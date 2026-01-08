@@ -25,7 +25,7 @@ importers:
         specifier: ^4.2.2
         version: 4.2.2
       '@nuxt/test-utils':
-        specifier: ^3.22.0
+        specifier: ^3.23.0
         version: 3.23.0(magicast@0.5.1)(typescript@5.9.3)(vitest@4.0.16(@types/node@25.0.3)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.2))
       '@nuxt/ui':
         specifier: 4.3.0
