@@ -5,8 +5,11 @@ export interface ModuleOptions {}
 
 export default defineNuxtModule<ModuleOptions>({
   meta: {
-    name: 'my-module',
-    configKey: 'myModule',
+    name: 'formkit-nuxt-ui',
+    configKey: 'formkitNuxtUi',
+    compatibility: {
+      nuxt: '>=4.0.0',
+    },
   },
   // Default configuration options of the Nuxt module
   defaults: {},
