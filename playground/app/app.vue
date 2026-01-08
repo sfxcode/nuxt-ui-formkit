@@ -14,7 +14,7 @@
         <UColorModeButton />
 
         <UButton
-          to="https://github.com/nuxt-ui-templates/starter"
+          to="https://github.com/sfxcode/formkit-nuxt-ui"
           target="_blank"
           icon="i-simple-icons-github"
           aria-label="GitHub"
@@ -25,7 +25,7 @@
     </UHeader>
 
     <UMain>
-      <NuxtPage />
+      <NuxtPage class="p-6" />
     </UMain>
 
     <USeparator icon="i-simple-icons-nuxtdotjs" />
@@ -39,7 +39,7 @@
 
       <template #right>
         <UButton
-          to="https://github.com/nuxt-ui-templates/starter"
+          to="https://github.com/sfxcode/formkit-nuxt-ui"
           target="_blank"
           icon="i-simple-icons-github"
           aria-label="GitHub"

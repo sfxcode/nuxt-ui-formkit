@@ -1,6 +1,6 @@
 <template>
   <div>
-    <UPageSection>
+    <UPage>
       <h1 class="text-3xl font-bold mb-4">
         Welcome to the FormKit Nuxt UI Playground!
       </h1>
@@ -13,6 +13,6 @@
       <p>
         Happy coding!
       </p>
-    </UPageSection>
+    </UPage>
   </div>
 </template>
