@@ -70,6 +70,8 @@
     "@nuxt/ui": "^4.3.0"
   },
   "devDependencies": {
+    "@iconify-json/lucide": "^1.2.82",
+    "@iconify-json/simple-icons": "^1.2.63",
     "@nuxt/devtools": "^3.1.1",
     "@nuxt/eslint-config": "^1.12.1",
     "@nuxt/module-builder": "^1.0.2",
