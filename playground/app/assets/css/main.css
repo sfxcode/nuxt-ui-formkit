@@ -26,6 +26,10 @@
   @apply text-xs font-medium;
 }
 
+.formkit-message {
+  @apply text-xs text-error;
+}
+
 .formkit-debug {
   @apply p-2 text-xs;
 }

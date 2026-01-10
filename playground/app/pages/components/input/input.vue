@@ -190,7 +190,7 @@ const inputSchema = [
           <p class="text-muted-foreground mb-6">
             Support for various HTML5 input inputTypes including text, email, password, number, tel, url, search, date, and time.
           </p>
-          <FUDataView
+          <FUDataEdit
             :data="{}"
             :schema="inputSchema.slice(0, 9)"
             debug-data
@@ -206,7 +206,7 @@ const inputSchema = [
           <p class="text-muted-foreground mb-6">
             Add leading or trailing icons to enhance the visual appearance and provide context.
           </p>
-          <FUDataView
+          <FUDataEdit
             :data="{}"
             :schema="inputSchema.slice(9, 12)"
             debug-data
@@ -222,7 +222,7 @@ const inputSchema = [
           <p class="text-muted-foreground mb-6">
             Available sizes: xs, sm, md (default), lg, and xl.
           </p>
-          <FUDataView
+          <FUDataEdit
             :data="{}"
             :schema="inputSchema.slice(12, 16)"
             debug-data
@@ -238,7 +238,7 @@ const inputSchema = [
           <p class="text-muted-foreground mb-6">
             Customize colors, variants, and padding to match your design.
           </p>
-          <FUDataView
+          <FUDataEdit
             :data="{}"
             :schema="inputSchema.slice(16, 19)"
             debug-data
@@ -254,13 +254,11 @@ const inputSchema = [
           <p class="text-muted-foreground mb-6">
             Different states including readonly and disabled.
           </p>
-          <FUDataView
+          <FUDataEdit
             :data="{}"
             :schema="inputSchema.slice(19, 21)"
             debug-data
-          >
-            rewerw
-          </FUDataView>
+          />
         </section>
       </div>
     </UContainer>

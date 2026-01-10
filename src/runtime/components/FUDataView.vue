@@ -1,7 +1,7 @@
 <script setup lang='ts'>
 import type { FormKitSchemaDefinition } from '@formkit/core'
 import type { PropType } from 'vue'
-import { FormKit, FormKitSchema } from '@formkit/vue'
+import { FormKitSchema } from '@formkit/vue'
 import FuDataDebug from './FUDataDebug.vue'
 
 const props = defineProps({

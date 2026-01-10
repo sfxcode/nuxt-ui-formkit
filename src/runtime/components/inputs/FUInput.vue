@@ -6,20 +6,20 @@ import { computed } from 'vue'
 import { useFormKitInput } from '../../composables/useFormKitInput'
 
 export interface FormKitInputProps {
-  inputType?: 'text' | 'email' | 'password' | 'number' | 'tel' | 'url' | 'search' | 'date' | 'time' | 'datetime-local'
-  placeholder?: string
   autofocus?: boolean
-  padded?: boolean
-  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
-  color?: string
-  variant?: 'outline' | 'none'
-  inputClass?: string
-  loading?: boolean
+  color?: 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'
   icon?: string
-  trailingIcon?: string
-  leadingIcon?: string
-  trailing?: boolean
+  inputClass?: string
+  inputType?: 'text' | 'email' | 'password' | 'number' | 'tel' | 'url' | 'search' | 'date' | 'time' | 'datetime-local'
   leading?: boolean
+  leadingIcon?: string
+  loading?: boolean
+  padded?: boolean
+  placeholder?: string
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
+  trailing?: boolean
+  trailingIcon?: string
+  variant?: 'outline' | 'soft' | 'subtle' | 'ghost' | 'none'
 }
 
 const props = defineProps({
@@ -36,7 +36,7 @@ const modelValue = computed({
   },
 })
 
-const { handleInput, handleChange, styleClass } = useFormKitInput(props.context)
+const { handleInput, handleChange, isInvalid, styleClass, color } = useFormKitInput(props.context)
 </script>
 
 <template>
@@ -44,25 +44,26 @@ const { handleInput, handleChange, styleClass } = useFormKitInput(props.context)
     :id="context.id"
     v-model="modelValue"
     v-bind="{ ...context?.attrs }"
-    :type="context?.inputType || 'text'"
-    :readonly="context?.attrs.readonly ?? false"
-    :style="context?.attrs.style"
-    :class="styleClass"
-    :placeholder="context.placeholder"
-    :disabled="!!context?.disabled"
     :autofocus="context.autofocus"
-    :padded="context.padded"
-    :size="context.size"
-    :color="context.color"
-    :variant="context.variant"
-    :input-class="context.inputClass"
-    :loading="context.loading"
+    :class="styleClass"
+    :color="color"
+    :disabled="!!context?.disabled"
+    :highlight="isInvalid || context.highlight"
     :icon="context.icon"
-    :trailing-icon="context.trailingIcon"
-    :leading-icon="context.leadingIcon"
-    :trailing="context.trailing"
+    :input-class="context.inputClass"
     :leading="context.leading"
-    @update:model-value="handleInput"
+    :leading-icon="context.leadingIcon"
+    :loading="context.loading"
+    :padded="context.padded"
+    :placeholder="context.placeholder"
+    :readonly="context?.attrs.readonly ?? false"
+    :size="context.size ?? 'md'"
+    :style="context?.attrs.style"
+    :trailing="context.trailing"
+    :trailing-icon="context.trailingIcon"
+    :type="context?.inputType || 'text'"
+    :variant="context.variant ?? 'outline'"
     @change="handleChange"
+    @update:model-value="handleInput"
   />
 </template>

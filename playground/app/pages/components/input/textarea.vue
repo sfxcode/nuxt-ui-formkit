@@ -188,7 +188,7 @@ const textareaSchema = [
           <p class="text-muted-foreground mb-6">
             Basic textarea with validation and help text.
           </p>
-          <FUDataView
+          <FUDataEdit
             :data="{}"
             :schema="textareaSchema.slice(0, 2)"
             debug-data
@@ -204,7 +204,7 @@ const textareaSchema = [
           <p class="text-muted-foreground mb-6">
             Control the height with fixed rows or enable auto-resize to grow with content.
           </p>
-          <FUDataView
+          <FUDataEdit
             :data="{}"
             :schema="textareaSchema.slice(2, 5)"
             debug-data
@@ -220,7 +220,7 @@ const textareaSchema = [
           <p class="text-muted-foreground mb-6">
             Available sizes: xs, sm, md (default), lg, and xl.
           </p>
-          <FUDataView
+          <FUDataEdit
             :data="{}"
             :schema="textareaSchema.slice(5, 9)"
             debug-data
@@ -236,7 +236,7 @@ const textareaSchema = [
           <p class="text-muted-foreground mb-6">
             Customize colors, variants, and padding to match your design.
           </p>
-          <FUDataView
+          <FUDataEdit
             :data="{}"
             :schema="textareaSchema.slice(9, 12)"
             debug-data
@@ -252,7 +252,7 @@ const textareaSchema = [
           <p class="text-muted-foreground mb-6">
             Add icons or show loading state for better user experience.
           </p>
-          <FUDataView
+          <FUDataEdit
             :data="{}"
             :schema="textareaSchema.slice(12, 16)"
             debug-data
@@ -268,7 +268,7 @@ const textareaSchema = [
           <p class="text-muted-foreground mb-6">
             Different states including readonly, disabled, and custom styling.
           </p>
-          <FUDataView
+          <FUDataEdit
             :data="{}"
             :schema="textareaSchema.slice(16, 19)"
             debug-data

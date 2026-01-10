@@ -4,29 +4,34 @@ import type { FormKitFrameworkContext } from '@formkit/core'
 import type { PropType } from 'vue'
 import { computed } from 'vue'
 import { useFormKitInput } from '../../composables/useFormKitInput'
+import type { SelectMenuItem } from '#ui/components/SelectMenu.vue'
 
-export interface FormKitTextareaProps {
-  autofocus?: boolean
-  autoresize?: boolean
+export interface FormKitSelectProps {
+  clearable?: boolean
   color?: 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'
-  cols?: number | string
-  highlight?: boolean
+  creatable?: boolean
+  disabled?: boolean
   icon?: string
   inputClass?: string
+  leading?: boolean
+  leadingIcon?: string
   loading?: boolean
-  maxrows?: number | string
+  multiple?: boolean
+  optionAttribute?: string
+  options?: string[] | SelectMenuItem[] | SelectMenuItem[][]
   padded?: boolean
   placeholder?: string
-  resize?: boolean
-  rows?: number | string
+  searchable?: boolean
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
+  trailing?: boolean
   trailingIcon?: string
+  valueAttribute?: string
   variant?: 'outline' | 'soft' | 'subtle' | 'ghost' | 'none'
 }
 
 const props = defineProps({
   context: {
-    type: Object as PropType<FormKitFrameworkContext & FormKitTextareaProps>,
+    type: Object as PropType<FormKitFrameworkContext & FormKitSelectProps>,
     required: true,
   },
 })
@@ -38,35 +43,41 @@ const modelValue = computed({
   },
 })
 
-const { handleInput, handleChange, styleClass, color, isInvalid } = useFormKitInput(props.context)
+const { handleInput, handleChange, isInvalid, color, styleClass } = useFormKitInput(props.context)
 </script>
 
 <template>
-  <UTextarea
+  <USelect
     :id="context.id"
     v-model="modelValue"
     v-bind="{ ...context?.attrs }"
-    :autofocus="context.autofocus"
-    :autoresize="context.autoresize"
     :class="styleClass"
+    :clearable="context.clearable"
     :color="color"
-    :cols="context.cols"
+    :creatable="context.creatable"
     :disabled="!!context?.disabled"
     :highlight="isInvalid || context.highlight"
     :icon="context.icon"
     :input-class="context.inputClass"
+    :items="context?.attrs.items ?? context.options"
+    :leading="context.leading"
+    :leading-icon="context.leadingIcon"
     :loading="context.loading"
-    :maxrows="context.maxrows"
+    :multiple="context.multiple"
+    :option-attribute="context.optionAttribute"
     :padded="context.padded"
     :placeholder="context.placeholder"
     :readonly="context?.attrs.readonly ?? false"
-    :resize="context.resize"
-    :rows="context.rows"
+    :searchable="context.searchable"
     :size="context.size ?? 'md'"
     :style="context?.attrs.style"
+    :trailing="context.trailing"
     :trailing-icon="context.trailingIcon"
+    :ui="context.ui"
+    :value-attribute="context.valueAttribute"
     :variant="context.variant ?? 'outline'"
     @change="handleChange"
     @update:model-value="handleInput"
   />
+  {{ context.attrs }}
 </template>

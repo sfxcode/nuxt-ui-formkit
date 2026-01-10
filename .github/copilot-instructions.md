@@ -192,3 +192,9 @@ addImports({
 - Follow the existing code style in the project
 - Suggest testing strategies alongside implementation
 
+## Component Generation for Nuxt components
+- When generating components that wrap Nuxt UI components, ensure to:
+  - Use `<script setup lang="ts">`
+  - Properly type props and emits
+  - Ignore Properties that are not relevant to the FormKit integration: name, required
+

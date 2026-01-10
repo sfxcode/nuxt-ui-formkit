@@ -12,6 +12,12 @@ export function useFormKitInput(context: FormKitFrameworkContext) {
       : context?.attrs?.class || ''
   })
 
+  const color = computed(() => {
+    return (isInvalid.value)
+      ? 'error'
+      : context?.color || 'primary'
+  })
+
   const formKitCreateInputSlots = new Set(['label', 'help', 'messages', 'message', 'input'])
 
   // FormKit slots added by createInput() and should be passed to FormKit not to the wrapped component.
@@ -35,5 +41,5 @@ export function useFormKitInput(context: FormKitFrameworkContext) {
     context?.node?.input?.(e)
   }
 
-  return { isInvalid, validSlotNames, styleClass, handleBlur, handleChange, handleInput, handleSelect }
+  return { isInvalid, validSlotNames, styleClass, color, handleBlur, handleChange, handleInput, handleSelect }
 }
