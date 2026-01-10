@@ -1,3 +1,41 @@
+<script setup>
+const schema
+  = [
+    {
+      $formkit: 'nuxtUITextarea',
+      id: 'basic',
+      name: 'name1',
+      placeholder: 'Basic',
+      label: 'Basic',
+      help: 'Required.',
+      validation: 'required',
+    },
+    {
+      $formkit: 'nuxtUITextarea',
+      name: 'name2',
+      label: '5 Rows',
+      rows: 5,
+      autoResize: true,
+    },
+    {
+      $formkit: 'nuxtUITextarea',
+      name: 'name3',
+      placeholder: 'Styled',
+      style: { background: 'gray' },
+      class: 'customClass',
+    },
+    {
+      $formkit: 'nuxtUITextarea',
+      name: 'name4',
+      placeholder: 'Read Only',
+      readonly: true,
+    },
+
+  ]
+
+const data = { test: 'sdfsd' }
+</script>
+
 <template>
   <div>
     <UPage>
@@ -13,6 +51,13 @@
       <p>
         Happy coding!
       </p>
+      <div>
+        <FUDataView
+          :data="{}"
+          :schema="schema"
+          debug-data
+        />
+      </div>
     </UPage>
   </div>
 </template>

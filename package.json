@@ -65,8 +65,9 @@
     "test:types": "vue-tsc --noEmit && cd playground && vue-tsc --noEmit"
   },
   "dependencies": {
-    "@nuxt/kit": "^4.2.2",
+    "@formkit/addons": "^1.7.2",
     "@formkit/nuxt": "^1.7.2",
+    "@nuxt/kit": "^4.2.2",
     "@nuxt/ui": "^4.3.0"
   },
   "devDependencies": {
@@ -83,6 +84,7 @@
     "nuxt": "^4.2.2",
     "typescript": "~5.9.3",
     "vitest": "^4.0.16",
-    "vue-tsc": "^3.2.2"
+    "vue-tsc": "^3.2.2",
+    "sass-embedded": "^1.97.2"
   }
 }

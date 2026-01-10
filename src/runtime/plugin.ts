@@ -1,5 +1,6 @@
 import { defineNuxtPlugin } from '#app'
+import { consola } from 'consola'
 
 export default defineNuxtPlugin((_nuxtApp) => {
-  console.log('Plugin injected by my-module!')
+  consola.info('Plugin injected by @sfxcode/formkit-nuxt-ui!')
 })
