@@ -1,4 +1,42 @@
-<script setup>
+<script setup lang="ts">
+import type { NavigationMenuItem } from '@nuxt/ui'
+
+const items = ref<NavigationMenuItem[]>([
+  {
+    label: 'Input Components',
+    icon: 'i-lucide-box',
+    active: true,
+    children: [
+      {
+        label: 'Input',
+        icon: 'i-lucide-file-text',
+        description: 'Input component with various types and validations.',
+        to: '/components/input/input',
+      },
+      {
+        label: 'Teatarea',
+        icon: 'i-lucide-file-text',
+        description: 'Textarea component with various types and validations.',
+        to: '/components/input/textarea',
+      },
+    ],
+  },
+  {
+    label: 'Output Components',
+    icon: 'i-lucide-box',
+    active: false,
+  },
+  {
+    label: 'Form Components',
+    icon: 'i-lucide-box',
+    active: false,
+  },
+  {
+    label: 'Composables',
+    icon: 'i-lucide-box',
+    active: false,
+  },
+])
 </script>
 
 <template>
@@ -9,6 +47,11 @@
           <h1 class="text-xl">FormKit Nuxt UI</h1>
         </NuxtLink>
       </template>
+
+      <UNavigationMenu
+        :items="items"
+        class="w-full justify-center"
+      />
 
       <template #right>
         <UColorModeButton />

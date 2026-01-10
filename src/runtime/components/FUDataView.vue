@@ -27,7 +27,7 @@ const props = defineProps({
   },
 })
 
-const formData = defineModel<any>()
+const formData = defineModel<Record<string, unknown>>()
 
 if (props.data) {
   formData.value = props.data
@@ -35,31 +35,22 @@ if (props.data) {
 </script>
 
 <template>
-  <div class="p-formkit-data-view">
-    <FormKit
-      v-model="formData"
-      type="form"
-      :form-class="formClass"
-      :actions="false"
-    >
-      <FormKitSchema
-        v-if="schema"
-        :schema="schema"
-        :data="formData"
-      />
-      <slot />
-    </FormKit>
-    <FuDataDebug
-      v-if="debugData"
-      :data="formData"
-      header="Data"
-    />
-    <FuDataDebug
-      v-if="debugSchema"
-      :data="schema as object"
-      header="Schema"
-    />
-  </div>
+  <FormKitSchema
+    v-if="schema"
+    :schema="schema"
+    :data="formData"
+  />
+  <slot />
+  <FuDataDebug
+    v-if="debugData"
+    :data="formData"
+    header="Data"
+  />
+  <FuDataDebug
+    v-if="debugSchema"
+    :data="schema as object"
+    header="Debug Schema"
+  />
 </template>
 
 <style scoped>

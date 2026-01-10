@@ -16,3 +16,20 @@
   --color-green-900: #0A5331;
   --color-green-950: #052E16;
 }
+
+
+.formkit-label {
+  @apply text-xs font-medium text-green-500;
+}
+
+.formkit-help {
+  @apply text-xs font-medium;
+}
+
+.formkit-debug {
+  @apply p-2 text-xs;
+}
+
+.formkit-form {
+  @apply space-y-3;
+}

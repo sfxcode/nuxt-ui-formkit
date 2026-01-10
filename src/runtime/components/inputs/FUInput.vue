@@ -5,28 +5,26 @@ import type { PropType } from 'vue'
 import { computed } from 'vue'
 import { useFormKitInput } from '../../composables/useFormKitInput'
 
-export interface FormKitTextareaProps {
+export interface FormKitInputProps {
+  inputType?: 'text' | 'email' | 'password' | 'number' | 'tel' | 'url' | 'search' | 'date' | 'time' | 'datetime-local'
   placeholder?: string
   autofocus?: boolean
-  autoresize?: boolean
-  rows?: number | string
-  cols?: number | string
-  maxrows?: number | string
-  resize?: boolean
   padded?: boolean
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
   color?: string
   variant?: 'outline' | 'none'
   inputClass?: string
-  highlight?: boolean
   loading?: boolean
   icon?: string
   trailingIcon?: string
+  leadingIcon?: string
+  trailing?: boolean
+  leading?: boolean
 }
 
 const props = defineProps({
   context: {
-    type: Object as PropType<FormKitFrameworkContext & FormKitTextareaProps>,
+    type: Object as PropType<FormKitFrameworkContext & FormKitInputProps>,
     required: true,
   },
 })
@@ -42,30 +40,28 @@ const { handleInput, handleChange, styleClass } = useFormKitInput(props.context)
 </script>
 
 <template>
-  <UTextarea
+  <UInput
     :id="context.id"
     v-model="modelValue"
     v-bind="{ ...context?.attrs }"
+    :type="context?.inputType || 'text'"
     :readonly="context?.attrs.readonly ?? false"
     :style="context?.attrs.style"
     :class="styleClass"
     :placeholder="context.placeholder"
     :disabled="!!context?.disabled"
     :autofocus="context.autofocus"
-    :autoresize="context.autoresize"
-    :rows="context.rows"
-    :cols="context.cols"
-    :maxrows="context.maxrows"
-    :resize="context.resize"
     :padded="context.padded"
     :size="context.size"
     :color="context.color"
     :variant="context.variant"
     :input-class="context.inputClass"
-    :highlight="context.highlight"
     :loading="context.loading"
     :icon="context.icon"
     :trailing-icon="context.trailingIcon"
+    :leading-icon="context.leadingIcon"
+    :trailing="context.trailing"
+    :leading="context.leading"
     @update:model-value="handleInput"
     @change="handleChange"
   />

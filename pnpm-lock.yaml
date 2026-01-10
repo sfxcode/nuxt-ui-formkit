@@ -11,6 +11,9 @@ importers:
       '@formkit/addons':
         specifier: ^1.7.2
         version: 1.7.2
+      '@formkit/icons':
+        specifier: ^1.7.2
+        version: 1.7.2
       '@formkit/nuxt':
         specifier: ^1.7.2
         version: 1.7.2(@nuxt/kit@4.2.2(magicast@0.5.1))(esbuild@0.27.2)(rollup@4.55.1)(vite@7.3.1(@types/node@25.0.3)(jiti@2.6.1)(lightningcss@1.30.2)(sass-embedded@1.97.2)(sass@1.97.2)(terser@5.44.1)(yaml@2.8.2))(vue@3.5.26(typescript@5.9.3))
@@ -20,9 +23,6 @@ importers:
       '@nuxt/ui':
         specifier: ^4.3.0
         version: 4.3.0(64d85c2c40e6ae354c64b2fb316e0308)
-      sass-embedded:
-        specifier: ^1.97.2
-        version: 1.97.2
     devDependencies:
       '@iconify-json/lucide':
         specifier: ^1.2.82
@@ -57,6 +57,9 @@ importers:
       nuxt:
         specifier: ^4.2.2
         version: 4.2.2(@parcel/watcher@2.5.1)(@types/node@25.0.3)(@vue/compiler-sfc@3.5.26)(cac@6.7.14)(db0@0.3.4)(eslint@9.39.2(jiti@2.6.1))(ioredis@5.9.1)(lightningcss@1.30.2)(magicast@0.5.1)(optionator@0.9.4)(rollup@4.55.1)(sass-embedded@1.97.2)(sass@1.97.2)(terser@5.44.1)(typescript@5.9.3)(vite@7.3.1(@types/node@25.0.3)(jiti@2.6.1)(lightningcss@1.30.2)(sass-embedded@1.97.2)(sass@1.97.2)(terser@5.44.1)(yaml@2.8.2))(vue-tsc@3.2.2(typescript@5.9.3))(yaml@2.8.2)
+      sass-embedded:
+        specifier: ^1.97.2
+        version: 1.97.2
       typescript:
         specifier: ~5.9.3
         version: 5.9.3
@@ -639,6 +642,9 @@ packages:
 
   '@formkit/i18n@1.7.2':
     resolution: {integrity: sha512-Zs6f+rtP2j2Nnt1HkNrL85WU6rtS1l1Q0BAQjCMGQPsbrppiL7/TZ5bNIrVm0DTntLgG3firDS7bNWAxPSwerQ==}
+
+  '@formkit/icons@1.7.2':
+    resolution: {integrity: sha512-4lgMca1xIxG42mLS6IjCiQ52Ns7Q0ang9/Ib1btzpB/C3rTJdWJDrrhVZgviO99x3Av1Lj3R5smn8f3x8mDG9g==}
 
   '@formkit/inputs@1.7.2':
     resolution: {integrity: sha512-4xs7RJN8EFGctTCNRXBTvor2O8RvuEEK3q2Hl/RMU5lhhn5tmck90fkkeAr9o+rWRoSNiV8XgbLQArQ/B1IYPw==}
@@ -5914,6 +5920,10 @@ snapshots:
       '@formkit/core': 1.7.2
       '@formkit/utils': 1.7.2
       '@formkit/validation': 1.7.2
+
+  '@formkit/icons@1.7.2':
+    dependencies:
+      '@formkit/core': 1.7.2
 
   '@formkit/inputs@1.7.2':
     dependencies:

@@ -7,7 +7,7 @@ export default defineNuxtConfig({
 
   devtools: { enabled: true },
 
-  css: ['~/assets/css/main.css', '../src/runtime/assets/scss/formkit-nuxt-ui.scss'],
+  css: ['~/assets/css/main.css'],
 
   // Nuxt UI Configuration
   ui: {
@@ -21,6 +21,7 @@ export default defineNuxtConfig({
   compatibilityDate: '2026-01-08',
 
   formkit: {
+    defaultConfig: false,
     configFile: '../src/runtime/formkit.config.ts',
   },
 

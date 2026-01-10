@@ -19,19 +19,19 @@ export function useFormKitInput(context: FormKitFrameworkContext) {
     Object.keys(context?.slots || {}).filter(slotName => !formKitCreateInputSlots.has(slotName)),
   )
 
-  function handleBlur(event: Event) {
+  function handleBlur(event: FocusEvent) {
     context?.handlers?.blur?.(event)
   }
 
-  function handleChange(_: any) {
+  function handleChange(_: unknown) {
     context?.node?.input?.(context?._value)
   }
 
-  function handleInput(_: any) {
+  function handleInput(_: unknown) {
     context?.node?.input?.(context?._value)
   }
 
-  function handleSelect(e: any) {
+  function handleSelect(e: unknown) {
     context?.node?.input?.(e)
   }
 
