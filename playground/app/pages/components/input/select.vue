@@ -8,16 +8,16 @@ const selectSchema = [
     label: 'Basic Select',
     help: 'This is a required field.',
     validation: 'required',
-    items: ['Option 1', 'Option 2', 'Option 3', 'Option 4'],
+    options: ['Option 1', 'Option 2', 'Option 3', 'Option 4'],
     placeholder: 'Select an option',
   },
   {
     $formkit: 'nuxtUISelect',
     name: 'select3',
     label: 'Multiple Select',
-    help: 'Select multiple items',
+    help: 'Select multiple options',
     multiple: true,
-    items: ['Apple', 'Banana', 'Cherry', 'Date', 'Elderberry', 'Fig'],
+    options: ['Apple', 'Banana', 'Cherry', 'Date', 'Elderberry', 'Fig'],
     placeholder: 'Select fruits',
   },
   {
@@ -26,7 +26,7 @@ const selectSchema = [
     label: 'Searchable Select',
     help: 'Type to search',
     searchable: true,
-    items: ['Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Argentina', 'Armenia', 'Australia', 'Austria', 'Azerbaijan', 'Bahamas', 'Bahrain', 'Bangladesh', 'Barbados', 'Belarus', 'Belgium', 'Belize', 'Benin', 'Bhutan', 'Bolivia'],
+    options: ['Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Argentina', 'Armenia', 'Australia', 'Austria', 'Azerbaijan', 'Bahamas', 'Bahrain', 'Bangladesh', 'Barbados', 'Belarus', 'Belgium', 'Belize', 'Benin', 'Bhutan', 'Bolivia'],
     placeholder: 'Search for a country',
   },
   {
@@ -35,17 +35,17 @@ const selectSchema = [
     label: 'Clearable Select',
     help: 'Can be cleared',
     clearable: true,
-    items: ['Red', 'Green', 'Blue', 'Yellow', 'Purple', 'Orange'],
+    options: ['Red', 'Green', 'Blue', 'Yellow', 'Purple', 'Orange'],
     placeholder: 'Select a color',
   },
   {
     $formkit: 'nuxtUISelect',
     name: 'select6',
     label: 'Creatable Select',
-    help: 'Create new items',
+    help: 'Create new options',
     creatable: true,
     searchable: true,
-    items: ['JavaScript', 'TypeScript', 'Python', 'Java'],
+    options: ['JavaScript', 'TypeScript', 'Python', 'Java'],
     placeholder: 'Type to create or select',
   },
   {
@@ -53,7 +53,7 @@ const selectSchema = [
     name: 'select7',
     label: 'Small Size',
     size: 'sm',
-    items: ['Small 1', 'Small 2', 'Small 3'],
+    options: ['Small 1', 'Small 2', 'Small 3'],
     placeholder: 'Small select',
   },
   {
@@ -61,7 +61,7 @@ const selectSchema = [
     name: 'select8',
     label: 'Medium Size (Default)',
     size: 'md',
-    items: ['Medium 1', 'Medium 2', 'Medium 3'],
+    options: ['Medium 1', 'Medium 2', 'Medium 3'],
     placeholder: 'Medium select',
   },
   {
@@ -69,7 +69,7 @@ const selectSchema = [
     name: 'select9',
     label: 'Large Size',
     size: 'lg',
-    items: ['Large 1', 'Large 2', 'Large 3'],
+    options: ['Large 1', 'Large 2', 'Large 3'],
     placeholder: 'Large select',
   },
   {
@@ -77,7 +77,7 @@ const selectSchema = [
     name: 'select10',
     label: 'Extra Large Size',
     size: 'xl',
-    items: ['XL 1', 'XL 2', 'XL 3'],
+    options: ['XL 1', 'XL 2', 'XL 3'],
     placeholder: 'Extra large select',
   },
   {
@@ -85,7 +85,7 @@ const selectSchema = [
     name: 'select11',
     label: 'With Leading Icon',
     icon: 'i-heroicons-tag',
-    items: ['Tag 1', 'Tag 2', 'Tag 3'],
+    options: ['Tag 1', 'Tag 2', 'Tag 3'],
     placeholder: 'Select with icon',
   },
   {
@@ -93,7 +93,7 @@ const selectSchema = [
     name: 'select12',
     label: 'With Trailing Icon',
     trailingIcon: 'i-heroicons-chevron-down',
-    items: ['Option A', 'Option B', 'Option C'],
+    options: ['Option A', 'Option B', 'Option C'],
     placeholder: 'Select with trailing icon',
   },
   {
@@ -101,7 +101,7 @@ const selectSchema = [
     name: 'select13',
     label: 'Loading State',
     loading: true,
-    items: ['Loading 1', 'Loading 2', 'Loading 3'],
+    options: ['Loading 1', 'Loading 2', 'Loading 3'],
     placeholder: 'Loading...',
   },
   {
@@ -110,7 +110,7 @@ const selectSchema = [
     label: 'Primary Color',
     color: 'primary',
     size: 'lg',
-    items: ['Primary 1', 'Primary 2', 'Primary 3'],
+    options: ['Primary 1', 'Primary 2', 'Primary 3'],
     placeholder: 'Primary color select',
   },
   {
@@ -118,7 +118,7 @@ const selectSchema = [
     name: 'select15',
     label: 'Variant Soft',
     variant: 'soft',
-    items: ['Soft 1', 'Soft 2', 'Soft 3'],
+    options: ['Soft 1', 'Soft 2', 'Soft 3'],
     placeholder: 'Soft variant',
   },
   {
@@ -126,7 +126,7 @@ const selectSchema = [
     name: 'select16',
     label: 'Variant Subtle',
     variant: 'subtle',
-    items: ['Subtle 1', 'Subtle 2', 'Subtle 3'],
+    options: ['Subtle 1', 'Subtle 2', 'Subtle 3'],
     placeholder: 'Subtle variant',
   },
   {
@@ -134,7 +134,7 @@ const selectSchema = [
     name: 'select17',
     label: 'Variant Ghost',
     variant: 'ghost',
-    items: ['Ghost 1', 'Ghost 2', 'Ghost 3'],
+    options: ['Ghost 1', 'Ghost 2', 'Ghost 3'],
     placeholder: 'Ghost variant',
   },
   {
@@ -142,7 +142,7 @@ const selectSchema = [
     name: 'select18',
     label: 'With Padding',
     padded: true,
-    items: ['Padded 1', 'Padded 2', 'Padded 3'],
+    options: ['Padded 1', 'Padded 2', 'Padded 3'],
     placeholder: 'Padded select',
   },
   {
@@ -151,7 +151,7 @@ const selectSchema = [
     label: 'Read Only',
     readonly: true,
     value: 'Option 2',
-    items: ['Option 1', 'Option 2', 'Option 3'],
+    options: ['Option 1', 'Option 2', 'Option 3'],
   },
   {
     $formkit: 'nuxtUISelect',
@@ -159,7 +159,7 @@ const selectSchema = [
     label: 'Disabled',
     disabled: true,
     value: 'Disabled Option',
-    items: ['Disabled Option', 'Other Option'],
+    options: ['Disabled Option', 'Other Option'],
   },
 ]
 </script>
@@ -175,7 +175,7 @@ const selectSchema = [
           The Select component integrates FormKit with Nuxt UI's USelect component, providing a powerful dropdown selection experience.
         </p>
         <p class="text-muted-foreground">
-          Explore various configurations including searchable, multiple selection, creatable items, and different styling variants.
+          Explore various configurations including searchable, multiple selection, creatable options, and different styling variants.
         </p>
       </div>
 
@@ -187,7 +187,7 @@ const selectSchema = [
             Basic Usage
           </h2>
           <p class="text-muted-foreground mb-6">
-            Basic select with simple items and object-based items.
+            Basic select with simple options and object-based options.
           </p>
           <FUDataEdit
             :data="{}"
@@ -203,7 +203,7 @@ const selectSchema = [
             Advanced Features
           </h2>
           <p class="text-muted-foreground mb-6">
-            Multiple selection, searchable, clearable, and creatable items.
+            Multiple selection, searchable, clearable, and creatable options.
           </p>
           <FUDataEdit
             :data="{}"
@@ -248,7 +248,7 @@ const selectSchema = [
 
         <section>
           <h2 class="text-2xl font-semibold mb-4">
-            Styling items
+            Styling options
           </h2>
           <p class="text-muted-foreground mb-6">
             Customize colors, variants, and padding to match your design.
