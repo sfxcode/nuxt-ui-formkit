@@ -34,7 +34,7 @@
     "design-system",
     "form-builder"
   ],
-  "packageManager": "pnpm@10.26.0+sha512.3b3f6c725ebe712506c0ab1ad4133cf86b1f4b687effce62a9b38b4d72e3954242e643190fc51fa1642949c735f403debd44f5cb0edd657abe63a8b6a7e1e402",
+  "packageManager": "pnpm@10.30.0+sha512.2b5753de015d480eeb88f5b5b61e0051f05b4301808a82ec8b840c9d2adf7748eb352c83f5c1593ca703ff1017295bc3fdd3119abb9686efc96b9fcb18200937",
   "type": "module",
   "exports": {
     ".": {
@@ -71,6 +71,7 @@
     "@nuxt/ui": "^4.4.0"
   },
   "devDependencies": {
+    "@iconify-json/heroicons": "^1.2.3",
     "@iconify-json/lucide": "^1.2.91",
     "@iconify-json/simple-icons": "^1.2.71",
     "@nuxt/devtools": "^3.2.1",
