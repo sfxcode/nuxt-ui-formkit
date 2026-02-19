@@ -94,18 +94,3 @@ export const nuxtUITextareaDefinition: FormKitTypeDefinition = createInput(FUTex
   props: ['name', 'placeholder', 'required', 'autofocus', 'autoresize', 'rows', 'cols', 'maxrows', 'resize', 'padded', 'size', 'color', 'variant', 'inputClass', 'ui', 'highlight', 'loading', 'icon', 'trailingIcon'],
   family: 'NuxtUIInput',
 })
-
-export const nuxtUIOutputTextDefinition: FormKitTypeDefinition = createInput(FUOutputText, {
-  props: ['size', 'color', 'variant', 'icon', 'leadingIcon', 'trailingIcon', 'leading', 'trailing'],
-  family: 'NuxtUIOutput',
-})
-
-export const nuxtUIOutputBooleanDefinition: FormKitTypeDefinition = createInput(FUOutputBoolean, {
-  props: ['size', 'color', 'variant', 'icon', 'leadingIcon', 'trailingIcon', 'leading', 'trailing', 'trueValue', 'falseValue', 'trueIcon', 'falseIcon'],
-  family: 'NuxtUIOutput',
-})
-
-export const nuxtUIOutputDateDefinition: FormKitTypeDefinition = createInput(FUOutputDate, {
-  props: ['size', 'color', 'variant', 'icon', 'leadingIcon', 'trailingIcon', 'leading', 'trailing', 'dateStyle', 'timeStyle', 'locale', 'relative'],
-  family: 'NuxtUIOutput',
-})
