@@ -181,7 +181,6 @@ const inputTagsSchema = [
           <FUDataEdit
             :data="{}"
             :schema="inputTagsSchema.slice(0, 5)"
-            debug-data
           />
         </section>
 
@@ -197,7 +196,6 @@ const inputTagsSchema = [
           <FUDataEdit
             :data="{}"
             :schema="inputTagsSchema.slice(5, 7)"
-            debug-data
           />
         </section>
 
@@ -213,7 +211,6 @@ const inputTagsSchema = [
           <FUDataEdit
             :data="{}"
             :schema="inputTagsSchema.slice(7, 11)"
-            debug-data
           />
         </section>
 
@@ -229,7 +226,6 @@ const inputTagsSchema = [
           <FUDataEdit
             :data="{}"
             :schema="inputTagsSchema.slice(11, 13)"
-            debug-data
           />
         </section>
 
@@ -245,7 +241,6 @@ const inputTagsSchema = [
           <FUDataEdit
             :data="{}"
             :schema="inputTagsSchema.slice(13, 17)"
-            debug-data
           />
         </section>
 
@@ -261,7 +256,6 @@ const inputTagsSchema = [
           <FUDataEdit
             :data="{}"
             :schema="inputTagsSchema.slice(17, 18)"
-            debug-data
           />
         </section>
 
@@ -277,7 +271,6 @@ const inputTagsSchema = [
           <FUDataEdit
             :data="{}"
             :schema="inputTagsSchema.slice(18, 20)"
-            debug-data
           />
         </section>
       </div>

@@ -329,7 +329,6 @@ const outputDateSchema = [
           <FUDataView
             :data="{}"
             :schema="outputDateSchema.slice(0, 1)"
-            debug-data
           />
         </section>
 
@@ -345,7 +344,6 @@ const outputDateSchema = [
           <FUDataView
             :data="{}"
             :schema="outputDateSchema.slice(1, 4)"
-            debug-data
           />
         </section>
 
@@ -361,7 +359,6 @@ const outputDateSchema = [
           <FUDataView
             :data="{}"
             :schema="outputDateSchema.slice(4, 9)"
-            debug-data
           />
         </section>
 
@@ -377,7 +374,6 @@ const outputDateSchema = [
           <FUDataView
             :data="{}"
             :schema="outputDateSchema.slice(9, 12)"
-            debug-data
           />
         </section>
 
@@ -393,7 +389,6 @@ const outputDateSchema = [
           <FUDataView
             :data="{}"
             :schema="outputDateSchema.slice(12, 17)"
-            debug-data
           />
         </section>
 
@@ -409,7 +404,6 @@ const outputDateSchema = [
           <FUDataView
             :data="{}"
             :schema="outputDateSchema.slice(17, 22)"
-            debug-data
           />
         </section>
 
@@ -425,7 +419,6 @@ const outputDateSchema = [
           <FUDataView
             :data="{}"
             :schema="outputDateSchema.slice(22, 27)"
-            debug-data
           />
         </section>
 
@@ -441,7 +434,6 @@ const outputDateSchema = [
           <FUDataView
             :data="{}"
             :schema="outputDateSchema.slice(27, 31)"
-            debug-data
           />
         </section>
 
@@ -457,7 +449,6 @@ const outputDateSchema = [
           <FUDataView
             :data="{}"
             :schema="outputDateSchema.slice(31, 35)"
-            debug-data
           />
         </section>
       </div>

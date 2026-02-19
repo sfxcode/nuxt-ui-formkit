@@ -177,7 +177,6 @@ const checkboxGroupSchema = [
           <FUDataEdit
             :data="{}"
             :schema="checkboxGroupSchema.slice(0, 3)"
-            debug-data
           />
         </section>
 
@@ -193,7 +192,6 @@ const checkboxGroupSchema = [
           <FUDataEdit
             :data="{}"
             :schema="checkboxGroupSchema.slice(3, 5)"
-            debug-data
           />
         </section>
 
@@ -209,7 +207,6 @@ const checkboxGroupSchema = [
           <FUDataEdit
             :data="{}"
             :schema="checkboxGroupSchema.slice(5, 10)"
-            debug-data
           />
         </section>
 
@@ -225,7 +222,6 @@ const checkboxGroupSchema = [
           <FUDataEdit
             :data="{}"
             :schema="checkboxGroupSchema.slice(10, 13)"
-            debug-data
           />
         </section>
 
@@ -241,7 +237,6 @@ const checkboxGroupSchema = [
           <FUDataEdit
             :data="{}"
             :schema="checkboxGroupSchema.slice(13, 14)"
-            debug-data
           />
         </section>
 
@@ -257,7 +252,6 @@ const checkboxGroupSchema = [
           <FUDataEdit
             :data="{}"
             :schema="checkboxGroupSchema.slice(14, 16)"
-            debug-data
           />
         </section>
       </div>

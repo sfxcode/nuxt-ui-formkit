@@ -35,10 +35,10 @@ export function useFormKitOutput(context: FormKitFrameworkContext) {
   const variantClass = computed(() => {
     const variant = (context.variant ?? 'none') as VariantType
     const variantMap: Record<VariantType, string> = {
-      outline: 'border border-gray-300 dark:border-gray-700 rounded-md px-3 py-2',
-      soft: 'bg-gray-100 dark:bg-gray-800 rounded-md px-3 py-2',
-      subtle: 'bg-gray-50 dark:bg-gray-900 rounded-md px-3 py-2',
-      ghost: 'hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md px-3 py-2',
+      outline: 'border border-gray-300 dark:border-gray-700 rounded-md px-2 py-1',
+      soft: 'bg-gray-100 dark:bg-gray-800 rounded-md',
+      subtle: 'bg-gray-50 dark:bg-gray-900 rounded-md',
+      ghost: 'hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md',
       none: '',
     }
     return variantMap[variant] || variantMap.none

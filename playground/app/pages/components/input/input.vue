@@ -193,7 +193,6 @@ const inputSchema = [
           <FUDataEdit
             :data="{}"
             :schema="inputSchema.slice(0, 9)"
-            debug-data
           />
         </section>
 
@@ -209,7 +208,6 @@ const inputSchema = [
           <FUDataEdit
             :data="{}"
             :schema="inputSchema.slice(9, 12)"
-            debug-data
           />
         </section>
 
@@ -225,7 +223,6 @@ const inputSchema = [
           <FUDataEdit
             :data="{}"
             :schema="inputSchema.slice(12, 16)"
-            debug-data
           />
         </section>
 
@@ -241,7 +238,6 @@ const inputSchema = [
           <FUDataEdit
             :data="{}"
             :schema="inputSchema.slice(16, 19)"
-            debug-data
           />
         </section>
 
@@ -257,7 +253,6 @@ const inputSchema = [
           <FUDataEdit
             :data="{}"
             :schema="inputSchema.slice(19, 21)"
-            debug-data
           />
         </section>
       </div>

@@ -194,7 +194,6 @@ const inputTimeSchema = [
           <FUDataEdit
             :data="{}"
             :schema="inputTimeSchema.slice(0, 2)"
-            debug-data
           />
         </section>
 
@@ -210,7 +209,6 @@ const inputTimeSchema = [
           <FUDataEdit
             :data="{}"
             :schema="inputTimeSchema.slice(2, 4)"
-            debug-data
           />
         </section>
 
@@ -226,7 +224,6 @@ const inputTimeSchema = [
           <FUDataEdit
             :data="{}"
             :schema="inputTimeSchema.slice(4, 6)"
-            debug-data
           />
         </section>
 
@@ -242,7 +239,6 @@ const inputTimeSchema = [
           <FUDataEdit
             :data="{}"
             :schema="inputTimeSchema.slice(6, 9)"
-            debug-data
           />
         </section>
 
@@ -258,7 +254,6 @@ const inputTimeSchema = [
           <FUDataEdit
             :data="{}"
             :schema="inputTimeSchema.slice(9, 14)"
-            debug-data
           />
         </section>
 
@@ -274,7 +269,6 @@ const inputTimeSchema = [
           <FUDataEdit
             :data="{}"
             :schema="inputTimeSchema.slice(14, 17)"
-            debug-data
           />
         </section>
 
@@ -290,7 +284,6 @@ const inputTimeSchema = [
           <FUDataEdit
             :data="{}"
             :schema="inputTimeSchema.slice(17, 20)"
-            debug-data
           />
         </section>
 
@@ -306,7 +299,6 @@ const inputTimeSchema = [
           <FUDataEdit
             :data="{}"
             :schema="inputTimeSchema.slice(20, 21)"
-            debug-data
           />
         </section>
 
@@ -322,7 +314,6 @@ const inputTimeSchema = [
           <FUDataEdit
             :data="{}"
             :schema="inputTimeSchema.slice(21, 23)"
-            debug-data
           />
         </section>
       </div>

@@ -10,7 +10,10 @@ const config: DefaultConfigOptions = {
   // Define the active locale
   locale: 'en',
   inputs: { ...nuxtUIInputs },
-
+  // ignore FormKit iconLoader since we use our own icons and don't want to load the default ones
+  iconLoader: (_) => {
+    return undefined
+  },
   plugins: [
     createAutoAnimatePlugin(
       {

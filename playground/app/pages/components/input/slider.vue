@@ -202,7 +202,6 @@ const sliderSchema = [
           <FUDataEdit
             :data="{}"
             :schema="sliderSchema.slice(0, 2)"
-            debug-data
           />
         </section>
 
@@ -218,7 +217,6 @@ const sliderSchema = [
           <FUDataEdit
             :data="{}"
             :schema="sliderSchema.slice(2, 4)"
-            debug-data
           />
         </section>
 
@@ -234,7 +232,6 @@ const sliderSchema = [
           <FUDataEdit
             :data="{}"
             :schema="sliderSchema.slice(4, 6)"
-            debug-data
           />
         </section>
 
@@ -250,7 +247,6 @@ const sliderSchema = [
           <FUDataEdit
             :data="{}"
             :schema="sliderSchema.slice(6, 9)"
-            debug-data
           />
         </section>
 
@@ -266,7 +262,6 @@ const sliderSchema = [
           <FUDataEdit
             :data="{}"
             :schema="sliderSchema.slice(9, 10)"
-            debug-data
           />
         </section>
 
@@ -282,7 +277,6 @@ const sliderSchema = [
           <FUDataEdit
             :data="{}"
             :schema="sliderSchema.slice(10, 15)"
-            debug-data
           />
         </section>
 
@@ -298,7 +292,6 @@ const sliderSchema = [
           <FUDataEdit
             :data="{}"
             :schema="sliderSchema.slice(15, 19)"
-            debug-data
           />
         </section>
 
@@ -314,7 +307,6 @@ const sliderSchema = [
           <FUDataEdit
             :data="{}"
             :schema="sliderSchema.slice(19, 21)"
-            debug-data
           />
         </section>
       </div>

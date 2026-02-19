@@ -1,4 +1,4 @@
-import { defineNuxtModule, addPlugin, createResolver, addComponent } from '@nuxt/kit'
+import { defineNuxtModule, addPlugin, createResolver, addComponent, addImports, addImportsDir } from '@nuxt/kit'
 
 // Module options TypeScript interface definition
 export type ModuleOptions = Record<string, never>
@@ -18,6 +18,9 @@ export default defineNuxtModule<ModuleOptions>({
 
     // Do not add the extension since the `.ts` will be transpiled to `.mjs` after `npm run prepack`
     addPlugin(resolver.resolve('./runtime/plugin'))
+
+    addImportsDir(resolver.resolve('./runtime/composables'))
+
     const NPM_PCK_FORMKIT_NUXT_UI = '@sfxcode/formkit-nuxt-ui'
 
     const componentNames = ['FUDataView', 'FUDataEdit', 'FUDataDebug']

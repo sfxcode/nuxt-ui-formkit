@@ -75,7 +75,7 @@ const props = defineProps({
 })
 const emit = defineEmits(['dataSaved', 'onReset'])
 
-const formData = defineModel<any>()
+const formData = defineModel<object>()
 
 if (props.data) {
   formData.value = props.data

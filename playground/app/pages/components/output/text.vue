@@ -206,7 +206,6 @@ const outputTextSchema = [
           <FUDataView
             :data="{}"
             :schema="outputTextSchema.slice(0, 1)"
-            debug-data
           />
         </section>
 
@@ -222,7 +221,6 @@ const outputTextSchema = [
           <FUDataView
             :data="{}"
             :schema="outputTextSchema.slice(1, 4)"
-            debug-data
           />
         </section>
 
@@ -238,7 +236,6 @@ const outputTextSchema = [
           <FUDataView
             :data="{}"
             :schema="outputTextSchema.slice(4, 9)"
-            debug-data
           />
         </section>
 
@@ -254,7 +251,6 @@ const outputTextSchema = [
           <FUDataView
             :data="{}"
             :schema="outputTextSchema.slice(9, 14)"
-            debug-data
           />
         </section>
 
@@ -270,7 +266,6 @@ const outputTextSchema = [
           <FUDataView
             :data="{}"
             :schema="outputTextSchema.slice(14, 19)"
-            debug-data
           />
         </section>
 
@@ -286,7 +281,6 @@ const outputTextSchema = [
           <FUDataView
             :data="{}"
             :schema="outputTextSchema.slice(19, 22)"
-            debug-data
           />
         </section>
       </div>

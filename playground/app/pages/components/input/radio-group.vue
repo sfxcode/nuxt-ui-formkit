@@ -167,7 +167,6 @@ const radioGroupSchema = [
           <FUDataEdit
             :data="{}"
             :schema="radioGroupSchema.slice(0, 2)"
-            debug-data
           />
         </section>
 
@@ -183,7 +182,6 @@ const radioGroupSchema = [
           <FUDataEdit
             :data="{}"
             :schema="radioGroupSchema.slice(2, 4)"
-            debug-data
           />
         </section>
 
@@ -199,7 +197,6 @@ const radioGroupSchema = [
           <FUDataEdit
             :data="{}"
             :schema="radioGroupSchema.slice(4, 8)"
-            debug-data
           />
         </section>
 
@@ -215,7 +212,6 @@ const radioGroupSchema = [
           <FUDataEdit
             :data="{}"
             :schema="radioGroupSchema.slice(8, 11)"
-            debug-data
           />
         </section>
 
@@ -231,7 +227,6 @@ const radioGroupSchema = [
           <FUDataEdit
             :data="{}"
             :schema="radioGroupSchema.slice(11, 12)"
-            debug-data
           />
         </section>
 
@@ -247,7 +242,6 @@ const radioGroupSchema = [
           <FUDataEdit
             :data="{}"
             :schema="radioGroupSchema.slice(12, 14)"
-            debug-data
           />
         </section>
       </div>

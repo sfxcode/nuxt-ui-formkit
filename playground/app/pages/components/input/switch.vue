@@ -164,7 +164,6 @@ const switchSchema = [
           <FUDataEdit
             :data="{}"
             :schema="switchSchema.slice(0, 3)"
-            debug-data
           />
         </section>
 
@@ -180,7 +179,6 @@ const switchSchema = [
           <FUDataEdit
             :data="{}"
             :schema="switchSchema.slice(3, 5)"
-            debug-data
           />
         </section>
 
@@ -196,7 +194,6 @@ const switchSchema = [
           <FUDataEdit
             :data="{}"
             :schema="switchSchema.slice(5, 7)"
-            debug-data
           />
         </section>
 
@@ -212,7 +209,6 @@ const switchSchema = [
           <FUDataEdit
             :data="{}"
             :schema="switchSchema.slice(7, 12)"
-            debug-data
           />
         </section>
 
@@ -228,7 +224,6 @@ const switchSchema = [
           <FUDataEdit
             :data="{}"
             :schema="switchSchema.slice(12, 16)"
-            debug-data
           />
         </section>
 
@@ -244,7 +239,6 @@ const switchSchema = [
           <FUDataEdit
             :data="{}"
             :schema="switchSchema.slice(16, 19)"
-            debug-data
           />
         </section>
       </div>

@@ -201,7 +201,6 @@ const pinInputSchema = [
           <FUDataEdit
             :data="{}"
             :schema="pinInputSchema.slice(0, 3)"
-            debug-data
           />
         </section>
 
@@ -217,7 +216,6 @@ const pinInputSchema = [
           <FUDataEdit
             :data="{}"
             :schema="pinInputSchema.slice(3, 5)"
-            debug-data
           />
         </section>
 
@@ -233,7 +231,6 @@ const pinInputSchema = [
           <FUDataEdit
             :data="{}"
             :schema="pinInputSchema.slice(5, 7)"
-            debug-data
           />
         </section>
 
@@ -249,7 +246,6 @@ const pinInputSchema = [
           <FUDataEdit
             :data="{}"
             :schema="pinInputSchema.slice(7, 11)"
-            debug-data
           />
         </section>
 
@@ -265,7 +261,6 @@ const pinInputSchema = [
           <FUDataEdit
             :data="{}"
             :schema="pinInputSchema.slice(11, 14)"
-            debug-data
           />
         </section>
 
@@ -281,7 +276,6 @@ const pinInputSchema = [
           <FUDataEdit
             :data="{}"
             :schema="pinInputSchema.slice(14, 17)"
-            debug-data
           />
         </section>
 
@@ -297,7 +291,6 @@ const pinInputSchema = [
           <FUDataEdit
             :data="{}"
             :schema="pinInputSchema.slice(17, 18)"
-            debug-data
           />
         </section>
 
@@ -313,7 +306,6 @@ const pinInputSchema = [
           <FUDataEdit
             :data="{}"
             :schema="pinInputSchema.slice(18, 20)"
-            debug-data
           />
         </section>
       </div>

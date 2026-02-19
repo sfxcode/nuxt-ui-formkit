@@ -2,7 +2,7 @@
 import type { FormKitFrameworkContext } from '@formkit/core'
 import type { PropType } from 'vue'
 import { computed } from 'vue'
-import { useFormKitInput } from '../../composables/useFormKitInput'
+import { useFormKitInput } from '../../utils/useFormKitInput'
 
 export interface RadioOption {
   value: string | number | boolean

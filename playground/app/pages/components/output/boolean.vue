@@ -290,7 +290,6 @@ const outputBooleanSchema = [
           <FUDataView
             :data="{}"
             :schema="outputBooleanSchema.slice(0, 2)"
-            debug-data
           />
         </section>
 
@@ -306,7 +305,6 @@ const outputBooleanSchema = [
           <FUDataView
             :data="{}"
             :schema="outputBooleanSchema.slice(2, 4)"
-            debug-data
           />
         </section>
 
@@ -322,7 +320,6 @@ const outputBooleanSchema = [
           <FUDataView
             :data="{}"
             :schema="outputBooleanSchema.slice(4, 8)"
-            debug-data
           />
         </section>
 
@@ -338,7 +335,6 @@ const outputBooleanSchema = [
           <FUDataView
             :data="{}"
             :schema="outputBooleanSchema.slice(8, 12)"
-            debug-data
           />
         </section>
 
@@ -354,7 +350,6 @@ const outputBooleanSchema = [
           <FUDataView
             :data="{}"
             :schema="outputBooleanSchema.slice(12, 17)"
-            debug-data
           />
         </section>
 
@@ -370,7 +365,6 @@ const outputBooleanSchema = [
           <FUDataView
             :data="{}"
             :schema="outputBooleanSchema.slice(17, 22)"
-            debug-data
           />
         </section>
 
@@ -386,7 +380,6 @@ const outputBooleanSchema = [
           <FUDataView
             :data="{}"
             :schema="outputBooleanSchema.slice(22, 26)"
-            debug-data
           />
         </section>
 
@@ -402,7 +395,6 @@ const outputBooleanSchema = [
           <FUDataView
             :data="{}"
             :schema="outputBooleanSchema.slice(26, 30)"
-            debug-data
           />
         </section>
       </div>

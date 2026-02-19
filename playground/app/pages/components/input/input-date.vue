@@ -41,7 +41,6 @@ const inputDateSchema = [
           <FUDataEdit
             :data="{}"
             :schema="inputDateSchema"
-            debug-data
           />
         </section>
       </div>

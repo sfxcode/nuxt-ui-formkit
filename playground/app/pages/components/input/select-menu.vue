@@ -283,7 +283,6 @@ const selectMenuSchema = [
           <FUDataEdit
             :data="{}"
             :schema="selectMenuSchema.slice(0, 4)"
-            debug-data
           />
         </section>
 
@@ -299,7 +298,6 @@ const selectMenuSchema = [
           <FUDataEdit
             :data="{}"
             :schema="selectMenuSchema.slice(4, 5)"
-            debug-data
           />
         </section>
 
@@ -315,7 +313,6 @@ const selectMenuSchema = [
           <FUDataEdit
             :data="{}"
             :schema="selectMenuSchema.slice(5, 8)"
-            debug-data
           />
         </section>
 
@@ -331,7 +328,6 @@ const selectMenuSchema = [
           <FUDataEdit
             :data="{}"
             :schema="selectMenuSchema.slice(8, 11)"
-            debug-data
           />
         </section>
 
@@ -347,7 +343,6 @@ const selectMenuSchema = [
           <FUDataEdit
             :data="{}"
             :schema="selectMenuSchema.slice(11, 16)"
-            debug-data
           />
         </section>
 
@@ -363,7 +358,6 @@ const selectMenuSchema = [
           <FUDataEdit
             :data="{}"
             :schema="selectMenuSchema.slice(16, 18)"
-            debug-data
           />
         </section>
 
@@ -379,7 +373,6 @@ const selectMenuSchema = [
           <FUDataEdit
             :data="{}"
             :schema="selectMenuSchema.slice(18, 20)"
-            debug-data
           />
         </section>
 
@@ -395,7 +388,6 @@ const selectMenuSchema = [
           <FUDataEdit
             :data="{}"
             :schema="selectMenuSchema.slice(20, 21)"
-            debug-data
           />
         </section>
 
@@ -411,7 +403,6 @@ const selectMenuSchema = [
           <FUDataEdit
             :data="{}"
             :schema="selectMenuSchema.slice(21, 24)"
-            debug-data
           />
         </section>
       </div>

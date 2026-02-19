@@ -2,7 +2,7 @@
 import type { FormKitFrameworkContext } from '@formkit/core'
 import type { PropType } from 'vue'
 import { computed } from 'vue'
-import { useFormKitOutput } from '../../composables/useFormKitOutput'
+import { useFormKitOutput } from '../../utils/useFormKitOutput'
 
 export interface FormKitOutputTextProps {
   color?: 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'

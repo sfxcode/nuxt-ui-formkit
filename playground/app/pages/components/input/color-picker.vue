@@ -192,7 +192,6 @@ const colorPickerSchema = [
           <FUDataEdit
             :data="{}"
             :schema="colorPickerSchema.slice(0, 2)"
-            debug-data
           />
         </section>
 
@@ -208,7 +207,6 @@ const colorPickerSchema = [
           <FUDataEdit
             :data="{}"
             :schema="colorPickerSchema.slice(2, 6)"
-            debug-data
           />
         </section>
 
@@ -224,7 +222,6 @@ const colorPickerSchema = [
           <FUDataEdit
             :data="{}"
             :schema="colorPickerSchema.slice(6, 10)"
-            debug-data
           />
         </section>
 
@@ -240,7 +237,6 @@ const colorPickerSchema = [
           <FUDataEdit
             :data="{}"
             :schema="colorPickerSchema.slice(10, 15)"
-            debug-data
           />
         </section>
 
@@ -256,7 +252,6 @@ const colorPickerSchema = [
           <FUDataEdit
             :data="{}"
             :schema="colorPickerSchema.slice(15, 19)"
-            debug-data
           />
         </section>
 
@@ -272,7 +267,6 @@ const colorPickerSchema = [
           <FUDataEdit
             :data="{}"
             :schema="colorPickerSchema.slice(19, 20)"
-            debug-data
           />
         </section>
       </div>

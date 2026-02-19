@@ -191,7 +191,6 @@ const textareaSchema = [
           <FUDataEdit
             :data="{}"
             :schema="textareaSchema.slice(0, 2)"
-            debug-data
           />
         </section>
 
@@ -207,7 +206,6 @@ const textareaSchema = [
           <FUDataEdit
             :data="{}"
             :schema="textareaSchema.slice(2, 5)"
-            debug-data
           />
         </section>
 
@@ -223,7 +221,6 @@ const textareaSchema = [
           <FUDataEdit
             :data="{}"
             :schema="textareaSchema.slice(5, 9)"
-            debug-data
           />
         </section>
 
@@ -239,7 +236,6 @@ const textareaSchema = [
           <FUDataEdit
             :data="{}"
             :schema="textareaSchema.slice(9, 12)"
-            debug-data
           />
         </section>
 
@@ -255,7 +251,6 @@ const textareaSchema = [
           <FUDataEdit
             :data="{}"
             :schema="textareaSchema.slice(12, 16)"
-            debug-data
           />
         </section>
 
@@ -271,7 +266,6 @@ const textareaSchema = [
           <FUDataEdit
             :data="{}"
             :schema="textareaSchema.slice(16, 19)"
-            debug-data
           />
         </section>
       </div>

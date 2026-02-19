@@ -192,7 +192,6 @@ const selectSchema = [
           <FUDataEdit
             :data="{}"
             :schema="selectSchema.slice(0, 2)"
-            debug-data
           />
         </section>
 
@@ -208,7 +207,6 @@ const selectSchema = [
           <FUDataEdit
             :data="{}"
             :schema="selectSchema.slice(2, 6)"
-            debug-data
           />
         </section>
 
@@ -224,7 +222,6 @@ const selectSchema = [
           <FUDataEdit
             :data="{}"
             :schema="selectSchema.slice(6, 10)"
-            debug-data
           />
         </section>
 
@@ -240,7 +237,6 @@ const selectSchema = [
           <FUDataEdit
             :data="{}"
             :schema="selectSchema.slice(10, 13)"
-            debug-data
           />
         </section>
 
@@ -256,7 +252,6 @@ const selectSchema = [
           <FUDataEdit
             :data="{}"
             :schema="selectSchema.slice(13, 18)"
-            debug-data
           />
         </section>
 
@@ -272,7 +267,6 @@ const selectSchema = [
           <FUDataEdit
             :data="{}"
             :schema="selectSchema.slice(18, 20)"
-            debug-data
           />
         </section>
       </div>
