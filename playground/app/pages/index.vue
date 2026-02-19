@@ -79,6 +79,7 @@ const data = ref({ email: 'tom@sfxcode.com', eu_citizen: false })
         :data="data"
         :schema="schema"
         debug-data
+        @data-saved="console.log('Data saved:', $event)"
       />
     </UContainer>
   </div>
