@@ -204,6 +204,7 @@ const checkboxSchema = [
           <FUDataEdit
             :data="{}"
             :schema="checkboxSchema.slice(0, 4)"
+            debug-data
           />
         </section>
 

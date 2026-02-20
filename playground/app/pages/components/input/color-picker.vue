@@ -108,6 +108,7 @@ const colorPickerSchema = [
           <FUDataEdit
             :data="{}"
             :schema="colorPickerSchema.slice(0, 2)"
+            debug-data
           />
         </section>
 

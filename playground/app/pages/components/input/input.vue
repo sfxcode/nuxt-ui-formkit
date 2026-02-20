@@ -254,6 +254,7 @@ const inputSchema = [
           <FUDataEdit
             :data="{}"
             :schema="inputSchema.slice(0, 8)"
+            debug-data
           />
         </section>
 

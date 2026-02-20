@@ -1,7 +1,7 @@
 <script setup lang='ts'>
 import type { FormKitFrameworkContext } from '@formkit/core'
 import type { CalendarDate, CalendarDateTime, DateValue, ZonedDateTime } from '@internationalized/date'
-import { shallowRef, type PropType } from 'vue'
+import type { PropType } from 'vue'
 import { useFormKitInput } from '../../utils/useFormKitInput'
 import type { AvatarProps } from '#ui/components/Avatar.vue'
 
@@ -48,9 +48,7 @@ const props = defineProps({
   },
 })
 
-const { handleInput, handleChange, isInvalid, styleClass, color } = useFormKitInput(props.context)
-
-const modelValue = shallowRef(props.context._value as CalendarDate | CalendarDateTime | ZonedDateTime | DateRange | undefined)
+const { handleInput, handleChange, isInvalid, styleClass, color, modelValue } = useFormKitInput(props.context)
 </script>
 
 <template>

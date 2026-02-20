@@ -38,7 +38,7 @@ export const nuxtUIInputDefinition: FormKitTypeDefinition = createInput(FUInput,
 })
 
 export const nuxtUIInputDateDefinition: FormKitTypeDefinition = createInput(FUInputDate, {
-  props: ['placeholder', 'autofocus', 'autofocusDelay', 'size', 'color', 'variant', 'inputClass', 'loading', 'icon', 'trailingIcon', 'leadingIcon', 'trailing', 'leading', 'padded', 'range', 'granularity', 'hourCycle', 'hideTimeZone', 'minValue', 'maxValue', 'isDateUnavailable', 'defaultPlaceholder', 'separatorIcon', 'step', 'readonly'],
+  props: ['defaultValue', 'color', 'variant', 'size', 'highlight', 'fixed', 'autofocus', 'autofocusDelay', 'range', 'separatorIcon', 'icon', 'avatar', 'leading', 'leadingIcon', 'trailing', 'trailingIcon', 'loading', 'loadingIcon', 'placeholder', 'defaultPlaceholder', 'hourCycle', 'step', 'granularity', 'hideTimeZone', 'maxValue', 'minValue', 'isDateUnavailable', 'ui'],
   family: 'NuxtUIInput',
 })
 

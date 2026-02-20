@@ -219,6 +219,7 @@ const checkboxGroupSchema = [
           <FUDataEdit
             :data="{}"
             :schema="checkboxGroupSchema.slice(0, 3)"
+            debug-data
           />
         </section>
 
