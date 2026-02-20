@@ -1,35 +1,44 @@
 <script setup lang='ts'>
 import type { FormKitFrameworkContext } from '@formkit/core'
-import type { DateValue } from '@internationalized/date'
-import type { PropType } from 'vue'
+import type { CalendarDate, CalendarDateTime, DateValue, ZonedDateTime } from '@internationalized/date'
+import { shallowRef, type PropType } from 'vue'
 import { useFormKitInput } from '../../utils/useFormKitInput'
+import type { AvatarProps } from '#ui/components/Avatar.vue'
+
+export interface DateRange {
+  start: CalendarDate | CalendarDateTime | ZonedDateTime
+  end: CalendarDate | CalendarDateTime | ZonedDateTime
+}
 
 export interface FormKitInputDateProps {
+  defaultValue: CalendarDate | CalendarDateTime | ZonedDateTime | DateRange
+  color?: 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'
+  variant?: 'outline' | 'soft' | 'subtle' | 'ghost' | 'none'
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
+  highlight?: boolean
+  fixed?: boolean
   autofocus?: boolean
   autofocusDelay?: number
-  color?: 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'
-  defaultPlaceholder?: DateValue
-  granularity?: 'day' | 'hour' | 'minute' | 'second'
-  hideTimeZone?: boolean
-  hourCycle?: 12 | 24
+  range?: boolean
+  separatorIcon?: string
   icon?: string
-  inputClass?: string
-  isDateUnavailable?: (date: DateValue) => boolean
+  avatar?: AvatarProps
   leading?: boolean
   leadingIcon?: string
-  loading?: boolean
-  maxValue?: DateValue
-  minValue?: DateValue
-  padded?: boolean
-  placeholder?: DateValue
-  range?: boolean
-  readonly?: boolean
-  separatorIcon?: string
-  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
-  step?: Record<string, number>
   trailing?: boolean
   trailingIcon?: string
-  variant?: 'outline' | 'soft' | 'subtle' | 'ghost' | 'none'
+  loading?: boolean
+  loadingIcon?: string
+  placeholder?: CalendarDate | CalendarDateTime | ZonedDateTime
+  defaultPlaceholder?: CalendarDate | CalendarDateTime | ZonedDateTime
+  hourCycle?: 12 | 24
+  step?: Record<string, number>
+  granularity?: 'day' | 'hour' | 'minute' | 'second'
+  hideTimeZone?: boolean
+  maxValue?: CalendarDate | CalendarDateTime | ZonedDateTime
+  minValue?: CalendarDate | CalendarDateTime | ZonedDateTime
+  isDateUnavailable?: (date: DateValue) => boolean
+  ui?: Record<string, unknown>
 }
 
 const props = defineProps({
@@ -39,7 +48,9 @@ const props = defineProps({
   },
 })
 
-const { handleInput, handleChange, isInvalid, styleClass, color, modelValue } = useFormKitInput(props.context)
+const { handleInput, handleChange, isInvalid, styleClass, color } = useFormKitInput(props.context)
+
+const modelValue = shallowRef(props.context._value as CalendarDate | CalendarDateTime | ZonedDateTime | DateRange | undefined)
 </script>
 
 <template>
@@ -47,33 +58,38 @@ const { handleInput, handleChange, isInvalid, styleClass, color, modelValue } = 
     :id="context.id"
     v-model="modelValue"
     v-bind="{ ...context?.attrs }"
+    :default-value="context.defaultValue"
+    :class="styleClass"
+    :disabled="!!context?.disabled"
+    :readonly="context?.attrs.readonly ?? false"
+    :style="context?.attrs.style"
+    :color="color"
+    :highlight="isInvalid || context.highlight"
+    :size="context.size ?? 'md'"
+    :variant="context.variant ?? 'outline'"
+    :placeholder="context.placeholder"
+    :default-placeholder="context.defaultPlaceholder"
     :autofocus="context.autofocus"
     :autofocus-delay="context.autofocusDelay"
-    :class="styleClass"
-    :color="color as any"
-    :default-placeholder="context.defaultPlaceholder"
-    :disabled="!!context?.disabled"
-    :granularity="context.granularity"
-    :hide-time-zone="context.hideTimeZone"
-    :highlight="!!(isInvalid || context.highlight)"
-    :hour-cycle="context.hourCycle"
+    :fixed="context.fixed"
+    :separator-icon="context.separatorIcon"
+    :range="context.range"
     :icon="context.icon"
-    :is-date-unavailable="context.isDateUnavailable"
+    :avatar="context.avatar"
     :leading="context.leading"
     :leading-icon="context.leadingIcon"
-    :loading="context.loading"
-    :max-value="context.maxValue"
-    :min-value="context.minValue"
-    :placeholder="context.placeholder"
-    :range="context.range"
-    :readonly="context.readonly ?? context?.attrs.readonly ?? false"
-    :separator-icon="context.separatorIcon"
-    :size="context.size ?? 'md'"
-    :step="context.step"
-    :style="context?.attrs.style"
     :trailing="context.trailing"
     :trailing-icon="context.trailingIcon"
-    :variant="context.variant ?? 'outline'"
+    :loading="context.loading"
+    :loading-icon="context.loadingIcon"
+    :hour-cycle="context.hourCycle"
+    :step="context.step"
+    :granularity="context.granularity"
+    :hide-time-zone="context.hideTimeZone"
+    :max-value="context.maxValue"
+    :min-value="context.minValue"
+    :is-date-unavailable="context.isDateUnavailable"
+    :ui="context.ui"
     @change="handleChange"
     @update:model-value="handleInput"
   />
