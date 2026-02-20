@@ -25,123 +25,165 @@ const checkboxGroupSchema = [
     $formkit: 'nuxtUICheckboxGroup',
     id: 'checkbox-group-basic',
     name: 'interests1',
-    label: 'Basic Checkbox Group',
-    help: 'Select your interests',
+    legend: 'Basic Checkbox Group',
     options: interestsOptions,
     validation: 'required',
   },
   {
     $formkit: 'nuxtUICheckboxGroup',
     name: 'features1',
-    label: 'With Descriptions',
-    help: 'Options with additional descriptions',
+    legend: 'With Descriptions',
     options: featuresOptions,
   },
   {
     $formkit: 'nuxtUICheckboxGroup',
     name: 'permissions1',
-    label: 'With Disabled Option',
-    help: 'Some options may be disabled',
+    legend: 'With Disabled Option',
     options: permissionsOptions,
   },
   {
     $formkit: 'nuxtUICheckboxGroup',
     name: 'interests2',
-    label: 'Horizontal Orientation',
-    help: 'Checkboxes displayed horizontally',
+    legend: 'Horizontal Orientation',
     options: interestsOptions,
     orientation: 'horizontal',
   },
   {
     $formkit: 'nuxtUICheckboxGroup',
     name: 'interests3',
-    label: 'Vertical Orientation (Default)',
-    help: 'Checkboxes displayed vertically',
+    legend: 'Vertical Orientation (Default)',
     options: interestsOptions,
     orientation: 'vertical',
   },
   {
     $formkit: 'nuxtUICheckboxGroup',
     name: 'interests4',
-    label: 'Extra Small Size',
+    legend: 'Extra Small Size',
     options: interestsOptions.slice(0, 3),
     size: 'xs',
   },
   {
     $formkit: 'nuxtUICheckboxGroup',
     name: 'interests5',
-    label: 'Small Size',
+    legend: 'Small Size',
     options: interestsOptions.slice(0, 3),
     size: 'sm',
   },
   {
     $formkit: 'nuxtUICheckboxGroup',
     name: 'interests6',
-    label: 'Medium Size (Default)',
+    legend: 'Medium Size (Default)',
     options: interestsOptions.slice(0, 3),
     size: 'md',
   },
   {
     $formkit: 'nuxtUICheckboxGroup',
     name: 'interests7',
-    label: 'Large Size',
+    legend: 'Large Size',
     options: interestsOptions.slice(0, 3),
     size: 'lg',
   },
   {
     $formkit: 'nuxtUICheckboxGroup',
     name: 'interests8',
-    label: 'Extra Large Size',
+    legend: 'Extra Large Size',
     options: interestsOptions.slice(0, 3),
     size: 'xl',
   },
   {
     $formkit: 'nuxtUICheckboxGroup',
     name: 'interests9',
-    label: 'Primary Color',
+    legend: 'Primary Color',
     options: interestsOptions,
     color: 'primary',
   },
   {
     $formkit: 'nuxtUICheckboxGroup',
     name: 'interests10',
-    label: 'Success Color',
+    legend: 'Success Color',
     options: interestsOptions,
     color: 'success',
   },
   {
     $formkit: 'nuxtUICheckboxGroup',
     name: 'interests11',
-    label: 'Error Color',
+    legend: 'Error Color',
     options: interestsOptions,
     color: 'error',
   },
   {
     $formkit: 'nuxtUICheckboxGroup',
+    name: 'interests14',
+    legend: 'Table Variant',
+    options: interestsOptions,
+    variant: 'table',
+  },
+  {
+    $formkit: 'nuxtUICheckboxGroup',
+    name: 'interests15',
+    legend: 'List Variant',
+    options: interestsOptions,
+    variant: 'list',
+  },
+  {
+    $formkit: 'nuxtUICheckboxGroup',
+    name: 'interests16',
+    legend: 'Card Variant',
+    options: interestsOptions,
+    variant: 'card',
+  },
+  {
+    $formkit: 'nuxtUICheckboxGroup',
+    name: 'interests17',
+    legend: 'Indicator at Start',
+    options: interestsOptions,
+    indicator: 'start',
+  },
+  {
+    $formkit: 'nuxtUICheckboxGroup',
+    name: 'interests18',
+    legend: 'Indicator at End',
+    options: interestsOptions,
+    indicator: 'end',
+  },
+  {
+    $formkit: 'nuxtUICheckboxGroup',
+    name: 'interests19',
+    legend: 'Custom Check Icon',
+    options: interestsOptions.slice(0, 3),
+    icon: 'i-heroicons-star',
+  },
+  {
+    $formkit: 'nuxtUICheckboxGroup',
+    name: 'interests20',
+    legend: 'Keyboard Loop Navigation',
+    options: interestsOptions,
+    loop: true,
+  },
+  {
+    $formkit: 'nuxtUICheckboxGroup',
     name: 'custom1',
-    label: 'Custom Value Attribute',
-    help: 'Using custom value attribute',
+    legend: 'Custom Value & Label Keys',
     options: [
-      { id: 1, name: 'Option One' },
-      { id: 2, name: 'Option Two' },
-      { id: 3, name: 'Option Three' },
+      { id: 1, name: 'Option One', desc: 'First option' },
+      { id: 2, name: 'Option Two', desc: 'Second option' },
+      { id: 3, name: 'Option Three', desc: 'Third option' },
     ],
-    valueAttribute: 'id',
-    optionAttribute: 'name',
+    valueKey: 'id',
+    labelKey: 'name',
+    descriptionKey: 'desc',
   },
   {
     $formkit: 'nuxtUICheckboxGroup',
     name: 'interests12',
-    label: 'With Default Values',
-    help: 'Pre-selected options',
+    legend: 'With Default Values',
     options: interestsOptions,
     value: ['coding', 'design'],
   },
   {
     $formkit: 'nuxtUICheckboxGroup',
     name: 'interests13',
-    label: 'Disabled',
-    help: 'Disabled checkbox group',
+    legend: 'Disabled',
     options: interestsOptions,
     disabled: true,
     value: ['coding'],
@@ -229,14 +271,59 @@ const checkboxGroupSchema = [
 
         <section>
           <h2 class="text-2xl font-semibold mb-4">
-            Custom Attributes
+            Variants
           </h2>
           <p class="text-muted-foreground mb-6">
-            Use custom value and option attributes for flexible data structures.
+            Different visual variants including table, list, and card styles.
           </p>
           <FUDataEdit
             :data="{}"
-            :schema="checkboxGroupSchema.slice(13, 14)"
+            :schema="checkboxGroupSchema.slice(13, 16)"
+          />
+        </section>
+
+        <USeparator />
+
+        <section>
+          <h2 class="text-2xl font-semibold mb-4">
+            Indicator Position
+          </h2>
+          <p class="text-muted-foreground mb-6">
+            Control the position of checkbox indicators (start or end).
+          </p>
+          <FUDataEdit
+            :data="{}"
+            :schema="checkboxGroupSchema.slice(16, 18)"
+          />
+        </section>
+
+        <USeparator />
+
+        <section>
+          <h2 class="text-2xl font-semibold mb-4">
+            Custom Icons & Navigation
+          </h2>
+          <p class="text-muted-foreground mb-6">
+            Customize checkbox icons and enable keyboard loop navigation.
+          </p>
+          <FUDataEdit
+            :data="{}"
+            :schema="checkboxGroupSchema.slice(18, 20)"
+          />
+        </section>
+
+        <USeparator />
+
+        <section>
+          <h2 class="text-2xl font-semibold mb-4">
+            Custom Keys
+          </h2>
+          <p class="text-muted-foreground mb-6">
+            Use custom value, label, and description keys for flexible data structures.
+          </p>
+          <FUDataEdit
+            :data="{}"
+            :schema="checkboxGroupSchema.slice(20, 21)"
           />
         </section>
 
@@ -251,7 +338,7 @@ const checkboxGroupSchema = [
           </p>
           <FUDataEdit
             :data="{}"
-            :schema="checkboxGroupSchema.slice(14, 16)"
+            :schema="checkboxGroupSchema.slice(21, 23)"
           />
         </section>
       </div>

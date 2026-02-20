@@ -7,7 +7,6 @@ const inputSchema = [
     name: 'input1',
     placeholder: 'Basic Input',
     label: 'Basic Input',
-    help: 'This is a required field.',
     validation: 'required',
   },
   {
@@ -16,7 +15,7 @@ const inputSchema = [
     inputType: 'email',
     placeholder: 'your.email@example.com',
     label: 'Email Address',
-    help: 'Enter a valid email address',
+    autocomplete: 'email',
     validation: 'required|email',
   },
   {
@@ -25,7 +24,8 @@ const inputSchema = [
     inputType: 'password',
     placeholder: 'Enter password',
     label: 'Password',
-    help: 'Password must be at least 8 characters',
+    autocomplete: 'current-password',
+    minLength: 8,
     validation: 'required|length:8',
   },
   {
@@ -33,8 +33,10 @@ const inputSchema = [
     name: 'input4',
     inputType: 'number',
     placeholder: '0',
-    label: 'Number Input',
-    help: 'Enter a number',
+    label: 'Number Input (Min: 0, Max: 100)',
+    min: 0,
+    max: 100,
+    step: 5,
   },
   {
     $formkit: 'nuxtUIInput',
@@ -42,7 +44,8 @@ const inputSchema = [
     inputType: 'tel',
     placeholder: '+1 (555) 123-4567',
     label: 'Phone Number',
-    help: 'Enter your phone number',
+    autocomplete: 'tel',
+    pattern: '[0-9+\\-\\s()]+',
   },
   {
     $formkit: 'nuxtUIInput',
@@ -50,7 +53,6 @@ const inputSchema = [
     inputType: 'url',
     placeholder: 'https://example.com',
     label: 'Website URL',
-    help: 'Enter a valid URL',
     validation: 'url',
   },
   {
@@ -64,91 +66,150 @@ const inputSchema = [
   {
     $formkit: 'nuxtUIInput',
     name: 'input8',
-    inputType: 'date',
-    label: 'Date',
-    help: 'Select a date',
+    inputType: 'text',
+    placeholder: 'Enter text',
+    label: 'Text with Max Length',
+    maxLength: 50,
   },
   {
     $formkit: 'nuxtUIInput',
     name: 'input9',
-    inputType: 'time',
-    label: 'Time',
-    help: 'Select a time',
+    placeholder: 'With Autofocus',
+    label: 'Autofocus Input',
+    autofocus: true,
   },
   {
     $formkit: 'nuxtUIInput',
     name: 'input10',
-    placeholder: 'With Leading Icon',
-    label: 'With Leading Icon',
-    icon: 'i-heroicons-user',
+    placeholder: 'With Autofocus Delay',
+    label: 'Autofocus with 1000ms Delay',
+    autofocus: true,
+    autofocusDelay: 1000,
   },
   {
     $formkit: 'nuxtUIInput',
     name: 'input11',
-    placeholder: 'With Trailing Icon',
-    label: 'With Trailing Icon',
-    trailingIcon: 'i-heroicons-check-circle',
+    placeholder: 'With Leading Icon',
+    label: 'Leading Icon',
+    leadingIcon: 'i-heroicons-user',
   },
   {
     $formkit: 'nuxtUIInput',
     name: 'input12',
-    placeholder: 'Loading State',
-    label: 'Loading State',
-    loading: true,
+    placeholder: 'With Trailing Icon',
+    label: 'Trailing Icon',
+    trailingIcon: 'i-heroicons-check-circle',
   },
   {
     $formkit: 'nuxtUIInput',
     name: 'input13',
-    placeholder: 'Small Size',
-    label: 'Small Size',
-    size: 'sm',
+    placeholder: 'With Both Icons',
+    label: 'Leading and Trailing Icons',
+    leadingIcon: 'i-heroicons-envelope',
+    trailingIcon: 'i-heroicons-at-symbol',
   },
   {
     $formkit: 'nuxtUIInput',
     name: 'input14',
-    placeholder: 'Medium Size (Default)',
-    label: 'Medium Size',
-    size: 'md',
+    placeholder: 'With Avatar',
+    label: 'With Avatar',
+    avatar: { src: 'https://i.pravatar.cc/150?img=1', alt: 'User Avatar' },
   },
   {
     $formkit: 'nuxtUIInput',
     name: 'input15',
-    placeholder: 'Large Size',
-    label: 'Large Size',
-    size: 'lg',
+    placeholder: 'Loading State',
+    label: 'Loading',
+    loading: true,
   },
   {
     $formkit: 'nuxtUIInput',
     name: 'input16',
-    placeholder: 'Extra Large Size',
-    label: 'Extra Large Size',
-    size: 'xl',
+    placeholder: 'Custom Loading Icon',
+    label: 'Custom Loading Icon',
+    loading: true,
+    loadingIcon: 'i-heroicons-arrow-path',
   },
   {
     $formkit: 'nuxtUIInput',
     name: 'input17',
-    placeholder: 'Primary Color',
-    label: 'Primary Color',
-    color: 'primary',
-    size: 'lg',
+    placeholder: 'Highlighted Input',
+    label: 'Highlight',
+    highlight: true,
   },
   {
     $formkit: 'nuxtUIInput',
     name: 'input18',
+    placeholder: 'Extra Small Size',
+    label: 'Size XS',
+    size: 'xs',
+  },
+  {
+    $formkit: 'nuxtUIInput',
+    name: 'input19',
+    placeholder: 'Small Size',
+    label: 'Size SM',
+    size: 'sm',
+  },
+  {
+    $formkit: 'nuxtUIInput',
+    name: 'input20',
+    placeholder: 'Medium Size (Default)',
+    label: 'Size MD',
+    size: 'md',
+  },
+  {
+    $formkit: 'nuxtUIInput',
+    name: 'input21',
+    placeholder: 'Large Size',
+    label: 'Size LG',
+    size: 'lg',
+  },
+  {
+    $formkit: 'nuxtUIInput',
+    name: 'input22',
+    placeholder: 'Extra Large Size',
+    label: 'Size XL',
+    size: 'xl',
+  },
+  {
+    $formkit: 'nuxtUIInput',
+    name: 'input23',
+    placeholder: 'Primary Color',
+    label: 'Primary Color',
+    color: 'primary',
+  },
+  {
+    $formkit: 'nuxtUIInput',
+    name: 'input24',
+    placeholder: 'Success Color',
+    label: 'Success Color',
+    color: 'success',
+  },
+  {
+    $formkit: 'nuxtUIInput',
+    name: 'input25',
+    placeholder: 'Error Color',
+    label: 'Error Color',
+    color: 'error',
+  },
+  {
+    $formkit: 'nuxtUIInput',
+    name: 'input26',
     placeholder: 'Variant None',
     label: 'Variant None',
     variant: 'none',
   },
   {
     $formkit: 'nuxtUIInput',
-    name: 'input18',
+    name: 'input27',
     placeholder: 'Variant Ghost',
     label: 'Variant Ghost',
     variant: 'ghost',
   },
   {
     $formkit: 'nuxtUIInput',
-    name: 'input20',
+    name: 'input28',
     placeholder: 'Read Only',
     label: 'Read Only',
     readonly: true,
@@ -156,7 +217,7 @@ const inputSchema = [
   },
   {
     $formkit: 'nuxtUIInput',
-    name: 'input21',
+    name: 'input29',
     placeholder: 'Disabled',
     label: 'Disabled',
     disabled: true,
@@ -176,7 +237,7 @@ const inputSchema = [
           The Input component integrates FormKit with Nuxt UI's UInput component, providing a seamless form input experience.
         </p>
         <p class="text-muted-foreground">
-          Explore various input inputTypes, validation patterns, styling options, and states below.
+          Explore various input types, autocomplete, validation attributes, icons, avatars, highlight, loading states, sizing options, and more.
         </p>
       </div>
 
@@ -185,14 +246,14 @@ const inputSchema = [
       <div class="space-y-12">
         <section>
           <h2 class="text-2xl font-semibold mb-4">
-            Input inputTypes
+            Input Types & Validation
           </h2>
           <p class="text-muted-foreground mb-6">
-            Support for various HTML5 input inputTypes including text, email, password, number, tel, url, search, date, and time.
+            Support for various HTML5 input types with autocomplete, min/max values, pattern validation, and length constraints.
           </p>
           <FUDataEdit
             :data="{}"
-            :schema="inputSchema.slice(0, 9)"
+            :schema="inputSchema.slice(0, 8)"
           />
         </section>
 
@@ -200,14 +261,29 @@ const inputSchema = [
 
         <section>
           <h2 class="text-2xl font-semibold mb-4">
-            Icons
+            Autofocus
           </h2>
           <p class="text-muted-foreground mb-6">
-            Add leading or trailing icons to enhance the visual appearance and provide context.
+            Control focus behavior with autofocus and autofocus delay options.
           </p>
           <FUDataEdit
             :data="{}"
-            :schema="inputSchema.slice(9, 12)"
+            :schema="inputSchema.slice(8, 10)"
+          />
+        </section>
+
+        <USeparator />
+
+        <section>
+          <h2 class="text-2xl font-semibold mb-4">
+            Icons & Slots
+          </h2>
+          <p class="text-muted-foreground mb-6">
+            Add leading or trailing icons, avatars, and loading indicators to enhance visual appearance.
+          </p>
+          <FUDataEdit
+            :data="{}"
+            :schema="inputSchema.slice(10, 17)"
           />
         </section>
 
@@ -222,7 +298,7 @@ const inputSchema = [
           </p>
           <FUDataEdit
             :data="{}"
-            :schema="inputSchema.slice(12, 16)"
+            :schema="inputSchema.slice(17, 22)"
           />
         </section>
 
@@ -230,14 +306,14 @@ const inputSchema = [
 
         <section>
           <h2 class="text-2xl font-semibold mb-4">
-            Styling Options
+            Colors & Variants
           </h2>
           <p class="text-muted-foreground mb-6">
-            Customize colors, variants, and padding to match your design.
+            Customize colors and variants to match your design.
           </p>
           <FUDataEdit
             :data="{}"
-            :schema="inputSchema.slice(16, 19)"
+            :schema="inputSchema.slice(22, 27)"
           />
         </section>
 
@@ -252,7 +328,7 @@ const inputSchema = [
           </p>
           <FUDataEdit
             :data="{}"
-            :schema="inputSchema.slice(19, 21)"
+            :schema="inputSchema.slice(27, 29)"
           />
         </section>
       </div>
