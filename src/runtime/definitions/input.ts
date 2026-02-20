@@ -43,7 +43,7 @@ export const nuxtUIInputDateDefinition: FormKitTypeDefinition = createInput(FUIn
 })
 
 export const nuxtUIInputMenuDefinition: FormKitTypeDefinition = createInput(FUInputMenu, {
-  props: ['options', 'placeholder', 'multiple', 'searchable', 'searchablePlaceholder', 'loading', 'size', 'color', 'variant', 'icon', 'trailingIcon', 'leadingIcon', 'trailing', 'leading', 'padded', 'inputClass', 'valueAttribute', 'optionAttribute'],
+  props: ['options', 'inputType', 'placeholder', 'color', 'variant', 'size', 'autofocus', 'autofocusDelay', 'trailingIcon', 'selectedIcon', 'deleteIcon', 'clear', 'clearIcon', 'arrow', 'portal', 'virtualize', 'valueKey', 'labelKey', 'descriptionKey', 'multiple', 'highlight', 'fixed', 'createItem', 'filterFields', 'ignoreFilter', 'defaultOpen', 'resetSearchTermOnBlur', 'resetSearchTermOnSelect', 'resetModelValueOnClear', 'highlightOnHover', 'openOnClick', 'openOnFocus', 'icon', 'leading', 'leadingIcon', 'trailing', 'loading', 'loadingIcon', 'list', 'autocomplete', 'searchTerm', 'ui'],
   family: 'NuxtUIInput',
 })
 

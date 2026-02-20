@@ -16,24 +16,48 @@ export interface InputMenuItem {
 }
 
 export interface FormKitInputMenuProps {
+  options?: string[] | InputMenuItem[]
+  inputType?: 'number' | 'search' | 'image' | 'text' | 'button' | 'time' | 'color' | 'checkbox' | 'date' | 'datetime-local' | 'email' | 'file' | 'hidden' | 'month' | 'password' | 'radio' | 'range' | 'reset' | 'submit' | 'tel' | 'url' | 'week' | string & {}
+  placeholder?: string
   color?: 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'
+  variant?: 'outline' | 'soft' | 'subtle' | 'ghost' | 'none'
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
+  autofocus?: boolean
+  autofocusDelay?: number
+  trailingIcon?: string
+  selectedIcon?: string
+  deleteIcon?: string
+  clear?: boolean
+  clearIcon?: string
+  arrow?: boolean
+  portal?: boolean
+  virtualize?: boolean
+  valueKey?: string
+  labelKey?: string
+  descriptionKey?: string
+  multiple?: boolean
+  highlight?: boolean
+  fixed?: boolean
+  createItem?: boolean
+  filterFields?: string[]
+  ignoreFilter?: false
+  defaultOpen?: false
+  resetSearchTermOnBlur?: boolean
+  resetSearchTermOnSelect?: boolean
+  resetModelValueOnClear?: boolean
+  highlightOnHover?: boolean
+  openOnClick?: boolean
+  openOnFocus?: boolean
   icon?: string
-  inputClass?: string
   leading?: boolean
   leadingIcon?: string
-  loading?: boolean
-  multiple?: boolean
-  options?: InputMenuItem[]
-  optionAttribute?: string
-  padded?: boolean
-  placeholder?: string
-  searchable?: boolean
-  searchablePlaceholder?: string
-  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
   trailing?: boolean
-  trailingIcon?: string
-  valueAttribute?: string
-  variant?: 'outline' | 'soft' | 'subtle' | 'ghost' | 'none'
+  loading?: boolean
+  loadingIcon?: string
+  list?: string
+  autocomplete?: string & {} | 'on' | 'off'
+  searchTerm?: string
+  ui?: Record<string, unknown>
 }
 
 const props = defineProps({
@@ -52,28 +76,50 @@ const { handleInput, handleChange, isInvalid, styleClass, color, modelValue, ite
     v-model="modelValue"
     v-bind="{ ...context?.attrs }"
     :class="styleClass"
-    :color="color as any"
     :disabled="!!context?.disabled"
+    :readonly="context?.attrs.readonly ?? false"
+    :style="context?.attrs.style"
+    :color="color"
     :highlight="!!(isInvalid || context.highlight)"
-    :icon="context.icon"
-    :input-class="context.inputClass"
+    :size="context.size ?? 'md'"
+    :variant="context.variant ?? 'outline'"
+    :type="context?.inputType || 'text'"
+    :items="items"
+    :placeholder="context.placeholder"
+    :autofocus="context.autofocus"
+    :autofocus-delay="context.autofocusDelay"
+    :trailing-icon="context.trailingIcon"
+    :selected-icon="context.selectedIcon"
+    :delete-icon="context.deleteIcon"
+    :clear="context.clear"
+    :clear-icon="context.clearIcon"
+    :arrow="context.arrow"
+    :portal="context.portal"
+    :virtualize="context.virtualize"
+    :value-key="context.valueKey"
+    :label-key="context.labelKey"
+    :description-key="context.descriptionKey"
+    :multiple="context.multiple"
+    :fixed="context.fixed"
+    :create-item="context.createItem"
+    :filter-fields="context.filterFields"
+    :ignore-filter="context.ignoreFilter"
+    :default-open="context.defaultOpen"
+    :reset-search-term-on-blur="context.resetSearchTermOnBlur"
+    :reset-search-term-on-select="context.resetSearchTermOnSelect"
+    :reset-model-value-on-clear="context.resetModelValueOnClear"
+    :highlight-on-hover="context.highlightOnHover"
+    :open-on-click="context.openOnClick"
+    :open-on-focus="context.openOnFocus"
     :leading="context.leading"
     :leading-icon="context.leadingIcon"
-    :loading="context.loading"
-    :multiple="context.multiple"
-    :option-attribute="context.optionAttribute ?? 'label'"
-    :items="items"
-    :padded="context.padded"
-    :placeholder="context.placeholder"
-    :readonly="context?.attrs.readonly ?? false"
-    :searchable="context.searchable"
-    :searchable-placeholder="context.searchablePlaceholder"
-    :size="context.size ?? 'md'"
-    :style="context?.attrs.style"
     :trailing="context.trailing"
-    :trailing-icon="context.trailingIcon"
-    :value-attribute="context.valueAttribute ?? 'label'"
-    :variant="context.variant ?? 'outline'"
+    :loading="context.loading"
+    :loading-icon="context.loadingIcon"
+    :list="context.list"
+    :autocomplete="context.autocomplete"
+    :search-term="context.searchTerm"
+    :ui="context.ui"
     @change="handleChange"
     @update:model-value="handleInput"
   />

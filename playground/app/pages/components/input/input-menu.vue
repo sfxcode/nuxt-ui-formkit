@@ -34,7 +34,6 @@ const inputMenuSchema = [
     id: 'menu-basic',
     name: 'menu1',
     label: 'Basic Input Menu',
-    help: 'Select an option from the menu',
     options: countryOptions,
     validation: 'required',
   },
@@ -42,7 +41,6 @@ const inputMenuSchema = [
     $formkit: 'nuxtUIInputMenu',
     name: 'menu2',
     label: 'With Icons',
-    help: 'Menu items with icons',
     options: notificationOptions,
     placeholder: 'Select a folder',
   },
@@ -50,7 +48,6 @@ const inputMenuSchema = [
     $formkit: 'nuxtUIInputMenu',
     name: 'menu3',
     label: 'With Avatars',
-    help: 'Menu items with user avatars',
     options: userOptions,
     placeholder: 'Select a user',
   },
@@ -58,7 +55,6 @@ const inputMenuSchema = [
     $formkit: 'nuxtUIInputMenu',
     name: 'menu4',
     label: 'With Disabled Options',
-    help: 'Some options are disabled',
     options: statusOptions,
     placeholder: 'Select status',
   },
@@ -66,7 +62,6 @@ const inputMenuSchema = [
     $formkit: 'nuxtUIInputMenu',
     name: 'menu5',
     label: 'Multiple Selection',
-    help: 'Select multiple items',
     options: countryOptions,
     multiple: true,
     placeholder: 'Select countries',
@@ -74,16 +69,6 @@ const inputMenuSchema = [
   {
     $formkit: 'nuxtUIInputMenu',
     name: 'menu6',
-    label: 'Searchable Menu',
-    help: 'Search through options',
-    options: countryOptions,
-    searchable: true,
-    searchablePlaceholder: 'Search countries...',
-    placeholder: 'Select country',
-  },
-  {
-    $formkit: 'nuxtUIInputMenu',
-    name: 'menu7',
     label: 'With Leading Icon',
     options: countryOptions,
     leadingIcon: 'i-lucide-search',
@@ -91,7 +76,7 @@ const inputMenuSchema = [
   },
   {
     $formkit: 'nuxtUIInputMenu',
-    name: 'menu8',
+    name: 'menu7',
     label: 'With Trailing Icon',
     options: countryOptions,
     trailingIcon: 'i-lucide-chevron-down',
@@ -99,7 +84,7 @@ const inputMenuSchema = [
   },
   {
     $formkit: 'nuxtUIInputMenu',
-    name: 'menu9',
+    name: 'menu8',
     label: 'Loading State',
     options: [],
     loading: true,
@@ -107,7 +92,7 @@ const inputMenuSchema = [
   },
   {
     $formkit: 'nuxtUIInputMenu',
-    name: 'menu10',
+    name: 'menu9',
     label: 'Extra Small Size',
     options: countryOptions.slice(0, 3),
     size: 'xs',
@@ -115,7 +100,7 @@ const inputMenuSchema = [
   },
   {
     $formkit: 'nuxtUIInputMenu',
-    name: 'menu11',
+    name: 'menu10',
     label: 'Small Size',
     options: countryOptions.slice(0, 3),
     size: 'sm',
@@ -123,7 +108,7 @@ const inputMenuSchema = [
   },
   {
     $formkit: 'nuxtUIInputMenu',
-    name: 'menu12',
+    name: 'menu11',
     label: 'Medium Size (Default)',
     options: countryOptions.slice(0, 3),
     size: 'md',
@@ -131,7 +116,7 @@ const inputMenuSchema = [
   },
   {
     $formkit: 'nuxtUIInputMenu',
-    name: 'menu13',
+    name: 'menu12',
     label: 'Large Size',
     options: countryOptions.slice(0, 3),
     size: 'lg',
@@ -139,7 +124,7 @@ const inputMenuSchema = [
   },
   {
     $formkit: 'nuxtUIInputMenu',
-    name: 'menu14',
+    name: 'menu13',
     label: 'Extra Large Size',
     options: countryOptions.slice(0, 3),
     size: 'xl',
@@ -147,7 +132,7 @@ const inputMenuSchema = [
   },
   {
     $formkit: 'nuxtUIInputMenu',
-    name: 'menu15',
+    name: 'menu14',
     label: 'Primary Color',
     options: countryOptions,
     color: 'primary',
@@ -155,7 +140,7 @@ const inputMenuSchema = [
   },
   {
     $formkit: 'nuxtUIInputMenu',
-    name: 'menu16',
+    name: 'menu15',
     label: 'Success Color',
     options: countryOptions,
     color: 'success',
@@ -163,7 +148,7 @@ const inputMenuSchema = [
   },
   {
     $formkit: 'nuxtUIInputMenu',
-    name: 'menu17',
+    name: 'menu16',
     label: 'Outline Variant',
     options: countryOptions,
     variant: 'outline',
@@ -171,7 +156,7 @@ const inputMenuSchema = [
   },
   {
     $formkit: 'nuxtUIInputMenu',
-    name: 'menu18',
+    name: 'menu17',
     label: 'Soft Variant',
     options: countryOptions,
     variant: 'soft',
@@ -179,35 +164,19 @@ const inputMenuSchema = [
   },
   {
     $formkit: 'nuxtUIInputMenu',
-    name: 'menu19',
-    label: 'With Padding',
-    options: countryOptions,
-    padded: true,
-    placeholder: 'Select...',
-  },
-  {
-    $formkit: 'nuxtUIInputMenu',
-    name: 'menu20',
+    name: 'menu18',
     label: 'With Default Value',
     options: countryOptions,
-    value: 'Canada',
+    value: { label: 'Canada', icon: 'i-lucide-flag' },
     placeholder: 'Select...',
   },
   {
     $formkit: 'nuxtUIInputMenu',
-    name: 'menu21',
-    label: 'Read Only',
-    options: countryOptions,
-    readonly: true,
-    value: 'United States',
-  },
-  {
-    $formkit: 'nuxtUIInputMenu',
-    name: 'menu22',
+    name: 'menu19',
     label: 'Disabled',
     options: countryOptions,
     disabled: true,
-    value: 'France',
+    value: { label: 'France', icon: 'i-lucide-flag' },
   },
 ]
 </script>
@@ -235,26 +204,11 @@ const inputMenuSchema = [
             Basic Usage
           </h2>
           <p class="text-muted-foreground mb-6">
-            Basic input menu with icons, avatars, and disabled options.
+            Basic input menu with icons, avatars, disabled options, and multiple selection.
           </p>
           <FUDataEdit
             :data="{}"
-            :schema="inputMenuSchema.slice(0, 4)"
-          />
-        </section>
-
-        <USeparator />
-
-        <section>
-          <h2 class="text-2xl font-semibold mb-4">
-            Multiple & Searchable
-          </h2>
-          <p class="text-muted-foreground mb-6">
-            Enable multiple selection and search functionality.
-          </p>
-          <FUDataEdit
-            :data="{}"
-            :schema="inputMenuSchema.slice(4, 6)"
+            :schema="inputMenuSchema.slice(0, 5)"
           />
         </section>
 
@@ -269,7 +223,7 @@ const inputMenuSchema = [
           </p>
           <FUDataEdit
             :data="{}"
-            :schema="inputMenuSchema.slice(6, 9)"
+            :schema="inputMenuSchema.slice(5, 8)"
           />
         </section>
 
@@ -284,7 +238,7 @@ const inputMenuSchema = [
           </p>
           <FUDataEdit
             :data="{}"
-            :schema="inputMenuSchema.slice(9, 14)"
+            :schema="inputMenuSchema.slice(8, 13)"
           />
         </section>
 
@@ -299,7 +253,7 @@ const inputMenuSchema = [
           </p>
           <FUDataEdit
             :data="{}"
-            :schema="inputMenuSchema.slice(14, 16)"
+            :schema="inputMenuSchema.slice(13, 15)"
           />
         </section>
 
@@ -314,22 +268,7 @@ const inputMenuSchema = [
           </p>
           <FUDataEdit
             :data="{}"
-            :schema="inputMenuSchema.slice(16, 18)"
-          />
-        </section>
-
-        <USeparator />
-
-        <section>
-          <h2 class="text-2xl font-semibold mb-4">
-            Styling Options
-          </h2>
-          <p class="text-muted-foreground mb-6">
-            Customize padding to match your design.
-          </p>
-          <FUDataEdit
-            :data="{}"
-            :schema="inputMenuSchema.slice(18, 19)"
+            :schema="inputMenuSchema.slice(15, 17)"
           />
         </section>
 
@@ -340,11 +279,11 @@ const inputMenuSchema = [
             States
           </h2>
           <p class="text-muted-foreground mb-6">
-            Different states including default value, readonly, and disabled.
+            Different states including default value and disabled.
           </p>
           <FUDataEdit
             :data="{}"
-            :schema="inputMenuSchema.slice(19, 22)"
+            :schema="inputMenuSchema.slice(17, 19)"
           />
         </section>
       </div>
