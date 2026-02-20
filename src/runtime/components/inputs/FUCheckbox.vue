@@ -13,7 +13,6 @@ export interface FormKitCheckboxProps {
   indicator?: 'start' | 'end' | 'hidden'
   icon?: string
   indeterminateIcon?: string
-  required?: boolean
   autofocus?: false | true | 'true' | 'false'
   ui?: Record<string, unknown>
 }
@@ -25,7 +24,7 @@ const props = defineProps({
   },
 })
 
-const { handleInput, handleChange, styleClass, modelValue } = useFormKitInput(props.context)
+const { handleInput, handleChange, styleClass, modelValue, color } = useFormKitInput(props.context)
 </script>
 
 <template>
@@ -34,17 +33,16 @@ const { handleInput, handleChange, styleClass, modelValue } = useFormKitInput(pr
     v-model="modelValue"
     v-bind="{ ...context?.attrs }"
     :class="styleClass"
-    :style="context?.attrs.style"
     :disabled="!!context?.disabled"
+    :style="context?.attrs.style"
+    :color="color"
     :size="context.size ?? 'md'"
-    :color="context.color ?? 'primary'"
     :variant="context.variant"
-    :description="context.description"
     :label="context.label"
+    :description="context.description"
     :indicator="context.indicator"
     :icon="context.icon"
     :indeterminate-icon="context.indeterminateIcon"
-    :required="context.required"
     :autofocus="context.autofocus"
     :ui="context.ui"
     @change="handleChange"

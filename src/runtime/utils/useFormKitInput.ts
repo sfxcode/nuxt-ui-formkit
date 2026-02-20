@@ -6,16 +6,16 @@ export function useFormKitInput(context: FormKitFrameworkContext) {
     return context?.state?.validationVisible && !context?.state?.valid
   })
 
-  const styleClass = computed(() => {
+  const styleClass = computed<string>(() => {
     return (isInvalid.value)
       ? `${context?.attrs?.class || ''} nuxt-ui-formkit--invalid`
-      : context?.attrs?.class || ''
+      : String(context?.attrs?.class || '')
   })
 
-  const color = computed(() => {
+  const color = computed<'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'>(() => {
     return (isInvalid.value)
       ? 'error'
-      : context?.color || 'primary'
+      : context?.color as 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral' || 'primary'
   })
 
   const formKitCreateInputSlots = new Set(['label', 'help', 'messages', 'message', 'input'])

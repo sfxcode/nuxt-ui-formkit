@@ -12,17 +12,19 @@ export interface CheckboxOption {
 }
 
 export interface FormKitCheckboxGroupProps {
-  color?: 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'
-  options?: CheckboxOption[]
-  valueAttribute?: string
-  optionAttribute?: string
-  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
-  orientation?: 'horizontal' | 'vertical'
-  inputClass?: string
-  indeterminate?: boolean
+  options?: string[] | CheckboxOption[]
   legend?: string
-  help?: string
+  valueKey?: string
+  labelKey?: string
+  descriptionKey?: string
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
   variant?: 'table' | 'list' | 'card'
+  orientation?: 'horizontal' | 'vertical'
+  loop?: boolean
+  name?: string
+  color?: 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'
+  indicator?: 'start' | 'end' | 'hidden'
+  icon?: string
   ui?: Record<string, unknown>
 }
 
@@ -42,21 +44,19 @@ const { handleInput, handleChange, isInvalid, styleClass, color, modelValue, ite
     v-model="modelValue"
     v-bind="{ ...context?.attrs }"
     :class="styleClass"
-    :color="color as any"
     :disabled="!!context?.disabled"
-    :help="context.help"
-    :highlight="!!(isInvalid || context.highlight)"
-    :indeterminate="context.indeterminate"
-    :input-class="context.inputClass"
+    :style="context?.attrs.style"
+    :color="color"
+    :size="context.size ?? 'md'"
+    :variant="context.variant ?? 'list'"
+    :orientation="context.orientation ?? 'vertical'"
     :items="items"
     :legend="context.legend"
-    :option-attribute="context.optionAttribute ?? 'label'"
-    :orientation="context.orientation ?? 'vertical'"
-    :size="context.size ?? 'md'"
-    :style="context?.attrs.style"
-    :ui="context.ui"
-    :value-attribute="context.valueAttribute ?? 'value'"
-    :variant="context.variant"
+    :value-key="context.valueKey"
+    :label-key="context.labelKey"
+    :description-key="context.descriptionKey"
+    :loop="context.loop ?? false"
+    :name="context.name"
     @change="handleChange"
     @update:model-value="handleInput"
   />

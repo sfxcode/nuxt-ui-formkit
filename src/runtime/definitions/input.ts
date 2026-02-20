@@ -18,22 +18,22 @@ import FUSwitch from '../components/inputs/FUSwitch.vue'
 import FUTextarea from '../components/inputs/FUTextarea.vue'
 
 export const nuxtUICheckboxDefinition: FormKitTypeDefinition = createInput(FUCheckbox, {
-  props: ['label', 'description', 'required', 'help', 'color', 'size', 'inputClass', 'ui'],
+  props: ['label', 'description', 'color', 'variant', 'size', 'indicator', 'icon', 'indeterminateIcon', 'autofocus', 'ui'],
   family: 'NuxtUIInput',
 })
 
 export const nuxtUICheckboxGroupDefinition: FormKitTypeDefinition = createInput(FUCheckboxGroup, {
-  props: ['options', 'size', 'color', 'inputClass', 'valueAttribute', 'optionAttribute', 'orientation'],
+  props: ['options', 'legend', 'valueKey', 'labelKey', 'descriptionKey', 'size', 'variant', 'orientation', 'loop', 'color', 'indicator', 'icon', 'ui', 'items'],
   family: 'NuxtUIInput',
 })
 
 export const nuxtUIColorPickerDefinition: FormKitTypeDefinition = createInput(FUColorPicker, {
-  props: ['size', 'inputClass', 'variant', 'format', 'modes', 'showAlpha', 'showInput', 'swatches'],
+  props: ['size', 'inputClass', 'format', 'throttle', 'ui'],
   family: 'NuxtUIInput',
 })
 
 export const nuxtUIInputDefinition: FormKitTypeDefinition = createInput(FUInput, {
-  props: ['inputType', 'placeholder', 'autofocus', 'autofocusDelay', 'size', 'color', 'variant', 'inputClass', 'loading', 'icon', 'trailingIcon', 'leadingIcon', 'trailing', 'leading'],
+  props: ['inputType', 'size', 'autocomplete', 'autofocus', 'autofocusDelay', 'highlight', 'fixed', 'color', 'icon', 'avatar', 'leading', 'leadingIcon', 'trailing', 'trailingIcon', 'loading', 'loadingIcon', 'placeholder', 'list', 'max', 'maxLength', 'min', 'minLength', 'pattern', 'step', 'variant'],
   family: 'NuxtUIInput',
 })
 

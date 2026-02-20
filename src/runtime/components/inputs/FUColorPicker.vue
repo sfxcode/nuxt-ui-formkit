@@ -6,12 +6,9 @@ import { useFormKitInput } from '../../utils/useFormKitInput'
 export interface FormKitColorPickerProps {
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
   inputClass?: string
-  variant?: 'outline' | 'soft' | 'subtle' | 'ghost' | 'none'
-  format?: 'hex' | 'rgb' | 'hsl'
-  modes?: ('hex' | 'rgb' | 'hsl')[]
-  showAlpha?: boolean
-  showInput?: boolean
-  swatches?: string[]
+  format?: 'hex' | 'rgb' | 'hsl' | 'cmyk' | 'lab'
+  throttle: number
+  ui?: Record<string, unknown>
 }
 
 const props = defineProps({
@@ -21,7 +18,7 @@ const props = defineProps({
   },
 })
 
-const { handleInput, handleChange, isInvalid, styleClass, modelValue } = useFormKitInput(props.context)
+const { handleInput, handleChange, styleClass, modelValue } = useFormKitInput(props.context)
 </script>
 
 <template>
@@ -31,16 +28,11 @@ const { handleInput, handleChange, isInvalid, styleClass, modelValue } = useForm
     v-bind="{ ...context?.attrs }"
     :class="styleClass"
     :disabled="!!context?.disabled"
-    :format="context.format"
-    :highlight="!!(isInvalid || context.highlight)"
-    :input-class="context.inputClass"
-    :modes="context.modes"
-    :show-alpha="context.showAlpha"
-    :show-input="context.showInput"
-    :size="context.size ?? 'md'"
     :style="context?.attrs.style"
-    :swatches="context.swatches"
-    :variant="context.variant ?? 'outline'"
+    :size="context.size ?? 'md'"
+    :format="context.format"
+    :throttle="context.throttle"
+    :ui="context.ui"
     @change="handleChange"
     @update:model-value="handleInput"
   />
