@@ -38,7 +38,7 @@ export interface FormKitInputMenuProps {
   multiple?: boolean
   highlight?: boolean
   fixed?: boolean
-  createItem?: boolean
+  createItem?: boolean | 'always' | { position?: 'top' | 'bottom', when?: 'always' | 'empty' | undefined } | undefined
   filterFields?: string[]
   ignoreFilter?: false
   defaultOpen?: false
@@ -101,7 +101,7 @@ const { handleInput, handleChange, isInvalid, styleClass, color, modelValue, ite
     :description-key="context.descriptionKey"
     :multiple="context.multiple"
     :fixed="context.fixed"
-    :create-item="context.createItem"
+    :create-item="context.createItem || false"
     :filter-fields="context.filterFields"
     :ignore-filter="context.ignoreFilter"
     :default-open="context.defaultOpen"

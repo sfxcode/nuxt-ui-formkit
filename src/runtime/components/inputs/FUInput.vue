@@ -70,6 +70,7 @@ const { handleInput, handleChange, isInvalid, styleClass, color, modelValue } = 
     :trailing="context.trailing"
     :trailing-icon="context.trailingIcon"
     :loading="context.loading"
+    :loading-icon="context.loadingIcon"
     :list="context.list"
     :max="context.max"
     :max-length="context.maxLength"

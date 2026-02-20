@@ -2,26 +2,38 @@
 import type { FormKitFrameworkContext } from '@formkit/core'
 import type { PropType } from 'vue'
 import { useFormKitInput } from '../../utils/useFormKitInput'
+import type { AvatarProps } from '#ui/components/Avatar.vue'
 
 export interface FormKitInputTagsProps {
-  autofocus?: boolean
+  placeholder?: string
+  maxLength?: number
   color?: 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'
+  variant?: 'outline' | 'soft' | 'subtle' | 'ghost' | 'none'
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
+  autofocus?: boolean
+  autofocusDelay?: number
+  deleteIcon?: string
+  highlight?: boolean
+  fixed?: boolean
+  addOnPaste?: boolean
+  addOnTab?: boolean
+  addOnBlur?: boolean
+  duplicate?: boolean
+  delimiters?: string | RegExp
+  max: number
+  convertValue?: (value: string) => string
+  displayValue?: (value: string) => string
   icon?: string
-  inputClass?: string
+  avatar?: AvatarProps
   leading?: boolean
   leadingIcon?: string
-  loading?: boolean
-  padded?: boolean
-  placeholder?: string
-  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
   trailing?: boolean
   trailingIcon?: string
-  variant?: 'outline' | 'soft' | 'subtle' | 'ghost' | 'none'
-  allowDuplicates?: boolean
-  max?: number
-  min?: number
-  separator?: string | string[]
-  tagVariant?: 'solid' | 'soft' | 'outline' | 'subtle'
+  loading?: boolean
+  loadingIcon?: boolean
+  list?: string
+  autocomplete?: string & {} | 'on' | 'off'
+  ui?: Record<string, unknown>
 }
 
 const props = defineProps({
@@ -39,29 +51,39 @@ const { handleInput, handleChange, isInvalid, styleClass, color, modelValue } = 
     :id="context.id"
     v-model="modelValue"
     v-bind="{ ...context?.attrs }"
-    :allow-duplicates="context.allowDuplicates"
-    :autofocus="context.autofocus"
     :class="styleClass"
-    :color="color as any"
     :disabled="!!context?.disabled"
-    :highlight="!!(isInvalid || context.highlight)"
+    :readonly="context?.attrs.readonly ?? false"
+    :style="context?.attrs.style"
+    :color="color"
+    :highlight="isInvalid || context.highlight"
+    :size="context.size ?? 'md'"
+    :variant="context.variant ?? 'outline'"
+    :placeholder="context.placeholder"
+    :max-length="context.maxLength"
+    :autofocus="context.autofocus"
+    :autofocus-delay="context.autofocusDelay ?? 0"
+    :delete-icon="context.deleteIcon"
+    :fixed="context.fixed"
+    :add-on-paste="context.addOnPaste"
+    :add-on-tab="context.addOnTab"
+    :add-on-blur="context.addOnBlur"
+    :duplicate="context.duplicate"
+    :delimiters="context.delimiters"
+    :max="context.max"
+    :convert-value="context.convertValue"
+    :display-value="context.displayValue"
     :icon="context.icon"
-    :input-class="context.inputClass"
+    :avatar="context.avatar"
     :leading="context.leading"
     :leading-icon="context.leadingIcon"
-    :loading="context.loading"
-    :max="context.max"
-    :min="context.min"
-    :padded="context.padded"
-    :placeholder="context.placeholder"
-    :readonly="context?.attrs.readonly ?? false"
-    :separator="context.separator"
-    :size="context.size ?? 'md'"
-    :style="context?.attrs.style"
-    :tag-variant="context.tagVariant"
     :trailing="context.trailing"
     :trailing-icon="context.trailingIcon"
-    :variant="context.variant ?? 'outline'"
+    :loading="context.loading"
+    :loading-icon="context.loadingIcon"
+    :list="context.list"
+    :autocomplete="context.autocomplete || 'off'"
+    :ui="context.ui"
     @change="handleChange"
     @update:model-value="handleInput"
   />
