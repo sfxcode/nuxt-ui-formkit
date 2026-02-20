@@ -31,6 +31,7 @@ export interface FormKitInputProps {
   pattern?: string
   step?: number | string
   variant?: 'outline' | 'soft' | 'subtle' | 'ghost' | 'none'
+  ui?: Record<string, unknown>
 }
 
 const props = defineProps({
