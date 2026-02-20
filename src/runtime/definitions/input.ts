@@ -88,6 +88,6 @@ export const nuxtUISwitchDefinition: FormKitTypeDefinition = createInput(FUSwitc
 })
 
 export const nuxtUITextareaDefinition: FormKitTypeDefinition = createInput(FUTextarea, {
-  props: ['name', 'placeholder', 'required', 'autofocus', 'autoresize', 'rows', 'cols', 'maxrows', 'resize', 'padded', 'size', 'color', 'variant', 'inputClass', 'ui', 'highlight', 'loading', 'icon', 'trailingIcon'],
+  props: ['color', 'size', 'variant', 'placeholder', 'autofocus', 'autofocusDelay', 'autoresize', 'autoresizeDelay', 'rows', 'maxrows', 'highlight', 'fixed', 'icon', 'avatar', 'leading', 'leadingIcon', 'trailing', 'trailingIcon', 'loading', 'loadingIcon', 'cols', 'dirname', 'maxlength', 'minlength', 'wrap', 'ui'],
   family: 'NuxtUIInput',
 })

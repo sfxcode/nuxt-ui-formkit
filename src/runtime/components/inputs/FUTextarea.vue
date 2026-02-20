@@ -3,24 +3,35 @@ import type { FormKitFrameworkContext } from '@formkit/core'
 
 import type { PropType } from 'vue'
 import { useFormKitInput } from '../../utils/useFormKitInput'
+import type { AvatarProps } from '#ui/components/Avatar.vue'
 
 export interface FormKitTextareaProps {
-  autofocus?: boolean
-  autoresize?: boolean
   color?: 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'
-  cols?: number | string
-  highlight?: boolean
-  icon?: string
-  inputClass?: string
-  loading?: boolean
-  maxrows?: number | string
-  padded?: boolean
-  placeholder?: string
-  resize?: boolean
-  rows?: number | string
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
-  trailingIcon?: string
   variant?: 'outline' | 'soft' | 'subtle' | 'ghost' | 'none'
+  placeholder?: string
+  autofocus?: boolean
+  autofocusDelay?: number
+  autoresize?: boolean
+  autoresizeDelay?: number
+  rows?: number
+  maxrows?: number
+  highlight?: boolean
+  fixed?: boolean
+  icon?: string
+  avatar?: AvatarProps
+  leading?: boolean
+  leadingIcon?: string
+  trailing?: boolean
+  trailingIcon?: string
+  loading?: boolean
+  loadingIcon?: boolean
+  cols?: number | string
+  dirname?: string
+  maxlength?: number | string
+  minlength?: number | string
+  wrap?: string
+  ui?: Record<string, unknown>
 }
 
 const props = defineProps({
@@ -38,26 +49,36 @@ const { handleInput, handleChange, styleClass, color, isInvalid, modelValue } = 
     :id="context.id"
     v-model="modelValue"
     v-bind="{ ...context?.attrs }"
-    :autofocus="context.autofocus"
-    :autoresize="context.autoresize"
     :class="styleClass"
-    :color="color as any"
-    :cols="context.cols"
     :disabled="!!context?.disabled"
-    :highlight="isInvalid || context.highlight"
-    :icon="context.icon"
-    :input-class="context.inputClass"
-    :loading="context.loading"
-    :maxrows="context.maxrows as any"
-    :padded="context.padded"
-    :placeholder="context.placeholder"
     :readonly="context?.attrs.readonly ?? false"
-    :resize="context.resize"
-    :rows="context.rows as any"
-    :size="context.size ?? 'md'"
     :style="context?.attrs.style"
-    :trailing-icon="context.trailingIcon"
+    :color="color"
+    :highlight="isInvalid || context.highlight"
+    :size="context.size ?? 'md'"
     :variant="context.variant ?? 'outline'"
+    :placeholder="context.placeholder"
+    :autofocus="context.autofocus"
+    :autofocus-delay="context.autofocusDelay"
+    :autoresize="context.autoresize"
+    :autoresize-delay="context.autoresizeDelay"
+    :rows="context.rows"
+    :maxrows="context.maxrows"
+    :fixed="context.fixed"
+    :icon="context.icon"
+    :avatar="context.avatar"
+    :leading="context.leading"
+    :leading-icon="context.leadingIcon"
+    :trailing="context.trailing"
+    :trailing-icon="context.trailingIcon"
+    :loading="context.loading"
+    :loading-icon="context.loadingIcon"
+    :cols="context.cols"
+    :dirname="context.dirname"
+    :maxlength="context.maxlength"
+    :minlength="context.minlength"
+    :wrap="context.wrap"
+    :ui="context.ui"
     @change="handleChange"
     @update:model-value="handleInput"
   />

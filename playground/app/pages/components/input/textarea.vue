@@ -39,11 +39,11 @@ const textareaSchema = [
   {
     $formkit: 'nuxtUITextarea',
     name: 'textarea5',
-    placeholder: 'Resize disabled...',
-    label: 'Resize Disabled',
-    help: 'Manual resize is disabled',
+    placeholder: 'Fixed positioning...',
+    label: 'With Fixed Positioning',
+    help: 'Fixed positioning enabled',
     rows: 4,
-    resize: false,
+    fixed: true,
   },
   {
     $formkit: 'nuxtUITextarea',
@@ -96,9 +96,10 @@ const textareaSchema = [
   {
     $formkit: 'nuxtUITextarea',
     name: 'textarea12',
-    placeholder: 'With padding...',
-    label: 'With Padding',
-    padded: true,
+    placeholder: 'With autoresize delay...',
+    label: 'Autoresize with Delay',
+    autoresize: true,
+    autoresizeDelay: 300,
     rows: 3,
   },
   {
