@@ -6,14 +6,15 @@ import { useFormKitInput } from '../../utils/useFormKitInput'
 export interface FormKitSwitchProps {
   color?: 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
-  inputClass?: string
-  label?: string
-  description?: string
-  icon?: string
-  onIcon?: string
-  offIcon?: string
   loading?: boolean
   loadingIcon?: string
+  checkedIcon?: string
+  uncheckedIcon?: string
+  label?: string
+  description?: string
+  defaultValue?: boolean
+  autofocus?: false | true | 'true' | 'false'
+  ui?: Record<string, unknown>
 }
 
 const props = defineProps({
@@ -23,7 +24,7 @@ const props = defineProps({
   },
 })
 
-const { handleInput, handleChange, isInvalid, styleClass, color, modelValue } = useFormKitInput(props.context)
+const { handleInput, handleChange, styleClass, color, modelValue } = useFormKitInput(props.context)
 </script>
 
 <template>
@@ -35,16 +36,16 @@ const { handleInput, handleChange, isInvalid, styleClass, color, modelValue } = 
     :disabled="!!context?.disabled"
     :style="context?.attrs.style"
     :color="color"
-    :description="context.description"
-    :highlight="!!(isInvalid || context.highlight)"
-    :icon="context.icon"
-    :input-class="context.inputClass"
-    :label="context.label"
+    :size="context.size ?? 'md'"
     :loading="context.loading"
     :loading-icon="context.loadingIcon"
-    :off-icon="context.offIcon"
-    :on-icon="context.onIcon"
-    :size="context.size ?? 'md'"
+    :checked-icon="context.checkedIcon"
+    :unchecked-icon="context.uncheckedIcon"
+    :label="context.label"
+    :description="context.description"
+    :default-value="context.defaultValue"
+    :autofocus="context.autofocus"
+    :ui="context.ui"
     @change="handleChange"
     @update:model-value="handleInput"
   />

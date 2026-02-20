@@ -83,7 +83,7 @@ export const nuxtUISliderDefinition: FormKitTypeDefinition = createInput(FUSlide
 })
 
 export const nuxtUISwitchDefinition: FormKitTypeDefinition = createInput(FUSwitch, {
-  props: ['label', 'description', 'size', 'color', 'inputClass', 'icon', 'onIcon', 'offIcon', 'loading', 'loadingIcon'],
+  props: ['color', 'size', 'loading', 'loadingIcon', 'checkedIcon', 'uncheckedIcon', 'label', 'description', 'defaultValue', 'autofocus', 'ui'],
   family: 'NuxtUIInput',
 })
 
