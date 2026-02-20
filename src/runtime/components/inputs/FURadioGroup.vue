@@ -56,6 +56,7 @@ const { handleInput, handleChange, styleClass, color, modelValue, items } = useF
     :description-key="context.descriptionKey"
     :loop="context.loop ?? false"
     :name="context.name"
+    :ui="context.ui"
     @change="handleChange"
     @update:model-value="handleInput"
   />

@@ -4,28 +4,38 @@ import type { FormKitFrameworkContext } from '@formkit/core'
 import type { PropType } from 'vue'
 import { useFormKitInput } from '../../utils/useFormKitInput'
 import type { SelectMenuItem } from '#ui/components/SelectMenu.vue'
+import type { AvatarProps } from '#ui/components/Avatar.vue'
 
 export interface FormKitSelectProps {
-  clearable?: boolean
+  options?: string[] | SelectMenuItem[] | SelectMenuItem[][]
+  placeholder?: string
   color?: 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'
-  creatable?: boolean
-  disabled?: boolean
+  variant?: 'outline' | 'soft' | 'subtle' | 'ghost' | 'none'
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
+  selectedIcon?: string
+  arrow?: boolean
+  portal?: boolean
+  valueKey?: string
+  labelKey?: string
+  descriptionKey?: string
+  defaultValue: any
+  multiple?: boolean
+  highlight?: boolean
+  fixed?: boolean
+  autofocus?: boolean
+  autofocusDelay?: number
+  open?: boolean
+  defaultOpen?: boolean
+  autocomplete?: string & {} | 'on' | 'off'
   icon?: string
-  inputClass?: string
+  avatar?: AvatarProps
   leading?: boolean
   leadingIcon?: string
-  loading?: boolean
-  multiple?: boolean
-  optionAttribute?: string
-  options?: string[] | SelectMenuItem[] | SelectMenuItem[][]
-  padded?: boolean
-  placeholder?: string
-  searchable?: boolean
-  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
   trailing?: boolean
   trailingIcon?: string
-  valueAttribute?: string
-  variant?: 'outline' | 'soft' | 'subtle' | 'ghost' | 'none'
+  loading?: boolean
+  loadingIcon?: string
+  ui?: Record<string, unknown>
 }
 
 const props = defineProps({
@@ -35,7 +45,7 @@ const props = defineProps({
   },
 })
 
-const { handleInput, handleChange, isInvalid, color, styleClass, modelValue, items } = useFormKitInput(props.context)
+const { handleInput, handleChange, color, styleClass, modelValue, items } = useFormKitInput(props.context)
 </script>
 
 <template>
@@ -44,30 +54,35 @@ const { handleInput, handleChange, isInvalid, color, styleClass, modelValue, ite
     v-model="modelValue"
     v-bind="{ ...context?.attrs }"
     :class="styleClass"
-    :clearable="context.clearable"
-    :color="color as any"
-    :creatable="context.creatable"
     :disabled="!!context?.disabled"
-    :highlight="!!(isInvalid || context.highlight)"
-    :icon="context.icon"
-    :input-class="context.inputClass"
+    :style="context?.attrs.style"
+    :color="color"
+    :size="context.size ?? 'md'"
+    :variant="context.variant ?? 'outline'"
     :items="items"
+    :placeholder="context.placeholder"
+    :selected-icon="context.selectedIcon"
+    :icon="context.icon"
+    :avatar="context.avatar"
     :leading="context.leading"
     :leading-icon="context.leadingIcon"
-    :loading="context.loading"
-    :multiple="context.multiple"
-    :option-attribute="context.optionAttribute"
-    :padded="context.padded"
-    :placeholder="context.placeholder"
-    :readonly="context?.attrs.readonly ?? false"
-    :searchable="context.searchable"
-    :size="context.size ?? 'md'"
-    :style="context?.attrs.style"
     :trailing="context.trailing"
     :trailing-icon="context.trailingIcon"
+    :loading="context.loading"
+    :loading-icon="context.loadingIcon"
+    :arrow="context.arrow"
+    :portal="context.portal"
+    :value-key="context.valueKey"
+    :label-key="context.labelKey"
+    :description-key="context.descriptionKey"
+    :default-value="context.defaultValue"
+    :multiple="context.multiple"
+    :autofocus="context.autofocus"
+    :autofocus-delay="context.autofocusDelay"
+    :open="context.open"
+    :default-open="context.defaultOpen"
+    :autocomplete="context.autocomplete"
     :ui="context.ui"
-    :value-attribute="context.valueAttribute"
-    :variant="context.variant ?? 'outline'"
     @change="handleChange"
     @update:model-value="handleInput"
   />

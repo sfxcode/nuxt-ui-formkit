@@ -50,6 +50,7 @@ const { handleInput, handleChange, isInvalid, styleClass, color, modelValue } = 
     :mask="context.mask"
     :otp="context.otp"
     :placeholder="context.placeholder"
+    :ui="context.ui"
     @change="handleChange"
     @update:model-value="handleInput"
   />

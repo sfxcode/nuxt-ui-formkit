@@ -68,7 +68,7 @@ export const nuxtUIRadioGroupDefinition: FormKitTypeDefinition = createInput(FUR
 })
 
 export const nuxtUISelectDefinition: FormKitTypeDefinition = createInput(FUSelect, {
-  props: ['options', 'placeholder', 'multiple', 'searchable', 'clearable', 'creatable', 'loading', 'size', 'color', 'variant', 'icon', 'trailingIcon', 'leadingIcon', 'trailing', 'leading', 'padded', 'inputClass', 'ui', 'valueAttribute', 'optionAttribute'],
+  props: ['options', 'placeholder', 'color', 'variant', 'size', 'selectedIcon', 'arrow', 'portal', 'valueKey', 'labelKey', 'descriptionKey', 'defaultValue', 'multiple', 'highlight', 'fixed', 'autofocus', 'autofocusDelay', 'open', 'defaultOpen', 'autocomplete', 'icon', 'avatar', 'leading', 'leadingIcon', 'trailing', 'trailingIcon', 'loading', 'loadingIcon', 'ui'],
   family: 'NuxtUIInput',
 })
 

@@ -23,30 +23,29 @@ const selectSchema = [
   {
     $formkit: 'nuxtUISelect',
     name: 'select4',
-    label: 'Searchable Select',
-    help: 'Type to search',
-    searchable: true,
+    label: 'With Autofocus',
+    help: 'Automatically focused',
+    autofocus: true,
     options: ['Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Argentina', 'Armenia', 'Australia', 'Austria', 'Azerbaijan', 'Bahamas', 'Bahrain', 'Bangladesh', 'Barbados', 'Belarus', 'Belgium', 'Belize', 'Benin', 'Bhutan', 'Bolivia'],
-    placeholder: 'Search for a country',
+    placeholder: 'Select a country',
   },
   {
     $formkit: 'nuxtUISelect',
     name: 'select5',
-    label: 'Clearable Select',
-    help: 'Can be cleared',
-    clearable: true,
+    label: 'With Arrow Icon',
+    help: 'Shows arrow indicator',
+    arrow: true,
     options: ['Red', 'Green', 'Blue', 'Yellow', 'Purple', 'Orange'],
     placeholder: 'Select a color',
   },
   {
     $formkit: 'nuxtUISelect',
     name: 'select6',
-    label: 'Creatable Select',
-    help: 'Create new options',
-    creatable: true,
-    searchable: true,
+    label: 'With Highlight',
+    help: 'Highlighted styling',
+    highlight: true,
     options: ['JavaScript', 'TypeScript', 'Python', 'Java'],
-    placeholder: 'Type to create or select',
+    placeholder: 'Select a language',
   },
   {
     $formkit: 'nuxtUISelect',
@@ -140,10 +139,10 @@ const selectSchema = [
   {
     $formkit: 'nuxtUISelect',
     name: 'select18',
-    label: 'With Padding',
-    padded: true,
-    options: ['Padded 1', 'Padded 2', 'Padded 3'],
-    placeholder: 'Padded select',
+    label: 'With Fixed Positioning',
+    fixed: true,
+    options: ['Fixed 1', 'Fixed 2', 'Fixed 3'],
+    placeholder: 'Fixed positioning',
   },
   {
     $formkit: 'nuxtUISelect',
@@ -175,7 +174,7 @@ const selectSchema = [
           The Select component integrates FormKit with Nuxt UI's USelect component, providing a powerful dropdown selection experience.
         </p>
         <p class="text-muted-foreground">
-          Explore various configurations including searchable, multiple selection, creatable options, and different styling variants.
+          Explore various configurations including multiple selection, autofocus, highlight, and different styling variants.
         </p>
       </div>
 
@@ -202,7 +201,7 @@ const selectSchema = [
             Advanced Features
           </h2>
           <p class="text-muted-foreground mb-6">
-            Multiple selection, searchable, clearable, and creatable options.
+            Multiple selection, autofocus, arrow indicators, and highlight styling.
           </p>
           <FUDataEdit
             :data="{}"
@@ -247,7 +246,7 @@ const selectSchema = [
             Styling options
           </h2>
           <p class="text-muted-foreground mb-6">
-            Customize colors, variants, and padding to match your design.
+            Customize colors, variants, and fixed positioning to match your design.
           </p>
           <FUDataEdit
             :data="{}"
