@@ -27,7 +27,7 @@ const schema = reactive(
       name: 'myText',
       label: 'Text',
       validation: '',
-      rows: '3',
+      rows: 3,
     },
     {
       $formkit: 'nuxtUIInput',
