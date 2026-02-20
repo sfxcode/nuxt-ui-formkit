@@ -7,144 +7,231 @@ const inputTagsSchema = [
     name: 'tags1',
     placeholder: 'Add tags...',
     label: 'Basic Tags',
-    help: 'Press Enter or comma to add tags',
     validation: 'required',
   },
   {
     $formkit: 'nuxtUIInputTags',
     name: 'tags2',
     placeholder: 'Enter skills...',
-    label: 'Skills',
-    help: 'Add your skills',
-    separator: [',', 'Enter'],
+    label: 'With Default Values',
+    value: ['JavaScript', 'TypeScript', 'Vue.js'],
   },
   {
     $formkit: 'nuxtUIInputTags',
     name: 'tags3',
-    placeholder: 'Add interests...',
-    label: 'Interests (max 5)',
-    help: 'You can add up to 5 interests',
-    max: 5,
+    placeholder: 'Enter interests...',
+    label: 'Custom Delimiters (comma, semicolon)',
+    delimiters: [',', ';'],
   },
   {
     $formkit: 'nuxtUIInputTags',
     name: 'tags4',
     placeholder: 'Add categories...',
-    label: 'Categories (min 2)',
-    help: 'At least 2 categories required',
-    min: 2,
-    validation: 'required',
+    label: 'Max Tags (5)',
+    max: 5,
   },
   {
     $formkit: 'nuxtUIInputTags',
     name: 'tags5',
     placeholder: 'Add tags...',
     label: 'Allow Duplicates',
-    help: 'Duplicates are allowed',
-    allowDuplicates: true,
+    duplicate: true,
   },
   {
     $formkit: 'nuxtUIInputTags',
     name: 'tags6',
-    placeholder: 'Search tags...',
-    label: 'With Leading Icon',
-    icon: 'i-heroicons-tag',
+    placeholder: 'Type and press Tab...',
+    label: 'Add on Tab',
+    addOnTab: true,
   },
   {
     $formkit: 'nuxtUIInputTags',
     name: 'tags7',
+    placeholder: 'Type and blur...',
+    label: 'Add on Blur',
+    addOnBlur: true,
+  },
+  {
+    $formkit: 'nuxtUIInputTags',
+    name: 'tags8',
+    placeholder: 'Paste multiple items...',
+    label: 'Add on Paste',
+    addOnPaste: true,
+  },
+  {
+    $formkit: 'nuxtUIInputTags',
+    name: 'tags9',
+    placeholder: 'Max 20 characters per tag...',
+    label: 'Max Length per Tag',
+    maxLength: 20,
+  },
+  {
+    $formkit: 'nuxtUIInputTags',
+    name: 'tags10',
+    placeholder: 'Type to add...',
+    label: 'Autofocus',
+    autofocus: true,
+  },
+  {
+    $formkit: 'nuxtUIInputTags',
+    name: 'tags11',
+    placeholder: 'Type to add...',
+    label: 'Autofocus with Delay (1000ms)',
+    autofocus: true,
+    autofocusDelay: 1000,
+  },
+  {
+    $formkit: 'nuxtUIInputTags',
+    name: 'tags12',
+    placeholder: 'Search tags...',
+    label: 'With Leading Icon',
+    leadingIcon: 'i-heroicons-tag',
+  },
+  {
+    $formkit: 'nuxtUIInputTags',
+    name: 'tags13',
+    placeholder: 'Add tags...',
+    label: 'With Trailing Icon',
+    trailingIcon: 'i-heroicons-plus',
+  },
+  {
+    $formkit: 'nuxtUIInputTags',
+    name: 'tags14',
+    placeholder: 'With icon...',
+    label: 'With Icon',
+    icon: 'i-heroicons-hashtag',
+  },
+  {
+    $formkit: 'nuxtUIInputTags',
+    name: 'tags15',
+    placeholder: 'Add tags...',
+    label: 'With Avatar',
+    avatar: { src: 'https://i.pravatar.cc/150?img=3', alt: 'User Avatar' },
+  },
+  {
+    $formkit: 'nuxtUIInputTags',
+    name: 'tags16',
     placeholder: 'Loading...',
     label: 'Loading State',
     loading: true,
   },
   {
     $formkit: 'nuxtUIInputTags',
-    name: 'tags8',
+    name: 'tags17',
+    placeholder: 'Loading...',
+    label: 'Custom Loading Icon',
+    loading: true,
+    loadingIcon: 'i-heroicons-arrow-path',
+  },
+  {
+    $formkit: 'nuxtUIInputTags',
+    name: 'tags18',
+    placeholder: 'Add tags...',
+    label: 'Custom Delete Icon',
+    deleteIcon: 'i-heroicons-trash',
+    value: ['Tag 1', 'Tag 2'],
+  },
+  {
+    $formkit: 'nuxtUIInputTags',
+    name: 'tags19',
+    placeholder: 'Add tags...',
+    label: 'Highlighted',
+    highlight: true,
+  },
+  {
+    $formkit: 'nuxtUIInputTags',
+    name: 'tags20',
+    placeholder: 'Fixed positioning...',
+    label: 'Fixed',
+    fixed: true,
+  },
+  {
+    $formkit: 'nuxtUIInputTags',
+    name: 'tags21',
+    placeholder: 'Extra Small Size',
+    label: 'Size XS',
+    size: 'xs',
+  },
+  {
+    $formkit: 'nuxtUIInputTags',
+    name: 'tags22',
     placeholder: 'Small Size',
-    label: 'Small Size',
+    label: 'Size SM',
     size: 'sm',
   },
   {
     $formkit: 'nuxtUIInputTags',
-    name: 'tags9',
+    name: 'tags23',
     placeholder: 'Medium Size (Default)',
-    label: 'Medium Size',
+    label: 'Size MD',
     size: 'md',
   },
   {
     $formkit: 'nuxtUIInputTags',
-    name: 'tags10',
+    name: 'tags24',
     placeholder: 'Large Size',
-    label: 'Large Size',
+    label: 'Size LG',
     size: 'lg',
   },
   {
     $formkit: 'nuxtUIInputTags',
-    name: 'tags11',
+    name: 'tags25',
     placeholder: 'Extra Large Size',
-    label: 'Extra Large Size',
+    label: 'Size XL',
     size: 'xl',
   },
   {
     $formkit: 'nuxtUIInputTags',
-    name: 'tags12',
+    name: 'tags26',
     placeholder: 'Primary Color',
     label: 'Primary Color',
     color: 'primary',
   },
   {
     $formkit: 'nuxtUIInputTags',
-    name: 'tags13',
+    name: 'tags27',
     placeholder: 'Success Color',
     label: 'Success Color',
     color: 'success',
   },
   {
     $formkit: 'nuxtUIInputTags',
-    name: 'tags14',
-    placeholder: 'Outline Variant',
-    label: 'Outline Variant',
+    name: 'tags28',
+    placeholder: 'Error Color',
+    label: 'Error Color',
+    color: 'error',
+  },
+  {
+    $formkit: 'nuxtUIInputTags',
+    name: 'tags29',
+    placeholder: 'Variant None',
+    label: 'Variant None',
+    variant: 'none',
+  },
+  {
+    $formkit: 'nuxtUIInputTags',
+    name: 'tags30',
+    placeholder: 'Variant Ghost',
+    label: 'Variant Ghost',
+    variant: 'ghost',
+  },
+  {
+    $formkit: 'nuxtUIInputTags',
+    name: 'tags31',
+    placeholder: 'Variant Outline',
+    label: 'Variant Outline',
     variant: 'outline',
   },
   {
     $formkit: 'nuxtUIInputTags',
-    name: 'tags15',
-    placeholder: 'Soft Variant',
-    label: 'Soft Variant',
+    name: 'tags32',
+    placeholder: 'Variant Soft',
+    label: 'Variant Soft',
     variant: 'soft',
   },
   {
     $formkit: 'nuxtUIInputTags',
-    name: 'tags16',
-    placeholder: 'Solid Tag Variant',
-    label: 'Solid Tag Variant',
-    tagVariant: 'solid',
-  },
-  {
-    $formkit: 'nuxtUIInputTags',
-    name: 'tags17',
-    placeholder: 'Outline Tag Variant',
-    label: 'Outline Tag Variant',
-    tagVariant: 'outline',
-  },
-  {
-    $formkit: 'nuxtUIInputTags',
-    name: 'tags18',
-    placeholder: 'With Padding',
-    label: 'With Padding',
-    padded: true,
-  },
-  {
-    $formkit: 'nuxtUIInputTags',
-    name: 'tags19',
-    placeholder: 'Read Only',
-    label: 'Read Only',
-    readonly: true,
-    value: ['tag1', 'tag2', 'tag3'],
-  },
-  {
-    $formkit: 'nuxtUIInputTags',
-    name: 'tags20',
+    name: 'tags33',
     placeholder: 'Disabled',
     label: 'Disabled',
     disabled: true,
@@ -164,7 +251,7 @@ const inputTagsSchema = [
           The InputTags component integrates FormKit with Nuxt UI's UInputTags component, providing a seamless tag input experience.
         </p>
         <p class="text-muted-foreground">
-          Explore various tag input configurations, validation patterns, styling options, and states below.
+          Explore various tag input configurations including delimiters, behavior options, icons, avatars, validation patterns, styling options, and states.
         </p>
       </div>
 
@@ -176,11 +263,11 @@ const inputTagsSchema = [
             Basic Usage
           </h2>
           <p class="text-muted-foreground mb-6">
-            Basic tag input with validation, custom separators, and min/max limits.
+            Basic tag input with validation and default values.
           </p>
           <FUDataEdit
             :data="{}"
-            :schema="inputTagsSchema.slice(0, 5)"
+            :schema="inputTagsSchema.slice(0, 2)"
           />
         </section>
 
@@ -188,14 +275,74 @@ const inputTagsSchema = [
 
         <section>
           <h2 class="text-2xl font-semibold mb-4">
-            Icons & Loading
+            Configuration Options
           </h2>
           <p class="text-muted-foreground mb-6">
-            Add leading icons or show loading state.
+            Configure delimiters, max tags, duplicates, and max length per tag.
           </p>
           <FUDataEdit
             :data="{}"
-            :schema="inputTagsSchema.slice(5, 7)"
+            :schema="inputTagsSchema.slice(2, 9)"
+          />
+        </section>
+
+        <USeparator />
+
+        <section>
+          <h2 class="text-2xl font-semibold mb-4">
+            Behavior Options
+          </h2>
+          <p class="text-muted-foreground mb-6">
+            Control when tags are added: on Tab, on Blur, or on Paste.
+          </p>
+          <FUDataEdit
+            :data="{}"
+            :schema="inputTagsSchema.slice(5, 8)"
+          />
+        </section>
+
+        <USeparator />
+
+        <section>
+          <h2 class="text-2xl font-semibold mb-4">
+            Autofocus
+          </h2>
+          <p class="text-muted-foreground mb-6">
+            Control focus behavior with autofocus and autofocus delay options.
+          </p>
+          <FUDataEdit
+            :data="{}"
+            :schema="inputTagsSchema.slice(9, 11)"
+          />
+        </section>
+
+        <USeparator />
+
+        <section>
+          <h2 class="text-2xl font-semibold mb-4">
+            Icons & Slots
+          </h2>
+          <p class="text-muted-foreground mb-6">
+            Add leading/trailing icons, avatars, custom delete icons, and loading indicators.
+          </p>
+          <FUDataEdit
+            :data="{}"
+            :schema="inputTagsSchema.slice(11, 18)"
+          />
+        </section>
+
+        <USeparator />
+
+        <section>
+          <h2 class="text-2xl font-semibold mb-4">
+            Visual Elements
+          </h2>
+          <p class="text-muted-foreground mb-6">
+            Highlight styling and fixed positioning options.
+          </p>
+          <FUDataEdit
+            :data="{}"
+            :schema="inputTagsSchema.slice(18, 20)"
           />
         </section>
 
@@ -210,7 +357,7 @@ const inputTagsSchema = [
           </p>
           <FUDataEdit
             :data="{}"
-            :schema="inputTagsSchema.slice(7, 11)"
+            :schema="inputTagsSchema.slice(20, 25)"
           />
         </section>
 
@@ -225,7 +372,7 @@ const inputTagsSchema = [
           </p>
           <FUDataEdit
             :data="{}"
-            :schema="inputTagsSchema.slice(11, 13)"
+            :schema="inputTagsSchema.slice(25, 28)"
           />
         </section>
 
@@ -236,26 +383,11 @@ const inputTagsSchema = [
             Variants
           </h2>
           <p class="text-muted-foreground mb-6">
-            Different input and tag variants including outline, soft, solid, and subtle.
+            Different variants including none, ghost, outline, and soft.
           </p>
           <FUDataEdit
             :data="{}"
-            :schema="inputTagsSchema.slice(13, 17)"
-          />
-        </section>
-
-        <USeparator />
-
-        <section>
-          <h2 class="text-2xl font-semibold mb-4">
-            Styling Options
-          </h2>
-          <p class="text-muted-foreground mb-6">
-            Customize padding to match your design.
-          </p>
-          <FUDataEdit
-            :data="{}"
-            :schema="inputTagsSchema.slice(17, 18)"
+            :schema="inputTagsSchema.slice(28, 32)"
           />
         </section>
 
@@ -266,11 +398,11 @@ const inputTagsSchema = [
             States
           </h2>
           <p class="text-muted-foreground mb-6">
-            Different states including readonly and disabled.
+            Disabled state.
           </p>
           <FUDataEdit
             :data="{}"
-            :schema="inputTagsSchema.slice(18, 20)"
+            :schema="inputTagsSchema.slice(32, 33)"
           />
         </section>
       </div>

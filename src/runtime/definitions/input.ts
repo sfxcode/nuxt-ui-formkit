@@ -48,12 +48,12 @@ export const nuxtUIInputMenuDefinition: FormKitTypeDefinition = createInput(FUIn
 })
 
 export const nuxtUIInputTagsDefinition: FormKitTypeDefinition = createInput(FUInputTags, {
-  props: ['placeholder', 'autofocus', 'size', 'color', 'variant', 'inputClass', 'loading', 'icon', 'trailingIcon', 'leadingIcon', 'trailing', 'leading', 'padded', 'allowDuplicates', 'max', 'min', 'separator', 'tagVariant'],
+  props: ['placeholder', 'maxLength', 'color', 'variant', 'size', 'autofocus', 'autofocusDelay', 'deleteIcon', 'highlight', 'fixed', 'addOnPaste', 'addOnTab', 'addOnBlur', 'duplicate', 'delimiters', 'max', 'convertValue', 'displayValue', 'icon', 'avatar', 'leading', 'leadingIcon', 'trailing', 'trailingIcon', 'loading', 'loadingIcon', 'list', 'autocomplete', 'ui'],
   family: 'NuxtUIInput',
 })
 
 export const nuxtUIInputTimeDefinition: FormKitTypeDefinition = createInput(FUInputTime, {
-  props: ['placeholder', 'autofocus', 'size', 'color', 'variant', 'inputClass', 'loading', 'icon', 'trailingIcon', 'leadingIcon', 'trailing', 'leading', 'padded', 'format', 'step'],
+  props: ['color', 'variant', 'size', 'highlight', 'fixed', 'autofocus', 'autofocusDelay', 'defaultValue', 'placeholder', 'defaultPlaceholder', 'hourCycle', 'step', 'stepSnapping', 'granularity', 'hideTimeZone', 'maxValue', 'minValue', 'icon', 'avatar', 'leading', 'leadingIcon', 'trailing', 'trailingIcon', 'loading', 'loadingIcon', 'ui'],
   family: 'NuxtUIInput',
 })
 

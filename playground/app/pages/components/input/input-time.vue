@@ -1,5 +1,7 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup>
+import { Time } from '@internationalized/date'
+
 const inputTimeSchema = [
   {
     $formkit: 'nuxtUIInputTime',
@@ -8,27 +10,27 @@ const inputTimeSchema = [
     label: 'Basic Time Input',
     help: 'Select a time',
     validation: 'required',
+    defaultValue: new Time(12, 0),
   },
   {
     $formkit: 'nuxtUIInputTime',
     name: 'time2',
     label: 'With Default Time',
     help: 'Pre-selected time',
-    value: '14:30',
   },
   {
     $formkit: 'nuxtUIInputTime',
     name: 'time3',
     label: '12-Hour Format',
     help: 'AM/PM format',
-    format: '12',
+    hourCycle: 12,
   },
   {
     $formkit: 'nuxtUIInputTime',
     name: 'time4',
     label: '24-Hour Format (Default)',
     help: 'Military time format',
-    format: '24',
+    hourCycle: 24,
   },
   {
     $formkit: 'nuxtUIInputTime',
@@ -49,119 +51,115 @@ const inputTimeSchema = [
     name: 'time7',
     label: 'With Leading Icon',
     leadingIcon: 'i-lucide-clock',
-    placeholder: 'Select time',
   },
   {
     $formkit: 'nuxtUIInputTime',
     name: 'time8',
     label: 'With Trailing Icon',
     trailingIcon: 'i-lucide-calendar-clock',
-    placeholder: 'Select time',
+
   },
   {
     $formkit: 'nuxtUIInputTime',
     name: 'time9',
     label: 'Loading State',
     loading: true,
-    placeholder: 'Loading...',
   },
   {
     $formkit: 'nuxtUIInputTime',
     name: 'time10',
     label: 'Extra Small Size',
     size: 'xs',
-    placeholder: 'Select time',
+
   },
   {
     $formkit: 'nuxtUIInputTime',
     name: 'time11',
     label: 'Small Size',
     size: 'sm',
-    placeholder: 'Select time',
+
   },
   {
     $formkit: 'nuxtUIInputTime',
     name: 'time12',
     label: 'Medium Size (Default)',
     size: 'md',
-    placeholder: 'Select time',
+
   },
   {
     $formkit: 'nuxtUIInputTime',
     name: 'time13',
     label: 'Large Size',
     size: 'lg',
-    placeholder: 'Select time',
+
   },
   {
     $formkit: 'nuxtUIInputTime',
     name: 'time14',
     label: 'Extra Large Size',
     size: 'xl',
-    placeholder: 'Select time',
+
   },
   {
     $formkit: 'nuxtUIInputTime',
     name: 'time15',
     label: 'Primary Color',
     color: 'primary',
-    placeholder: 'Select time',
+
   },
   {
     $formkit: 'nuxtUIInputTime',
     name: 'time16',
     label: 'Success Color',
     color: 'success',
-    placeholder: 'Select time',
+
   },
   {
     $formkit: 'nuxtUIInputTime',
     name: 'time17',
     label: 'Error Color',
     color: 'error',
-    placeholder: 'Select time',
+
   },
   {
     $formkit: 'nuxtUIInputTime',
     name: 'time18',
     label: 'Outline Variant',
     variant: 'outline',
-    placeholder: 'Select time',
+
   },
   {
     $formkit: 'nuxtUIInputTime',
     name: 'time19',
     label: 'Soft Variant',
     variant: 'soft',
-    placeholder: 'Select time',
+
   },
   {
     $formkit: 'nuxtUIInputTime',
     name: 'time20',
     label: 'Subtle Variant',
     variant: 'subtle',
-    placeholder: 'Select time',
+
   },
   {
     $formkit: 'nuxtUIInputTime',
     name: 'time21',
-    label: 'With Padding',
-    padded: true,
-    placeholder: 'Select time',
+    label: 'With Fixed Positioning',
+    fixed: true,
+
   },
   {
     $formkit: 'nuxtUIInputTime',
     name: 'time22',
     label: 'Read Only',
     readonly: true,
-    value: '09:00',
   },
   {
     $formkit: 'nuxtUIInputTime',
     name: 'time23',
     label: 'Disabled',
     disabled: true,
-    value: '17:30',
   },
 ]
 </script>
@@ -294,7 +292,7 @@ const inputTimeSchema = [
             Styling Options
           </h2>
           <p class="text-muted-foreground mb-6">
-            Customize padding to match your design.
+            Fixed positioning for the time picker popup.
           </p>
           <FUDataEdit
             :data="{}"

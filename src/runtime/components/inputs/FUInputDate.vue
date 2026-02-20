@@ -11,7 +11,6 @@ export interface DateRange {
 }
 
 export interface FormKitInputDateProps {
-  defaultValue: CalendarDate | CalendarDateTime | ZonedDateTime | DateRange
   color?: 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'
   variant?: 'outline' | 'soft' | 'subtle' | 'ghost' | 'none'
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
@@ -29,6 +28,7 @@ export interface FormKitInputDateProps {
   trailingIcon?: string
   loading?: boolean
   loadingIcon?: string
+  defaultValue: CalendarDate | CalendarDateTime | ZonedDateTime | DateRange
   placeholder?: CalendarDate | CalendarDateTime | ZonedDateTime
   defaultPlaceholder?: CalendarDate | CalendarDateTime | ZonedDateTime
   hourCycle?: 12 | 24

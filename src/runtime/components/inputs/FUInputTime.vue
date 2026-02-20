@@ -2,23 +2,36 @@
 import type { FormKitFrameworkContext } from '@formkit/core'
 import type { PropType } from 'vue'
 import { useFormKitInput } from '../../utils/useFormKitInput'
+import type { Time } from '@internationalized/date'
+import type { AvatarProps } from '#ui/components/Avatar.vue'
 
 export interface FormKitInputTimeProps {
-  autofocus?: boolean
   color?: 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'
+  variant?: 'outline' | 'soft' | 'subtle' | 'ghost' | 'none'
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
+  highlight?: boolean
+  fixed?: boolean
+  autofocus?: boolean
+  autofocusDelay?: number
+  defaultValue: Time
+  placeholder?: Time
+  defaultPlaceholder?: Time
+  hourCycle?: 12 | 24
+  step?: any
+  stepSnapping?: boolean
+  granularity?: 'hour' | 'minute' | 'second'
+  hideTimeZone?: boolean
+  maxValue?: Time
+  minValue?: Time
   icon?: string
-  inputClass?: string
+  avatar?: AvatarProps
   leading?: boolean
   leadingIcon?: string
-  loading?: boolean
-  padded?: boolean
-  placeholder?: string
-  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
   trailing?: boolean
   trailingIcon?: string
-  variant?: 'outline' | 'soft' | 'subtle' | 'ghost' | 'none'
-  format?: '12' | '24'
-  step?: number
+  loading?: boolean
+  loadingIcon?: string
+  ui?: Record<string, unknown>
 }
 
 const props = defineProps({
@@ -36,26 +49,36 @@ const { handleInput, handleChange, isInvalid, styleClass, color, modelValue } = 
     :id="context.id"
     v-model="modelValue"
     v-bind="{ ...context?.attrs }"
-    :autofocus="context.autofocus"
+    :default-value="context.defaultValue"
     :class="styleClass"
-    :color="color as any"
     :disabled="!!context?.disabled"
-    :format="context.format as any"
-    :highlight="!!(isInvalid || context.highlight)"
+    :readonly="context?.attrs.readonly ?? false"
+    :style="context?.attrs.style"
+    :color="color"
+    :highlight="isInvalid || context.highlight"
+    :size="context.size ?? 'md'"
+    :variant="context.variant ?? 'outline'"
+    :placeholder="context.placeholder"
+    :default-placeholder="context.defaultPlaceholder"
+    :autofocus="context.autofocus"
+    :autofocus-delay="context.autofocusDelay"
+    :fixed="context.fixed"
     :icon="context.icon"
-    :input-class="context.inputClass"
+    :avatar="context.avatar"
     :leading="context.leading"
     :leading-icon="context.leadingIcon"
-    :loading="context.loading"
-    :padded="context.padded"
-    :placeholder="context.placeholder as any"
-    :readonly="context?.attrs.readonly ?? false"
-    :size="context.size ?? 'md'"
-    :step="context.step as any"
-    :style="context?.attrs.style"
     :trailing="context.trailing"
     :trailing-icon="context.trailingIcon"
-    :variant="context.variant ?? 'outline'"
+    :loading="context.loading"
+    :loading-icon="context.loadingIcon"
+    :hour-cycle="context.hourCycle"
+    :step="context.step"
+    :step-snapping="context.stepSnapping"
+    :granularity="context.granularity"
+    :hide-time-zone="context.hideTimeZone"
+    :max-value="context.maxValue"
+    :min-value="context.minValue"
+    :ui="context.ui"
     @change="handleChange"
     @update:model-value="handleInput"
   />
