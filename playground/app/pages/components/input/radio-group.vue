@@ -109,15 +109,15 @@ const radioGroupSchema = [
   {
     $formkit: 'nuxtUIRadioGroup',
     name: 'radio12',
-    label: 'Custom Value Attribute',
-    help: 'Using custom value attribute',
+    label: 'Custom Value Keys',
+    help: 'Using custom value and label keys',
     options: [
       { id: 1, name: 'First Option' },
       { id: 2, name: 'Second Option' },
       { id: 3, name: 'Third Option' },
     ],
-    valueAttribute: 'id',
-    optionAttribute: 'name',
+    valueKey: 'id',
+    labelKey: 'name',
   },
   {
     $formkit: 'nuxtUIRadioGroup',
@@ -219,10 +219,10 @@ const radioGroupSchema = [
 
         <section>
           <h2 class="text-2xl font-semibold mb-4">
-            Custom Attributes
+            Custom Keys
           </h2>
           <p class="text-muted-foreground mb-6">
-            Use custom value and option attributes for flexible data structures.
+            Use custom value and label keys for flexible data structures.
           </p>
           <FUDataEdit
             :data="{}"

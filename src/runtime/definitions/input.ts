@@ -63,7 +63,7 @@ export const nuxtUIPinInputDefinition: FormKitTypeDefinition = createInput(FUPin
 })
 
 export const nuxtUIRadioGroupDefinition: FormKitTypeDefinition = createInput(FURadioGroup, {
-  props: ['options', 'size', 'color', 'inputClass', 'valueAttribute', 'optionAttribute', 'orientation'],
+  props: ['options', 'legend', 'valueKey', 'labelKey', 'descriptionKey', 'size', 'variant', 'orientation', 'loop', 'name', 'color', 'indicator', 'ui'],
   family: 'NuxtUIInput',
 })
 

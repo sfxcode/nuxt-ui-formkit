@@ -12,13 +12,19 @@ export interface RadioOption {
 }
 
 export interface FormKitRadioGroupProps {
-  color?: 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'
   options?: RadioOption[]
-  valueAttribute?: string
-  optionAttribute?: string
+  legend?: string
+  valueKey?: string
+  labelKey?: string
+  descriptionKey?: string
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
+  variant?: 'table' | 'list' | 'card'
   orientation?: 'horizontal' | 'vertical'
-  inputClass?: string
+  loop?: boolean
+  name?: string
+  color?: 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'
+  indicator?: 'start' | 'end' | 'hidden'
+  ui?: Record<string, unknown>
 }
 
 const props = defineProps({
@@ -28,7 +34,7 @@ const props = defineProps({
   },
 })
 
-const { handleInput, handleChange, isInvalid, styleClass, color, modelValue } = useFormKitInput(props.context)
+const { handleInput, handleChange, styleClass, color, modelValue, items } = useFormKitInput(props.context)
 </script>
 
 <template>
@@ -37,16 +43,19 @@ const { handleInput, handleChange, isInvalid, styleClass, color, modelValue } = 
     v-model="modelValue"
     v-bind="{ ...context?.attrs }"
     :class="styleClass"
-    :color="color as any"
     :disabled="!!context?.disabled"
-    :highlight="!!(isInvalid || context.highlight)"
-    :input-class="context.inputClass"
-    :option-attribute="context.optionAttribute ?? 'label'"
-    :options="context.options ?? []"
-    :orientation="context.orientation ?? 'vertical'"
-    :size="context.size ?? 'md'"
     :style="context?.attrs.style"
-    :value-attribute="context.valueAttribute ?? 'value'"
+    :color="color"
+    :size="context.size ?? 'md'"
+    :variant="context.variant ?? 'list'"
+    :orientation="context.orientation ?? 'vertical'"
+    :items="items"
+    :legend="context.legend"
+    :value-key="context.valueKey"
+    :label-key="context.labelKey"
+    :description-key="context.descriptionKey"
+    :loop="context.loop ?? false"
+    :name="context.name"
     @change="handleChange"
     @update:model-value="handleInput"
   />
