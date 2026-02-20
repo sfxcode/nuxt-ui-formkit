@@ -33,7 +33,7 @@ export const nuxtUIColorPickerDefinition: FormKitTypeDefinition = createInput(FU
 })
 
 export const nuxtUIInputDefinition: FormKitTypeDefinition = createInput(FUInput, {
-  props: ['inputType', 'size', 'autocomplete', 'autofocus', 'autofocusDelay', 'highlight', 'fixed', 'color', 'icon', 'avatar', 'leading', 'leadingIcon', 'trailing', 'trailingIcon', 'loading', 'loadingIcon', 'placeholder', 'list', 'max', 'maxLength', 'min', 'minLength', 'pattern', 'step', 'variant'],
+  props: ['inputType', 'size', 'autocomplete', 'autofocus', 'autofocusDelay', 'highlight', 'fixed', 'color', 'icon', 'avatar', 'leading', 'leadingIcon', 'trailing', 'trailingIcon', 'loading', 'loadingIcon', 'placeholder', 'list', 'max', 'maxLength', 'min', 'minLength', 'pattern', 'step', 'variant', 'ui'],
   family: 'NuxtUIInput',
 })
 
