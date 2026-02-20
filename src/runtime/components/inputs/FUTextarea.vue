@@ -2,7 +2,6 @@
 import type { FormKitFrameworkContext } from '@formkit/core'
 
 import type { PropType } from 'vue'
-import { computed } from 'vue'
 import { useFormKitInput } from '../../utils/useFormKitInput'
 
 export interface FormKitTextareaProps {
@@ -31,14 +30,7 @@ const props = defineProps({
   },
 })
 
-const modelValue = computed({
-  get: () => props.context._value,
-  set: (value) => {
-    props.context.node.input(value)
-  },
-})
-
-const { handleInput, handleChange, styleClass, color, isInvalid } = useFormKitInput(props.context)
+const { handleInput, handleChange, styleClass, color, isInvalid, modelValue } = useFormKitInput(props.context)
 </script>
 
 <template>
@@ -49,19 +41,19 @@ const { handleInput, handleChange, styleClass, color, isInvalid } = useFormKitIn
     :autofocus="context.autofocus"
     :autoresize="context.autoresize"
     :class="styleClass"
-    :color="color"
+    :color="color as any"
     :cols="context.cols"
     :disabled="!!context?.disabled"
     :highlight="isInvalid || context.highlight"
     :icon="context.icon"
     :input-class="context.inputClass"
     :loading="context.loading"
-    :maxrows="context.maxrows"
+    :maxrows="context.maxrows as any"
     :padded="context.padded"
     :placeholder="context.placeholder"
     :readonly="context?.attrs.readonly ?? false"
     :resize="context.resize"
-    :rows="context.rows"
+    :rows="context.rows as any"
     :size="context.size ?? 'md'"
     :style="context?.attrs.style"
     :trailing-icon="context.trailingIcon"

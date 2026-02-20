@@ -41,5 +41,20 @@ export function useFormKitInput(context: FormKitFrameworkContext) {
     context?.node?.input?.(e)
   }
 
-  return { isInvalid, validSlotNames, styleClass, color, handleBlur, handleChange, handleInput, handleSelect }
+  const modelValue = computed({
+    get: () => context._value,
+    set: (value) => {
+      context.node.input(value)
+    },
+  })
+
+  const items = computed(() => {
+    const options = context.options ?? context.attrs.items
+    if (Array.isArray(options)) {
+      return options
+    }
+    return []
+  })
+
+  return { isInvalid, validSlotNames, styleClass, color, handleBlur, handleChange, handleInput, handleSelect, modelValue, items }
 }

@@ -2,7 +2,6 @@
 import type { FormKitFrameworkContext } from '@formkit/core'
 import type { DateValue } from '@internationalized/date'
 import type { PropType } from 'vue'
-import { computed } from 'vue'
 import { useFormKitInput } from '../../utils/useFormKitInput'
 
 export interface FormKitInputDateProps {
@@ -40,14 +39,7 @@ const props = defineProps({
   },
 })
 
-const modelValue = computed({
-  get: () => props.context._value,
-  set: (value) => {
-    props.context.node.input(value)
-  },
-})
-
-const { handleInput, handleChange, isInvalid, styleClass, color } = useFormKitInput(props.context)
+const { handleInput, handleChange, isInvalid, styleClass, color, modelValue } = useFormKitInput(props.context)
 </script>
 
 <template>

@@ -2,7 +2,6 @@
 import type { FormKitFrameworkContext } from '@formkit/core'
 
 import type { PropType } from 'vue'
-import { computed } from 'vue'
 import { useFormKitInput } from '../../utils/useFormKitInput'
 
 export interface FormKitCheckboxProps {
@@ -22,14 +21,7 @@ const props = defineProps({
   },
 })
 
-const modelValue = computed({
-  get: () => props.context._value,
-  set: (value) => {
-    props.context.node.input(value)
-  },
-})
-
-const { handleInput, handleChange, styleClass } = useFormKitInput(props.context)
+const { handleInput, handleChange, styleClass, modelValue } = useFormKitInput(props.context)
 </script>
 
 <template>

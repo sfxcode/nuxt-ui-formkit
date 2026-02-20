@@ -2,7 +2,6 @@
 import type { FormKitFrameworkContext } from '@formkit/core'
 
 import type { PropType } from 'vue'
-import { computed } from 'vue'
 import { useFormKitInput } from '../../utils/useFormKitInput'
 import type { SelectMenuItem } from '#ui/components/SelectMenu.vue'
 
@@ -36,22 +35,7 @@ const props = defineProps({
   },
 })
 
-const modelValue = computed({
-  get: () => props.context._value,
-  set: (value) => {
-    props.context.node.input(value)
-  },
-})
-
-const items = computed(() => {
-  const options = props.context.options ?? props.context.attrs.items
-  if (Array.isArray(options)) {
-    return options
-  }
-  return []
-})
-
-const { handleInput, handleChange, isInvalid, color, styleClass } = useFormKitInput(props.context)
+const { handleInput, handleChange, isInvalid, color, styleClass, modelValue, items } = useFormKitInput(props.context)
 </script>
 
 <template>
@@ -61,10 +45,10 @@ const { handleInput, handleChange, isInvalid, color, styleClass } = useFormKitIn
     v-bind="{ ...context?.attrs }"
     :class="styleClass"
     :clearable="context.clearable"
-    :color="color"
+    :color="color as any"
     :creatable="context.creatable"
     :disabled="!!context?.disabled"
-    :highlight="isInvalid || context.highlight"
+    :highlight="!!(isInvalid || context.highlight)"
     :icon="context.icon"
     :input-class="context.inputClass"
     :items="items"

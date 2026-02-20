@@ -8,12 +8,6 @@ const items = ref<NavigationMenuItem[]>([
     active: true,
     children: [
       {
-        label: 'Input',
-        icon: 'i-lucide-file-text',
-        description: 'Input component with various types and validations.',
-        to: '/components/input/input',
-      },
-      {
         label: 'Checkbox',
         icon: 'i-lucide-check',
         description: 'Checkbox component for single selection.',
@@ -30,6 +24,12 @@ const items = ref<NavigationMenuItem[]>([
         icon: 'i-lucide-palette',
         description: 'Color picker for selecting colors in multiple formats.',
         to: '/components/input/color-picker',
+      },
+      {
+        label: 'Input',
+        icon: 'i-lucide-file-text',
+        description: 'Input component with various types and validations.',
+        to: '/components/input/input',
       },
       {
         label: 'InputDate',
@@ -97,12 +97,6 @@ const items = ref<NavigationMenuItem[]>([
         description: 'Textarea component with various types and validations.',
         to: '/components/input/textarea',
       },
-      {
-        label: 'Select',
-        icon: 'i-lucide-list',
-        description: 'Select component with single and multiple selection.',
-        to: '/components/input/select',
-      },
     ],
   },
   {
@@ -110,12 +104,6 @@ const items = ref<NavigationMenuItem[]>([
     icon: 'i-lucide-box',
     active: false,
     children: [
-      {
-        label: 'OutputText',
-        icon: 'i-lucide-file-text',
-        description: 'Read-only text display with icons and styling.',
-        to: '/components/output/text',
-      },
       {
         label: 'OutputBoolean',
         icon: 'i-lucide-toggle-left',
@@ -127,6 +115,12 @@ const items = ref<NavigationMenuItem[]>([
         icon: 'i-lucide-calendar',
         description: 'Date display with formatting and relative time support.',
         to: '/components/output/date',
+      },
+      {
+        label: 'OutputText',
+        icon: 'i-lucide-file-text',
+        description: 'Read-only text display with icons and styling.',
+        to: '/components/output/text',
       },
     ],
   },

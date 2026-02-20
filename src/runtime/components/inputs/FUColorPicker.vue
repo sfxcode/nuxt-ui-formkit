@@ -1,7 +1,6 @@
 <script setup lang='ts'>
 import type { FormKitFrameworkContext } from '@formkit/core'
 import type { PropType } from 'vue'
-import { computed } from 'vue'
 import { useFormKitInput } from '../../utils/useFormKitInput'
 
 export interface FormKitColorPickerProps {
@@ -22,14 +21,7 @@ const props = defineProps({
   },
 })
 
-const modelValue = computed({
-  get: () => props.context._value ?? '#000000',
-  set: (value) => {
-    props.context.node.input(value)
-  },
-})
-
-const { handleInput, handleChange, isInvalid, styleClass } = useFormKitInput(props.context)
+const { handleInput, handleChange, isInvalid, styleClass, modelValue } = useFormKitInput(props.context)
 </script>
 
 <template>

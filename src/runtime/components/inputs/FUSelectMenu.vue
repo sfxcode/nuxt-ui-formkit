@@ -1,7 +1,6 @@
 <script setup lang='ts'>
 import type { FormKitFrameworkContext } from '@formkit/core'
 import type { PropType } from 'vue'
-import { computed } from 'vue'
 import { useFormKitInput } from '../../utils/useFormKitInput'
 
 export interface SelectMenuGroup {
@@ -50,14 +49,7 @@ const props = defineProps({
   },
 })
 
-const modelValue = computed({
-  get: () => props.context._value,
-  set: (value) => {
-    props.context.node.input(value)
-  },
-})
-
-const { handleInput, handleChange, isInvalid, styleClass, color } = useFormKitInput(props.context)
+const { handleInput, handleChange, isInvalid, styleClass, color, modelValue, items } = useFormKitInput(props.context)
 </script>
 
 <template>
@@ -76,7 +68,7 @@ const { handleInput, handleChange, isInvalid, styleClass, color } = useFormKitIn
     :loading="context.loading"
     :multiple="context.multiple"
     :option-attribute="context.optionAttribute ?? 'label'"
-    :options="context.options ?? []"
+    :items="items"
     :padded="context.padded"
     :placeholder="context.placeholder"
     :readonly="context?.attrs.readonly ?? false"

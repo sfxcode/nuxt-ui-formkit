@@ -13,9 +13,9 @@ export function addNuxtAsteriskPlugin(node: FormKitNode): void {
             $el: 'span',
             if: '$state.required',
             attrs: {
-              class: 'p-formkit-asterisk',
+              class: 'text-error nuxt-ui-formkit--asterisk',
             },
-            children: ['*'],
+            children: [' *'],
           }],
         }
 
