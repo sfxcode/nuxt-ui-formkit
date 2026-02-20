@@ -50,18 +50,18 @@ const pinInputSchema = [
     $formkit: 'nuxtUIPinInput',
     name: 'pin6',
     placeholder: '0',
-    label: 'Number Type',
-    help: 'Only numbers allowed',
-    type: 'number',
+    label: 'With Autofocus',
+    help: 'Automatically focused on load',
+    autofocus: true,
     length: 6,
   },
   {
     $formkit: 'nuxtUIPinInput',
     name: 'pin7',
     placeholder: '-',
-    label: 'Text Type',
-    help: 'Alphanumeric allowed',
-    type: 'text',
+    label: 'With Highlight',
+    help: 'Highlighted style',
+    highlight: true,
     length: 6,
   },
   {
@@ -148,8 +148,8 @@ const pinInputSchema = [
     $formkit: 'nuxtUIPinInput',
     name: 'pin18',
     placeholder: '0',
-    label: 'With Padding',
-    padded: true,
+    label: 'With Fixed Positioning',
+    fixed: true,
     length: 4,
   },
   {
@@ -223,10 +223,10 @@ const pinInputSchema = [
 
         <section>
           <h2 class="text-2xl font-semibold mb-4">
-            Input Types
+            Input Features
           </h2>
           <p class="text-muted-foreground mb-6">
-            Configure number-only or alphanumeric input.
+            Configure autofocus and highlight styling.
           </p>
           <FUDataEdit
             :data="{}"
@@ -286,7 +286,7 @@ const pinInputSchema = [
             Styling Options
           </h2>
           <p class="text-muted-foreground mb-6">
-            Customize padding to match your design.
+            Fixed positioning for input elements.
           </p>
           <FUDataEdit
             :data="{}"

@@ -58,7 +58,7 @@ export const nuxtUIInputTimeDefinition: FormKitTypeDefinition = createInput(FUIn
 })
 
 export const nuxtUIPinInputDefinition: FormKitTypeDefinition = createInput(FUPinInput, {
-  props: ['placeholder', 'autofocus', 'size', 'color', 'variant', 'inputClass', 'padded', 'length', 'mask', 'otp', 'type'],
+  props: ['color', 'variant', 'size', 'length', 'autofocus', 'autofocusDelay', 'highlight', 'fixed', 'defaultValue', 'mask', 'otp', 'placeholder', 'ui'],
   family: 'NuxtUIInput',
 })
 

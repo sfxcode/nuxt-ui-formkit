@@ -4,17 +4,19 @@ import type { PropType } from 'vue'
 import { useFormKitInput } from '../../utils/useFormKitInput'
 
 export interface FormKitPinInputProps {
-  autofocus?: boolean
   color?: 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'
-  inputClass?: string
-  length?: number
+  variant?: 'outline' | 'soft' | 'subtle' | 'ghost' | 'none'
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
+  length?: string | number
+  autofocus?: boolean
+  autofocusDelay?: number
+  highlight?: boolean
+  fixed?: boolean
+  defaultValue?: string[] | undefined
   mask?: boolean
   otp?: boolean
-  padded?: boolean
   placeholder?: string
-  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
-  type?: 'text' | 'number'
-  variant?: 'outline' | 'soft' | 'subtle' | 'ghost' | 'none'
+  ui?: Record<string, unknown>
 }
 
 const props = defineProps({
@@ -32,22 +34,22 @@ const { handleInput, handleChange, isInvalid, styleClass, color, modelValue } = 
     :id="context.id"
     v-model="modelValue"
     v-bind="{ ...context?.attrs }"
-    :autofocus="context.autofocus"
+    :default-value="context.defaultValue"
     :class="styleClass"
-    :color="color as any"
     :disabled="!!context?.disabled"
-    :highlight="!!(isInvalid || context.highlight)"
-    :input-class="context.inputClass"
-    :length="context.length ?? 6"
+    :readonly="context?.attrs.readonly ?? false"
+    :style="context?.attrs.style"
+    :color="color"
+    :highlight="isInvalid || context.highlight"
+    :size="context.size ?? 'md'"
+    :variant="context.variant ?? 'outline'"
+    :length="context.length ?? 5"
+    :autofocus="context.autofocus"
+    :autofocus-delay="context.autofocusDelay"
+    :fixed="context.fixed"
     :mask="context.mask"
     :otp="context.otp"
-    :padded="context.padded"
     :placeholder="context.placeholder"
-    :readonly="context?.attrs.readonly ?? false"
-    :size="context.size ?? 'md'"
-    :style="context?.attrs.style"
-    :type="context.type ?? 'text'"
-    :variant="context.variant ?? 'outline'"
     @change="handleChange"
     @update:model-value="handleInput"
   />
