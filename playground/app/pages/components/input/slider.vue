@@ -60,26 +60,24 @@ const sliderSchema = [
     name: 'slider7',
     label: 'With Tooltip',
     help: 'Shows current value in tooltip',
-    showTooltip: true,
+    tooltip: true,
     value: 50,
   },
   {
     $formkit: 'nuxtUISlider',
     name: 'slider8',
-    label: 'Tooltip Top',
-    help: 'Tooltip positioned at top',
-    showTooltip: true,
-    tooltipPosition: 'top',
+    label: 'Inverted Slider',
+    help: 'Slider with inverted direction',
+    inverted: true,
     value: 60,
   },
   {
     $formkit: 'nuxtUISlider',
     name: 'slider9',
-    label: 'Tooltip Bottom',
-    help: 'Tooltip positioned at bottom',
-    showTooltip: true,
-    tooltipPosition: 'bottom',
-    value: 40,
+    label: 'Range with Min Steps',
+    help: 'Range slider with minimum steps between thumbs',
+    value: [20, 60],
+    minStepsBetweenThumbs: 10,
   },
   {
     $formkit: 'nuxtUISlider',
@@ -239,10 +237,10 @@ const sliderSchema = [
 
         <section>
           <h2 class="text-2xl font-semibold mb-4">
-            Tooltips
+            Advanced Features
           </h2>
           <p class="text-muted-foreground mb-6">
-            Show current value in tooltips with different positions.
+            Tooltip display, inverted direction, and range sliders with minimum steps between thumbs.
           </p>
           <FUDataEdit
             :data="{}"

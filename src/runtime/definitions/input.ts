@@ -78,7 +78,7 @@ export const nuxtUISelectMenuDefinition: FormKitTypeDefinition = createInput(FUS
 })
 
 export const nuxtUISliderDefinition: FormKitTypeDefinition = createInput(FUSlider, {
-  props: ['size', 'color', 'inputClass', 'min', 'max', 'step', 'orientation', 'showTooltip', 'tooltipPosition'],
+  props: ['color', 'size', 'orientation', 'tooltip', 'defaultValue', 'name', 'inverted', 'min', 'max', 'step', 'minStepsBetweenThumbs', 'ui'],
   family: 'NuxtUIInput',
 })
 

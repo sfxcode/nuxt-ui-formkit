@@ -6,13 +6,16 @@ import { useFormKitInput } from '../../utils/useFormKitInput'
 export interface FormKitSliderProps {
   color?: 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
-  inputClass?: string
+  orientation?: 'horizontal' | 'vertical'
+  tooltip?: boolean
+  defaultValue?: number | number[]
+  name?: string
+  inverted?: boolean
   min?: number
   max?: number
   step?: number
-  orientation?: 'horizontal' | 'vertical'
-  showTooltip?: boolean
-  tooltipPosition?: 'top' | 'bottom' | 'left' | 'right'
+  minStepsBetweenThumbs?: number
+  ui?: Record<string, unknown>
 }
 
 const props = defineProps({
@@ -22,7 +25,7 @@ const props = defineProps({
   },
 })
 
-const { handleInput, handleChange, isInvalid, styleClass, color, modelValue } = useFormKitInput(props.context)
+const { handleInput, handleChange, styleClass, color, modelValue } = useFormKitInput(props.context)
 </script>
 
 <template>
@@ -31,18 +34,21 @@ const { handleInput, handleChange, isInvalid, styleClass, color, modelValue } = 
     v-model="modelValue"
     v-bind="{ ...context?.attrs }"
     :class="styleClass"
-    :color="color as any"
     :disabled="!!context?.disabled"
-    :highlight="!!(isInvalid || context.highlight)"
-    :input-class="context.inputClass"
-    :max="context.max ?? 100"
-    :min="context.min ?? 0"
-    :orientation="context.orientation ?? 'horizontal'"
-    :show-tooltip="context.showTooltip"
-    :size="context.size ?? 'md'"
-    :step="context.step ?? 1"
     :style="context?.attrs.style"
-    :tooltip-position="context.tooltipPosition"
+    :color="color"
+    :size="context.size ?? 'md'"
+    :variant="context.variant ?? 'outline'"
+    :orientation="context.orientation ?? 'horizontal'"
+    :tooltip="context.tooltip"
+    :default-value="context.defaultValue"
+    :name="context.name"
+    :inverted="context.inverted"
+    :min="context.min"
+    :max="context.max"
+    :step="context.step"
+    :min-steps-between-thumbs="context.minStepsBetweenThumbs"
+    :ui="context.ui"
     @change="handleChange"
     @update:model-value="handleInput"
   />
