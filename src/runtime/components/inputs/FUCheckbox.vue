@@ -5,13 +5,17 @@ import type { PropType } from 'vue'
 import { useFormKitInput } from '../../utils/useFormKitInput'
 
 export interface FormKitCheckboxProps {
-  color?: 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'
-  description?: string
-  help?: string
-  inputClass?: string
   label?: string
-  required?: boolean
+  description?: string
+  color?: 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'
+  variant?: 'card' | 'list'
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
+  indicator?: 'start' | 'end' | 'hidden'
+  icon?: string
+  indeterminateIcon?: string
+  required?: boolean
+  autofocus?: false | true | 'true' | 'false'
+  ui?: Record<string, unknown>
 }
 
 const props = defineProps({
@@ -30,14 +34,19 @@ const { handleInput, handleChange, styleClass, modelValue } = useFormKitInput(pr
     v-model="modelValue"
     v-bind="{ ...context?.attrs }"
     :class="styleClass"
-    :color="context.color ?? 'primary'"
-    :description="context.description"
-    :disabled="!!context?.disabled"
-    :help="context.help"
-    :input-class="context.inputClass"
-    :label="context.label"
-    :size="context.size ?? 'md'"
     :style="context?.attrs.style"
+    :disabled="!!context?.disabled"
+    :size="context.size ?? 'md'"
+    :color="context.color ?? 'primary'"
+    :variant="context.variant"
+    :description="context.description"
+    :label="context.label"
+    :indicator="context.indicator"
+    :icon="context.icon"
+    :indeterminate-icon="context.indeterminateIcon"
+    :required="context.required"
+    :autofocus="context.autofocus"
+    :ui="context.ui"
     @change="handleChange"
     @update:model-value="handleInput"
   />
