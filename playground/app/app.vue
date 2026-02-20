@@ -14,16 +14,22 @@ const items = ref<NavigationMenuItem[]>([
         to: '/components/input/input',
       },
       {
-        label: 'ColorPicker',
-        icon: 'i-lucide-palette',
-        description: 'Color picker for selecting colors in multiple formats.',
-        to: '/components/input/color-picker',
+        label: 'Checkbox',
+        icon: 'i-lucide-check',
+        description: 'Checkbox component for single selection.',
+        to: '/components/input/checkbox',
       },
       {
         label: 'CheckboxGroup',
         icon: 'i-lucide-check-square',
         description: 'Checkbox group for multiple selection.',
         to: '/components/input/checkbox-group',
+      },
+      {
+        label: 'ColorPicker',
+        icon: 'i-lucide-palette',
+        description: 'Color picker for selecting colors in multiple formats.',
+        to: '/components/input/color-picker',
       },
       {
         label: 'InputDate',
@@ -54,6 +60,12 @@ const items = ref<NavigationMenuItem[]>([
         icon: 'i-lucide-lock',
         description: 'PIN/OTP input component for secure code entry.',
         to: '/components/input/pin-input',
+      },
+      {
+        label: 'RadioGroup',
+        icon: 'i-lucide-circle-dot',
+        description: 'Radio button group for single selection from multiple options.',
+        to: '/components/input/radio-group',
       },
       {
         label: 'Select',

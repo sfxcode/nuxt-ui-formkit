@@ -1,8 +1,10 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup lang="ts">
+import type { SelectItem } from '@nuxt/ui'
+
 const { addElement } = useFormKitSchema()
 
-const options = [
+const items: SelectItem[] = [
   { label: 'Every page load', value: 'refresh' },
   { label: 'Every hour', value: 'hourly' },
   { label: 'Every day', value: 'daily' },
@@ -10,8 +12,8 @@ const options = [
 
 const schema = reactive(
   [
-    addElement('h2', ['Register ', '$email']),
-    addElement('h3', 'Header Text H3'),
+    addElement('h2', ['Register ', '$email'], { class: 'text-2xl' }),
+    addElement('h3', 'Header Text H3', { class: 'text-xl' }),
     {
       $formkit: 'nuxtUIInput',
       name: 'email',
@@ -51,7 +53,7 @@ const schema = reactive(
       $formkit: 'nuxtUICheckbox',
       name: 'eu_citizen',
       id: 'eu',
-      prefix: 'Are you a european citizen?',
+      label: 'Are you a european citizen?',
     },
     {
       $formkit: 'nuxtUISelect',
@@ -60,7 +62,8 @@ const schema = reactive(
       label: 'Cookie notice frequency',
       optionLabel: 'label',
       optionValue: 'value',
-      options,
+      items,
+      class: 'w-48',
       help: 'How often should we display a cookie notice?',
       outerClass: 'col-6',
     },
@@ -73,8 +76,6 @@ const data = ref({ email: 'tom@sfxcode.com', eu_citizen: false })
 <template>
   <div>
     <UContainer>
-      <h1>Welcome to Your Vue.js App</h1>
-      <p>This is the main page of your Vue.js application.</p>
       <FUDataEdit
         :data="data"
         :schema="schema"

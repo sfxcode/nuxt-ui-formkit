@@ -16,9 +16,6 @@ import FUSelectMenu from '../components/inputs/FUSelectMenu.vue'
 import FUSlider from '../components/inputs/FUSlider.vue'
 import FUSwitch from '../components/inputs/FUSwitch.vue'
 import FUTextarea from '../components/inputs/FUTextarea.vue'
-import FUOutputDate from '../components/output/FUOutputDate.vue'
-import FUOutputBoolean from '../components/output/FUOutputBoolean.vue'
-import FUOutputText from '../components/output/FUOutputText.vue'
 
 export const nuxtUICheckboxDefinition: FormKitTypeDefinition = createInput(FUCheckbox, {
   props: ['label', 'description', 'required', 'help', 'color', 'size', 'inputClass', 'ui'],
@@ -36,7 +33,7 @@ export const nuxtUIColorPickerDefinition: FormKitTypeDefinition = createInput(FU
 })
 
 export const nuxtUIInputDefinition: FormKitTypeDefinition = createInput(FUInput, {
-  props: ['inputType', 'placeholder', 'autofocus', 'padded', 'size', 'color', 'variant', 'inputClass', 'loading', 'icon', 'trailingIcon', 'leadingIcon', 'trailing', 'leading'],
+  props: ['inputType', 'placeholder', 'autofocus', 'autofocusDelay', 'size', 'color', 'variant', 'inputClass', 'loading', 'icon', 'trailingIcon', 'leadingIcon', 'trailing', 'leading'],
   family: 'NuxtUIInput',
 })
 

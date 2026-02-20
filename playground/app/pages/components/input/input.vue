@@ -141,10 +141,10 @@ const inputSchema = [
   },
   {
     $formkit: 'nuxtUIInput',
-    name: 'input19',
-    placeholder: 'With Padding',
-    label: 'With Padding',
-    padded: true,
+    name: 'input18',
+    placeholder: 'Variant Ghost',
+    label: 'Variant Ghost',
+    variant: 'ghost',
   },
   {
     $formkit: 'nuxtUIInput',

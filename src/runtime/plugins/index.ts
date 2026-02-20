@@ -1,7 +1,7 @@
 import type { FormKitExtendableSchemaRoot, FormKitNode } from '@formkit/core'
 
 export function addNuxtAsteriskPlugin(node: FormKitNode): void {
-  if (!node.props.type.startsWith('UF') || node.props.type.startsWith('UFOutput'))
+  if (!node.props.type.startsWith('nuxtUI') || node.props.type.startsWith('UFOutput'))
     return
 
   node.on('created', () => {
@@ -26,7 +26,7 @@ export function addNuxtAsteriskPlugin(node: FormKitNode): void {
 }
 
 export function addNuxtLabelPlugin(node: FormKitNode): void {
-  if (!node.props.type.startsWith('prime'))
+  if (!node.props.type.startsWith('nuxtUi'))
     return
 
   node.on('created', () => {

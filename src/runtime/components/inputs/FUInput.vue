@@ -14,7 +14,7 @@ export interface FormKitInputProps {
   leading?: boolean
   leadingIcon?: string
   loading?: boolean
-  padded?: boolean
+  autofocusDelay?: number
   placeholder?: string
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
   trailing?: boolean
@@ -54,7 +54,7 @@ const { handleInput, handleChange, isInvalid, styleClass, color } = useFormKitIn
     :leading="context.leading"
     :leading-icon="context.leadingIcon"
     :loading="context.loading"
-    :padded="context.padded"
+    :autofocus-delay="context.autofocusDelay"
     :placeholder="context.placeholder"
     :readonly="context?.attrs.readonly ?? false"
     :size="context.size ?? 'md'"

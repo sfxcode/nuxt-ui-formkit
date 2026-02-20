@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-import type { FormKitSchemaDefinition } from '@formkit/core'
+import type { FormKitGroupValue, FormKitSchemaDefinition } from '@formkit/core'
 import type { PropType } from 'vue'
 import { reset } from '@formkit/core'
 import { FormKit, FormKitMessages, FormKitSchema } from '@formkit/vue'

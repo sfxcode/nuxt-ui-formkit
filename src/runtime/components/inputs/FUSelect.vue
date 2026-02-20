@@ -43,6 +43,14 @@ const modelValue = computed({
   },
 })
 
+const items = computed(() => {
+  const options = props.context.options ?? props.context.attrs.items
+  if (Array.isArray(options)) {
+    return options
+  }
+  return []
+})
+
 const { handleInput, handleChange, isInvalid, color, styleClass } = useFormKitInput(props.context)
 </script>
 
@@ -59,7 +67,7 @@ const { handleInput, handleChange, isInvalid, color, styleClass } = useFormKitIn
     :highlight="isInvalid || context.highlight"
     :icon="context.icon"
     :input-class="context.inputClass"
-    :items="context?.options ?? context.attrs.items"
+    :items="items"
     :leading="context.leading"
     :leading-icon="context.leadingIcon"
     :loading="context.loading"
@@ -79,5 +87,4 @@ const { handleInput, handleChange, isInvalid, color, styleClass } = useFormKitIn
     @change="handleChange"
     @update:model-value="handleInput"
   />
-  {{ context.attrs }}
 </template>

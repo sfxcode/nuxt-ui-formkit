@@ -8,6 +8,10 @@ defineProps({
     type: String,
     default: 'Debug',
   },
+  textClass: {
+    type: String,
+    default: 'text-xs',
+  },
 })
 </script>
 
@@ -17,7 +21,10 @@ defineProps({
       {{ header }}
     </h3>
     <slot />
-    <pre v-if="data">{{ data }}</pre>
+    <pre
+      v-if="data"
+      :class="textClass"
+    >{{ data }}</pre>
     <span v-else>No Data available</span>
   </div>
 </template>
