@@ -72,20 +72,20 @@
   },
   "devDependencies": {
     "@iconify-json/heroicons": "^1.2.3",
-    "@iconify-json/lucide": "^1.2.91",
+    "@iconify-json/lucide": "^1.2.92",
     "@iconify-json/simple-icons": "^1.2.71",
     "@nuxt/devtools": "^3.2.1",
     "@nuxt/eslint-config": "^1.15.1",
     "@nuxt/module-builder": "^1.0.2",
     "@nuxt/schema": "^4.3.1",
-    "@nuxt/test-utils": "^3.23.0",
+    "@nuxt/test-utils": "^4.0.0",
     "@types/node": "latest",
     "changelogen": "^0.6.2",
-    "eslint": "^9.39.2",
+    "eslint": "^10.0.1",
     "nuxt": "^4.3.1",
     "sass-embedded": "^1.97.3",
     "typescript": "~5.9.3",
     "vitest": "^4.0.18",
-    "vue-tsc": "^3.2.4"
+    "vue-tsc": "^3.2.5"
   }
 }
