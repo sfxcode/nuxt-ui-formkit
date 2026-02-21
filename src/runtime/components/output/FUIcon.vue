@@ -23,7 +23,6 @@ defineProps({
 <template>
   <UIcon
     :name="name"
-    :class="iconClass"
     @click="onClick"
   />
 </template>

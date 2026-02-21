@@ -61,14 +61,14 @@ const { containerClass, iconClass, leadingIconName, trailingIconName } = useForm
     <FUIcon
       v-if="leadingIconName"
       :name="leadingIconName as string"
-      :icon-class="iconClass"
+      :class="iconClass"
       :on-click="context?.onLeadingIconClicked"
     />
     <span>{{ displayValue }}</span>
     <FUIcon
       v-if="trailingIconName"
       :name="trailingIconName as string"
-      :icon-class="iconClass"
+      :class="iconClass"
       :on-click="context?.onTrailingIconClicked"
     />
   </div>
