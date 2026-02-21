@@ -16,6 +16,8 @@ FormKit Nuxt UI bridges the gap between [FormKit](https://formkit.com/)'s powerf
 - [📖 &nbsp;FormKit Documentation](https://formkit.com/)
 - [🎨 &nbsp;Nuxt UI Documentation](https://ui.nuxt.com/)
 
+<img src="./formkit-nuxt-ui.png" alt="FormKit Nuxt UI Screenshot" width="70%" />
+
 ## Features
 
 ✨ **16 Input Components** - Complete set of FormKit-wrapped Nuxt UI input components
