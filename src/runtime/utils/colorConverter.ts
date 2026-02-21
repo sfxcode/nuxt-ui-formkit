@@ -14,22 +14,22 @@ export function convertColorToHex(color: string): string {
   }
 
   // RGB/RGBA format
-  if (trimmedColor.startsWith('rgb')) {
+  if (trimmedColor.toLowerCase().startsWith('rgb')) {
     return rgbToHex(trimmedColor)
   }
 
   // HSL/HSLA format
-  if (trimmedColor.startsWith('hsl')) {
+  if (trimmedColor.toLowerCase().startsWith('hsl')) {
     return hslToHex(trimmedColor)
   }
 
   // CMYK format
-  if (trimmedColor.startsWith('cmyk')) {
+  if (trimmedColor.toLowerCase().startsWith('cmyk')) {
     return cmykToHex(trimmedColor)
   }
 
   // LAB format
-  if (trimmedColor.startsWith('lab')) {
+  if (trimmedColor.toLowerCase().startsWith('lab')) {
     return labToHex(trimmedColor)
   }
 
@@ -46,7 +46,12 @@ export function convertColorToHex(color: string): string {
  * Normalizes hex color to 6-digit format
  */
 function normalizeHex(hex: string): string {
-  const cleaned = hex.replace('#', '')
+  const cleaned = hex.replace('#', '').toLowerCase()
+
+  // Validate hex characters
+  if (!/^[\da-f]+$/i.test(cleaned) || cleaned.length === 0) {
+    return '#000000'
+  }
 
   // 3-digit hex to 6-digit
   if (cleaned.length === 3) {
@@ -63,14 +68,25 @@ function normalizeHex(hex: string): string {
     return `#${cleaned.substring(0, 6)}`
   }
 
-  return `#${cleaned.substring(0, 6).padEnd(6, '0')}`
+  // 6-digit hex (standard)
+  if (cleaned.length === 6) {
+    return `#${cleaned}`
+  }
+
+  // 1, 2, or 5 digits - pad with zeros
+  if (cleaned.length < 6) {
+    return `#${cleaned.padEnd(6, '0')}`
+  }
+
+  // More than 8 digits - truncate to 6
+  return `#${cleaned.substring(0, 6)}`
 }
 
 /**
  * Converts RGB/RGBA to hex
  */
 function rgbToHex(rgb: string): string {
-  const match = rgb.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*[\d.]+)?\)/)
+  const match = rgb.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*[\d.]+)?\)/i)
   if (!match)
     return '#000000'
 
