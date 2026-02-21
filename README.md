@@ -5,6 +5,8 @@
 [![License][license-src]][license-href]
 [![Nuxt][nuxt-src]][nuxt-href]
 
+> **⚠️ Work in Progress**: This project is under active development. APIs, components, and features may change without notice. While the core functionality is stable, expect breaking changes in minor versions until v1.0.0 is released. Use with caution in production environments.
+
 > Seamless integration between FormKit form handling and Nuxt UI components for Nuxt 4
 
 FormKit Nuxt UI bridges the gap between [FormKit](https://formkit.com/)'s powerful form management and [Nuxt UI](https://ui.nuxt.com/)'s beautiful component library, providing a complete solution for building forms in Nuxt applications.
