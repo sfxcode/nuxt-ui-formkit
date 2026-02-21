@@ -28,6 +28,7 @@ export interface FormKitSelectMenuProps {
   searchInput?: boolean
   color?: 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'
   variant?: 'outline' | 'soft' | 'subtle' | 'ghost' | 'none'
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
   icon?: string
   avatar?: AvatarProps
   leading?: boolean
@@ -44,7 +45,7 @@ export interface FormKitSelectMenuProps {
   valueKey?: string
   labelKey?: string
   descriptionKey?: string
-  defaultValue?: any
+  defaultValue?: unknown
   multiple?: boolean
   highlight?: boolean
   fixed?: boolean

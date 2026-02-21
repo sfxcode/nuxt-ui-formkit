@@ -5,6 +5,12 @@ import { useFormKitInput } from '../../utils/useFormKitInput'
 import type { Time } from '@internationalized/date'
 import type { AvatarProps } from '#ui/components/Avatar.vue'
 
+type DateStep = {
+  hour?: number
+  minute?: number
+  second?: number
+}
+
 export interface FormKitInputTimeProps {
   color?: 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'
   variant?: 'outline' | 'soft' | 'subtle' | 'ghost' | 'none'
@@ -17,7 +23,7 @@ export interface FormKitInputTimeProps {
   placeholder?: Time
   defaultPlaceholder?: Time
   hourCycle?: 12 | 24
-  step?: any
+  step?: DateStep
   stepSnapping?: boolean
   granularity?: 'hour' | 'minute' | 'second'
   hideTimeZone?: boolean

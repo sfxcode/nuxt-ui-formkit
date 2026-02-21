@@ -18,7 +18,7 @@ export interface FormKitSelectProps {
   valueKey?: string
   labelKey?: string
   descriptionKey?: string
-  defaultValue: any
+  defaultValue?: unknown
   multiple?: boolean
   highlight?: boolean
   fixed?: boolean
