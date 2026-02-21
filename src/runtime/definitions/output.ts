@@ -9,7 +9,7 @@ import FUOutputNumber from '../components/output/FUOutputNumber.vue'
 import FUOutputList from '../components/output/FUOutputList.vue'
 
 export const nuxtUIOutputTextDefinition: FormKitTypeDefinition = createInput(FUOutputText, {
-  props: ['size', 'color', 'variant', 'icon', 'leadingIcon', 'trailingIcon', 'leading', 'trailing', 'onIconClicked', 'onLeadingIconClicked', 'onTrailingIconClicked'],
+  props: ['size', 'color', 'variant', 'icon', 'leadingIcon', 'trailingIcon', 'leading', 'trailing', 'onIconClicked', 'onLeadingIconClicked', 'onTrailingIconClicked', 'outputType'],
   family: 'NuxtUIOutput',
 })
 

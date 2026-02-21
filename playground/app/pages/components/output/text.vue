@@ -177,6 +177,110 @@ const outputTextSchema = [
     color: 'error',
     variant: 'outline',
   },
+  {
+    $formkit: 'nuxtUIOutputText',
+    name: 'output23',
+    value: 'Plain text output',
+    label: 'Text Type',
+    outputType: 'text',
+    leadingIcon: 'i-heroicons-document-text',
+  },
+  {
+    $formkit: 'nuxtUIOutputText',
+    name: 'output24',
+    value: 'contact@example.com',
+    label: 'Email Type',
+    outputType: 'email',
+    leadingIcon: 'i-heroicons-envelope',
+  },
+  {
+    $formkit: 'nuxtUIOutputText',
+    name: 'output25',
+    value: 'https://example.com',
+    label: 'URL Type',
+    outputType: 'url',
+    leadingIcon: 'i-heroicons-link',
+  },
+  {
+    $formkit: 'nuxtUIOutputText',
+    name: 'output26',
+    value: '+1 (555) 123-4567',
+    label: 'Tel Type',
+    outputType: 'tel',
+    leadingIcon: 'i-heroicons-phone',
+  },
+  {
+    $formkit: 'nuxtUIOutputText',
+    name: 'output27',
+    value: '#3b82f6',
+    label: 'Color (Hex)',
+    outputType: 'color',
+    leadingIcon: 'i-lucide-palette',
+  },
+  {
+    $formkit: 'nuxtUIOutputText',
+    name: 'output28',
+    value: 'rgb(120, 100, 240)',
+    label: 'Color (RGB)',
+    outputType: 'color',
+    leadingIcon: 'i-lucide-palette',
+  },
+  {
+    $formkit: 'nuxtUIOutputText',
+    name: 'output29',
+    value: 'hsl(50, 91%, 30%)',
+    label: 'Color (HSL)',
+    outputType: 'color',
+    leadingIcon: 'i-lucide-palette',
+  },
+  {
+    $formkit: 'nuxtUIOutputText',
+    name: 'output30',
+    value: 'rgba(59, 130, 246, 0.8)',
+    label: 'Color (RGBA)',
+    outputType: 'color',
+    leadingIcon: 'i-lucide-palette',
+  },
+  {
+    $formkit: 'nuxtUIOutputText',
+    name: 'output31',
+    value: 'cmyk(33%, 33%, 10%, 4%)',
+    label: 'Color (CMYK)',
+    outputType: 'color',
+    leadingIcon: 'i-lucide-palette',
+  },
+  {
+    $formkit: 'nuxtUIOutputText',
+    name: 'output32',
+    value: '75',
+    label: 'Duration (75)',
+    outputType: 'duration',
+    leadingIcon: 'i-heroicons-clock',
+  },
+  {
+    $formkit: 'nuxtUIOutputText',
+    name: 'output33',
+    value: '150m',
+    label: 'Duration (150m)',
+    outputType: 'duration',
+    leadingIcon: 'i-heroicons-clock',
+  },
+  {
+    $formkit: 'nuxtUIOutputText',
+    name: 'output34',
+    value: '3h',
+    label: 'Duration (3h)',
+    outputType: 'duration',
+    leadingIcon: 'i-heroicons-clock',
+  },
+  {
+    $formkit: 'nuxtUIOutputText',
+    name: 'output35',
+    value: '3h20m',
+    label: 'Duration (3h20m)',
+    outputType: 'duration',
+    leadingIcon: 'i-heroicons-clock',
+  },
 ]
 </script>
 
@@ -266,6 +370,23 @@ const outputTextSchema = [
           <FUDataView
             :data="{}"
             :schema="outputTextSchema.slice(14, 19)"
+          />
+        </section>
+
+        <USeparator />
+
+        <section>
+          <h2 class="text-2xl font-semibold mb-4">
+            Types
+          </h2>
+          <p class="text-muted-foreground mb-6">
+            Different output types for specialized display: text (default), email, url, tel, color, and duration.
+            Color type supports multiple formats (hex, rgb, hsl, rgba, cmyk) and automatically converts them for display.
+            Duration type formats seconds into human-readable time (e.g., "1h 30m 45s").
+          </p>
+          <FUDataView
+            :data="{}"
+            :schema="outputTextSchema.slice(22, 36)"
           />
         </section>
 
