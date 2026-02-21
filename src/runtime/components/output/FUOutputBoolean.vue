@@ -1,8 +1,10 @@
 <script setup lang='ts'>
 import type { FormKitFrameworkContext } from '@formkit/core'
-import type { PropType } from 'vue'
 import { computed } from 'vue'
 import { useFormKitOutput } from '../../utils/useFormKitOutput'
+import type { PropType } from 'vue'
+import type { FormKitIconProps } from './FUIcon.vue'
+import FUIcon from './FUIcon.vue'
 
 export interface FormKitOutputBooleanProps {
   color?: 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'
@@ -21,7 +23,7 @@ export interface FormKitOutputBooleanProps {
 
 const props = defineProps({
   context: {
-    type: Object as PropType<FormKitFrameworkContext & FormKitOutputBooleanProps>,
+    type: Object as PropType<FormKitFrameworkContext & FormKitOutputBooleanProps & FormKitIconProps>,
     required: true,
   },
 })
@@ -45,7 +47,7 @@ const booleanIcon = computed(() => {
   return undefined
 })
 
-const { containerClass, iconSize, leadingIconName, trailingIconName } = useFormKitOutput(props.context)
+const { containerClass, iconClass, leadingIconName, trailingIconName } = useFormKitOutput(props.context)
 </script>
 
 <template>
@@ -54,21 +56,24 @@ const { containerClass, iconSize, leadingIconName, trailingIconName } = useFormK
     :class="containerClass"
     :style="context?.attrs?.style"
   >
-    <UIcon
+    <FUIcon
       v-if="leadingIconName"
-      :name="leadingIconName"
-      :class="iconSize"
+      :name="leadingIconName as string"
+      :icon-class="iconClass"
+      :on-click="context?.onLeadingIconClicked"
     />
-    <UIcon
+    <FUIcon
       v-if="booleanIcon"
       :name="booleanIcon"
-      :class="iconSize"
+      :icon-class="iconClass"
+      :on-click="context?.onIconClicked"
     />
     <span>{{ displayValue }}</span>
-    <UIcon
+    <FUIcon
       v-if="trailingIconName"
-      :name="trailingIconName"
-      :class="iconSize"
+      :name="trailingIconName as string"
+      :icon-class="iconClass"
+      :on-click="context?.onTrailingIconClicked"
     />
   </div>
 </template>

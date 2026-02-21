@@ -39,7 +39,7 @@ const dateValue = computed(() => {
   }
 })
 
-const { containerClass, iconSize, leadingIconName, trailingIconName } = useFormKitOutput(props.context)
+const { containerClass, iconClass, leadingIconName, trailingIconName } = useFormKitOutput(props.context)
 </script>
 
 <template>
@@ -51,7 +51,7 @@ const { containerClass, iconSize, leadingIconName, trailingIconName } = useFormK
     <UIcon
       v-if="leadingIconName"
       :name="leadingIconName"
-      :class="iconSize"
+      :class="iconClass"
     />
     <NuxtTime
       v-if="dateValue"
@@ -65,7 +65,7 @@ const { containerClass, iconSize, leadingIconName, trailingIconName } = useFormK
     <UIcon
       v-if="trailingIconName"
       :name="trailingIconName"
-      :class="iconSize"
+      :class="iconClass"
     />
   </div>
 </template>

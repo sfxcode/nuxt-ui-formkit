@@ -54,7 +54,7 @@ export function useFormKitOutput(context: FormKitFrameworkContext) {
     ].filter(Boolean).join(' ')
   })
 
-  const iconSize = computed(() => {
+  const iconClass = computed(() => {
     const size = (context.size ?? 'md') as SizeType
     const iconSizeMap: Record<SizeType, string> = {
       xs: 'h-3 w-3',
@@ -66,11 +66,11 @@ export function useFormKitOutput(context: FormKitFrameworkContext) {
     return iconSizeMap[size] || iconSizeMap.md
   })
 
-  const leadingIconName = computed(() => {
+  const leadingIconName = computed<string | null>(() => {
     return context.leadingIcon || (context.leading && context.icon) || null
   })
 
-  const trailingIconName = computed(() => {
+  const trailingIconName = computed<string | null>(() => {
     return context.trailingIcon || (context.trailing && context.icon) || null
   })
 
@@ -79,7 +79,7 @@ export function useFormKitOutput(context: FormKitFrameworkContext) {
     sizeClass,
     variantClass,
     containerClass,
-    iconSize,
+    iconClass,
     leadingIconName,
     trailingIconName,
   }

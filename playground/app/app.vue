@@ -117,6 +117,18 @@ const items = ref<NavigationMenuItem[]>([
         to: '/components/output/date',
       },
       {
+        label: 'OutputLink',
+        icon: 'i-lucide-link',
+        description: 'Link display with internal/external URL support.',
+        to: '/components/output/link',
+      },
+      {
+        label: 'OutputNumber',
+        icon: 'i-lucide-hash',
+        description: 'Number display with currency, percentage, and formatting options.',
+        to: '/components/output/number',
+      },
+      {
         label: 'OutputText',
         icon: 'i-lucide-file-text',
         description: 'Read-only text display with icons and styling.',

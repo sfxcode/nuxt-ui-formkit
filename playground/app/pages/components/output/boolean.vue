@@ -19,6 +19,7 @@ const outputBooleanSchema = [
     value: true,
     label: 'With Leading Icon',
     leadingIcon: 'i-heroicons-shield-check',
+    onLeadingIconClicked: () => alert('Leading icon clicked!'),
   },
   {
     $formkit: 'nuxtUIOutputBoolean',

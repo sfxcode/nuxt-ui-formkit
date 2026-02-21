@@ -49,7 +49,7 @@ const displayValue = computed(() => {
   return linkUrl
 })
 
-const { containerClass, iconSize, leadingIconName, trailingIconName } = useFormKitOutput(props.context)
+const { containerClass, iconClass, leadingIconName, trailingIconName } = useFormKitOutput(props.context)
 
 const linkClass = computed(() => {
   const classes = [
@@ -68,7 +68,7 @@ const linkClass = computed(() => {
     <UIcon
       v-if="leadingIconName"
       :name="leadingIconName"
-      :class="iconSize"
+      :class="iconClass"
     />
     <ULink
       v-if="isExternal"
@@ -92,7 +92,7 @@ const linkClass = computed(() => {
     <UIcon
       v-if="trailingIconName"
       :name="trailingIconName"
-      :class="iconSize"
+      :class="iconClass"
     />
   </div>
 </template>

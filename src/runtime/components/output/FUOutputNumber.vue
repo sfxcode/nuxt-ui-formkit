@@ -4,11 +4,13 @@ import type { PropType } from 'vue'
 import { computed } from 'vue'
 import { useFormKitOutput } from '../../utils/useFormKitOutput'
 
-export interface FormKitOutputTextProps {
+export interface FormKitOutputNumberProps {
   color?: 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'
+  formatOptions?: Intl.NumberFormatOptions
   icon?: string
   leading?: boolean
   leadingIcon?: string
+  locale?: string
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
   trailing?: boolean
   trailingIcon?: string
@@ -17,12 +19,33 @@ export interface FormKitOutputTextProps {
 
 const props = defineProps({
   context: {
-    type: Object as PropType<FormKitFrameworkContext & FormKitOutputTextProps>,
+    type: Object as PropType<FormKitFrameworkContext & FormKitOutputNumberProps>,
     required: true,
   },
 })
 
-const displayValue = computed(() => props.context._value ?? '')
+const numberValue = computed(() => {
+  const value = props.context._value
+  if (value === null || value === undefined || value === '')
+    return null
+  return Number(value)
+})
+
+const displayValue = computed(() => {
+  if (numberValue.value === null || Number.isNaN(numberValue.value))
+    return ''
+
+  const locale = props.context.locale ?? 'en-US'
+  const formatOptions = props.context.formatOptions ?? {}
+
+  try {
+    return new Intl.NumberFormat(locale, formatOptions).format(numberValue.value)
+  }
+  catch (error) {
+    console.error('Error formatting number:', error)
+    return String(numberValue.value)
+  }
+})
 
 const { containerClass, iconClass, leadingIconName, trailingIconName } = useFormKitOutput(props.context)
 </script>
