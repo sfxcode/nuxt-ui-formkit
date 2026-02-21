@@ -1,5 +1,5 @@
 import { nuxtUICheckboxDefinition, nuxtUICheckboxGroupDefinition, nuxtUIColorPickerDefinition, nuxtUIInputDateDefinition, nuxtUIInputDefinition, nuxtUIInputMenuDefinition, nuxtUIInputTagsDefinition, nuxtUIInputTimeDefinition, nuxtUIPinInputDefinition, nuxtUIRadioGroupDefinition, nuxtUISelectDefinition, nuxtUISelectMenuDefinition, nuxtUISliderDefinition, nuxtUISwitchDefinition, nuxtUITextareaDefinition } from '../definitions/input'
-import { nuxtUIOutputBooleanDefinition, nuxtUIOutputDateDefinition, nuxtUIOutputTextDefinition } from '../definitions/output'
+import { nuxtUIOutputBooleanDefinition, nuxtUIOutputDateDefinition, nuxtUIOutputLinkDefinition, nuxtUIOutputTextDefinition } from '../definitions/output'
 
 export const nuxtUIInputs = {
   nuxtUICheckbox: nuxtUICheckboxDefinition,
@@ -22,5 +22,6 @@ export const nuxtUIInputs = {
 export const nuxtUIOutputs = {
   nuxtUIOutputBoolean: nuxtUIOutputBooleanDefinition,
   nuxtUIOutputDate: nuxtUIOutputDateDefinition,
+  nuxtUIOutputLink: nuxtUIOutputLinkDefinition,
   nuxtUIOutputText: nuxtUIOutputTextDefinition,
 }

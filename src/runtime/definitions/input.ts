@@ -73,7 +73,7 @@ export const nuxtUISelectDefinition: FormKitTypeDefinition = createInput(FUSelec
 })
 
 export const nuxtUISelectMenuDefinition: FormKitTypeDefinition = createInput(FUSelectMenu, {
-  props: ['options', 'placeholder', 'multiple', 'searchable', 'searchablePlaceholder', 'loading', 'size', 'color', 'variant', 'icon', 'trailingIcon', 'leadingIcon', 'trailing', 'leading', 'padded', 'inputClass', 'valueAttribute', 'optionAttribute'],
+  props: ['options', 'placeholder', 'searchInput', 'color', 'variant', 'icon', 'avatar', 'leading', 'leadingIcon', 'trailing', 'trailingIcon', 'loading', 'loadingIcon', 'selectedIcon', 'clear', 'clearIcon', 'arrow', 'portal', 'virtualize', 'valueKey', 'labelKey', 'descriptionKey', 'defaultValue', 'multiple', 'highlight', 'fixed', 'createItem', 'filterFields', 'ignoreFilter', 'autofocus', 'autofocusDelay', 'open', 'defaultOpen', 'resetSearchTermOnBlur', 'resetSearchTermOnSelect', 'resetModelValueOnClear', 'highlightOnHover', 'searchTerm', 'ui'],
   family: 'NuxtUIInput',
 })
 

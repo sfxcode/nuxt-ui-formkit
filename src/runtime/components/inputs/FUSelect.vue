@@ -45,7 +45,7 @@ const props = defineProps({
   },
 })
 
-const { handleInput, handleChange, color, styleClass, modelValue, items } = useFormKitInput(props.context)
+const { handleInput, handleChange, isInvalid, color, styleClass, modelValue, items } = useFormKitInput(props.context)
 </script>
 
 <template>
@@ -57,6 +57,7 @@ const { handleInput, handleChange, color, styleClass, modelValue, items } = useF
     :disabled="!!context?.disabled"
     :style="context?.attrs.style"
     :color="color"
+    :highlight="isInvalid || context.highlight"
     :size="context.size ?? 'md'"
     :variant="context.variant ?? 'outline'"
     :items="items"

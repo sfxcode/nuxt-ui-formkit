@@ -107,21 +107,19 @@ const selectMenuSchema = [
   {
     $formkit: 'nuxtUISelectMenu',
     name: 'selectmenu7',
-    label: 'Searchable Menu',
+    label: 'With Search Input',
     help: 'Search through options',
     options: countries,
-    searchable: true,
-    searchablePlaceholder: 'Search countries...',
+    searchInput: true,
     placeholder: 'Select country',
   },
   {
     $formkit: 'nuxtUISelectMenu',
     name: 'selectmenu8',
-    label: 'Searchable Groups',
+    label: 'Search in Groups',
     help: 'Search in grouped options',
     options: groupedOptions,
-    searchable: true,
-    searchablePlaceholder: 'Search technologies...',
+    searchInput: true,
     placeholder: 'Select technology',
   },
   {
@@ -223,9 +221,9 @@ const selectMenuSchema = [
   {
     $formkit: 'nuxtUISelectMenu',
     name: 'selectmenu21',
-    label: 'With Padding',
+    label: 'With Fixed Positioning',
     options: countries,
-    padded: true,
+    fixed: true,
     placeholder: 'Select...',
   },
   {
@@ -305,10 +303,10 @@ const selectMenuSchema = [
 
         <section>
           <h2 class="text-2xl font-semibold mb-4">
-            Multiple & Searchable
+            Multiple & Search Input
           </h2>
           <p class="text-muted-foreground mb-6">
-            Enable multiple selection and search functionality.
+            Enable multiple selection and search input functionality.
           </p>
           <FUDataEdit
             :data="{}"
@@ -383,7 +381,7 @@ const selectMenuSchema = [
             Styling Options
           </h2>
           <p class="text-muted-foreground mb-6">
-            Customize padding to match your design.
+            Fixed positioning for the dropdown menu.
           </p>
           <FUDataEdit
             :data="{}"

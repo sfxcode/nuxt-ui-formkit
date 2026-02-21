@@ -2,6 +2,7 @@
 import type { FormKitFrameworkContext } from '@formkit/core'
 import type { PropType } from 'vue'
 import { useFormKitInput } from '../../utils/useFormKitInput'
+import type { AvatarProps } from '#ui/components/Avatar.vue'
 
 export interface SelectMenuGroup {
   label?: string
@@ -22,24 +23,44 @@ export interface SelectMenuItem {
 }
 
 export interface FormKitSelectMenuProps {
+  options?: SelectMenuItem[] | SelectMenuGroup[]
+  placeholder?: string
+  searchInput?: boolean
   color?: 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'
+  variant?: 'outline' | 'soft' | 'subtle' | 'ghost' | 'none'
   icon?: string
-  inputClass?: string
+  avatar?: AvatarProps
   leading?: boolean
   leadingIcon?: string
-  loading?: boolean
-  multiple?: boolean
-  options?: SelectMenuItem[] | SelectMenuGroup[]
-  optionAttribute?: string
-  padded?: boolean
-  placeholder?: string
-  searchable?: boolean
-  searchablePlaceholder?: string
-  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
   trailing?: boolean
   trailingIcon?: string
-  valueAttribute?: string
-  variant?: 'outline' | 'soft' | 'subtle' | 'ghost' | 'none'
+  loading?: boolean
+  loadingIcon?: string
+  selectedIcon?: string
+  clear?: boolean
+  arrow?: boolean
+  portal?: boolean
+  virtualize?: boolean
+  valueKey?: string
+  labelKey?: string
+  descriptionKey?: string
+  defaultValue?: any
+  multiple?: boolean
+  highlight?: boolean
+  fixed?: boolean
+  createItem?: boolean
+  filterFields?: string[]
+  ignoreFilter?: boolean
+  autofocus?: boolean
+  autofocusDelay?: number
+  open?: boolean
+  defaultOpen?: boolean
+  resetSearchTermOnBlur?: boolean
+  resetSearchTermOnSelect?: boolean
+  resetModelValueOnClear?: boolean
+  highlightOnHover?: boolean
+  searchTerm?: string
+  ui?: Record<string, unknown>
 }
 
 const props = defineProps({
@@ -58,28 +79,47 @@ const { handleInput, handleChange, isInvalid, styleClass, color, modelValue, ite
     v-model="modelValue"
     v-bind="{ ...context?.attrs }"
     :class="styleClass"
-    :color="color as any"
     :disabled="!!context?.disabled"
-    :highlight="!!(isInvalid || context.highlight)"
+    :style="context?.attrs.style"
+    :color="color"
+    :highlight="isInvalid || context.highlight"
+    :size="context.size ?? 'md'"
+    :variant="context.variant ?? 'outline'"
+    :items="items"
+    :placeholder="context.placeholder"
+    :selected-icon="context.selectedIcon"
     :icon="context.icon"
-    :input-class="context.inputClass"
+    :avatar="context.avatar"
     :leading="context.leading"
     :leading-icon="context.leadingIcon"
-    :loading="context.loading"
-    :multiple="context.multiple"
-    :option-attribute="context.optionAttribute ?? 'label'"
-    :items="items"
-    :padded="context.padded"
-    :placeholder="context.placeholder"
-    :readonly="context?.attrs.readonly ?? false"
-    :searchable="context.searchable"
-    :searchable-placeholder="context.searchablePlaceholder"
-    :size="context.size ?? 'md'"
-    :style="context?.attrs.style"
     :trailing="context.trailing"
     :trailing-icon="context.trailingIcon"
-    :value-attribute="context.valueAttribute ?? 'value'"
-    :variant="context.variant ?? 'outline'"
+    :loading="context.loading"
+    :loading-icon="context.loadingIcon"
+    :search-input="context.searchInput"
+    :clear="context.clear"
+    :clear-icon="context.clearIcon"
+    :arrow="context.arrow"
+    :portal="context.portal"
+    :virtualize="context.virtualize"
+    :value-key="context.valueKey"
+    :label-key="context.labelKey"
+    :description-key="context.descriptionKey"
+    :default-value="context.defaultValue"
+    :multiple="context.multiple"
+    :create-item="context.createItem"
+    :filter-fields="context.filterFields"
+    :ignore-filter="context.ignoreFilter"
+    :autofocus="context.autofocus"
+    :autofocus-delay="context.autofocusDelay"
+    :open="context.open"
+    :default-open="context.defaultOpen"
+    :reset-search-term-on-blur="context.resetSearchTermOnBlur"
+    :reset-search-term-on-select="context.resetSearchTermOnSelect"
+    :reset-model-value-on-clear="context.resetModelValueOnClear"
+    :highlight-on-hover="context.highlightOnHover"
+    :search-term="context.searchTerm"
+    :ui="context.ui"
     @change="handleChange"
     @update:model-value="handleInput"
   />
