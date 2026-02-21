@@ -3,6 +3,8 @@ import type { FormKitFrameworkContext } from '@formkit/core'
 import type { PropType } from 'vue'
 import { computed } from 'vue'
 import { useFormKitOutput } from '../../utils/useFormKitOutput'
+import type { FormKitIconProps } from './FUIcon.vue'
+import FUIcon from './FUIcon.vue'
 
 export interface FormKitOutputLinkProps {
   color?: 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'
@@ -19,7 +21,7 @@ export interface FormKitOutputLinkProps {
 
 const props = defineProps({
   context: {
-    type: Object as PropType<FormKitFrameworkContext & FormKitOutputLinkProps>,
+    type: Object as PropType<FormKitFrameworkContext & FormKitOutputLinkProps & FormKitIconProps>,
     required: true,
   },
 })
@@ -65,10 +67,11 @@ const linkClass = computed(() => {
     :class="containerClass"
     :style="context?.attrs?.style"
   >
-    <UIcon
+    <FUIcon
       v-if="leadingIconName"
-      :name="leadingIconName"
-      :class="iconClass"
+      :name="leadingIconName as string"
+      :icon-class="iconClass"
+      :on-click="context?.onLeadingIconClicked"
     />
     <ULink
       v-if="isExternal"
@@ -89,10 +92,11 @@ const linkClass = computed(() => {
       <span>{{ displayValue }}</span>
     </NuxtLink>
 
-    <UIcon
+    <FUIcon
       v-if="trailingIconName"
-      :name="trailingIconName"
-      :class="iconClass"
+      :name="trailingIconName as string"
+      :icon-class="iconClass"
+      :on-click="context?.onTrailingIconClicked"
     />
   </div>
 </template>

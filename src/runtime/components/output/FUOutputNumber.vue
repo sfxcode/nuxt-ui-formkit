@@ -3,6 +3,8 @@ import type { FormKitFrameworkContext } from '@formkit/core'
 import type { PropType } from 'vue'
 import { computed } from 'vue'
 import { useFormKitOutput } from '../../utils/useFormKitOutput'
+import type { FormKitIconProps } from './FUIcon.vue'
+import FUIcon from './FUIcon.vue'
 
 export interface FormKitOutputNumberProps {
   color?: 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'
@@ -19,7 +21,7 @@ export interface FormKitOutputNumberProps {
 
 const props = defineProps({
   context: {
-    type: Object as PropType<FormKitFrameworkContext & FormKitOutputNumberProps>,
+    type: Object as PropType<FormKitFrameworkContext & FormKitOutputNumberProps & FormKitIconProps>,
     required: true,
   },
 })
@@ -56,16 +58,18 @@ const { containerClass, iconClass, leadingIconName, trailingIconName } = useForm
     :class="containerClass"
     :style="context?.attrs?.style"
   >
-    <UIcon
+    <FUIcon
       v-if="leadingIconName"
-      :name="leadingIconName"
-      :class="iconClass"
+      :name="leadingIconName as string"
+      :icon-class="iconClass"
+      :on-click="context?.onLeadingIconClicked"
     />
     <span>{{ displayValue }}</span>
-    <UIcon
+    <FUIcon
       v-if="trailingIconName"
-      :name="trailingIconName"
-      :class="iconClass"
+      :name="trailingIconName as string"
+      :icon-class="iconClass"
+      :on-click="context?.onTrailingIconClicked"
     />
   </div>
 </template>
