@@ -35,7 +35,7 @@ const props = defineProps({
   },
 })
 
-const { handleInput, handleChange, styleClass, color, modelValue, items } = useFormKitInput(props.context)
+const { handleInput, handleChange, styleClass, color, modelValue, items, validSlotNames } = useFormKitInput(props.context)
 </script>
 
 <template>
@@ -59,5 +59,16 @@ const { handleInput, handleChange, styleClass, color, modelValue, items } = useF
     :name="context.name"
     @change="handleChange"
     @update:model-value="handleInput"
-  />
+  >
+    <template
+      v-for="slotName in validSlotNames"
+      :key="slotName"
+      #[slotName]="slotProps"
+    >
+      <component
+        :is="context?.slots[slotName]"
+        v-bind="{ ...context, ...slotProps }"
+      />
+    </template>
+  </UCheckboxGroup>
 </template>

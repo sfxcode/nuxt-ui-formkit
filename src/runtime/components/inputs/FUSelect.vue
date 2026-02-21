@@ -45,7 +45,7 @@ const props = defineProps({
   },
 })
 
-const { handleInput, handleChange, isInvalid, color, styleClass, modelValue, items } = useFormKitInput(props.context)
+const { handleInput, handleChange, isInvalid, color, styleClass, modelValue, items, validSlotNames } = useFormKitInput(props.context)
 </script>
 
 <template>
@@ -86,5 +86,16 @@ const { handleInput, handleChange, isInvalid, color, styleClass, modelValue, ite
     :ui="context.ui"
     @change="handleChange"
     @update:model-value="handleInput"
-  />
+  >
+    <template
+      v-for="slotName in validSlotNames"
+      :key="slotName"
+      #[slotName]="slotProps"
+    >
+      <component
+        :is="context?.slots[slotName]"
+        v-bind="{ ...context, ...slotProps }"
+      />
+    </template>
+  </USelect>
 </template>
