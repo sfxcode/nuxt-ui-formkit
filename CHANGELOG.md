@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v0.7.4
+
+[compare changes](https://github.com/sfxcode/formkit-nuxt-ui/compare/v0.7.3...v0.7.4)
+
+### 🚀 Enhancements
+
+- Normalize color input handling and improve hex validation in colorConverter ([8c4e870](https://github.com/sfxcode/formkit-nuxt-ui/commit/8c4e870))
+- Implement output components schema and enhance data display in FUDataView ([2977a75](https://github.com/sfxcode/formkit-nuxt-ui/commit/2977a75))
+
+### 🩹 Fixes
+
+- Correct type check for Nuxt UI output components in addNuxtAsteriskPlugin ([ea93b24](https://github.com/sfxcode/formkit-nuxt-ui/commit/ea93b24))
+
+### ✅ Tests
+
+- Add comprehensive tests for color and duration conversion utilities ([f05e70d](https://github.com/sfxcode/formkit-nuxt-ui/commit/f05e70d))
+
+### ❤️ Contributors
+
+- Sfxcode ([@sfxcode](https://github.com/sfxcode))
+
 ## v0.7.3
 
 [compare changes](https://github.com/sfxcode/formkit-nuxt-ui/compare/v0.7.2...v0.7.3)
