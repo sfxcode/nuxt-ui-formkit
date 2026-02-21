@@ -7,6 +7,7 @@ import FUColorPicker from '../components/inputs/FUColorPicker.vue'
 import FUInput from '../components/inputs/FUInput.vue'
 import FUInputDate from '../components/inputs/FUInputDate.vue'
 import FUInputMenu from '../components/inputs/FUInputMenu.vue'
+import FUInputNumber from '../components/inputs/FUInputNumber.vue'
 import FUInputTags from '../components/inputs/FUInputTags.vue'
 import FUInputTime from '../components/inputs/FUInputTime.vue'
 import FUPinInput from '../components/inputs/FUPinInput.vue'
@@ -44,6 +45,11 @@ export const nuxtUIInputDateDefinition: FormKitTypeDefinition = createInput(FUIn
 
 export const nuxtUIInputMenuDefinition: FormKitTypeDefinition = createInput(FUInputMenu, {
   props: ['options', 'inputType', 'placeholder', 'color', 'variant', 'size', 'autofocus', 'autofocusDelay', 'trailingIcon', 'selectedIcon', 'deleteIcon', 'clear', 'clearIcon', 'arrow', 'portal', 'virtualize', 'valueKey', 'labelKey', 'descriptionKey', 'multiple', 'highlight', 'fixed', 'createItem', 'filterFields', 'ignoreFilter', 'defaultOpen', 'resetSearchTermOnBlur', 'resetSearchTermOnSelect', 'resetModelValueOnClear', 'highlightOnHover', 'openOnClick', 'openOnFocus', 'icon', 'leading', 'leadingIcon', 'trailing', 'loading', 'loadingIcon', 'list', 'autocomplete', 'searchTerm', 'ui'],
+  family: 'NuxtUIInput',
+})
+
+export const nuxtUIInputNumberDefinition: FormKitTypeDefinition = createInput(FUInputNumber, {
+  props: ['placeholder', 'color', 'variant', 'size', 'highlight', 'fixed', 'orientation', 'increment', 'incrementIcon', 'incrementDisabled', 'decrement', 'decrementIcon', 'decrementDisabled', 'autofocus', 'autofocusDelay', 'min', 'max', 'step', 'stepSnapping', 'formatOptions', 'disableWheelChange', 'invertWheelChange', 'focusOnChange', 'list', 'autocomplete', 'ui'],
   family: 'NuxtUIInput',
 })
 
