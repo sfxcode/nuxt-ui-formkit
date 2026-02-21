@@ -12,7 +12,7 @@ export interface FormKitOutputListProps {
   itemClass?: string
   leading?: boolean
   leadingIcon?: string
-  listType?: 'span' | 'div' | 'ul' | 'ol' | 'comma' | 'semicolon' | 'pipe' | 'dash' | 'space'
+  listType?: 'span' | 'div' | 'ul' | 'ol' | 'comma' | 'semicolon' | 'pipe' | 'dash' | 'space' | 'badge'
   separator?: string
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
   trailing?: boolean
@@ -64,6 +64,14 @@ const displayValue = computed(() => {
 
 const itemClass = computed(() => {
   return props.context.itemClass ?? ''
+})
+
+const badgeVariant = computed(() => {
+  const variant = props.context.variant
+  // UBadge supports: outline, soft, subtle, solid
+  // Map ghost and none to soft
+  if (variant === 'ghost' || variant === 'none') return 'soft'
+  return variant
 })
 
 const { containerClass, iconClass, leadingIconName, trailingIconName } = useFormKitOutput(props.context)
@@ -137,6 +145,23 @@ const { containerClass, iconClass, leadingIconName, trailingIconName } = useForm
         {{ item }}
       </li>
     </ol>
+
+    <!-- Badge list (styled like tags/badges) -->
+    <div
+      v-else-if="listType === 'badge'"
+      class="flex flex-wrap gap-2"
+    >
+      <UBadge
+        v-for="(item, index) in listValue"
+        :key="index"
+        :color="context.color"
+        :variant="badgeVariant"
+        :size="context.size"
+        :class="itemClass"
+      >
+        {{ item }}
+      </UBadge>
+    </div>
 
     <FUIcon
       v-if="trailingIconName"

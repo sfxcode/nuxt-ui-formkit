@@ -121,6 +121,16 @@ const outputListSchema = [
   },
   {
     $formkit: 'nuxtUIOutputList',
+    name: 'list14a',
+    value: sampleTags,
+    label: 'Badge List',
+    listType: 'badge',
+    leadingIcon: 'i-heroicons-tag',
+    color: 'success',
+
+  },
+  {
+    $formkit: 'nuxtUIOutputList',
     name: 'list15',
     value: sampleTags,
     label: 'Extra Small',
@@ -274,6 +284,16 @@ const outputListSchema = [
     variant: 'subtle',
     listType: 'dash',
   },
+  {
+    $formkit: 'nuxtUIOutputList',
+    name: 'list33',
+    value: sampleTags,
+    label: 'Technology Badges',
+    leadingIcon: 'i-heroicons-tag',
+    color: 'primary',
+    variant: 'soft',
+    listType: 'badge',
+  },
 ]
 </script>
 
@@ -358,11 +378,11 @@ const outputListSchema = [
             List Types
           </h2>
           <p class="text-muted-foreground mb-6">
-            Different HTML list structures: span (inline), div (block), ul (unordered), and ol (ordered).
+            Different HTML list structures: span (inline), div (block), ul (unordered), ol (ordered), and badge (badge-style).
           </p>
           <FUDataView
             :data="{}"
-            :schema="outputListSchema.slice(10, 14)"
+            :schema="outputListSchema.slice(10, 15)"
           />
         </section>
 
@@ -377,7 +397,7 @@ const outputListSchema = [
           </p>
           <FUDataView
             :data="{}"
-            :schema="outputListSchema.slice(14, 19)"
+            :schema="outputListSchema.slice(15, 20)"
           />
         </section>
 
@@ -392,7 +412,7 @@ const outputListSchema = [
           </p>
           <FUDataView
             :data="{}"
-            :schema="outputListSchema.slice(19, 24)"
+            :schema="outputListSchema.slice(20, 25)"
           />
         </section>
 
@@ -407,7 +427,7 @@ const outputListSchema = [
           </p>
           <FUDataView
             :data="{}"
-            :schema="outputListSchema.slice(24, 28)"
+            :schema="outputListSchema.slice(25, 29)"
           />
         </section>
 
@@ -422,7 +442,7 @@ const outputListSchema = [
           </p>
           <FUDataView
             :data="{}"
-            :schema="outputListSchema.slice(28, 32)"
+            :schema="outputListSchema.slice(29, 33)"
           />
         </section>
       </div>
