@@ -1,3 +1,4 @@
+import type { FormKitNode } from '@formkit/core'
 import { useFormKitSchema } from './useFormKitSchema'
 
 export function useFormKitRepeater() {
@@ -9,36 +10,36 @@ export function useFormKitRepeater() {
     ], innerClass, outerClass)
   }
 
-  function addListGroupFunctions(data: any, addNodeDefaultObject: object = {}) {
+  function addListGroupFunctions(data: Record<string, unknown>, addNodeDefaultObject: object = {}) {
     // Swap elements immutably
-    const swapElements = (array: any[], index1: number, index2: number) => {
+    const swapElements = <T>(array: T[], index1: number, index2: number): T[] => {
       const newArray = [...array]
-      const temp = newArray[index1]
-      newArray[index1] = newArray[index2]
+      const temp = newArray[index1]!
+      newArray[index1] = newArray[index2]!
       newArray[index2] = temp
       return newArray
     }
 
-    data.addNode = (parentNode: any) => (): void => {
-      const newArray: any[] = [...parentNode.value, addNodeDefaultObject]
+    data.addNode = (parentNode: FormKitNode) => (): void => {
+      const newArray: unknown[] = [...(parentNode.value as unknown[]), addNodeDefaultObject]
       parentNode.input(newArray, false)
     }
-    data.removeNode = (parentNode: any, index: number) => (): void => {
-      parentNode.input(parentNode._value.filter((_: any, i: number): boolean => i !== index), false)
+    data.removeNode = (parentNode: FormKitNode, index: number) => (): void => {
+      parentNode.input((parentNode._value as unknown[]).filter((_: unknown, i: number): boolean => i !== index), false)
     }
-    data.moveNodeUp = (parentNode: any, index: number) => (): void => {
-      const array: any[] = [...parentNode.value]
+    data.moveNodeUp = (parentNode: FormKitNode, index: number) => (): void => {
+      const array: unknown[] = [...(parentNode.value as unknown[])]
       if (index > 0)
         parentNode.input(swapElements(array, index - 1, index), false)
     }
-    data.moveNodeDown = (parentNode: any, index: number) => (): void => {
-      const array: any[] = [...parentNode.value]
+    data.moveNodeDown = (parentNode: FormKitNode, index: number) => (): void => {
+      const array: unknown[] = [...(parentNode.value as unknown[])]
       if (index < array.length - 1)
         parentNode.input(swapElements(array, index, index + 1), false)
     }
-    data.copyNode = (parentNode: any, index: number) => (): void => {
-      const obj: any = parentNode.value[index]
-      const newArray: any[] = [...parentNode.value, { ...obj }]
+    data.copyNode = (parentNode: FormKitNode, index: number) => (): void => {
+      const obj: unknown = (parentNode.value as unknown[])[index]
+      const newArray: unknown[] = [...(parentNode.value as unknown[]), { ...(obj as object) }]
       parentNode.input(newArray, false)
     }
   }
