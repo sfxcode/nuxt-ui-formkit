@@ -152,6 +152,20 @@ const items = ref<NavigationMenuItem[]>([
     label: 'Form Components',
     icon: 'i-lucide-box',
     active: false,
+    children: [
+      {
+        label: 'Without Schema',
+        icon: 'i-lucide-file-code',
+        description: 'Form example without schema, using direct component approach.',
+        to: '/form/without-schema',
+      },
+      {
+        label: 'Slot Usage',
+        icon: 'i-lucide-layers',
+        description: 'Examples of using slots to customize FormKit components with Nuxt UI.',
+        to: '/form/slot',
+      },
+    ],
   },
   {
     label: 'Composables',
