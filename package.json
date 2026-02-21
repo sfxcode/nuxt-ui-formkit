@@ -40,14 +40,17 @@
     ".": {
       "types": "./dist/types.d.mts",
       "import": "./dist/module.mjs"
+    },
+    "./runtime": {
+      "types": "./dist/runtime/index.d.ts",
+      "import": "./dist/runtime/index.js"
     }
   },
   "main": "./dist/module.mjs",
   "typesVersions": {
     "*": {
       ".": [
-        "./dist/types.d.mts",
-        "./dist/runtime/index.d.ts"
+        "./dist/types.d.mts"
       ]
     }
   },
