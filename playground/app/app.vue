@@ -44,6 +44,12 @@ const items = ref<NavigationMenuItem[]>([
         to: '/components/input/input-menu',
       },
       {
+        label: 'InputNumber',
+        icon: 'i-lucide-hash',
+        description: 'Number input with increment/decrement buttons and formatting.',
+        to: '/components/input/input-number',
+      },
+      {
         label: 'InputTags',
         icon: 'i-lucide-tags',
         description: 'Tag input component with validation and customization.',
@@ -121,6 +127,12 @@ const items = ref<NavigationMenuItem[]>([
         icon: 'i-lucide-link',
         description: 'Link display with internal/external URL support.',
         to: '/components/output/link',
+      },
+      {
+        label: 'OutputList',
+        icon: 'i-lucide-list',
+        description: 'List display with multiple formats, separators, and badge styles.',
+        to: '/components/output/list',
       },
       {
         label: 'OutputNumber',
