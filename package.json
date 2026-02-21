@@ -46,7 +46,9 @@
   "typesVersions": {
     "*": {
       ".": [
-        "./dist/types.d.mts"
+        "./dist/types.d.mts",
+        "./dist/runtime/index.d.ts"
+
       ]
     }
   },
