@@ -6,6 +6,7 @@ import FUOutputBoolean from '../components/output/FUOutputBoolean.vue'
 import FUOutputText from '../components/output/FUOutputText.vue'
 import FUOutputLink from '../components/output/FUOutputLink.vue'
 import FUOutputNumber from '../components/output/FUOutputNumber.vue'
+import FUOutputList from '../components/output/FUOutputList.vue'
 
 export const nuxtUIOutputTextDefinition: FormKitTypeDefinition = createInput(FUOutputText, {
   props: ['size', 'color', 'variant', 'icon', 'leadingIcon', 'trailingIcon', 'leading', 'trailing', 'onIconClicked', 'onLeadingIconClicked', 'onTrailingIconClicked'],
@@ -29,5 +30,10 @@ export const nuxtUIOutputLinkDefinition: FormKitTypeDefinition = createInput(FUO
 
 export const nuxtUIOutputNumberDefinition: FormKitTypeDefinition = createInput(FUOutputNumber, {
   props: ['size', 'color', 'variant', 'icon', 'leadingIcon', 'trailingIcon', 'leading', 'trailing', 'locale', 'formatOptions', 'onIconClicked', 'onLeadingIconClicked', 'onTrailingIconClicked'],
+  family: 'NuxtUIOutput',
+})
+
+export const nuxtUIOutputListDefinition: FormKitTypeDefinition = createInput(FUOutputList, {
+  props: ['size', 'color', 'variant', 'icon', 'leadingIcon', 'trailingIcon', 'leading', 'trailing', 'listType', 'separator', 'itemClass', 'onIconClicked', 'onLeadingIconClicked', 'onTrailingIconClicked'],
   family: 'NuxtUIOutput',
 })
