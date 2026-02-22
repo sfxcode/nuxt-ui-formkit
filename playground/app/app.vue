@@ -169,7 +169,7 @@ const items = ref<NavigationMenuItem[]>([
         label: 'Repeater',
         icon: 'i-lucide-list-plus',
         description: 'Dynamic list management with add, remove, copy, and reorder capabilities.',
-        to: '/form/repeater',
+        to: '/form/repeater-sample',
       },
     ],
   },
