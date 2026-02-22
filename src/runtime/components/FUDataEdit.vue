@@ -94,59 +94,61 @@ function handleReset() {
 </script>
 
 <template>
-  <FormKit
-    :id="id"
-    v-model="formData"
-    :form-class="formClass"
-    :actions-class="actionsClass"
-    type="form"
-    @submit="handleSave"
-  >
-    <template #default>
-      <FormKitSchema
-        v-if="formSchema"
-        :schema="formSchema"
-        :data="formData"
-      />
-      <slot />
-    </template>
-    <template #messages>
-      <slot name="messages">
-        <FormKitMessages class="p-formkit-data-edit-messages" />
-      </slot>
-    </template>
-    <template #submit>
-      <slot name="submit">
-        <UButton
-          :icon="submitIcon"
-          type="submit"
-          :label="submitLabel"
-          :class="submitClass"
-          :severity="submitSeverity"
-          @submit="handleSave"
+  <div class="formkit-data-edit">
+    <FormKit
+      :id="id"
+      v-model="formData"
+      :form-class="formClass"
+      :actions-class="actionsClass"
+      type="form"
+      @submit="handleSave"
+    >
+      <template #default>
+        <FormKitSchema
+          v-if="formSchema"
+          :schema="formSchema"
+          :data="formData"
         />
-        <UButton
-          v-if="showReset"
-          type="reset"
-          :icon="resetIcon"
-          :label="resetLabel"
-          :class="resetClass"
-          :severity="resetSeverity"
-          @click="handleReset"
-        />
-      </slot>
-    </template>
-  </FormKit>
-  <FUDataDebug
-    v-if="debugData"
-    :data="formData"
-    header="Data"
-  />
-  <FUDataDebug
-    v-if="debugSchema"
-    :data="formSchema as object"
-    header="Schema"
-  />
+        <slot />
+      </template>
+      <template #messages>
+        <slot name="messages">
+          <FormKitMessages class="p-formkit-data-edit-messages" />
+        </slot>
+      </template>
+      <template #submit>
+        <slot name="submit">
+          <UButton
+            :icon="submitIcon"
+            type="submit"
+            :label="submitLabel"
+            :class="submitClass"
+            :severity="submitSeverity"
+            @submit="handleSave"
+          />
+          <UButton
+            v-if="showReset"
+            type="reset"
+            :icon="resetIcon"
+            :label="resetLabel"
+            :class="resetClass"
+            :severity="resetSeverity"
+            @click="handleReset"
+          />
+        </slot>
+      </template>
+    </FormKit>
+    <FUDataDebug
+      v-if="debugData"
+      :data="formData"
+      header="Data"
+    />
+    <FUDataDebug
+      v-if="debugSchema"
+      :data="formSchema as object"
+      header="Schema"
+    />
+  </div>
 </template>
 
 <style scoped>

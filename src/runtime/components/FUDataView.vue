@@ -35,30 +35,32 @@ if (props.data) {
 </script>
 
 <template>
-  <FormKit
-    v-model="formData"
-    :actions="false"
-    :form-class="formClass"
-    type="form"
-  >
-    <FormKitSchema
-      v-if="schema"
-      :schema="schema"
-      :data="formData"
-    />
-  </FormKit>
+  <div class="formkit-data-view">
+    <FormKit
+      v-model="formData"
+      :actions="false"
+      :form-class="formClass"
+      type="form"
+    >
+      <FormKitSchema
+        v-if="schema"
+        :schema="schema"
+        :data="formData"
+      />
+    </FormKit>
 
-  <slot />
-  <FuDataDebug
-    v-if="debugData"
-    :data="formData"
-    header="Data"
-  />
-  <FuDataDebug
-    v-if="debugSchema"
-    :data="schema as object"
-    header="Debug Schema"
-  />
+    <slot />
+    <FuDataDebug
+      v-if="debugData"
+      :data="formData"
+      header="Data"
+    />
+    <FuDataDebug
+      v-if="debugSchema"
+      :data="schema as object"
+      header="Debug Schema"
+    />
+  </div>
 </template>
 
 <style scoped>
