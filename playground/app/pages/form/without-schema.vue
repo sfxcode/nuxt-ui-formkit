@@ -35,6 +35,7 @@ const options = ['Apple', 'Banana', 'Cherry', 'Date', 'Elderberry', 'Fig']
           Use FormKit components directly in your template with validation and data binding.
         </p>
         <FUDataEdit
+          v-if="data"
           :data="data"
           :debug-data="true"
           @data-saved="submitHandler"

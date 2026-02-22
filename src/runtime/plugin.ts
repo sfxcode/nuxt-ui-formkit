@@ -1,6 +1,7 @@
 import { defineNuxtPlugin } from '#app'
-import { consola } from 'consola'
+import { UButton } from '#components'
 
 export default defineNuxtPlugin((_nuxtApp) => {
-  consola.info('Plugin injected by @sfxcode/formkit-nuxt-ui!')
+  // add Button for repeater
+  _nuxtApp.vueApp.component('UButton', UButton)
 })

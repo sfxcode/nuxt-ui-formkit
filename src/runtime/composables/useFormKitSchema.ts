@@ -1,5 +1,5 @@
 export function useFormKitSchema() {
-  const addComponent = (component: string = 'Button', props: object = {}, render: string | boolean = true, formKitAttrs: object = {}): object => {
+  const addComponent = (component: string = 'UButton', props: object = {}, render: string | boolean = true, formKitAttrs: object = {}): object => {
     return {
       $cmp: component,
       if: render.toString(),

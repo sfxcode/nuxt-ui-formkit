@@ -165,6 +165,12 @@ const items = ref<NavigationMenuItem[]>([
         description: 'Examples of using slots to customize FormKit components with Nuxt UI.',
         to: '/form/slot',
       },
+      {
+        label: 'Repeater',
+        icon: 'i-lucide-list-plus',
+        description: 'Dynamic list management with add, remove, copy, and reorder capabilities.',
+        to: '/form/repeater',
+      },
     ],
   },
   {

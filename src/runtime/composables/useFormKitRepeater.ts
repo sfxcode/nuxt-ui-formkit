@@ -2,12 +2,12 @@ import type { FormKitNode } from '@formkit/core'
 import { useFormKitSchema } from './useFormKitSchema'
 
 export function useFormKitRepeater() {
-  const { addElement, addComponent, addElementsInOuterDiv } = useFormKitSchema()
+  const { addComponent, addElement, addElementsInOuterDiv } = useFormKitSchema()
 
-  function addInsertButton(label: string = 'Add', innerClass: string = '', outerClass: string = '', buttonClass: string = 'p-button-sm', iconClass: string = 'pi pi-plus') {
-    return addElementsInOuterDiv([
-      addComponent('Button', { onClick: '$addNode($node.parent)', label, class: buttonClass, icon: iconClass }, '$node.parent.value.length == 0'),
-    ], innerClass, outerClass)
+  function addInsertButton(label: string = 'Add Item', icon: string = 'i-lucide-plus', styleClass: string = '', render: string = '$node.children.length == 0') {
+    return addElement('div', [
+      addComponent('UButton', { onClick: '$addNode($node)', label, icon }),
+    ], { class: styleClass }, render)
   }
 
   function addListGroupFunctions(data: Record<string, unknown>, addNodeDefaultObject: object = {}) {
@@ -39,24 +39,23 @@ export function useFormKitRepeater() {
     }
     data.copyNode = (parentNode: FormKitNode, index: number) => (): void => {
       const obj: unknown = (parentNode.value as unknown[])[index]
-      const newArray: unknown[] = [...(parentNode.value as unknown[]), { ...(obj as object) }]
-      parentNode.input(newArray, false)
+      const array: unknown[] = [...(parentNode.value as unknown[])]
+      array.splice(index + 1, 0, { ...(obj as object) })
+      parentNode.input(array, false)
     }
   }
 
-  function addGroupButtons(innerClass: string = '', outerClass: string = 'col-4', label: string = 'Actions', help: string = '', render: string = 'true') {
-    const addButtonComponent = (onClick: string = '', label: string = '', icon: string = '', severity: string = '', render: string = 'true', styleClass: string = 'p-button-sm'): object => {
-      return addComponent('Button', { onClick, label, icon, class: styleClass, severity }, render)
+  function addGroupButtons(innerClass: string = '', outerClass: string = '', label: string = '', help: string = '', render: string = 'true') {
+    const addButtonComponent = (onClick: string = '', icon: string = '', color: string = '', render: string = 'true'): object => {
+      return addComponent('UButton', { onClick, icon, color }, render)
     }
 
     return addElementsInOuterDiv([
-      addButtonComponent('$removeNode($node.parent, $index)', '', 'pi pi-times', 'danger'),
-      addButtonComponent('$copyNode($node.parent, $index)', '', 'pi pi-plus'),
-      addButtonComponent('$moveNodeUp($node.parent, $index)', '', 'pi pi-arrow-up', 'secondary', '$index != 0'),
-      addElement('span', [], { class: 'p-space' }, '$index == 0'),
-      addButtonComponent('$moveNodeDown($node.parent, $index)', '', 'pi pi-arrow-down', 'secondary', '$index < $node.parent.value.length -1'),
-      addElement('span', [], { class: 'p-space' }, '$index == $node.parent.value.length -1'),
-    ], `p-action-buttons ${innerClass}`, outerClass, label, help, render)
+      addButtonComponent('$removeNode($node.parent, $index)', 'i-lucide-x', 'error'),
+      addButtonComponent('$copyNode($node.parent, $index)', 'i-lucide-copy', 'secondary'),
+      addButtonComponent('$moveNodeUp($node.parent, $index)', 'i-lucide-arrow-up', 'primary', '$index != 0'),
+      addButtonComponent('$moveNodeDown($node.parent, $index)', 'i-lucide-arrow-down', 'primary', '$index < $node.parent.value.length -1'),
+    ], innerClass, outerClass, label, help, render)
   }
 
   return { addInsertButton, addGroupButtons, addListGroupFunctions }

@@ -76,6 +76,7 @@ function getChip(value: string) {
           allowing you to render dynamic content that responds to the current selection.
         </p>
         <FUDataEdit
+          v-if="data"
           :data="data"
           :debug-data="true"
           @data-saved="submitHandler"
