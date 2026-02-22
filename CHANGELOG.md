@@ -5,6 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v0.7.10
+
+[compare changes](https://github.com/sfxcode/formkit-nuxt-ui/compare/v0.7.8...v0.7.10)
+
+### 🚀 Enhancements
+
+- Add FormKit repeater component for dynamic list management ([c63c6ca](https://github.com/sfxcode/formkit-nuxt-ui/commit/c63c6ca))
+- Add UButton component for use in FormKit repeater ([4134b20](https://github.com/sfxcode/formkit-nuxt-ui/commit/4134b20))
+
+### 💅 Refactors
+
+- Update import paths and re-export definitions for better accessibility ([d35932f](https://github.com/sfxcode/formkit-nuxt-ui/commit/d35932f))
+- Wrap FormKit components in div for improved structure ([f56cd1b](https://github.com/sfxcode/formkit-nuxt-ui/commit/f56cd1b))
+- Wrap content in client-only component for improved rendering ([2dbe95e](https://github.com/sfxcode/formkit-nuxt-ui/commit/2dbe95e))
+- Rename repeater component to repeater-sample for clarity ([920f648](https://github.com/sfxcode/formkit-nuxt-ui/commit/920f648))
+
+### 🏡 Chore
+
+- **release:** Bump version to 0.7.9 ([c132ed0](https://github.com/sfxcode/formkit-nuxt-ui/commit/c132ed0))
+- Update release script to use minor versioning for changelogen ([b1cd5a0](https://github.com/sfxcode/formkit-nuxt-ui/commit/b1cd5a0))
+
+### ❤️ Contributors
+
+- Sfxcode ([@sfxcode](https://github.com/sfxcode))
+
 ## v0.7.8
 
 [compare changes](https://github.com/sfxcode/formkit-nuxt-ui/compare/v0.7.7...v0.7.8)
