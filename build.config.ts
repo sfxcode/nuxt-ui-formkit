@@ -2,24 +2,33 @@ import { defineBuildConfig } from 'unbuild'
 
 export default defineBuildConfig({
   entries: [
-    'src/module',
+    // Module entry
     {
+      input: 'src/module',
+    },
+    // Runtime exports - formkit type definitions and plugins
+    {
+      input: 'src/runtime/formkit/',
+      outDir: 'dist/runtime/formkit',
       builder: 'mkdist',
-      input: './src/runtime/',
-      outDir: './dist/runtime',
-      pattern: ['**/*.{ts,vue}'],
-      loaders: ['vue', 'js'],
+      declaration: true,
+      ext: 'mjs',
     },
   ],
-  declaration: true,
   externals: [
     '@nuxt/kit',
     '@nuxt/schema',
-    'nuxt',
-    'vue',
     '@formkit/core',
     '@formkit/vue',
+    '@formkit/inputs',
     '@formkit/addons',
     '@nuxt/ui',
+    'vue',
+    '#app',
+    '#imports',
   ],
+  declaration: true,
+  rollup: {
+    emitCJS: false,
+  },
 })

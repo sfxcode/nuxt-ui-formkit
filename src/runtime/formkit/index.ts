@@ -15,6 +15,10 @@ import type {
   SwitchSlots,
 } from '@nuxt/ui'
 
+// Re-export all definitions for external use
+export * from './definitions'
+export * from './plugins'
+
 /**
  * Keeps all slots from 1st argument, add any slots from 2nd type which do not collide with the 1st's names.
  */

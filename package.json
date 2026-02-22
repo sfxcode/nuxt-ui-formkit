@@ -41,20 +41,17 @@
       "types": "./dist/types.d.mts",
       "import": "./dist/module.mjs"
     },
-    "./runtime/formkit": {
-      "types": "./dist/runtime/formkit/index.d.ts",
-      "import": "./dist/runtime/formkit/index.mjs",
-      "require": "./dist/runtime/formkit/index.js"
-    },
-    "./runtime/formkit/definitions": {
+    "./definitions": {
       "types": "./dist/runtime/formkit/definitions/index.d.ts",
-      "import": "./dist/runtime/formkit/definitions/index.mjs",
-      "require": "./dist/runtime/formkit/definitions/index.js"
+      "import": "./dist/runtime/formkit/definitions/index.mjs"
     },
-    "./runtime/formkit/plugins": {
+    "./plugins": {
       "types": "./dist/runtime/formkit/plugins/index.d.ts",
-      "import": "./dist/runtime/formkit/plugins/index.mjs",
-      "require": "./dist/runtime/formkit/plugins/index.js"
+      "import": "./dist/runtime/formkit/plugins/index.mjs"
+    },
+    "./formkit": {
+      "types": "./dist/runtime/formkit/index.d.ts",
+      "import": "./dist/runtime/formkit/index.mjs"
     }
   },
   "main": "./dist/module.mjs",
@@ -62,6 +59,15 @@
     "*": {
       ".": [
         "./dist/types.d.mts"
+      ],
+      "definitions": [
+        "./dist/runtime/formkit/definitions/index.d.ts"
+      ],
+      "plugins": [
+        "./dist/runtime/formkit/plugins/index.d.ts"
+      ],
+      "formkit": [
+        "./dist/runtime/formkit/index.d.ts"
       ]
     }
   },

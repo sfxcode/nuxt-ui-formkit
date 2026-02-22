@@ -1,6 +1,10 @@
 import { nuxtUICheckboxDefinition, nuxtUICheckboxGroupDefinition, nuxtUIColorPickerDefinition, nuxtUIInputDateDefinition, nuxtUIInputDefinition, nuxtUIInputMenuDefinition, nuxtUIInputNumberDefinition, nuxtUIInputTagsDefinition, nuxtUIInputTimeDefinition, nuxtUIPinInputDefinition, nuxtUIRadioGroupDefinition, nuxtUISelectDefinition, nuxtUISelectMenuDefinition, nuxtUISliderDefinition, nuxtUISwitchDefinition, nuxtUITextareaDefinition } from './input'
 import { nuxtUIOutputBooleanDefinition, nuxtUIOutputDateDefinition, nuxtUIOutputLinkDefinition, nuxtUIOutputListDefinition, nuxtUIOutputNumberDefinition, nuxtUIOutputTextDefinition } from './output'
 
+// Re-export all individual definitions
+export * from './input'
+export * from './output'
+
 export const nuxtUIInputs = {
   nuxtUICheckbox: nuxtUICheckboxDefinition,
   nuxtUICheckboxGroup: nuxtUICheckboxGroupDefinition,

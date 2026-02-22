@@ -353,6 +353,49 @@ The playground includes comprehensive examples for all components:
 - @formkit/vue 1.x
 - @formkit/nuxt 1.x
 
+## External Module Usage
+
+External Nuxt modules and applications can import FormKit definitions programmatically.
+
+### Import All Definitions
+
+```typescript
+import { nuxtUIInputs, nuxtUIOutputs } from '@sfxcode/formkit-nuxt-ui/formkit'
+
+// Use in FormKit config
+export default defineFormKitConfig({
+  inputs: {
+    ...nuxtUIInputs,
+    ...nuxtUIOutputs,
+  },
+})
+```
+
+### Import Individual Definitions
+
+```typescript
+import { 
+  nuxtUICheckboxDefinition,
+  nuxtUIInputDefinition,
+  nuxtUISelectDefinition 
+} from '@sfxcode/formkit-nuxt-ui/definitions'
+
+export default defineFormKitConfig({
+  inputs: {
+    nuxtUICheckbox: nuxtUICheckboxDefinition,
+    nuxtUIInput: nuxtUIInputDefinition,
+    nuxtUISelect: nuxtUISelectDefinition,
+  },
+})
+```
+
+### Available Import Paths
+
+- `@sfxcode/formkit-nuxt-ui/formkit` - All definitions + type augmentation
+- `@sfxcode/formkit-nuxt-ui/definitions` - Definition objects only
+
+For detailed usage examples, see [EXTERNAL_USAGE.md](./EXTERNAL_USAGE.md).
+
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
