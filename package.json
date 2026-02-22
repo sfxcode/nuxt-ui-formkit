@@ -41,10 +41,22 @@
       "types": "./dist/types.d.mts",
       "import": "./dist/module.mjs"
     },
-    "./runtime": {
-      "types": "./dist/runtime/index.d.ts",
-      "import": "./dist/runtime/index.js"
+    "./runtime/formkit": {
+      "types": "./dist/runtime/formkit/index.d.ts",
+      "import": "./dist/runtime/formkit/index.mjs",
+      "require": "./dist/runtime/formkit/index.js"
+    },
+    "./runtime/formkit/definitions": {
+      "types": "./dist/runtime/formkit/definitions/index.d.ts",
+      "import": "./dist/runtime/formkit/definitions/index.mjs",
+      "require": "./dist/runtime/formkit/definitions/index.js"
+    },
+    "./runtime/formkit/plugins": {
+      "types": "./dist/runtime/formkit/plugins/index.d.ts",
+      "import": "./dist/runtime/formkit/plugins/index.mjs",
+      "require": "./dist/runtime/formkit/plugins/index.js"
     }
+
   },
   "main": "./dist/module.mjs",
   "typesVersions": {
@@ -86,9 +98,11 @@
     "@types/node": "latest",
     "changelogen": "^0.6.2",
     "eslint": "^10.0.1",
+    "mkdist": "^2.4.1",
     "nuxt": "^4.3.1",
     "sass-embedded": "^1.97.3",
     "typescript": "~5.9.3",
+    "unbuild": "^3.6.1",
     "vitest": "^4.0.18",
     "vue-tsc": "^3.2.5"
   }

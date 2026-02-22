@@ -1,12 +1,12 @@
 import type { FormKitTypeDefinition } from '@formkit/core'
 import { createInput } from '@formkit/vue'
 
-import FUOutputDate from '../../components/output/FUOutputDate.vue'
-import FUOutputBoolean from '../../components/output/FUOutputBoolean.vue'
-import FUOutputText from '../../components/output/FUOutputText.vue'
-import FUOutputLink from '../../components/output/FUOutputLink.vue'
-import FUOutputNumber from '../../components/output/FUOutputNumber.vue'
-import FUOutputList from '../../components/output/FUOutputList.vue'
+import FUOutputDate from '../../runtime/components/output/FUOutputDate.vue'
+import FUOutputBoolean from '../../runtime/components/output/FUOutputBoolean.vue'
+import FUOutputText from '../../runtime/components/output/FUOutputText.vue'
+import FUOutputLink from '../../runtime/components/output/FUOutputLink.vue'
+import FUOutputNumber from '../../runtime/components/output/FUOutputNumber.vue'
+import FUOutputList from '../../runtime/components/output/FUOutputList.vue'
 
 export const nuxtUIOutputTextDefinition: FormKitTypeDefinition = createInput(FUOutputText, {
   props: ['size', 'color', 'variant', 'icon', 'leadingIcon', 'trailingIcon', 'leading', 'trailing', 'onIconClicked', 'onLeadingIconClicked', 'onTrailingIconClicked', 'outputType'],

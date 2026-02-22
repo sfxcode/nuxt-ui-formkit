@@ -20,11 +20,6 @@ export default defineNuxtConfig({
   },
   compatibilityDate: '2026-01-08',
 
-  formkit: {
-    defaultConfig: false,
-    configFile: '../src/runtime/formkit.config.ts',
-  },
-
   // FormKit Nuxt UI Module Configuration
   formkitNuxtUi: { },
 })
