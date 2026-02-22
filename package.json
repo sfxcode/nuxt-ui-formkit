@@ -44,14 +44,6 @@
     "./runtime": {
       "types": "./dist/runtime/index.d.ts",
       "import": "./dist/runtime/index.js"
-    },
-    "./runtime/definitions": {
-      "types": "./dist/runtime/definitions/index.d.ts",
-      "import": "./dist/runtime/definitions/index.js"
-    },
-    "./runtime/plugins": {
-      "types": "./dist/runtime/plugins/index.d.ts",
-      "import": "./dist/runtime/plugins/index.js"
     }
   },
   "main": "./dist/module.mjs",

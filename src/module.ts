@@ -20,6 +20,8 @@ export default defineNuxtModule<ModuleOptions>({
     addPlugin(resolver.resolve('./runtime/plugin'))
 
     addImportsDir(resolver.resolve('./runtime/composables'))
+    addImportsDir(resolver.resolve('./runtime/formkit/definitions'))
+    addImportsDir(resolver.resolve('./runtime/formkit/plugins'))
 
     const NPM_PCK_FORMKIT_NUXT_UI = '@sfxcode/formkit-nuxt-ui'
 

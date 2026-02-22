@@ -2,8 +2,8 @@
 import type { DefaultConfigOptions } from '@formkit/vue'
 import { createAutoAnimatePlugin } from '@formkit/addons'
 import { de, en } from '@formkit/i18n'
-import { nuxtUIInputs, nuxtUIOutputs } from '../runtime/definitions'
-import { addNuxtAsteriskPlugin } from '../runtime/plugins'
+import { nuxtUIInputs, nuxtUIOutputs } from './formkit/definitions'
+import { addNuxtAsteriskPlugin } from './formkit/plugins'
 
 const config: DefaultConfigOptions = {
   locales: { en, de },
