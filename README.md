@@ -12,11 +12,11 @@
 FormKit Nuxt UI bridges the gap between [FormKit](https://formkit.com/)'s powerful form management and [Nuxt UI](https://ui.nuxt.com/)'s beautiful component library, providing a complete solution for building forms in Nuxt applications.
 
 - [✨ &nbsp;Release Notes](/CHANGELOG.md)
-- [🏀 &nbsp;Live Playground](https://github.com/sfxcode/formkit-nuxt-ui/tree/main/playground)
+- [🏀 &nbsp;Live Playground](https://github.com/sfxcode/nuxt-ui-formkit/tree/main/playground)
 - [📖 &nbsp;FormKit Documentation](https://formkit.com/)
 - [🎨 &nbsp;Nuxt UI Documentation](https://ui.nuxt.com/)
 
-<img src="./formkit-nuxt-ui.png" alt="FormKit Nuxt UI Screenshot" width="70%" />
+<img src="nuxt-ui-formkit.png" alt="FormKit Nuxt UI Screenshot" width="70%" />
 
 ## Features
 
@@ -74,13 +74,13 @@ Install the module to your Nuxt application:
 
 ```bash
 # Using pnpm (recommended)
-pnpm add @sfxcode/formkit-nuxt-ui
+pnpm add @sfxcode/nuxt-ui-formkit
 
 # Using npm
-npm install @sfxcode/formkit-nuxt-ui
+npm install @sfxcode/nuxt-ui-formkit
 
 # Using yarn
-yarn add @sfxcode/formkit-nuxt-ui
+yarn add @sfxcode/nuxt-ui-formkit
 ```
 
 Add the module to your `nuxt.config.ts`:
@@ -89,7 +89,7 @@ Add the module to your `nuxt.config.ts`:
 export default defineNuxtConfig({
   modules: [
     '@nuxt/ui',
-    '@sfxcode/formkit-nuxt-ui'
+    '@sfxcode/nuxt-ui-formkit'
   ]
 })
 ```
@@ -314,8 +314,8 @@ The playground includes comprehensive examples for all components:
   
   ```bash
   # Clone the repository
-  git clone https://github.com/sfxcode/formkit-nuxt-ui.git
-  cd formkit-nuxt-ui
+  git clone https://github.com/sfxcode/nuxt-ui-formkit.git
+  cd nuxt-ui-formkit
   
   # Install dependencies (using pnpm)
   pnpm install
@@ -360,7 +360,7 @@ External Nuxt modules and applications can import FormKit definitions programmat
 ### Import All Definitions
 
 ```typescript
-import { nuxtUIInputs, nuxtUIOutputs } from '@sfxcode/formkit-nuxt-ui/formkit'
+import { nuxtUIInputs, nuxtUIOutputs } from '@sfxcode/nuxt-ui-formkit/formkit'
 
 // Use in FormKit config
 export default defineFormKitConfig({
@@ -378,7 +378,7 @@ import {
   nuxtUICheckboxDefinition,
   nuxtUIInputDefinition,
   nuxtUISelectDefinition 
-} from '@sfxcode/formkit-nuxt-ui/definitions'
+} from '@sfxcode/nuxt-ui-formkit/definitions'
 
 export default defineFormKitConfig({
   inputs: {
@@ -391,8 +391,8 @@ export default defineFormKitConfig({
 
 ### Available Import Paths
 
-- `@sfxcode/formkit-nuxt-ui/formkit` - All definitions + type augmentation
-- `@sfxcode/formkit-nuxt-ui/definitions` - Definition objects only
+- `@sfxcode/nuxt-ui-formkit/formkit` - All definitions + type augmentation
+- `@sfxcode/nuxt-ui-formkit/definitions` - Definition objects only
 
 For detailed usage examples, see [EXTERNAL_USAGE.md](./EXTERNAL_USAGE.md).
 
@@ -417,14 +417,14 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 - [Nuxt](https://nuxt.com/) - The Intuitive Vue Framework
 
 <!-- Badges -->
-[npm-version-src]: https://img.shields.io/npm/v/@sfxcode/formkit-nuxt-ui/latest.svg?style=flat&colorA=020420&colorB=00DC82
-[npm-version-href]: https://npmjs.com/package/@sfxcode/formkit-nuxt-ui
+[npm-version-src]: https://img.shields.io/npm/v/@sfxcode/nuxt-ui-formkit/latest.svg?style=flat&colorA=020420&colorB=00DC82
+[npm-version-href]: https://npmjs.com/package/@sfxcode/nuxt-ui-formkit
 
-[npm-downloads-src]: https://img.shields.io/npm/dm/@sfxcode/formkit-nuxt-ui.svg?style=flat&colorA=020420&colorB=00DC82
-[npm-downloads-href]: https://npm.chart.dev/@sfxcode/formkit-nuxt-ui
+[npm-downloads-src]: https://img.shields.io/npm/dm/@sfxcode/nuxt-ui-formkit.svg?style=flat&colorA=020420&colorB=00DC82
+[npm-downloads-href]: https://npm.chart.dev/@sfxcode/nuxt-ui-formkit
 
-[license-src]: https://img.shields.io/npm/l/@sfxcode/formkit-nuxt-ui.svg?style=flat&colorA=020420&colorB=00DC82
-[license-href]: https://npmjs.com/package/@sfxcode/formkit-nuxt-ui
+[license-src]: https://img.shields.io/npm/l/@sfxcode/nuxt-ui-formkit.svg?style=flat&colorA=020420&colorB=00DC82
+[license-href]: https://npmjs.com/package/@sfxcode/nuxt-ui-formkit
 
 [nuxt-src]: https://img.shields.io/badge/Nuxt-020420?logo=nuxt
 [nuxt-href]: https://nuxt.com

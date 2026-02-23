@@ -5,8 +5,8 @@ export type ModuleOptions = Record<string, never>
 
 export default defineNuxtModule<ModuleOptions>({
   meta: {
-    name: 'formkit-nuxt-ui',
-    configKey: 'formkitNuxtUi',
+    name: 'nuxt-ui-formkit',
+    configKey: 'nuxtUiFormkit',
     compatibility: {
       nuxt: '>=4.0.0',
     },
@@ -21,7 +21,7 @@ export default defineNuxtModule<ModuleOptions>({
 
     addImportsDir(resolver.resolve('./runtime/composables'))
 
-    const NPM_PCK_FORMKIT_NUXT_UI = '@sfxcode/formkit-nuxt-ui'
+    const NPM_PCK_FORMKIT_NUXT_UI = '@sfxcode/nuxt-ui-formkit'
 
     const componentNames = ['FUDataView', 'FUDataEdit', 'FUDataDebug']
     componentNames.forEach(name =>

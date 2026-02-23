@@ -13,10 +13,10 @@
     }
   ],
   "license": "MIT",
-  "homepage": "https://github.com/sfxcode/formkit-nuxt-ui",
+  "homepage": "https://github.com/sfxcode/nuxt-ui-formkit",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sfxcode/formkit-nuxt-ui.git"
+    "url": "git+https://github.com/sfxcode/nuxt-ui-formkit.git"
   },
   "keywords": [
     "nuxt",

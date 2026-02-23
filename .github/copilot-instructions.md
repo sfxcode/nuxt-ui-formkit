@@ -1,4 +1,4 @@
-# GitHub Copilot Instructions for formkit-nuxt-ui
+# GitHub Copilot Instructions for nuxt-ui-formkit
 
 ## Project Overview
 This is a Nuxt module that integrates FormKit with Nuxt UI components. The module provides seamless integration between FormKit form handling and Nuxt UI's design system.

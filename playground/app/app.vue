@@ -199,7 +199,7 @@ const items = ref<NavigationMenuItem[]>([
         <UColorModeButton />
 
         <UButton
-          to="https://github.com/sfxcode/formkit-nuxt-ui"
+          to="https://github.com/sfxcode/nuxt-ui-formkit"
           target="_blank"
           icon="i-simple-icons-github"
           aria-label="GitHub"
@@ -224,7 +224,7 @@ const items = ref<NavigationMenuItem[]>([
 
       <template #right>
         <UButton
-          to="https://github.com/sfxcode/formkit-nuxt-ui"
+          to="https://github.com/sfxcode/nuxt-ui-formkit"
           target="_blank"
           icon="i-simple-icons-github"
           aria-label="GitHub"
