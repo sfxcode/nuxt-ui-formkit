@@ -1,5 +1,5 @@
 {
-  "name": "@sfxcode/formkit-nuxt-ui",
+  "name": "@sfxcode/nuxt-ui-formkit",
   "version": "0.8.1",
   "description": "FormKit integration for Nuxt UI - Seamlessly connect FormKit form handling with Nuxt UI components",
   "author": {
