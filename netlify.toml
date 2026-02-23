@@ -1,5 +1,5 @@
 [build]
-command = "pnpm run dev:build"
+command = "pnpm run dev:prepare && pnpm run dev:build"
 
 [build.environment]
 NPM_FLAGS = "--prefix=/dev/null"
