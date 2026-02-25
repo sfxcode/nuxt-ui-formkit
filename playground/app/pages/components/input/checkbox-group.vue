@@ -295,6 +295,7 @@ const checkboxGroupSchema = [
           <FUDataEdit
             :data="{}"
             :schema="checkboxGroupSchema.slice(16, 18)"
+            form-class="w-40"
           />
         </section>
 

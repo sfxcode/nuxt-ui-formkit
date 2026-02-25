@@ -50,6 +50,7 @@ const { handleInput, handleChange, styleClass, color, modelValue, items, validSl
     :size="context.size ?? 'md'"
     :variant="context.variant ?? 'list'"
     :orientation="context.orientation ?? 'vertical'"
+    :indicator="context.indicator ?? 'start'"
     :items="items"
     :legend="context.legend"
     :value-key="context.valueKey"
