@@ -5,6 +5,32 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v0.8.3
+
+[compare changes](https://github.com/sfxcode/nuxt-ui-formkit/compare/v0.8.2...v0.8.3)
+
+### 🚀 Enhancements
+
+- Add default values to readonly and disabled time inputs ([edd316a](https://github.com/sfxcode/nuxt-ui-formkit/commit/edd316a))
+
+### 🩹 Fixes
+
+- Update checkbox group components with indicator prop ([1b83d1f](https://github.com/sfxcode/nuxt-ui-formkit/commit/1b83d1f))
+
+### 🏡 Chore
+
+- Add Netlify configuration file for build and redirects ([6cbf11b](https://github.com/sfxcode/nuxt-ui-formkit/commit/6cbf11b))
+- Update Netlify build command to include preparation step ([e8aadc1](https://github.com/sfxcode/nuxt-ui-formkit/commit/e8aadc1))
+- Update dependencies in package.json ([5b79a4c](https://github.com/sfxcode/nuxt-ui-formkit/commit/5b79a4c))
+
+### ✅ Tests
+
+- Add unit tests for useFormKitSchema, useFormKitInput, and useFormKitOutput ([11866ac](https://github.com/sfxcode/nuxt-ui-formkit/commit/11866ac))
+
+### ❤️ Contributors
+
+- Sfxcode ([@sfxcode](https://github.com/sfxcode))
+
 ## v0.8.2
 
 [compare changes](https://github.com/sfxcode/nuxt-ui-formkit/compare/v0.8.1...v0.8.2)
