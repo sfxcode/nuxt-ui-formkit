@@ -1,5 +1,5 @@
 import { expect, it } from 'vitest'
-import { durationToMinutes, formattedDuration } from '../src/runtime/utils/durationConverter'
+import { durationToMinutes, formattedDuration } from '../../src/runtime/utils/durationConverter'
 
 it('durationToMinutes', () => {
   expect(durationToMinutes('2h')).toBe(120)

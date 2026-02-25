@@ -1,5 +1,5 @@
 import { expect, it, describe } from 'vitest'
-import { convertColorToHex } from '../src/runtime/utils/colorConverter'
+import { convertColorToHex } from '../../src/runtime/utils/colorConverter'
 
 describe('convertColorToHex', () => {
   describe('Hex color formats', () => {
