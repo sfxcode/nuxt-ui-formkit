@@ -154,15 +154,6 @@ const pinInputSchema = [
   },
   {
     $formkit: 'nuxtUIPinInput',
-    name: 'pin19',
-    placeholder: '0',
-    label: 'Read Only',
-    readonly: true,
-    value: '123456',
-    length: 6,
-  },
-  {
-    $formkit: 'nuxtUIPinInput',
     name: 'pin20',
     placeholder: '0',
     label: 'Disabled',

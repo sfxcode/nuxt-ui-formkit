@@ -153,11 +153,13 @@ const inputTimeSchema = [
     $formkit: 'nuxtUIInputTime',
     name: 'time22',
     label: 'Read Only',
+    defaultValue: new Time(18, 30),
     readonly: true,
   },
   {
     $formkit: 'nuxtUIInputTime',
     name: 'time23',
+    defaultValue: new Time(10, 45),
     label: 'Disabled',
     disabled: true,
   },
