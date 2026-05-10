@@ -1,5 +1,6 @@
 import { nuxtUICheckboxDefinition, nuxtUICheckboxGroupDefinition, nuxtUIColorPickerDefinition, nuxtUIInputDateDefinition, nuxtUIInputDefinition, nuxtUIInputMenuDefinition, nuxtUIInputNumberDefinition, nuxtUIInputTagsDefinition, nuxtUIInputTimeDefinition, nuxtUIListboxDefinition, nuxtUIPinInputDefinition, nuxtUIRadioGroupDefinition, nuxtUISelectDefinition, nuxtUISelectMenuDefinition, nuxtUISliderDefinition, nuxtUISwitchDefinition, nuxtUITextareaDefinition } from './input'
 import { nuxtUIOutputBooleanDefinition, nuxtUIOutputDateDefinition, nuxtUIOutputLinkDefinition, nuxtUIOutputListDefinition, nuxtUIOutputNumberDefinition, nuxtUIOutputTextDefinition } from './output'
+import { nuxtUIRepeaterDefinition } from './repeater'
 
 // Re-export all individual definitions
 export * from './input'
@@ -23,6 +24,7 @@ export const nuxtUIInputs = {
   nuxtUISlider: nuxtUISliderDefinition,
   nuxtUISwitch: nuxtUISwitchDefinition,
   nuxtUITextarea: nuxtUITextareaDefinition,
+  nuxtUIRepeater: nuxtUIRepeaterDefinition,
 }
 
 export const nuxtUIOutputs = {
