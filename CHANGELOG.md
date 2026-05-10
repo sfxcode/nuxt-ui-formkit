@@ -5,6 +5,38 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.0.1
+
+[compare changes](https://github.com/sfxcode/nuxt-ui-formkit/compare/v0.11.0...v1.0.1)
+
+### 🚀 Enhancements
+
+- Add nuxtUIRepeaterDefinition for dynamic list handling in forms - no more need for useFormKitRepeater.ts - all is handled in the repeater directly ([94626c4](https://github.com/sfxcode/nuxt-ui-formkit/commit/94626c4))
+- Enhance repeater functionality in repeater-sample.vue - replace useFormKitRepeater with nuxtUIRepeater for improved dynamic list management ([c9695bd](https://github.com/sfxcode/nuxt-ui-formkit/commit/c9695bd))
+
+### 🩹 Fixes
+
+- Simplify class handling in addElementsInOuterDiv function ([b5361db](https://github.com/sfxcode/nuxt-ui-formkit/commit/b5361db))
+
+### 💅 Refactors
+
+- Improve type safety in repeater context methods by specifying FormKitNode type ([b1f1fca](https://github.com/sfxcode/nuxt-ui-formkit/commit/b1f1fca))
+- Enhance type safety in addRepeaterHandler by replacing 'any' with 'unknown' in swapElements and related functions ([7d6cb95](https://github.com/sfxcode/nuxt-ui-formkit/commit/7d6cb95))
+- Remove default class names from FormKit elements in useFormKitSchema tests ([d646f6b](https://github.com/sfxcode/nuxt-ui-formkit/commit/d646f6b))
+
+### 🏡 Chore
+
+- Update version to 1.0.0 and adjust release script for patch versioning ([bca1e72](https://github.com/sfxcode/nuxt-ui-formkit/commit/bca1e72))
+- Update package manager to pnpm@11.0.9 and add pnpm workspace configuration ([17b3698](https://github.com/sfxcode/nuxt-ui-formkit/commit/17b3698))
+- Remove unused dependencies from Vite configuration in nuxt.config.ts ([c6df915](https://github.com/sfxcode/nuxt-ui-formkit/commit/c6df915))
+- Remove example from test ([f92a57e](https://github.com/sfxcode/nuxt-ui-formkit/commit/f92a57e))
+- Remove example from test ([c468e5d](https://github.com/sfxcode/nuxt-ui-formkit/commit/c468e5d))
+- Update dependencies in package.json and pnpm-lock.yaml ([b3b24c0](https://github.com/sfxcode/nuxt-ui-formkit/commit/b3b24c0))
+
+### ❤️ Contributors
+
+- Sfxcode ([@sfxcode](https://github.com/sfxcode))
+
 ## v0.11.0
 
 [compare changes](https://github.com/sfxcode/nuxt-ui-formkit/compare/v0.10.0...v0.11.0)
