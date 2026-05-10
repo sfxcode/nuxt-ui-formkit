@@ -48,7 +48,7 @@ export const nuxtUIRepeaterDefinition: FormKitTypeDefinition = createInput(
 )
 
 function addRepeaterHandler(node: FormKitNode): void {
-  const swapElements = (array: any[], index1: number, index2: number) => {
+  const swapElements = (array: unknown[], index1: number, index2: number) => {
     const newArray = [...array]
     const temp = newArray[index1]
     newArray[index1] = newArray[index2]
@@ -60,32 +60,32 @@ function addRepeaterHandler(node: FormKitNode): void {
 
     node.context.removeNode = (parentNode: FormKitNode, index: number) => (): void => {
       if (parentNode && parentNode._value instanceof Array) {
-        parentNode.input(parentNode._value.filter((_: any, i: number): boolean => i !== index), false)
+        parentNode.input(parentNode._value.filter((_: unknown, i: number): boolean => i !== index), false)
       }
     }
     node.context.addNode = (parentNode: FormKitNode) => (): void => {
       if (parentNode && parentNode._value instanceof Array) {
-        const newArray: any[] = [...parentNode.value, node.context.newItem || {}]
+        const newArray: unknown[] = [...parentNode.value, node.context.newItem || {}]
         parentNode.input(newArray, false)
       }
     }
     node.context.cloneNode = (parentNode: FormKitNode, index: number) => (): void => {
       if (parentNode && parentNode._value instanceof Array) {
-        const item: any = parentNode.value[index]
-        const newArray: any[] = [...parentNode.value.slice(0, index), { ...item }, ...parentNode.value.slice(index)]
+        const item: unknown = parentNode.value[index]
+        const newArray: unknown[] = [...parentNode.value.slice(0, index), { ...item }, ...parentNode.value.slice(index)]
         parentNode.input([...newArray], false)
       }
     }
     node.context.moveNodeUp = (parentNode: FormKitNode, index: number) => (): void => {
       if (parentNode && parentNode._value instanceof Array) {
-        const array: any[] = [...parentNode.value]
+        const array: unknown[] = [...parentNode.value]
         if (index > 0)
           parentNode.input(swapElements(array, index - 1, index), false)
       }
     }
     node.context.moveNodeDown = (parentNode: FormKitNode, index: number) => (): void => {
       if (parentNode && parentNode._value instanceof Array) {
-        const array: any[] = [...parentNode.value]
+        const array: unknown[] = [...parentNode.value]
         if (index < array.length - 1)
           parentNode.input(swapElements(array, index, index + 1), false)
       }
