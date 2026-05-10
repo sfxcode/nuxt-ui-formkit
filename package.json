@@ -1,6 +1,6 @@
 {
   "name": "@sfxcode/nuxt-ui-formkit",
-  "version": "0.11.0",
+  "version": "1.0.0",
   "description": "FormKit integration for Nuxt UI - Seamlessly connect FormKit form handling with Nuxt UI components",
   "author": {
     "name": "Tom",
@@ -79,7 +79,7 @@
     "dev": "npm run dev:prepare && nuxi dev playground",
     "dev:build": "nuxi build playground",
     "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground",
-    "release": "npm run lint && npm run test && npm run prepack && changelogen --major --release && npm publish --access=public && git push --follow-tags",
+    "release": "npm run lint && npm run test && npm run prepack && changelogen --patch --release && npm publish --access=public && git push --follow-tags",
     "lint": "eslint .",
     "test": "vitest run",
     "test:watch": "vitest watch",
@@ -93,8 +93,8 @@
   },
   "devDependencies": {
     "@iconify-json/heroicons": "^1.2.3",
-    "@iconify-json/lucide": "^1.2.105",
-    "@iconify-json/simple-icons": "^1.2.80",
+    "@iconify-json/lucide": "^1.2.106",
+    "@iconify-json/simple-icons": "^1.2.81",
     "@nuxt/devtools": "4.0.0-alpha.4",
     "@nuxt/eslint-config": "^1.15.2",
     "@nuxt/module-builder": "^1.0.2",
