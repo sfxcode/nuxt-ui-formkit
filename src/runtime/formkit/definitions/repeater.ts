@@ -2,24 +2,25 @@ import type { FormKitNode, FormKitTypeDefinition } from '@formkit/core'
 import { createInput } from '@formkit/vue'
 import { useFormKitSchema } from '../../composables/useFormKitSchema'
 
-const { addList, addElement, addListGroup, addComponent, addElementsInOuterDiv } = useFormKitSchema()
+const { addList, addElement, addListGroup, addComponent } = useFormKitSchema()
 
-function addActionButtons(innerClass: string = '', outerClass: string = '', label: string, help: string = '', render: string = 'true') {
-  const addButtonComponent = (onClick: string = '', icon: string = '', color: string = '', render: string = 'true', disabled: 'false'): object => {
-    return addComponent('UButton', { onClick, icon, color, disabled }, render)
+function addButtonGroup(buttonGroupClass: string = '', buttonGroupItemClass: string = '', buttonSize: string, render: string = 'true') {
+  const addActionButtonComponent = (onClick: string = '', icon: string = '', color: string = '', render: string = 'true', disabled: 'false'): object => {
+    return addElement('div', [addComponent('UButton', { onClick, icon, color, disabled, size: buttonSize })], { class: buttonGroupItemClass }, render)
   }
 
-  return addElementsInOuterDiv([
-    addButtonComponent('$removeNode($node.parent, $index)', 'i-lucide-x', 'error'),
-    addButtonComponent('$cloneNode($node.parent, $index)', 'i-lucide-copy', 'secondary', '$displayCloneButton'),
-    addButtonComponent('$moveNodeDown($node.parent, $index)', 'i-lucide-arrow-down', 'primary', 'true', '$index === $node.parent.value.length -1'),
-    addButtonComponent('$moveNodeUp($node.parent, $index)', 'i-lucide-arrow-up', 'primary', 'true', '$index === 0'),
-  ], innerClass, outerClass, label, help, render)
+  return addElement('div', [
+    addActionButtonComponent('$moveNodeUp($node.parent, $index)', 'i-lucide-arrow-up', 'primary', '$renderMoveButtons', '$index === 0'),
+    addActionButtonComponent('$removeNode($node.parent, $index)', 'i-lucide-trash', 'error', '$displayDeleteButton'),
+    addActionButtonComponent('$cloneNode($node.parent, $index)', 'i-lucide-copy', 'secondary', '$displayCloneButton'),
+    addActionButtonComponent('$addNode($node.parent, $index)', 'i-lucide-plus', 'secondary', '$displayAddButton'),
+    addActionButtonComponent('$moveNodeDown($node.parent, $index)', 'i-lucide-arrow-down', 'primary', '$renderMoveButtons', '$index === $node.parent.value.length -1'),
+  ], { class: buttonGroupClass }, render)
 }
 
-function addInsertButton(label: string = 'Add Item', icon: string = 'i-lucide-plus', styleClass: string = '', render: string = 'true') {
+function addInsertButton(label: string = 'Add Item', icon: string = 'i-lucide-plus', styleClass: string = '', buttonSize: string, render: string = 'true') {
   return addElement('div', [
-    addComponent('UButton', { onClick: '$addNode($node)', label, icon }),
+    addComponent('UButton', { onClick: '$insertNode($node)', label, icon, size: buttonSize }),
   ], { class: styleClass }, render)
 }
 
@@ -27,22 +28,21 @@ export const nuxtUIRepeaterDefinition: FormKitTypeDefinition = createInput(
   [
     addElement('div', [
       addList('$listName', [
-        addInsertButton('$addButtonLabel', 'i-lucide-plus', '$addButtonClass', '$node.children.length == 0 || $alwaysDisplayAddButton'),
+        addInsertButton('$insertButtonLabel', 'i-lucide-plus', '$insertButtonClass', '$insertButtonSize', '$node.children.length == 0 || $alwaysDisplayInsertButton'),
         addListGroup([
           addElement('div', [
-            {
-              children: '$slots.default',
-            },
-            addActionButtons('$buttonsInnerClass', '$buttonsOuterClass', '$buttonsLabel'),
-          ], { class: '$itemClass' }),
-
-        ]),
+            addElement('div', [{ children: '$slots.default' }], { class: '$groupClass' }),
+            addButtonGroup('$buttonGroupClass', '$buttonGroupItemClass', '$buttonSize', '$renderButtons'),
+          ], { class: '$listItemClass' }),
+        ],
+        ),
       ], true, 'true'),
     ], { class: '$listClass' }),
 
   ],
   {
-    props: ['buttonsOuterClass', 'buttonsInnerClass', 'buttonsLabel', 'addButtonLabel', 'addButtonClass', 'newItem', 'itemClass', 'listClass', 'displayCloneButton', 'alwaysDisplayAddButton'],
+    props: ['insertButtonLabel', 'insertButtonClass', 'insertButtonSize', 'alwaysDisplayInsertButton', 'newItem', 'listClass', 'listItemClass', 'groupClass',
+      'hideButtonGroup', 'hideMoveButtons', 'buttonGroupClass', 'buttonGroupItemClass', 'buttonSize', 'displayCloneButton', 'displayAddButton', 'displayDeleteButton'],
     features: [addRepeaterHandler],
   },
 )
@@ -57,22 +57,34 @@ function addRepeaterHandler(node: FormKitNode): void {
   }
   node.on('created', () => {
     node.context.listName = node.name
+    node.context.renderButtons = !node.context.hideButtonGroup
+    node.context.insertButtonSize = node.context.insertButtonSize ? node.context.insertButtonSize : 'md'
+    node.context.buttonSize = node.context.buttonSize ? node.context.buttonSize : 'md'
+    node.context.renderMoveButtons = !node.context.hideMoveButtons
 
+    node.context.insertNode = (parentNode: FormKitNode) => (): void => {
+      if (parentNode && parentNode._value instanceof Array) {
+        const item: unknown = node.context.newItem ? { ...node.context.newItem } : {}
+        const newArray: unknown[] = [item, ...parentNode.value]
+        parentNode.input(newArray, false)
+      }
+    }
     node.context.removeNode = (parentNode: FormKitNode, index: number) => (): void => {
       if (parentNode && parentNode._value instanceof Array) {
         parentNode.input(parentNode._value.filter((_: unknown, i: number): boolean => i !== index), false)
       }
     }
-    node.context.addNode = (parentNode: FormKitNode) => (): void => {
+    node.context.addNode = (parentNode: FormKitNode, index: number) => (): void => {
       if (parentNode && parentNode._value instanceof Array) {
-        const newArray: unknown[] = [...parentNode.value, node.context.newItem || {}]
-        parentNode.input(newArray, false)
+        const item: unknown = node.context.newItem ? { ...node.context.newItem } : {}
+        const newArray: unknown[] = [...parentNode.value.slice(0, index + 1), { ...item }, ...parentNode.value.slice(index + 1)]
+        parentNode.input([...newArray], false)
       }
     }
     node.context.cloneNode = (parentNode: FormKitNode, index: number) => (): void => {
       if (parentNode && parentNode._value instanceof Array) {
         const item: unknown = parentNode.value[index]
-        const newArray: unknown[] = [...parentNode.value.slice(0, index), { ...item }, ...parentNode.value.slice(index)]
+        const newArray: unknown[] = [...parentNode.value.slice(0, index + 1), { ...item }, ...parentNode.value.slice(index + 1)]
         parentNode.input([...newArray], false)
       }
     }
