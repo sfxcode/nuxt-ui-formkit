@@ -3,7 +3,7 @@ const data = ref()
 const { addList, addElement, addListGroup, addComponent } = useFormKitSchema()
 
 function createDefaultValue(): object {
-  return { name: 'Sword', damage: '2D6' }
+  return { name: 'Bow', damage: '1D6+1' }
 }
 
 onMounted(() => {
