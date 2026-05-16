@@ -19,7 +19,7 @@ jobs:
           node-version: "24"
       # Pick your own package manager and build script
       - run: npm install
-      - run: npx nuxt build --preset github_pages
+      - run: npx nuxi generate
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
