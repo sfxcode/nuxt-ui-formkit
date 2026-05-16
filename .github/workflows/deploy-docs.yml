@@ -1,31 +1,10 @@
-name: Deploy Docs to GitHub Pages
-
+# https://github.com/actions/deploy-pages#usage
+name: Deploy to GitHub Pages
 on:
-  # Runs on pushes targeting the default branch
+  workflow_dispatch:
   push:
     branches:
       - main
-      - master
-    paths:
-      - 'docs/**'
-      - '.github/workflows/deploy-docs.yml'
-
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
-
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-  actions: read
-
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -33,27 +12,33 @@ jobs:
       run:
         working-directory: docs
     steps:
-      - uses: actions/checkout@v6.0.2
-
-      - uses: pnpm/action-setup@v5.0.0
-
-      - uses: actions/setup-node@v6.4.0
+      - uses: actions/checkout@v4
+      - run: corepack enable
+      - uses: actions/setup-node@v4
         with:
-          node-version: 24
-          cache: pnpm
-
-      - name: Install dependencies
-        run:  pnpm install --frozen-lockfile
-
-      - name: Build with Nuxt
-        run: pnpm generate
-        env:
-          NUXT_APP_BASE_URL: /nuxt-ui-formkit/
-
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v4
+          node-version: "24"
+      # Pick your own package manager and build script
+      - run: npm install
+      - run: npx nuxt build --preset github_pages
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs/.output/public
-          # cname: example.com # if wanna deploy to custom domain
-
+          path: ./.output/public
+  # Deployment job
+  deploy:
+    # Add a dependency to the build job
+    needs: build
+    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
+    permissions:
+      pages: write      # to deploy to Pages
+      id-token: write   # to verify the deployment originates from an appropriate source
+    # Deploy to the github_pages environment
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    # Specify runner + deployment step
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
