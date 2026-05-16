@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.0.3
+
+[compare changes](https://github.com/sfxcode/nuxt-ui-formkit/compare/v1.0.2...v1.0.3)
+
+### 🚀 Enhancements
+
+- Update repeater component with improved default values and internal class handling ([4085e06](https://github.com/sfxcode/nuxt-ui-formkit/commit/4085e06))
+- Update repeater sample component with modified default values and improved list structure ([082a8ef](https://github.com/sfxcode/nuxt-ui-formkit/commit/082a8ef))
+- Enhance repeater component with new input handling and improved list structure ([ca4a56c](https://github.com/sfxcode/nuxt-ui-formkit/commit/ca4a56c))
+- Add initial project setup for documentation with configuration files and example components ([7368a6e](https://github.com/sfxcode/nuxt-ui-formkit/commit/7368a6e))
+- Update README with repeater component details and enhance composables section ([6330e57](https://github.com/sfxcode/nuxt-ui-formkit/commit/6330e57))
+
+### 🏡 Chore
+
+- Update dependencies to latest versions in package.json ([e5f41ca](https://github.com/sfxcode/nuxt-ui-formkit/commit/e5f41ca))
+
+### ❤️ Contributors
+
+- Sfxcode ([@sfxcode](https://github.com/sfxcode))
+
 ## v1.0.2
 
 [compare changes](https://github.com/sfxcode/nuxt-ui-formkit/compare/v1.0.1...v1.0.2)
