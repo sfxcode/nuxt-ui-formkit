@@ -28,6 +28,9 @@ jobs:
   deploy:
     # Add a dependency to the build job
     needs: build
+    defaults:
+      run:
+        working-directory: docs
     # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
     permissions:
       pages: write      # to deploy to Pages
