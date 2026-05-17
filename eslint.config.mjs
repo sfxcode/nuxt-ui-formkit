@@ -16,5 +16,11 @@ export default createConfigForNuxt({
   },
 })
   .append(
-    // your custom flat config here...
+    // Ignore VitePress build and cache directories
+    {
+      ignores: [
+        'docs/.vitepress/cache/**',
+        'docs/.vitepress/dist/**',
+      ],
+    },
   )
