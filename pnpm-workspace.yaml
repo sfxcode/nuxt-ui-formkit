@@ -1,5 +1,9 @@
+packages:
+  - 'playground'
+
 allowBuilds:
   '@parcel/watcher': false
   esbuild: false
+  sharp: set this to true or false
   unrs-resolver: false
   vue-demi: false
