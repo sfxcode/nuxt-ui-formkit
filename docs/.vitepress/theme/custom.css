@@ -1,0 +1,154 @@
+/**
+ * Custom styles for Nuxt UI FormKit documentation
+ * VitePress 2 Alpha - Enhanced theme customization
+ */
+
+/**
+ * Customize the brand color to match Nuxt UI
+ * --vp-c-brand-1 is the primary brand color used for links, buttons, etc.
+ */
+:root {
+  /* Nuxt UI green brand colors */
+  --vp-c-brand-1: #00dc82;
+  --vp-c-brand-2: #00c16a;
+  --vp-c-brand-3: #00a155;
+  --vp-c-brand-soft: rgba(0, 220, 130, 0.14);
+
+  /* Code block colors */
+  --vp-code-block-bg: rgba(125, 125, 125, 0.04);
+  --vp-code-tab-divider: rgba(125, 125, 125, 0.2);
+
+  /* Custom accent colors */
+  --vp-c-accent-1: #00dc82;
+  --vp-c-accent-2: #00c16a;
+  --vp-c-accent-3: #00a155;
+
+  /* Layout spacing */
+  --vp-layout-max-width: 1440px;
+}
+
+.dark {
+  --vp-c-brand-1: #00dc82;
+  --vp-c-brand-2: #36e9a1;
+  --vp-c-brand-3: #52edb0;
+  --vp-c-brand-soft: rgba(0, 220, 130, 0.16);
+
+  --vp-code-block-bg: rgba(0, 0, 0, 0.2);
+}
+
+/**
+ * Component styles
+ */
+
+/* Enhanced code blocks */
+.vp-code-group {
+  margin: 16px 0;
+}
+
+/* Custom badge colors for FormKit components */
+.vp-doc a[href*="nuxtUI"] code {
+  color: var(--vp-c-brand-1);
+  background-color: var(--vp-c-brand-soft);
+}
+
+/* Enhanced table styling */
+.vp-doc table {
+  font-size: 14px;
+}
+
+.vp-doc th {
+  font-weight: 600;
+  background-color: var(--vp-c-bg-soft);
+}
+
+/* Better link styling */
+.vp-doc a {
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.vp-doc a:hover {
+  color: var(--vp-c-brand-2);
+}
+
+/* Enhanced home layout */
+.VPHome {
+  padding-bottom: 96px;
+}
+
+/* Feature grid enhancements */
+.VPFeature {
+  transition: all 0.3s ease;
+}
+
+.VPFeature:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--vp-c-bg-soft);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--vp-c-divider);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--vp-c-text-3);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .VPHome {
+    padding-bottom: 64px;
+  }
+}
+
+/* Enhanced code copy button */
+.vp-code-group .tabs {
+  border-radius: 8px 8px 0 0;
+}
+
+/* Better focus styles for accessibility */
+:focus-visible {
+  outline: 2px solid var(--vp-c-brand-1);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Custom container styles */
+.vp-doc .custom-block {
+  border-radius: 8px;
+  padding: 16px;
+  margin: 16px 0;
+}
+
+.vp-doc .custom-block.tip {
+  border-color: var(--vp-c-brand-1);
+}
+
+/* Enhanced sidebar */
+.VPSidebar {
+  padding-top: 24px;
+}
+
+.VPSidebarItem.level-0 {
+  font-weight: 600;
+  padding-top: 8px;
+}
+
+/* Better mobile navigation */
+@media (max-width: 960px) {
+  .VPNav {
+    backdrop-filter: blur(8px);
+  }
+}
+

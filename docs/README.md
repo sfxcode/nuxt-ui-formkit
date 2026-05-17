@@ -1,19 +1,60 @@
 # Nuxt UI FormKit Documentation
-Official documentation for the Nuxt UI FormKit module.
+
+This directory contains the VitePress documentation for Nuxt UI FormKit.
+
+VitePress is installed as a devDependency in the root package.json.
+
 ## Development
+
 ```bash
-# Install dependencies
-pnpm install
-# Start dev server (http://localhost:3000)
-pnpm dev
-# Build for production
-pnpm build
-# Preview production build
-pnpm preview
+# From project root
+pnpm docs:dev          # Start dev server
+pnpm docs:build        # Build docs
+pnpm docs:preview      # Preview built site
 ```
-## Content Structure
-- `content/` - Markdown documentation files
-- `app/app.config.ts` - Site configuration
-- `nuxt.config.ts` - Nuxt configuration
-## License
-MIT
+
+## Root Commands
+
+All documentation commands are run from the project root:
+
+```bash
+pnpm docs:dev          # Start dev server
+pnpm docs:build        # Build docs
+pnpm docs:preview      # Preview built site
+```
+
+## Structure
+
+```
+docs/
+├── .vitepress/       # VitePress configuration
+│   └── config.ts     # Site configuration
+├── getting-started/  # Getting started guides
+├── components/       # Component documentation
+├── api/             # API reference
+├── examples/        # Example documentation
+├── public/          # Static assets
+└── index.md         # Home page
+```
+
+## Content Format
+
+This documentation uses standard VitePress markdown format:
+
+- `::: info` - Info callouts
+- `::: tip` - Tip callouts
+- `::: warning` - Warning callouts
+- `::: danger` - Danger callouts
+- `::: code-group` - Code groups for multiple examples
+
+## Deployment
+
+Build the documentation for deployment:
+
+```bash
+pnpm build
+```
+
+The built files will be in `.vitepress/dist/` and can be deployed to any static hosting service (Netlify, Vercel, GitHub Pages, etc.).
+
+
