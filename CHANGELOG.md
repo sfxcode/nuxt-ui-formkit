@@ -5,6 +5,39 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.0.4
+
+[compare changes](https://github.com/sfxcode/nuxt-ui-formkit/compare/v1.0.3...v1.0.4)
+
+### 🚀 Enhancements
+
+- Add Netlify configuration and SPA fallback for client-side routing ([44cb466](https://github.com/sfxcode/nuxt-ui-formkit/commit/44cb466))
+- Add Netlify configuration and SPA fallback for client-side routing ([eaa6eab](https://github.com/sfxcode/nuxt-ui-formkit/commit/eaa6eab))
+- Add GitHub Pages deployment guide and update nuxt.config.ts for static site generation ([fd8ae4a](https://github.com/sfxcode/nuxt-ui-formkit/commit/fd8ae4a))
+- Add VitePress documentation structure with custom components and styles ([b6c7f0b](https://github.com/sfxcode/nuxt-ui-formkit/commit/b6c7f0b))
+- Ignore VitePress build and cache directories in ESLint configuration ([4a6b820](https://github.com/sfxcode/nuxt-ui-formkit/commit/4a6b820))
+- Add VitePress commands and update dependencies in package.json ([6cd2e76](https://github.com/sfxcode/nuxt-ui-formkit/commit/6cd2e76))
+- Add playground package to pnpm workspace configuration ([a27d228](https://github.com/sfxcode/nuxt-ui-formkit/commit/a27d228))
+
+### 🩹 Fixes
+
+- Update Netlify publish path to point to 'playground/dist' ([3a08cfc](https://github.com/sfxcode/nuxt-ui-formkit/commit/3a08cfc))
+
+### 💅 Refactors
+
+- Clean up repeater-sample.vue and plugin.ts by removing unused imports ([3ea9e9a](https://github.com/sfxcode/nuxt-ui-formkit/commit/3ea9e9a))
+- Clean up repeater-sample.vue and plugin.ts by removing unused imports ([7f7315b](https://github.com/sfxcode/nuxt-ui-formkit/commit/7f7315b))
+
+### 🏡 Chore
+
+- Remove packageManager field from package.json ([3f5c111](https://github.com/sfxcode/nuxt-ui-formkit/commit/3f5c111))
+- Remove packageManager field from package.json ([65d5a76](https://github.com/sfxcode/nuxt-ui-formkit/commit/65d5a76))
+- Update dependencies in package.json ([c8b9057](https://github.com/sfxcode/nuxt-ui-formkit/commit/c8b9057))
+
+### ❤️ Contributors
+
+- Sfxcode ([@sfxcode](https://github.com/sfxcode))
+
 ## v1.0.3
 
 [compare changes](https://github.com/sfxcode/nuxt-ui-formkit/compare/v1.0.2...v1.0.3)

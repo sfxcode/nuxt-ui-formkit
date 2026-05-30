@@ -1,0 +1,41 @@
+{
+  "name": "nuxt-ui-template-docs",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "lint": "eslint .",
+    "typecheck": "nuxt typecheck"
+  },
+  "dependencies": {
+    "@iconify-json/lucide": "^1.2.108",
+    "@iconify-json/simple-icons": "^1.2.82",
+    "@iconify-json/vscode-icons": "^1.2.49",
+    "@nuxt/content": "^3.13.0",
+    "@nuxt/image": "^2.0.0",
+    "@nuxt/ui": "^4.7.1",
+    "@nuxtjs/mcp-toolkit": "^0.16.1",
+    "@nuxtjs/mdc": "^0.21.1",
+    "@takumi-rs/core": "^1.1.2",
+    "@vueuse/core": "^14.3.0",
+    "minimark": "^0.2.0",
+    "nuxt": "^4.4.5",
+    "nuxt-llms": "0.2.0",
+    "nuxt-og-image": "^6.5.0",
+    "tailwindcss": "^4.3.0",
+    "ufo": "^1.6.4",
+    "unist-util-visit": "^5.1.0",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@nuxt/eslint": "^1.15.2",
+    "eslint": "^10.4.0",
+    "typescript": "^6.0.3",
+    "vue-tsc": "^3.2.9"
+  },
+  "packageManager": "pnpm@10.33.4"
+}
