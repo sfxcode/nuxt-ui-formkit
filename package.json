@@ -91,7 +91,8 @@
     "@formkit/addons": "^2.0.0",
     "@formkit/nuxt": "^2.0.0",
     "@nuxt/kit": "^4.4.6",
-    "@nuxt/ui": "^4.8.1"
+    "@nuxt/ui": "^4.8.1",
+    "@vue/compiler-dom": "^3.5.35"
   },
   "devDependencies": {
     "@iconify-json/heroicons": "^1.2.3",
