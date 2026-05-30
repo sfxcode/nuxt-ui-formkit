@@ -4,14 +4,15 @@ import { version } from '../../package.json'
 export default defineConfig({
   title: 'Nuxt UI FormKit',
   description: 'FormKit integration for Nuxt UI - Seamlessly connect FormKit form handling with Nuxt UI components',
+
   lang: 'en-US',
 
   // Base URL for deployment
-  base: '/',
+  base: '/buxt-ui-formkit/',
 
   // Sitemap configuration
   sitemap: {
-    hostname: 'https://nuxt-ui-formkit.sfxcode.com',
+    hostname: 'https://sfxcode.github.io/nuxt-ui-formkit',
   },
 
   // Enhanced metadata for better SEO
