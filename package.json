@@ -90,32 +90,32 @@
   "dependencies": {
     "@formkit/addons": "^2.0.0",
     "@formkit/nuxt": "^2.0.0",
-    "@nuxt/kit": "^4.4.5",
-    "@nuxt/ui": "^4.7.1"
+    "@nuxt/kit": "^4.4.6",
+    "@nuxt/ui": "^4.8.1"
   },
   "devDependencies": {
     "@iconify-json/heroicons": "^1.2.3",
-    "@iconify-json/lucide": "^1.2.107",
-    "@iconify-json/simple-icons": "^1.2.82",
+    "@iconify-json/lucide": "^1.2.110",
+    "@iconify-json/simple-icons": "^1.2.84",
     "@nuxt/devtools": "4.0.0-alpha.4",
     "@nuxt/eslint-config": "^1.15.2",
     "@nuxt/module-builder": "^1.0.2",
-    "@nuxt/schema": "^4.4.5",
+    "@nuxt/schema": "^4.4.6",
     "@nuxt/test-utils": "^4.0.3",
     "@types/node": "latest",
     "@vitejs/plugin-vue": "^6.0.7",
     "changelogen": "^0.6.2",
-    "eslint": "^10.3.0",
+    "eslint": "^10.4.0",
     "jsdom": "^29.1.1",
     "mkdist": "^2.4.1",
-    "nuxt": "^4.4.5",
-    "sass-embedded": "^1.99.0",
+    "nuxt": "^4.4.6",
+    "sass-embedded": "^1.100.0",
     "typescript": "~6.0.3",
     "unbuild": "^3.6.1",
     "vitepress": "2.0.0-alpha.17",
-    "vitest": "^4.1.6",
-    "vue": "^3.5.34",
-    "vue-tsc": "^3.2.9"
+    "vitest": "^4.1.7",
+    "vue": "^3.5.35",
+    "vue-tsc": "^3.3.2"
   },
   "packageManager": "pnpm@11.1.2+sha512.415a1cc25974731e75455c1468371be74c5aa5fb7621b50d4056d222451609f11412f23fd602e6169f1e060466641f798597e1be961a10688836a67b16569499"
 }
