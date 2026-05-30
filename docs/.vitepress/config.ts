@@ -1,4 +1,5 @@
 import { defineConfig } from 'vitepress'
+import { version } from '../../package.json'
 
 export default defineConfig({
   title: 'Nuxt UI FormKit',
@@ -74,7 +75,11 @@ export default defineConfig({
       { text: 'Components', link: '/components/inputs', activeMatch: '/components/' },
       { text: 'Examples', link: '/examples/', activeMatch: '/examples/' },
       {
-        text: 'v1.0.3',
+        text: 'Playground',
+        link: 'https://nuxt-ui-formkit.netlify.app/',
+      },
+      {
+        text: version,
         items: [
           { text: 'Changelog', link: 'https://github.com/sfxcode/nuxt-ui-formkit/blob/main/CHANGELOG.md' },
           { text: 'Contributing', link: 'https://github.com/sfxcode/nuxt-ui-formkit/blob/main/.github/CONTRIBUTING.md' },
