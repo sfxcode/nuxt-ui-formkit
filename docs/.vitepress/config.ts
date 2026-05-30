@@ -8,7 +8,7 @@ export default defineConfig({
   lang: 'en-US',
 
   // Base URL for deployment
-  base: '/buxt-ui-formkit/',
+  base: '/muxt-ui-formkit/',
 
   // Sitemap configuration
   sitemap: {
