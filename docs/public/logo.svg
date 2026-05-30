@@ -1,0 +1,29 @@
+<svg width="400" height="400" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Green Square Frame -->
+  <rect x="100" y="120" width="200" height="240" rx="12" stroke="#00DC82" stroke-width="4" fill="none" opacity="0.8"/>
+
+  <!-- Abstract Form Elements -->
+  <!-- Form line 1 -->
+  <rect x="120" y="140" width="160" height="20" rx="10" fill="#00DC82" opacity="0.2"/>
+  <rect x="120" y="140" width="110" height="20" rx="10" fill="#00DC82" opacity="0.6"/>
+
+  <!-- Form line 2 -->
+  <rect x="120" y="180" width="180" height="20" rx="10" fill="#00DC82" opacity="0.2"/>
+  <rect x="120" y="180" width="130" height="20" rx="10" fill="#00DC82" opacity="0.6"/>
+
+  <!-- Form line 3 -->
+  <rect x="120" y="220" width="170" height="20" rx="10" fill="#00DC82" opacity="0.2"/>
+  <rect x="120" y="220" width="120" height="20" rx="10" fill="#00DC82" opacity="0.6"/>
+
+  <!-- Form checkbox -->
+  <rect x="120" y="260" width="24" height="24" rx="5" stroke="#00DC82" stroke-width="3" fill="none" opacity="0.5"/>
+  <path d="M125 272 L130 277 L139 265" stroke="#00DC82" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.7"/>
+
+  <!-- Form button -->
+  <rect x="120" y="300" width="90" height="35" rx="8" fill="#00DC82" opacity="0.4"/>
+</svg>
+
+
+
+
+
