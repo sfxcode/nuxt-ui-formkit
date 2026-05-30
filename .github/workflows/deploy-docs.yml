@@ -1,44 +1,27 @@
-# https://github.com/actions/deploy-pages#usage
-name: Deploy to GitHub Pages
+name: Deploy Docs
+
 on:
-  workflow_dispatch:
   push:
-    branches:
-      - main
+
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: docs
     steps:
       - uses: actions/checkout@v4
-      - run: corepack enable
+      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: "24"
-      # Pick your own package manager and build script
-      - run: npm install
-      - run: npx nuxi generate
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+          node-version: lts/*
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - run: pnpm docs:build
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          path: ./docs/dist
-  # Deployment job
-  deploy:
-    # Add a dependency to the build job
-    needs: build
-    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
-    permissions:
-      pages: write      # to deploy to Pages
-      id-token: write   # to verify the deployment originates from an appropriate source
-    # Deploy to the github_pages environment
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    # Specify runner + deployment step
-    runs-on: ubuntu-latest
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: docs/.vitepress/dist
+          # cname: example.com # if wanna deploy to custom domain
