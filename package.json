@@ -90,7 +90,7 @@
   "dependencies": {
     "@formkit/addons": "^2.0.0",
     "@formkit/nuxt": "^2.0.0",
-    "@nuxt/kit": "^4.4.7",
+    "@nuxt/kit": "4.4.6",
     "@nuxt/ui": "^4.8.2",
     "@vue/compiler-dom": "^3.5.35"
   },
@@ -101,7 +101,7 @@
     "@nuxt/devtools": "4.0.0-alpha.7",
     "@nuxt/eslint-config": "^1.15.2",
     "@nuxt/module-builder": "^1.0.2",
-    "@nuxt/schema": "^4.4.7",
+    "@nuxt/schema": "4.4.6",
     "@nuxt/test-utils": "^4.0.3",
     "@types/node": "latest",
     "@vitejs/plugin-vue": "^6.0.7",
@@ -109,7 +109,7 @@
     "eslint": "^10.4.1",
     "jsdom": "^29.1.1",
     "mkdist": "^2.4.1",
-    "nuxt": "^4.4.7",
+    "nuxt": "4.4.6",
     "sass-embedded": "^1.100.0",
     "typescript": "~6.0.3",
     "unbuild": "^3.6.1",
