@@ -181,9 +181,10 @@ const items = ref<NavigationMenuItem[]>([
     ],
   },
   {
-    label: 'Composables',
-    icon: 'i-lucide-box',
+    label: 'Playground',
+    icon: 'i-lucide-flask-conical',
     active: false,
+    to: '/playground',
   },
 ])
 </script>
