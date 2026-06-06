@@ -27,6 +27,8 @@ const schema = [
     help: 'Attacks List Demo - Use Buttons to clone, move and delete',
     listClass: 'grid gap-2',
     listItemClass: 'flex gap-2',
+    minItems: 2,
+    maxItems: 4,
     hideButtonGroup: false,
     hideMoveButtons: false,
     displayCloneButton: true,
@@ -71,7 +73,7 @@ const schema = [
         This example demonstrates using FormKit's repeater functionality to manage dynamic lists of items with add, remove, clone, and reorder capabilities.
       </p>
       <p class="text-muted-foreground">
-        Create dynamic form sections where users can add multiple items, clone existing ones, and reorder them using intuitive controls powered by Nuxt UI components.
+        Create dynamic form sections where users can add multiple items, clone existing ones, and reorder them using intuitive controls powered by Nuxt UI components. This example includes min/max constraints (2-4 items) to demonstrate automatic button disabling.
       </p>
     </div>
 
@@ -83,7 +85,7 @@ const schema = [
           Dynamic Attack List
         </h2>
         <p class="text-muted-foreground mb-6">
-          Manage a fantasy character's attacks with dynamic add, remove, clone, and reorder actions. Each attack can be customized with name and damage values.
+          Manage a fantasy character's attacks with dynamic add, remove, clone, and reorder actions. Each attack can be customized with name and damage values. The list requires a minimum of 2 attacks (delete button disabled at minimum) and allows a maximum of 4 attacks (add/clone buttons disabled at maximum).
         </p>
         <FUDataEdit
           v-if="data"
