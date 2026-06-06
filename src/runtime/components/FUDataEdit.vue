@@ -3,7 +3,7 @@ import type { FormKitSchemaDefinition } from '@formkit/core'
 import type { PropType } from 'vue'
 import { reset } from '@formkit/core'
 import { FormKit, FormKitMessages, FormKitSchema } from '@formkit/vue'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 
 import FUDataDebug from './FUDataDebug.vue'
 
@@ -75,13 +75,24 @@ const props = defineProps({
 })
 const emit = defineEmits(['dataSaved', 'onReset'])
 
-const formData = defineModel<object>()
+const formSchema = ref(props.schema)
+
+const formData = defineModel<FormKitSchemaDefinition>()
+
+// Watch for changes to props and update internal refs
+watch(() => props.schema, (newSchema: FormKitSchemaDefinition) => {
+  formSchema.value = newSchema
+}, { deep: true })
+
+watch(() => props.data, (newData: object) => {
+  if (newData && newData !== formData.value) {
+    formData.value = newData
+  }
+}, { deep: true })
 
 if (props.data) {
   formData.value = props.data
 }
-
-const formSchema = ref(props.schema)
 
 function handleSave() {
   emit('dataSaved', formData.value)

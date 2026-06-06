@@ -3,6 +3,7 @@ import type { FormKitSchemaDefinition } from '@formkit/core'
 import type { PropType } from 'vue'
 import { FormKitSchema } from '@formkit/vue'
 import FuDataDebug from './FUDataDebug.vue'
+import { ref, watch } from 'vue'
 
 const props = defineProps({
   data: {
@@ -27,7 +28,20 @@ const props = defineProps({
   },
 })
 
-const formData = defineModel<Record<string, unknown>>()
+const formSchema = ref(props.schema)
+
+const formData = defineModel<FormKitSchemaDefinition>()
+
+// Watch for changes to props and update internal refs
+watch(() => props.schema, (newSchema: FormKitSchemaDefinition) => {
+  formSchema.value = newSchema
+}, { deep: true })
+
+watch(() => props.data, (newData: object) => {
+  if (newData && newData !== formData.value) {
+    formData.value = newData
+  }
+}, { deep: true })
 
 if (props.data) {
   formData.value = props.data
