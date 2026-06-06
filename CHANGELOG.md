@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.0.6
+
+[compare changes](https://github.com/sfxcode/nuxt-ui-formkit/compare/v1.0.5...v1.0.6)
+
+### 🚀 Enhancements
+
+- Add min/max item constraints to repeater component for improved user experience ([4ebb812](https://github.com/sfxcode/nuxt-ui-formkit/commit/4ebb812))
+- Add min/max item constraints to repeater documentation for enhanced user guidance ([88d1ed7](https://github.com/sfxcode/nuxt-ui-formkit/commit/88d1ed7))
+
+### 🩹 Fixes
+
+- Downgrade nuxt dependency version to ^4.2.2 in pnpm-lock.yaml ([328d590](https://github.com/sfxcode/nuxt-ui-formkit/commit/328d590))
+- Improve button component logic with dynamic disabled states and enhance array handling in repeater ([1ed3a40](https://github.com/sfxcode/nuxt-ui-formkit/commit/1ed3a40))
+- Downgrade nuxt dependencies to version 4.4.6 for compatibility ([44f54d5](https://github.com/sfxcode/nuxt-ui-formkit/commit/44f54d5))
+
+### ❤️ Contributors
+
+- Sfxcode ([@sfxcode](https://github.com/sfxcode))
+
 ## v1.0.5
 
 [compare changes](https://github.com/sfxcode/nuxt-ui-formkit/compare/v1.0.4...v1.0.5)
