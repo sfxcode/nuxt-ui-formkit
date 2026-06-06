@@ -5,6 +5,37 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.0.5
+
+[compare changes](https://github.com/sfxcode/nuxt-ui-formkit/compare/v1.0.4...v1.0.5)
+
+### 🚀 Enhancements
+
+- Add playground component with JSON schema editor and update app navigation ([b7512a8](https://github.com/sfxcode/nuxt-ui-formkit/commit/b7512a8))
+
+### 🩹 Fixes
+
+- Update base URL and sitemap hostname for deployment ([51c56df](https://github.com/sfxcode/nuxt-ui-formkit/commit/51c56df))
+- Update base URL for deployment ([5f44cc8](https://github.com/sfxcode/nuxt-ui-formkit/commit/5f44cc8))
+- Update base URL for deployment ([88cae2c](https://github.com/sfxcode/nuxt-ui-formkit/commit/88cae2c))
+- Update dependencies to latest versions ([593865d](https://github.com/sfxcode/nuxt-ui-formkit/commit/593865d))
+- Update @nuxt/devtools to version 4.0.0-alpha.7 ([9cb0cab](https://github.com/sfxcode/nuxt-ui-formkit/commit/9cb0cab))
+- Enhance form data handling with reactive watchers ([3a27829](https://github.com/sfxcode/nuxt-ui-formkit/commit/3a27829))
+
+### 📖 Documentation
+
+- Update navigation links and add version from package.json ([73ca8ab](https://github.com/sfxcode/nuxt-ui-formkit/commit/73ca8ab))
+- Add logo SVG for application branding ([e0884f3](https://github.com/sfxcode/nuxt-ui-formkit/commit/e0884f3))
+
+### 🏡 Chore
+
+- Update dependencies in package.json ([b9b947b](https://github.com/sfxcode/nuxt-ui-formkit/commit/b9b947b))
+- Update @vue/compiler-dom to version 3.5.35 and @vue/shared to version 3.5.35 ([3a32534](https://github.com/sfxcode/nuxt-ui-formkit/commit/3a32534))
+
+### ❤️ Contributors
+
+- Sfxcode ([@sfxcode](https://github.com/sfxcode))
+
 ## v1.0.4
 
 [compare changes](https://github.com/sfxcode/nuxt-ui-formkit/compare/v1.0.3...v1.0.4)
