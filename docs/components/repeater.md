@@ -113,6 +113,27 @@ Control which buttons are displayed:
 />
 ```
 
+### Min/Max Items Constraints
+
+Control the minimum and maximum number of items allowed:
+
+```vue
+<FormKit
+  type="nuxtUIRepeater"
+  name="contacts"
+  :new-item="{ name: '', phone: '' }"
+  :min-items="1"
+  :max-items="5"
+>
+  <!-- form fields -->
+</FormKit>
+```
+
+**Props:**
+
+- **minItems** - Minimum number of items required (default: 0). When reached, the delete button is automatically disabled.
+- **maxItems** - Maximum number of items allowed (default: unlimited). When reached, add/insert/clone buttons are automatically disabled.
+
 ### Insert Button
 
 Customize the "Add Item" button:
@@ -285,6 +306,45 @@ export default {
 </FormKit>
 ```
 
+### Team Members with Constraints
+
+```vue
+<FormKit
+  type="nuxtUIRepeater"
+  name="teamMembers"
+  label="Team Members"
+  :new-item="{ name: '', role: '', email: '' }"
+  :min-items="2"
+  :max-items="10"
+  insert-button-label="Add Team Member"
+>
+  <FormKit
+    type="nuxtUIInput"
+    name="name"
+    label="Name"
+    validation="required"
+  />
+  
+  <FormKit
+    type="nuxtUISelect"
+    name="role"
+    label="Role"
+    :options="['Developer', 'Designer', 'Manager', 'QA']"
+    validation="required"
+  />
+  
+  <FormKit
+    type="nuxtUIInput"
+    name="email"
+    input-type="email"
+    label="Email"
+    validation="required|email"
+  />
+</FormKit>
+```
+
+This example requires at least 2 team members and allows a maximum of 10. The delete button will be disabled when only 2 items remain, and add/clone buttons will be disabled when 10 items are reached.
+
 ## Features
 
 <List type="info">
@@ -292,6 +352,7 @@ export default {
 - **Remove Items** - Delete items with confirmation
 - **Clone Items** - Duplicate existing items
 - **Reorder** - Move items up and down
+- **Min/Max Constraints** - Limit the minimum and maximum number of items
 - **Smooth Animations** - Automatic animations for all operations
 - **Custom Styling** - Full control over button and list appearance
 - **Validation** - Built-in validation for repeated fields
@@ -302,7 +363,9 @@ export default {
 <List type="info">
 - Always provide a `newItem` prop with all required fields
 - Use validation on repeated fields for data integrity
-- Consider UX - don't allow removing the last item if at least one is required
+- Use `min-items` to enforce minimum requirements (e.g., at least one contact)
+- Use `max-items` to prevent excessive data entry and improve UX
+- Consider UX - buttons are automatically disabled when constraints are reached
 - Use `list-item-class` for consistent spacing and layout
 - Provide clear labels for add/remove buttons
 </List>
