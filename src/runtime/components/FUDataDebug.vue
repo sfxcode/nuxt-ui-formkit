@@ -6,7 +6,7 @@ defineProps({
   },
   header: {
     type: String,
-    default: 'Debug',
+    default: 'Debug Data',
   },
   textClass: {
     type: String,
@@ -18,15 +18,26 @@ defineProps({
 <template>
   <div class="formkit-debug">
     <client-only>
-      <h3 class="text-lg font-semibold mb-2">
-        {{ header }}
-      </h3>
-      <slot />
-      <pre
-        v-if="data"
-        :class="textClass"
-      >{{ data }}</pre>
-      <span v-else>No Data available</span>
+      <UCollapsible class="flex flex-col gap-2">
+        <UButton
+          :label="header"
+          color="neutral"
+          variant="outline"
+          leading-icon="i-lucide-bug"
+          trailing-icon="i-lucide-chevron-down"
+          block
+        />
+        <template #content>
+          <div>
+            <slot />
+          </div>
+          <pre
+            v-if="data"
+            :class="textClass"
+          >{{ data }}</pre>
+          <span v-else>No Data available</span>
+        </template>
+      </UCollapsible>
     </client-only>
   </div>
 </template>
