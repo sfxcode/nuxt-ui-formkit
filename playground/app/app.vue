@@ -178,6 +178,12 @@ const items = ref<NavigationMenuItem[]>([
         description: 'Dynamic list management with add, remove, copy, and reorder capabilities.',
         to: '/form/repeater-sample',
       },
+      {
+        label: 'Drag-and-Drop Repeater',
+        icon: 'i-lucide-move',
+        description: 'Intuitive drag-and-drop reordering for repeater lists with visual feedback.',
+        to: '/form/repeater-drag',
+      },
     ],
   },
   {

@@ -1,11 +1,11 @@
 ---
 title: Repeater Component
-description: Create dynamic repeatable form sections with add, remove, clone, and reorder functionality.
+description: Create dynamic repeatable form sections with add, remove, clone, and drag-and-drop reordering functionality.
 ---
 
 ## Overview
 
-The `nuxtUIRepeater` component is a special input component that allows you to create dynamic form sections where users can add, remove, clone, and reorder items. Perfect for managing lists like contacts, addresses, skills, or any repeatable data.
+The `nuxtUIRepeater` component is a special input component that allows you to create dynamic form sections where users can add, remove, clone, and reorder items. Perfect for managing lists like contacts, addresses, skills, or any repeatable data. Supports both button-based reordering and intuitive drag-and-drop functionality.
 
 It is also imported and registered globally, so you can use it anywhere in your Nuxt app without additional imports.
 
@@ -172,6 +172,34 @@ Customize the "Add Item" button:
 />
 ```
 
+### Drag and Drop Reordering
+
+Enable drag-and-drop reordering with a drag handle:
+
+```vue
+<FormKit
+  type="nuxtUIRepeater"
+  name="tasks"
+  :new-item="{ title: '', priority: 'medium' }"
+  :display-drag-handle="true"
+  drag-handle-class="cursor-grab active:cursor-grabbing"
+  drag-handle-icon-class="i-lucide-grip-vertical"
+>
+  <!-- form fields -->
+</FormKit>
+```
+
+**Props:**
+
+- **displayDragHandle** - Enable drag-and-drop reordering (default: false)
+- **dragHandleClass** - CSS class for the drag handle container (default: 'formkit-repeater-drag-handle')
+- **dragHandleIconClass** - Icon class for the drag handle (default: 'i-lucide-grip-vertical')
+
+When drag-and-drop is enabled:
+- Items can be reordered by dragging the handle icon
+- A visual indicator shows the drop target during dragging
+- Move up/down buttons can be hidden with `:hide-move-buttons="true"` if only drag-and-drop is desired
+
 ## Auto-Animate
 
 Repeaters automatically use `@formkit/auto-animate` for smooth animations when items are added, removed, or reordered.
@@ -306,6 +334,43 @@ export default {
 </FormKit>
 ```
 
+### Drag-and-Drop Task List
+
+```vue
+<FormKit
+  type="nuxtUIRepeater"
+  name="tasks"
+  label="Task List"
+  :new-item="{ title: '', priority: 'medium', status: 'todo' }"
+  :display-drag-handle="true"
+  :hide-move-buttons="true"
+  list-item-class="flex items-center gap-4 p-4 border rounded-lg hover:bg-gray-50"
+>
+  <FormKit
+    type="nuxtUIInput"
+    name="title"
+    label="Task"
+    validation="required"
+  />
+  
+  <FormKit
+    type="nuxtUISelect"
+    name="priority"
+    label="Priority"
+    :options="['low', 'medium', 'high']"
+  />
+  
+  <FormKit
+    type="nuxtUISelect"
+    name="status"
+    label="Status"
+    :options="['todo', 'in-progress', 'done']"
+  />
+</FormKit>
+```
+
+This example enables drag-and-drop reordering and hides the traditional up/down buttons, providing a modern UX for task management.
+
 ### Team Members with Constraints
 
 ```vue
@@ -351,7 +416,8 @@ This example requires at least 2 team members and allows a maximum of 10. The de
 - **Add Items** - Insert new items at the beginning or after specific items
 - **Remove Items** - Delete items with confirmation
 - **Clone Items** - Duplicate existing items
-- **Reorder** - Move items up and down
+- **Reorder** - Move items up and down with buttons
+- **Drag and Drop** - Intuitive drag-and-drop reordering with visual feedback
 - **Min/Max Constraints** - Limit the minimum and maximum number of items
 - **Smooth Animations** - Automatic animations for all operations
 - **Custom Styling** - Full control over button and list appearance
@@ -366,6 +432,8 @@ This example requires at least 2 team members and allows a maximum of 10. The de
 - Use `min-items` to enforce minimum requirements (e.g., at least one contact)
 - Use `max-items` to prevent excessive data entry and improve UX
 - Consider UX - buttons are automatically disabled when constraints are reached
+- Use drag-and-drop for better UX when managing sortable lists
+- Hide move buttons (`:hide-move-buttons="true"`) when using drag-and-drop only
 - Use `list-item-class` for consistent spacing and layout
 - Provide clear labels for add/remove buttons
 </List>
