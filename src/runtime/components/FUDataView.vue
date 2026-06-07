@@ -67,7 +67,7 @@ if (props.data) {
     <FuDataDebug
       v-if="debugData"
       :data="formData"
-      header="Data"
+      header="Debug Data"
     />
     <FuDataDebug
       v-if="debugSchema"

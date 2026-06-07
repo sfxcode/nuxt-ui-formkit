@@ -152,12 +152,12 @@ function handleReset() {
     <FUDataDebug
       v-if="debugData"
       :data="formData"
-      header="Data"
+      header="Debug Data"
     />
     <FUDataDebug
       v-if="debugSchema"
       :data="formSchema as object"
-      header="Schema"
+      header="Debug Schema"
     />
   </div>
 </template>
