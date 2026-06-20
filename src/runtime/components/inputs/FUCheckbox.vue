@@ -13,6 +13,8 @@ export interface FormKitCheckboxProps {
   indicator?: 'start' | 'end' | 'hidden'
   icon?: string
   indeterminateIcon?: string
+  trueValue?: unknown
+  falseValue?: unknown
   autofocus?: false | true | 'true' | 'false'
   ui?: Record<string, unknown>
 }
@@ -43,6 +45,8 @@ const { handleInput, handleChange, styleClass, modelValue, color, validSlotNames
     :indicator="context.indicator"
     :icon="context.icon"
     :indeterminate-icon="context.indeterminateIcon"
+    :true-value="context.trueValue"
+    :false-value="context.falseValue"
     :autofocus="context.autofocus"
     :ui="context.ui"
     @change="handleChange"
