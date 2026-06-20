@@ -27,6 +27,7 @@ export interface FormKitInputNumberProps {
   disableWheelChange?: boolean
   invertWheelChange?: boolean
   focusOnChange?: boolean
+  locale?: string
   list: string
   autocomplete?: string & {} | 'on' | 'off'
   ui?: Record<string, unknown>
@@ -49,6 +50,7 @@ const { handleInput, handleChange, isInvalid, styleClass, color, modelValue, val
     v-bind="{ ...context?.attrs }"
     :class="styleClass"
     :disabled="!!context?.disabled"
+    :readonly="context?.attrs.readonly ?? false"
     :style="context?.attrs.style"
     :color="color"
     :size="context.size ?? 'md'"
@@ -72,6 +74,7 @@ const { handleInput, handleChange, isInvalid, styleClass, color, modelValue, val
     :disable-wheel-change="context.disableWheelChange"
     :invert-wheel-change="context.invertWheelChange"
     :focus-on-change="context.focusOnChange"
+    :locale="context.locale"
     :placeholder="context.placeholder"
     :list="context.list"
     :autocomplete="context.autocomplete"
