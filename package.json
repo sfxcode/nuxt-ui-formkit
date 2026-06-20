@@ -94,6 +94,14 @@
     "@nuxt/ui": "^4.9.0",
     "@vue/compiler-dom": "^3.5.38"
   },
+  "peerDependencies": {
+    "vue-i18n": "^11.0.0"
+  },
+  "peerDependenciesMeta": {
+    "vue-i18n": {
+      "optional": true
+    }
+  },
   "devDependencies": {
     "@codemirror/lang-json": "^6.0.2",
     "@codemirror/state": "^6.6.0",
@@ -121,6 +129,7 @@
     "vitepress": "2.0.0-alpha.17",
     "vitest": "^4.1.9",
     "vue": "^3.5.38",
+    "vue-i18n": "^11.4.6",
     "vue-tsc": "^3.3.5"
   },
   "packageManager": "pnpm@11.1.2+sha512.415a1cc25974731e75455c1468371be74c5aa5fb7621b50d4056d222451609f11412f23fd602e6169f1e060466641f798597e1be961a10688836a67b16569499"
