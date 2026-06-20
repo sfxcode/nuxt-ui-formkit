@@ -412,7 +412,6 @@ This example requires at least 2 team members and allows a maximum of 10. The de
 
 ## Features
 
-<List type="info">
 - **Add Items** - Insert new items at the beginning or after specific items
 - **Remove Items** - Delete items with confirmation
 - **Clone Items** - Duplicate existing items
@@ -422,11 +421,9 @@ This example requires at least 2 team members and allows a maximum of 10. The de
 - **Smooth Animations** - Automatic animations for all operations
 - **Custom Styling** - Full control over button and list appearance
 - **Validation** - Built-in validation for repeated fields
-</List>
 
 ## Best Practices
 
-<List type="info">
 - Always provide a `newItem` prop with all required fields
 - Use validation on repeated fields for data integrity
 - Use `min-items` to enforce minimum requirements (e.g., at least one contact)
@@ -436,7 +433,6 @@ This example requires at least 2 team members and allows a maximum of 10. The de
 - Hide move buttons (`:hide-move-buttons="true"`) when using drag-and-drop only
 - Use `list-item-class` for consistent spacing and layout
 - Provide clear labels for add/remove buttons
-</List>
 
 ## Next Steps
 
