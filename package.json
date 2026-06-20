@@ -94,14 +94,6 @@
     "@nuxt/ui": "^4.9.0",
     "@vue/compiler-dom": "^3.5.38"
   },
-  "peerDependencies": {
-    "vue-i18n": "^11.0.0"
-  },
-  "peerDependenciesMeta": {
-    "vue-i18n": {
-      "optional": true
-    }
-  },
   "devDependencies": {
     "@codemirror/lang-json": "^6.0.2",
     "@codemirror/state": "^6.6.0",

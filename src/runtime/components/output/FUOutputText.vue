@@ -1,8 +1,7 @@
 <script setup lang='ts'>
 import type { FormKitFrameworkContext } from '@formkit/core'
 import type { PropType } from 'vue'
-import { computed } from 'vue'
-import { useI18n } from 'vue-i18n'
+import { computed, getCurrentInstance } from 'vue'
 import { useFormKitOutput } from '../../utils/useFormKitOutput'
 import { convertColorToHex } from '../../utils/colorConverter'
 import { formattedDuration } from '../../utils/durationConverter'
@@ -30,15 +29,12 @@ const props = defineProps({
 
 const outputType = computed(() => props.context.outputType ?? 'text')
 
-// Resolve a translation function via vue-i18n when an i18n instance is active.
-// Wrapped so the component still renders when no i18n plugin is set up.
-let translate: ((key: string) => unknown) | undefined
-try {
-  translate = useI18n().t
-}
-catch {
-  translate = undefined
-}
+// Resolve the host app's global translation function ($t) from vue-i18n /
+// @nuxtjs/i18n if present. Keeps the library free of any hard i18n dependency.
+const globalT = getCurrentInstance()?.appContext.config.globalProperties?.$t
+const translate = typeof globalT === 'function'
+  ? globalT as (key: string, ...args: unknown[]) => unknown
+  : undefined
 
 const displayValue = computed(() => {
   let result = props.context._value ?? ''
