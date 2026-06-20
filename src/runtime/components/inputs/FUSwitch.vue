@@ -13,6 +13,8 @@ export interface FormKitSwitchProps {
   label?: string
   description?: string
   defaultValue?: boolean
+  trueValue?: unknown
+  falseValue?: unknown
   autofocus?: false | true | 'true' | 'false'
   ui?: Record<string, unknown>
 }
@@ -44,6 +46,8 @@ const { handleInput, handleChange, styleClass, color, modelValue, validSlotNames
     :label="context.label"
     :description="context.description"
     :default-value="context.defaultValue"
+    :true-value="context.trueValue"
+    :false-value="context.falseValue"
     :autofocus="context.autofocus"
     :ui="context.ui"
     @change="handleChange"
