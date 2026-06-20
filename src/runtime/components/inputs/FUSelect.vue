@@ -15,6 +15,7 @@ export interface FormKitSelectProps {
   selectedIcon?: string
   arrow?: boolean
   portal?: boolean
+  content?: Record<string, unknown>
   valueKey?: string
   labelKey?: string
   descriptionKey?: string
@@ -73,6 +74,7 @@ const { handleInput, handleChange, isInvalid, color, styleClass, modelValue, ite
     :loading-icon="context.loadingIcon"
     :arrow="context.arrow"
     :portal="context.portal"
+    :content="context.content"
     :value-key="context.valueKey"
     :label-key="context.labelKey"
     :description-key="context.descriptionKey"
