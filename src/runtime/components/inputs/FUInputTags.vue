@@ -19,7 +19,7 @@ export interface FormKitInputTagsProps {
   addOnTab?: boolean
   addOnBlur?: boolean
   duplicate?: boolean
-  delimiters?: string | RegExp
+  delimiter?: string | RegExp
   max: number
   convertValue?: (value: string) => string
   displayValue?: (value: string) => string
@@ -69,7 +69,7 @@ const { handleInput, handleChange, isInvalid, styleClass, color, modelValue, val
     :add-on-tab="context.addOnTab"
     :add-on-blur="context.addOnBlur"
     :duplicate="context.duplicate"
-    :delimiters="context.delimiters"
+    :delimiter="context.delimiter"
     :max="context.max"
     :convert-value="context.convertValue"
     :display-value="context.displayValue"
