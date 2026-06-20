@@ -68,6 +68,36 @@ const displaySchema = [
 - `trailingIcon` - Icon after text
 - `color` - Text color
 - `size` - Text size
+- `outputType` - How the value is rendered (see below)
+
+**`outputType` values:**
+
+| Value | Description |
+| --- | --- |
+| `text` (default) | Render the raw value as plain text |
+| `email` | Render as a `mailto:` link |
+| `url` | Render as an external link (opens in a new tab) |
+| `tel` | Render as a `tel:` link |
+| `color` | Render the value as a hex color swatch |
+| `duration` | Format the value as a human-readable duration (e.g. `1h 30m`) |
+| `i18n` | Translate the value using it as the i18n message key |
+
+**i18n Example:**
+
+The `i18n` type uses the field value as the translation key via `vue-i18n`'s `useI18n()`. With a value of `status.active` and a matching message, it renders the translated text; when no i18n instance is active it falls back to the raw value.
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUIOutputText',
+    name: 'status',
+    label: 'Status',
+    outputType: 'i18n' // value "status.active" → "Active"
+  }
+]
+```
+
+> Requires `vue-i18n` (or `@nuxtjs/i18n`) to be installed and configured in your app. It is an optional peer dependency — without it, the value is shown unchanged.
 
 ### nuxtUIOutputLink
 
