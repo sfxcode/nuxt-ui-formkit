@@ -15,6 +15,8 @@ export interface FormKitPinInputProps {
   defaultValue?: string[] | undefined
   mask?: boolean
   otp?: boolean
+  separator?: number | number[]
+  type?: 'text' | 'number'
   placeholder?: string
   ui?: Record<string, unknown>
 }
@@ -49,6 +51,8 @@ const { handleInput, handleChange, isInvalid, styleClass, color, modelValue } = 
     :fixed="context.fixed"
     :mask="context.mask"
     :otp="context.otp"
+    :separator="context.separator"
+    :type="context.type ?? 'text'"
     :placeholder="context.placeholder"
     :ui="context.ui"
     @change="handleChange"
