@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.1.1
+
+[compare changes](https://github.com/sfxcode/nuxt-ui-formkit/compare/v1.1.0...v1.1.1)
+
+### 🏡 Chore
+
+- Update release script to use patch version bumps ([beab8b4](https://github.com/sfxcode/nuxt-ui-formkit/commit/beab8b4))
+- Clean up unused list tags in repeater component docs ([1090c29](https://github.com/sfxcode/nuxt-ui-formkit/commit/1090c29))
+- Remove vue-i18n peer dependency and refactor translation handling in FUOutputText component ([e3af0f1](https://github.com/sfxcode/nuxt-ui-formkit/commit/e3af0f1))
+
+### ❤️ Contributors
+
+- Sfxcode ([@sfxcode](https://github.com/sfxcode))
+
 ## v1.1.0
 
 [compare changes](https://github.com/sfxcode/nuxt-ui-formkit/compare/v1.0.7...v1.1.0)
