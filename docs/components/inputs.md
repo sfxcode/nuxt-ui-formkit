@@ -108,6 +108,10 @@ const schema = [
 ]
 ```
 
+**Key Props:**
+- `locale` - BCP 47 locale used for number formatting (e.g. `'de-DE'`)
+- `readonly` - Render as read-only
+
 ## Selection Components
 
 ### nuxtUISelect
@@ -146,6 +150,9 @@ const schema = [
 ]
 ```
 
+**Key Props:**
+- `content` - Positioning/behavior config for the dropdown content
+
 ### nuxtUISelectMenu
 
 Advanced select with grouping and multiple selection support.
@@ -181,6 +188,11 @@ const schema = [
 ]
 ```
 
+**Key Props:**
+- `size` - Component size
+- `content` - Positioning/behavior config for the dropdown content
+- `by` - Key or comparator used to match the selected value
+
 ### nuxtUIListbox
 
 Listbox for single/multiple selection with filtering.
@@ -199,6 +211,9 @@ const schema = [
 ]
 ```
 
+**Key Props:**
+- `color` - Component color
+
 ### nuxtUIInputMenu
 
 Dropdown menu with searchable options.
@@ -216,6 +231,12 @@ const schema = [
   }
 ]
 ```
+
+**Key Props:**
+- `mode` - `'combobox'` (default) or `'autocomplete'`
+- `content` - Positioning/behavior config for the dropdown content
+- `by` - Key or comparator used to match the selected value
+- `open` - Controlled open state of the menu
 
 ## Boolean Inputs
 
@@ -237,6 +258,9 @@ const schema = [
 ]
 ```
 
+**Key Props:**
+- `trueValue` / `falseValue` - Custom values emitted for the checked / unchecked states
+
 ### nuxtUICheckboxGroup
 
 Multiple checkbox selection.
@@ -257,6 +281,9 @@ const schema = [
   }
 ]
 ```
+
+**Key Props:**
+- `name` - Shared form control name for the group
 
 ### nuxtUIRadioGroup
 
@@ -308,6 +335,9 @@ const schema = [
   }
 ]
 ```
+
+**Key Props:**
+- `trueValue` / `falseValue` - Custom values emitted for the on / off states
 
 ## Specialized Inputs
 
@@ -380,7 +410,7 @@ const schema = [
 
 ### nuxtUIInputTags
 
-Tag input component with custom delimiters.
+Tag input component with a custom delimiter.
 
 **Schema Example:**
 
@@ -391,11 +421,14 @@ const schema = [
     name: 'tags',
     label: 'Tags',
     placeholder: 'Add tags...',
-    delimiters: [',', ' '],
-    help: 'Press comma or space to add a tag'
+    delimiter: ',',
+    help: 'Press comma to add a tag'
   }
 ]
 ```
+
+**Key Props:**
+- `delimiter` - Character or `RegExp` used to split tags (e.g. `','`)
 
 ### nuxtUIPinInput
 
@@ -415,6 +448,10 @@ const schema = [
   }
 ]
 ```
+
+**Key Props:**
+- `type` - `'text'` (default) or `'number'`
+- `separator` - Insert a separator between inputs (index or list of indexes)
 
 ### nuxtUISlider
 
