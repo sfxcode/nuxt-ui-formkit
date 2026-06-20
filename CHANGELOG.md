@@ -5,6 +5,39 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.1.0
+
+[compare changes](https://github.com/sfxcode/nuxt-ui-formkit/compare/v1.0.7...v1.1.0)
+
+### 🚀 Enhancements
+
+- Add support for configurable true/false values in FUCheckbox component ([e749559](https://github.com/sfxcode/nuxt-ui-formkit/commit/e749559))
+- Add new props (content, mode, by, open) to FUInputMenu component ([6903e11](https://github.com/sfxcode/nuxt-ui-formkit/commit/6903e11))
+- Add locale prop and readonly attribute to FUInputNumber component ([3eb9b78](https://github.com/sfxcode/nuxt-ui-formkit/commit/3eb9b78))
+- Add color prop to FUListbox component for customizable styles ([175ab63](https://github.com/sfxcode/nuxt-ui-formkit/commit/175ab63))
+- Add separator and type props to FUPinInput component for enhanced input customization ([502c5d6](https://github.com/sfxcode/nuxt-ui-formkit/commit/502c5d6))
+- Add content prop to FUSelect component for greater customization ([5571d5c](https://github.com/sfxcode/nuxt-ui-formkit/commit/5571d5c))
+- Add content and by props to FUSelectMenu component for improved customization ([7bf671c](https://github.com/sfxcode/nuxt-ui-formkit/commit/7bf671c))
+- Add trueValue and falseValue props to FUSwitch component for enhanced configuration ([e5155ca](https://github.com/sfxcode/nuxt-ui-formkit/commit/e5155ca))
+- Extend input definitions with additional props for greater customization ([933e3d8](https://github.com/sfxcode/nuxt-ui-formkit/commit/933e3d8))
+- Add i18n support to FUOutputText component and update dependencies for vue-i18n integration ([c652402](https://github.com/sfxcode/nuxt-ui-formkit/commit/c652402))
+- Document key props for input components to enhance developer guidance ([588c350](https://github.com/sfxcode/nuxt-ui-formkit/commit/588c350))
+- Document outputType prop and supported values for enhanced rendering options in outputs ([fe43ec4](https://github.com/sfxcode/nuxt-ui-formkit/commit/fe43ec4))
+- Add Nuxt UI references to input component documentation for easier cross-referencing ([c84d169](https://github.com/sfxcode/nuxt-ui-formkit/commit/c84d169))
+
+### 🩹 Fixes
+
+- Rename "delimiters" prop to "delimiter" in FUInputTags component to align with context references ([7478865](https://github.com/sfxcode/nuxt-ui-formkit/commit/7478865))
+
+### 🏡 Chore
+
+- Update pnpm-lock.yaml with dependency updates, including @formkit and @nuxt versions ([5ab2a39](https://github.com/sfxcode/nuxt-ui-formkit/commit/5ab2a39))
+- Update release script to use minor version bumps ([da5ab80](https://github.com/sfxcode/nuxt-ui-formkit/commit/da5ab80))
+
+### ❤️ Contributors
+
+- Sfxcode ([@sfxcode](https://github.com/sfxcode))
+
 ## v1.0.7
 
 [compare changes](https://github.com/sfxcode/nuxt-ui-formkit/compare/v1.0.6...v1.0.7)
