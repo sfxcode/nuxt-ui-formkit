@@ -32,6 +32,10 @@ export interface FormKitInputMenuProps {
   arrow?: boolean
   portal?: boolean
   virtualize?: boolean
+  content?: Record<string, unknown>
+  mode?: 'combobox' | 'autocomplete'
+  by?: string | ((a: unknown, b: unknown) => boolean)
+  open?: boolean
   valueKey?: string
   labelKey?: string
   descriptionKey?: string
@@ -96,6 +100,10 @@ const { handleInput, handleChange, isInvalid, styleClass, color, modelValue, ite
     :arrow="context.arrow"
     :portal="context.portal"
     :virtualize="context.virtualize"
+    :content="context.content"
+    :mode="context.mode"
+    :by="context.by"
+    :open="context.open"
     :value-key="context.valueKey"
     :label-key="context.labelKey"
     :description-key="context.descriptionKey"
