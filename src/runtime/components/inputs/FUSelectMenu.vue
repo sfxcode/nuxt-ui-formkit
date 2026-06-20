@@ -42,6 +42,8 @@ export interface FormKitSelectMenuProps {
   arrow?: boolean
   portal?: boolean
   virtualize?: boolean
+  content?: Record<string, unknown>
+  by?: string | ((a: unknown, b: unknown) => boolean)
   valueKey?: string
   labelKey?: string
   descriptionKey?: string
@@ -103,6 +105,8 @@ const { handleInput, handleChange, isInvalid, styleClass, color, modelValue, ite
     :arrow="context.arrow"
     :portal="context.portal"
     :virtualize="context.virtualize"
+    :content="context.content"
+    :by="context.by"
     :value-key="context.valueKey"
     :label-key="context.labelKey"
     :description-key="context.descriptionKey"
