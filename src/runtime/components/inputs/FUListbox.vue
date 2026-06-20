@@ -1,6 +1,6 @@
 <script setup lang='ts'>
 import type { FormKitFrameworkContext } from '@formkit/core'
-import { computed, type PropType } from 'vue'
+import { computed, ref, watch, type PropType } from 'vue'
 import { useFormKitInput } from '../../utils/useFormKitInput'
 
 export interface ListboxItem {
@@ -20,6 +20,7 @@ export interface ListboxItem {
 export interface FormKitListboxProps {
   options?: string[] | ListboxItem[] | ListboxItem[][]
   as?: string
+  color?: 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
   by?: string | ((a: unknown, b: unknown) => boolean)
   displayMode?: 'single' | 'transfer'
@@ -60,7 +61,7 @@ const props = defineProps({
   },
 })
 
-const { handleInput, handleChange, isInvalid, styleClass, modelValue, items, validSlotNames } = useFormKitInput(props.context)
+const { handleInput, handleChange, isInvalid, styleClass, color, modelValue, items, validSlotNames } = useFormKitInput(props.context)
 
 // Transfer List
 const targetItems = ref<ListboxItem[]>(modelValue.value || [])
@@ -112,6 +113,7 @@ watch(targetItems, (newVal) => {
     :class="styleClass"
     :style="context?.attrs.style"
     :as="context.as"
+    :color="color"
     :size="context.size ?? 'md'"
     :items="items"
     :by="context.by"
