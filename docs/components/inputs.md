@@ -16,6 +16,8 @@ All components are designed to work seamlessly in schemas. Template usage is als
 
 Text input component supporting various input types (text, email, password, url, tel, number, search).
 
+📖 Nuxt UI reference: [Input](https://ui.nuxt.com/components/input)
+
 **Schema Example:**
 
 ```typescript
@@ -69,6 +71,8 @@ const schema = [
 
 Multi-line text input with auto-resize functionality.
 
+📖 Nuxt UI reference: [Textarea](https://ui.nuxt.com/components/textarea)
+
 **Schema Example:**
 
 ```typescript
@@ -88,6 +92,8 @@ const schema = [
 ### nuxtUIInputNumber
 
 Number input with increment/decrement buttons and formatting options.
+
+📖 Nuxt UI reference: [InputNumber](https://ui.nuxt.com/components/input-number)
 
 **Schema Example:**
 
@@ -117,6 +123,8 @@ const schema = [
 ### nuxtUISelect
 
 Dropdown select with search functionality.
+
+📖 Nuxt UI reference: [Select](https://ui.nuxt.com/components/select)
 
 **Schema Example:**
 
@@ -156,6 +164,8 @@ const schema = [
 ### nuxtUISelectMenu
 
 Advanced select with grouping and multiple selection support.
+
+📖 Nuxt UI reference: [SelectMenu](https://ui.nuxt.com/components/select-menu)
 
 **Schema Example:**
 
@@ -197,6 +207,8 @@ const schema = [
 
 Listbox for single/multiple selection with filtering.
 
+📖 Nuxt UI reference: [Listbox](https://ui.nuxt.com/components/listbox)
+
 **Schema Example:**
 
 ```typescript
@@ -217,6 +229,8 @@ const schema = [
 ### nuxtUIInputMenu
 
 Dropdown menu with searchable options.
+
+📖 Nuxt UI reference: [InputMenu](https://ui.nuxt.com/components/input-menu)
 
 **Schema Example:**
 
@@ -244,6 +258,8 @@ const schema = [
 
 Single checkbox with label and description.
 
+📖 Nuxt UI reference: [Checkbox](https://ui.nuxt.com/components/checkbox)
+
 **Schema Example:**
 
 ```typescript
@@ -264,6 +280,8 @@ const schema = [
 ### nuxtUICheckboxGroup
 
 Multiple checkbox selection.
+
+📖 Nuxt UI reference: [CheckboxGroup](https://ui.nuxt.com/components/checkbox-group)
 
 **Schema Example:**
 
@@ -288,6 +306,8 @@ const schema = [
 ### nuxtUIRadioGroup
 
 Radio button group for single selection.
+
+📖 Nuxt UI reference: [RadioGroup](https://ui.nuxt.com/components/radio-group)
 
 **Schema Example:**
 
@@ -323,6 +343,8 @@ const schema = [
 
 Toggle switch for boolean values.
 
+📖 Nuxt UI reference: [Switch](https://ui.nuxt.com/components/switch)
+
 **Schema Example:**
 
 ```typescript
@@ -344,6 +366,8 @@ const schema = [
 ### nuxtUIInputDate
 
 Date and time picker with range support.
+
+📖 Nuxt UI reference: [InputDate](https://ui.nuxt.com/components/input-date)
 
 **Schema Example:**
 
@@ -378,6 +402,8 @@ const schema = [
 
 Time picker with 12/24-hour format.
 
+📖 Nuxt UI reference: [InputTime](https://ui.nuxt.com/components/input-time)
+
 **Schema Example:**
 
 ```typescript
@@ -395,6 +421,8 @@ const schema = [
 
 Color selection with multiple format support (hex, rgb, hsl).
 
+📖 Nuxt UI reference: [ColorPicker](https://ui.nuxt.com/components/color-picker)
+
 **Schema Example:**
 
 ```typescript
@@ -411,6 +439,8 @@ const schema = [
 ### nuxtUIInputTags
 
 Tag input component with a custom delimiter.
+
+📖 Nuxt UI reference: [InputTags](https://ui.nuxt.com/components/input-tags)
 
 **Schema Example:**
 
@@ -434,6 +464,8 @@ const schema = [
 
 PIN/OTP entry component.
 
+📖 Nuxt UI reference: [PinInput](https://ui.nuxt.com/components/pin-input)
+
 **Schema Example:**
 
 ```typescript
@@ -456,6 +488,8 @@ const schema = [
 ### nuxtUISlider
 
 Range slider for numeric values.
+
+📖 Nuxt UI reference: [Slider](https://ui.nuxt.com/components/slider)
 
 **Schema Example:**
 
