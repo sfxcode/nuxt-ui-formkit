@@ -16,6 +16,8 @@ node_modules
 # Generated dirs
 dist
 
+brain
+
 scratch
 
 # Nuxt
