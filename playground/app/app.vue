@@ -202,6 +202,31 @@ const items = ref<NavigationMenuItem[]>([
         description: 'Intuitive drag-and-drop reordering for repeater lists with visual feedback.',
         to: '/form/repeater-drag',
       },
+      {
+        label: 'Listbox Transfer',
+        icon: 'i-lucide-arrow-left-right',
+        description: 'Two-pane transfer list with bidirectional drag-and-drop and reordering.',
+        to: '/form/listbox-transfer',
+      },
+    ],
+  },
+  {
+    label: 'Live Samples',
+    icon: 'i-lucide-sparkles',
+    active: false,
+    children: [
+      {
+        label: 'User Registration',
+        icon: 'i-lucide-user-plus',
+        description: 'Shop account sign-up with conditional business fields and a repeater for extra addresses.',
+        to: '/samples/user-registration',
+      },
+      {
+        label: 'Hotel Reservation',
+        icon: 'i-lucide-bed-double',
+        description: 'Multi-room booking with a repeater and per-room-type conditional fields.',
+        to: '/samples/hotel-reservation',
+      },
     ],
   },
   {

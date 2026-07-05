@@ -148,6 +148,8 @@ const transferSchema = [
     transferLeftHeaderText: 'Available',
     transferRightHeaderText: 'Selected',
     transferAll: true,
+    transferSortIcons: true,
+    transferItemDraggable: true,
   },
 ]
 
@@ -234,7 +236,7 @@ const trasnferData = { listboxTrannsfer1: users.slice(1, 3) }
             Transfer List
           </h2>
           <p class="text-muted-foreground mb-6">
-            Transfer example.
+            Drag items between the two lists in either direction to transfer them, or use the arrow buttons. Drag items within the right list to reorder them, or use the optional up/down icons (enabled via `transferSortIcons`). The whole row is draggable here (`transferItemDraggable`), not just the grip handle.
           </p>
           <FUDataEdit
             :data="trasnferData"

@@ -205,7 +205,7 @@ const schema = [
 
 ### nuxtUIListbox
 
-Listbox for single/multiple selection with filtering.
+Listbox for single/multiple selection with filtering, plus a two-pane "transfer" mode for moving items between an available and a selected list.
 
 📖 Nuxt UI reference: [Listbox](https://ui.nuxt.com/components/listbox)
 
@@ -224,7 +224,47 @@ const schema = [
 ```
 
 **Key Props:**
+- `options` - Array of strings or `{ label, value, description, icon, avatar, chip, disabled }` objects (or nested arrays of these for grouped/labeled sections)
+- `multiple` - Allow selecting more than one item
+- `filter` - Show a search input to filter items (`true`, or an object of `UInput` props)
+- `by` / `valueKey` - Key or comparator used to match the selected value against `options`
 - `color` - Component color
+
+**With Transfer Mode:**
+
+Set `displayMode: 'transfer'` to render a two-pane UI instead: an "available" list on the left and a "selected" list on the right, with `v-model` bound to the array of items on the right.
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUIListbox',
+    name: 'teamMembers',
+    label: 'Project Team',
+    displayMode: 'transfer',
+    options: employees,
+    filter: true,
+    transferLeftHeaderText: 'Available',
+    transferRightHeaderText: 'Selected',
+    transferAll: true,
+    transferSortIcons: true,
+    transferItemDraggable: true
+  }
+]
+```
+
+Items can be moved between the two panes either with the arrow buttons or by dragging — in **either direction** — and reordered within the "selected" pane by dragging or with the optional up/down icons. A precise insertion-line indicator (not a whole-row highlight) shows exactly where a dragged item will land.
+
+**Transfer Mode Props:**
+- `displayMode` - `'single'` (default) or `'transfer'`
+- `transferLeftHeaderText` / `transferRightHeaderText` - Optional header labels above each pane
+- `transferHeaderClass` - CSS classes applied to both header labels (defaults to `'text-sm font-medium text-highlighted'`)
+- `transferAll` - Show "transfer all" / "remove all" buttons (the double-chevron buttons) in addition to the single-item transfer buttons
+- `transferSortIcons` - Show up/down chevron buttons on each item in the "selected" pane for reordering without dragging (off by default)
+- `transferItemDraggable` - Make the whole row draggable, not just its grip handle (off by default — the grip handle is always draggable)
+
+::: tip
+All the single-mode props above (`options`, `multiple`, `filter`, `by`/`valueKey`, `orientation`, `virtualize`, etc.) are also forwarded to both panes in transfer mode, except `color`, which currently only applies to single-select mode.
+:::
 
 ### nuxtUIInputMenu
 

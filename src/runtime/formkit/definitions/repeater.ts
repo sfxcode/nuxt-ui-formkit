@@ -35,6 +35,13 @@ function addDragHandle(handleClass: string = '', iconName: string = '', render: 
 
 export const nuxtUIRepeaterDefinition: FormKitTypeDefinition = createInput(
   addElement('div', [
+    // The nested `list` node below shares its name with this outer `input`-type
+    // node but is otherwise a distinct FormKitNode. Without an explicit
+    // `value: '$value'` binding it never inherits the outer node's value, so
+    // its own `_value` stays non-array — which breaks not just rendering
+    // pre-populated items but also every button here (insert/remove/move all
+    // guard on `Array.isArray(parentNode._value)` and silently no-op
+    // otherwise), making the whole repeater look inert until this is set.
     addList('$listName', [
       addInsertButton('$insertButtonLabel', 'i-lucide-plus', '$insertButtonClass', '$insertButtonSize', '$node.children.length == 0 || $alwaysDisplayInsertButton'),
       addListGroup([
@@ -53,7 +60,7 @@ export const nuxtUIRepeaterDefinition: FormKitTypeDefinition = createInput(
           onDragend: '$dragNodeEnd',
         }),
       ], true, {}),
-    ], true, 'true'),
+    ], true, 'true', { value: '$value' }),
   ], { class: '$internalListClass', id: '$internalListId' }, true),
   {
     props: ['insertButtonLabel', 'insertButtonClass', 'insertButtonSize', 'alwaysDisplayInsertButton', 'newItem', 'listClass', 'listItemClass',
