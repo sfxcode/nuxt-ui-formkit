@@ -5,6 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.2.1
+
+[compare changes](https://github.com/sfxcode/nuxt-ui-formkit/compare/v1.2.0...v1.2.1)
+
+### 🚀 Enhancements
+
+- Add valueType prop to nuxtUIInputDate and nuxtUICalendar for JS Date/ISO string support ([f1ffb93](https://github.com/sfxcode/nuxt-ui-formkit/commit/f1ffb93))
+
+### 🩹 Fixes
+
+- Resolve current/endDate conditional in job-application repeater ([d3cfd47](https://github.com/sfxcode/nuxt-ui-formkit/commit/d3cfd47))
+- Adjust repeater settings and reorder "currently working here" field ([7bf7b5a](https://github.com/sfxcode/nuxt-ui-formkit/commit/7bf7b5a))
+
+### 📖 Documentation
+
+- Fix stale component counts and missing example links ([ab035a1](https://github.com/sfxcode/nuxt-ui-formkit/commit/ab035a1))
+
+### 🏡 Chore
+
+- Update release script to default to patch version bumps ([7adae51](https://github.com/sfxcode/nuxt-ui-formkit/commit/7adae51))
+
+### ❤️ Contributors
+
+- Sfxcode ([@sfxcode](https://github.com/sfxcode))
+
 ## v1.2.0
 
 [compare changes](https://github.com/sfxcode/nuxt-ui-formkit/compare/v1.1.1...v1.2.0)
