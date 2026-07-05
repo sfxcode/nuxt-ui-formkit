@@ -109,6 +109,7 @@
     "@nuxt/test-utils": "^4.0.3",
     "@types/node": "latest",
     "@vitejs/plugin-vue": "^6.0.7",
+    "@vue/test-utils": "^2.4.11",
     "changelogen": "^0.6.2",
     "codemirror": "^6.0.2",
     "eslint": "^10.6.0",
