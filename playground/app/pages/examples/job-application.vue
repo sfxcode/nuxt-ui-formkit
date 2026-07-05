@@ -236,12 +236,13 @@ const schema = reactive([
     help: 'Add your work experience (most recent first)',
     insertButtonLabel: 'Add Another Position',
     insertButtonClass: 'mb-4',
-    alwaysDisplayInsertButton: false,
-    displayAddButton: true,
+    alwaysDisplayInsertButton: true,
+    displayAddButton: false,
     displayDeleteButton: true,
-    buttonSize: 'xl',
-    listItemClass: 'flex gap-6 justify-between bg-gray-50 dark:bg-gray-800/50 rounded-lg p-6 mb-4 space-y-4',
-    buttonGroupClass: 'buttonGroupClass flex flex-col justify-center gap-2',
+    hideMoveButtons: true,
+    buttonSize: 'xs',
+    listItemClass: 'relative bg-gray-50 dark:bg-gray-800/50 rounded-lg p-6 pr-14 mb-4 space-y-4',
+    buttonGroupClass: 'absolute top-4 right-4 flex gap-1',
     newItem: createDefaultWorkExperience(),
     children: [
       {
@@ -258,6 +259,9 @@ const schema = reactive([
         validation: 'required',
         leadingIcon: 'i-heroicons-building-office',
       },
+      // "Currently working here" is placed between the two dates (rather than
+      // after) so its grid position doesn't shift when End Date is
+      // conditionally removed from the tree.
       addElement('div', [], {
         class: 'grid grid-cols-1 md:grid-cols-3 gap-4',
       }, true, {
@@ -271,18 +275,18 @@ const schema = reactive([
             placeholder: '2020-01',
           },
           {
-            $formkit: 'nuxtUIInput',
-            name: 'endDate',
-            label: 'End Date',
-            if: '$node.value.current !== true',
-            inputType: 'month',
-            placeholder: '2023-12',
-          },
-          {
             $formkit: 'nuxtUICheckbox',
             name: 'current',
             label: 'Currently working here',
             outerClass: 'pt-6',
+          },
+          {
+            $formkit: 'nuxtUIInput',
+            name: 'endDate',
+            label: 'End Date',
+            if: '$node.value.current === true',
+            inputType: 'month',
+            placeholder: '2023-12',
           },
         ],
       }),
