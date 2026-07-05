@@ -438,6 +438,33 @@ const schema = [
 ]
 ```
 
+**Working with JS `Date` or ISO strings:**
+
+By default the form value is a native `@internationalized/date` `CalendarDate` / `CalendarDateTime` / `ZonedDateTime` — the type `UInputDate` itself uses. If your form data instead holds a JS `Date` or an ISO 8601 string, set `valueType` to convert at the boundary in both directions. `defaultValue`, `placeholder`, `defaultPlaceholder`, `minValue` and `maxValue` accept the same types and are converted the same way.
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUIInputDate',
+    name: 'eventDate',
+    label: 'Event Date',
+    valueType: 'date', // 'calendar' (default) | 'date' | 'iso'
+    defaultValue: new Date(2026, 6, 5)
+  },
+  {
+    $formkit: 'nuxtUIInputDate',
+    name: 'isoDate',
+    label: 'ISO Date',
+    valueType: 'iso',
+    defaultValue: '2026-07-05'
+  }
+]
+```
+
+**Key Props:**
+- `valueType` - `'calendar'` (default), `'date'`, or `'iso'` — the shape of the value read from and written to the form
+- `timeZone` - Timezone used when converting to/from `'date'`/`'iso'`; defaults to the local timezone
+
 ### nuxtUIInputTime
 
 Time picker with 12/24-hour format.
@@ -578,12 +605,30 @@ const schema = [
 ]
 ```
 
+**Working with JS `Date` or ISO strings:**
+
+By default the form value is a native `@internationalized/date` `DateValue` (or `{ start, end }` / an array of those for range/multiple mode) — the type `UCalendar` itself uses. Set `valueType` to convert to/from a JS `Date` or an ISO 8601 string at the boundary, in both directions. Works the same for single, range, and multiple selection.
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUICalendar',
+    name: 'appointmentDate',
+    label: 'Appointment Date',
+    valueType: 'date', // 'calendar' (default) | 'date' | 'iso'
+    defaultValue: new Date(2026, 6, 5)
+  }
+]
+```
+
 **Key Props:**
 - `type` - `'date'` (default), `'month'`, or `'year'` picker view
 - `range` - Enable selecting a start/end date range
 - `multiple` - Enable selecting multiple individual dates
 - `color` - Theme color for the selected date(s)
 - `size` - `'xs' | 'sm' | 'md' | 'lg' | 'xl'` - controls cell/font size, not the overall footprint
+- `valueType` - `'calendar'` (default), `'date'`, or `'iso'` — the shape of the value read from and written to the form
+- `timeZone` - Timezone used when converting to/from `'date'`/`'iso'`; defaults to the local timezone
 
 ::: tip
 The calendar grid fills its container by default (matching Nuxt UI's own `UCalendar`). Add a width class via `class` on the schema entry (e.g. `class: 'w-1/2'`) to control how much space it takes up.

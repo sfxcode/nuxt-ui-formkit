@@ -25,6 +25,8 @@ describe('nuxtUICalendarDefinition', () => {
       'isDateDisabled',
       'isDateUnavailable',
       'ui',
+      'valueType',
+      'timeZone',
     ])
   })
 

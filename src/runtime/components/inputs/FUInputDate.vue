@@ -2,13 +2,18 @@
 import type { FormKitFrameworkContext } from '@formkit/core'
 import type { CalendarDate, CalendarDateTime, DateValue, ZonedDateTime } from '@internationalized/date'
 import type { PropType } from 'vue'
+import { computed } from 'vue'
 import { useFormKitInput } from '../../utils/useFormKitInput'
+import type { DateValueType } from '../../utils/dateValueConversion'
+import { fromDateValueOrRange, toDateValue, toDateValueOrRange } from '../../utils/dateValueConversion'
 import type { AvatarProps } from '#ui/components/Avatar.vue'
 
 export interface DateRange {
   start: CalendarDate | CalendarDateTime | ZonedDateTime
   end: CalendarDate | CalendarDateTime | ZonedDateTime
 }
+
+type DateLike = CalendarDate | CalendarDateTime | ZonedDateTime | Date | string
 
 export interface FormKitInputDateProps {
   color?: 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'
@@ -28,15 +33,23 @@ export interface FormKitInputDateProps {
   trailingIcon?: string
   loading?: boolean
   loadingIcon?: string
-  defaultValue: CalendarDate | CalendarDateTime | ZonedDateTime | DateRange
-  placeholder?: CalendarDate | CalendarDateTime | ZonedDateTime
-  defaultPlaceholder?: CalendarDate | CalendarDateTime | ZonedDateTime
+  /**
+   * Shape of the value read from / written to the FormKit form data.
+   * `'calendar'` (default) keeps the native `@internationalized/date` `DateValue`.
+   * `'date'` converts to/from a JS `Date`. `'iso'` converts to/from an ISO 8601 string.
+   */
+  valueType?: DateValueType
+  /** Timezone used when converting to/from `'date'`/`'iso'`. Defaults to the local timezone. */
+  timeZone?: string
+  defaultValue: DateLike | { start: DateLike, end: DateLike }
+  placeholder?: DateLike
+  defaultPlaceholder?: DateLike
   hourCycle?: 12 | 24
   step?: Record<string, number>
   granularity?: 'day' | 'hour' | 'minute' | 'second'
   hideTimeZone?: boolean
-  maxValue?: CalendarDate | CalendarDateTime | ZonedDateTime
-  minValue?: CalendarDate | CalendarDateTime | ZonedDateTime
+  maxValue?: DateLike
+  minValue?: DateLike
   isDateUnavailable?: (date: DateValue) => boolean
   ui?: Record<string, unknown>
 }
@@ -48,7 +61,26 @@ const props = defineProps({
   },
 })
 
-const { handleInput, handleChange, isInvalid, styleClass, color, modelValue, validSlotNames } = useFormKitInput(props.context)
+const { handleInput, handleChange, isInvalid, styleClass, color, validSlotNames } = useFormKitInput(props.context)
+
+const conversionOptions = computed(() => ({
+  granularity: props.context.granularity,
+  hideTimeZone: props.context.hideTimeZone,
+  timeZone: props.context.timeZone,
+}))
+
+const modelValue = computed({
+  get: () => toDateValueOrRange(props.context._value, conversionOptions.value),
+  set: (value) => {
+    props.context.node.input(fromDateValueOrRange(value, props.context.valueType ?? 'calendar', props.context.timeZone))
+  },
+})
+
+const defaultValue = computed(() => toDateValueOrRange(props.context.defaultValue, conversionOptions.value))
+const placeholder = computed(() => toDateValue(props.context.placeholder, conversionOptions.value))
+const defaultPlaceholder = computed(() => toDateValue(props.context.defaultPlaceholder, conversionOptions.value))
+const maxValue = computed(() => toDateValue(props.context.maxValue, conversionOptions.value))
+const minValue = computed(() => toDateValue(props.context.minValue, conversionOptions.value))
 </script>
 
 <template>
@@ -56,7 +88,7 @@ const { handleInput, handleChange, isInvalid, styleClass, color, modelValue, val
     :id="context.id"
     v-model="modelValue"
     v-bind="{ ...context?.attrs }"
-    :default-value="context.defaultValue"
+    :default-value="defaultValue"
     :class="styleClass"
     :disabled="!!context?.disabled"
     :readonly="context?.attrs.readonly ?? false"
@@ -65,8 +97,8 @@ const { handleInput, handleChange, isInvalid, styleClass, color, modelValue, val
     :highlight="isInvalid || context.highlight"
     :size="context.size ?? 'md'"
     :variant="context.variant ?? 'outline'"
-    :placeholder="context.placeholder"
-    :default-placeholder="context.defaultPlaceholder"
+    :placeholder="placeholder"
+    :default-placeholder="defaultPlaceholder"
     :autofocus="context.autofocus"
     :autofocus-delay="context.autofocusDelay"
     :fixed="context.fixed"
@@ -84,8 +116,8 @@ const { handleInput, handleChange, isInvalid, styleClass, color, modelValue, val
     :step="context.step"
     :granularity="context.granularity"
     :hide-time-zone="context.hideTimeZone"
-    :max-value="context.maxValue"
-    :min-value="context.minValue"
+    :max-value="maxValue"
+    :min-value="minValue"
     :is-date-unavailable="context.isDateUnavailable"
     :ui="context.ui"
     @change="handleChange"

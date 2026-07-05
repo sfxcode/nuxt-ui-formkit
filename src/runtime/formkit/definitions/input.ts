@@ -23,7 +23,7 @@ import FUSwitch from '../../../runtime/components/inputs/FUSwitch.vue'
 import FUTextarea from '../../../runtime/components/inputs/FUTextarea.vue'
 
 export const nuxtUICalendarDefinition: FormKitTypeDefinition = createInput(FUCalendar, {
-  props: ['type', 'range', 'multiple', 'color', 'variant', 'size', 'weekNumbers', 'monthControls', 'yearControls', 'viewControl', 'defaultValue', 'minValue', 'maxValue', 'isDateDisabled', 'isDateUnavailable', 'ui'],
+  props: ['type', 'range', 'multiple', 'color', 'variant', 'size', 'weekNumbers', 'monthControls', 'yearControls', 'viewControl', 'defaultValue', 'minValue', 'maxValue', 'isDateDisabled', 'isDateUnavailable', 'ui', 'valueType', 'timeZone'],
   family: 'NuxtUIInput',
 })
 
@@ -58,7 +58,7 @@ export const nuxtUIInputDefinition: FormKitTypeDefinition = createInput(FUInput,
 })
 
 export const nuxtUIInputDateDefinition: FormKitTypeDefinition = createInput(FUInputDate, {
-  props: ['defaultValue', 'color', 'variant', 'size', 'highlight', 'fixed', 'autofocus', 'autofocusDelay', 'range', 'separatorIcon', 'icon', 'avatar', 'leading', 'leadingIcon', 'trailing', 'trailingIcon', 'loading', 'loadingIcon', 'placeholder', 'defaultPlaceholder', 'hourCycle', 'step', 'granularity', 'hideTimeZone', 'maxValue', 'minValue', 'isDateUnavailable', 'ui'],
+  props: ['defaultValue', 'color', 'variant', 'size', 'highlight', 'fixed', 'autofocus', 'autofocusDelay', 'range', 'separatorIcon', 'icon', 'avatar', 'leading', 'leadingIcon', 'trailing', 'trailingIcon', 'loading', 'loadingIcon', 'placeholder', 'defaultPlaceholder', 'hourCycle', 'step', 'granularity', 'hideTimeZone', 'maxValue', 'minValue', 'isDateUnavailable', 'ui', 'valueType', 'timeZone'],
   family: 'NuxtUIInput',
 })
 

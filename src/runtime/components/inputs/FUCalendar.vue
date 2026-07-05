@@ -2,11 +2,16 @@
 import type { FormKitFrameworkContext } from '@formkit/core'
 import type { DateValue } from '@internationalized/date'
 import type { PropType } from 'vue'
+import { computed } from 'vue'
 import { useFormKitInput } from '../../utils/useFormKitInput'
+import type { DateValueType } from '../../utils/dateValueConversion'
+import { toDateValue, toDateValueOrRangeOrArray, fromDateValueOrRangeOrArray } from '../../utils/dateValueConversion'
+
+type DateLike = DateValue | Date | string
 
 export interface CalendarDateRange {
-  start: DateValue
-  end: DateValue
+  start: DateLike
+  end: DateLike
 }
 
 export interface FormKitCalendarProps {
@@ -20,9 +25,17 @@ export interface FormKitCalendarProps {
   monthControls?: boolean
   yearControls?: boolean
   viewControl?: boolean
-  defaultValue?: DateValue | DateValue[] | CalendarDateRange
-  minValue?: DateValue
-  maxValue?: DateValue
+  /**
+   * Shape of the value read from / written to the FormKit form data.
+   * `'calendar'` (default) keeps the native `@internationalized/date` `DateValue`.
+   * `'date'` converts to/from a JS `Date`. `'iso'` converts to/from an ISO 8601 string.
+   */
+  valueType?: DateValueType
+  /** Timezone used when converting to/from `'date'`/`'iso'`. Defaults to the local timezone. */
+  timeZone?: string
+  defaultValue?: DateLike | DateLike[] | CalendarDateRange
+  minValue?: DateLike
+  maxValue?: DateLike
   isDateDisabled?: (date: DateValue) => boolean
   isDateUnavailable?: (date: DateValue) => boolean
   ui?: Record<string, unknown>
@@ -35,7 +48,20 @@ const props = defineProps({
   },
 })
 
-const { handleInput, styleClass, color, modelValue, validSlotNames } = useFormKitInput(props.context)
+const { handleInput, styleClass, color, validSlotNames } = useFormKitInput(props.context)
+
+const conversionOptions = computed(() => ({ timeZone: props.context.timeZone }))
+
+const modelValue = computed({
+  get: () => toDateValueOrRangeOrArray(props.context._value, conversionOptions.value),
+  set: (value) => {
+    props.context.node.input(fromDateValueOrRangeOrArray(value, props.context.valueType ?? 'calendar', props.context.timeZone))
+  },
+})
+
+const defaultValue = computed(() => toDateValueOrRangeOrArray(props.context.defaultValue, conversionOptions.value))
+const minValue = computed(() => toDateValue(props.context.minValue, conversionOptions.value))
+const maxValue = computed(() => toDateValue(props.context.maxValue, conversionOptions.value))
 </script>
 
 <template>
@@ -56,9 +82,9 @@ const { handleInput, styleClass, color, modelValue, validSlotNames } = useFormKi
     :month-controls="context.monthControls"
     :year-controls="context.yearControls"
     :view-control="context.viewControl"
-    :default-value="context.defaultValue"
-    :min-value="context.minValue"
-    :max-value="context.maxValue"
+    :default-value="defaultValue"
+    :min-value="minValue"
+    :max-value="maxValue"
     :is-date-disabled="context.isDateDisabled"
     :is-date-unavailable="context.isDateUnavailable"
     :ui="context.ui"

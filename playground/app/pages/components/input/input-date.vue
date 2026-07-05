@@ -2,7 +2,11 @@
 <script setup>
 import { parseDate, CalendarDate } from '@internationalized/date'
 
-const data = { date2: new CalendarDate(2022, 2, 3) }
+const data = {
+  date2: new CalendarDate(2022, 2, 3),
+  date34: new Date(2026, 6, 5),
+  date35: '2026-07-05',
+}
 const inputDateSchema = [
   {
     $formkit: 'nuxtUIInputDate',
@@ -205,6 +209,27 @@ const inputDateSchema = [
     disabled: true,
     defaultValue: new CalendarDate(2022, 3, 3),
   },
+  {
+    $formkit: 'nuxtUIInputDate',
+    name: 'date33',
+    label: 'defaultValue as JS Date (valueType: date)',
+    valueType: 'date',
+    defaultValue: new Date(2026, 6, 5),
+  },
+  {
+    $formkit: 'nuxtUIInputDate',
+    name: 'date34',
+    label: 'Bound to a JS Date (valueType: date)',
+    valueType: 'date',
+    help: 'Underlying form value stays a JS Date on every change.',
+  },
+  {
+    $formkit: 'nuxtUIInputDate',
+    name: 'date35',
+    label: 'Bound to an ISO string (valueType: iso)',
+    valueType: 'iso',
+    help: 'Underlying form value stays an ISO 8601 string on every change.',
+  },
 ]
 </script>
 
@@ -372,6 +397,24 @@ const inputDateSchema = [
           <FUDataEdit
             :data="{}"
             :schema="inputDateSchema.slice(31, 32)"
+          />
+        </section>
+
+        <USeparator />
+
+        <section>
+          <h2 class="text-2xl font-semibold mb-4">
+            Value Types
+          </h2>
+          <p class="text-muted-foreground mb-6">
+            By default the form value is a native <code>@internationalized/date</code> <code>DateValue</code>. Set
+            <code>valueType</code> to <code>'date'</code> or <code>'iso'</code> to read/write a JS <code>Date</code>
+            or an ISO 8601 string instead — conversion happens at the boundary in both directions.
+          </p>
+          <FUDataEdit
+            :data="data"
+            :schema="inputDateSchema.slice(32, 35)"
+            debug-data
           />
         </section>
       </div>
