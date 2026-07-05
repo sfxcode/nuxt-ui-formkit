@@ -1,9 +1,12 @@
 import type { FormKitTypeDefinition } from '@formkit/core'
 import { createInput } from '@formkit/vue'
 
+import FUCalendar from '../../../runtime/components/inputs/FUCalendar.vue'
 import FUCheckbox from '../../../runtime/components/inputs/FUCheckbox.vue'
 import FUCheckboxGroup from '../../../runtime/components/inputs/FUCheckboxGroup.vue'
 import FUColorPicker from '../../../runtime/components/inputs/FUColorPicker.vue'
+import FUEditor from '../../../runtime/components/inputs/FUEditor.vue'
+import FUFileUpload from '../../../runtime/components/inputs/FUFileUpload.vue'
 import FUInput from '../../../runtime/components/inputs/FUInput.vue'
 import FUInputDate from '../../../runtime/components/inputs/FUInputDate.vue'
 import FUInputMenu from '../../../runtime/components/inputs/FUInputMenu.vue'
@@ -19,6 +22,11 @@ import FUSlider from '../../../runtime/components/inputs/FUSlider.vue'
 import FUSwitch from '../../../runtime/components/inputs/FUSwitch.vue'
 import FUTextarea from '../../../runtime/components/inputs/FUTextarea.vue'
 
+export const nuxtUICalendarDefinition: FormKitTypeDefinition = createInput(FUCalendar, {
+  props: ['type', 'range', 'multiple', 'color', 'variant', 'size', 'weekNumbers', 'monthControls', 'yearControls', 'viewControl', 'defaultValue', 'minValue', 'maxValue', 'isDateDisabled', 'isDateUnavailable', 'ui'],
+  family: 'NuxtUIInput',
+})
+
 export const nuxtUICheckboxDefinition: FormKitTypeDefinition = createInput(FUCheckbox, {
   props: ['label', 'description', 'color', 'variant', 'size', 'indicator', 'icon', 'indeterminateIcon', 'trueValue', 'falseValue', 'autofocus', 'ui'],
   family: 'NuxtUIInput',
@@ -31,6 +39,16 @@ export const nuxtUICheckboxGroupDefinition: FormKitTypeDefinition = createInput(
 
 export const nuxtUIColorPickerDefinition: FormKitTypeDefinition = createInput(FUColorPicker, {
   props: ['size', 'inputClass', 'format', 'throttle', 'ui'],
+  family: 'NuxtUIInput',
+})
+
+export const nuxtUIEditorDefinition: FormKitTypeDefinition = createInput(FUEditor, {
+  props: ['contentType', 'starterKit', 'placeholder', 'markdown', 'image', 'mention', 'editorHandlers', 'extensions', 'autofocus', 'toolbar', 'toolbarItems', 'bubbleToolbar', 'bubbleToolbarItems', 'dragHandle', 'suggestionMenu', 'suggestionMenuItems', 'mentionItems', 'ui'],
+  family: 'NuxtUIInput',
+})
+
+export const nuxtUIFileUploadDefinition: FormKitTypeDefinition = createInput(FUFileUpload, {
+  props: ['multiple', 'accept', 'icon', 'label', 'description', 'color', 'variant', 'size', 'layout', 'position', 'dropzone', 'interactive', 'required', 'reset', 'fileIcon', 'fileImage', 'fileDelete', 'fileDeleteIcon', 'preview', 'name', 'ui'],
   family: 'NuxtUIInput',
 })
 

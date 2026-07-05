@@ -1,7 +1,10 @@
 import type { FormKitBaseSlots, FormKitInputs } from '@formkit/inputs'
 import type {
+  CalendarSlots,
   CheckboxSlots,
   CheckboxGroupSlots,
+  EditorSlots,
+  FileUploadSlots,
   RadioGroupSlots,
   InputSlots,
   TextareaSlots,
@@ -28,6 +31,9 @@ type MergeSlots<A, B> = A & Omit<B, keyof A>
 declare module '@formkit/inputs' {
   interface FormKitInputProps<Props extends FormKitInputs<Props>> {
     // Input Components
+    nuxtUICalendar: {
+      type: 'nuxtUICalendar'
+    }
     nuxtUICheckbox: {
       type: 'nuxtUICheckbox'
     }
@@ -36,6 +42,12 @@ declare module '@formkit/inputs' {
     }
     nuxtUIColorPicker: {
       type: 'nuxtUIColorPicker'
+    }
+    nuxtUIEditor: {
+      type: 'nuxtUIEditor'
+    }
+    nuxtUIFileUpload: {
+      type: 'nuxtUIFileUpload'
     }
     nuxtUIInput: {
       type: 'nuxtUIInput'
@@ -101,8 +113,11 @@ declare module '@formkit/inputs' {
   }
 
   interface FormKitInputSlots<Props extends FormKitInputs<Props>> {
+    nuxtUICalendar: MergeSlots<FormKitBaseSlots<Props>, CalendarSlots>
     nuxtUICheckbox: MergeSlots<FormKitBaseSlots<Props>, CheckboxSlots>
     nuxtUICheckboxGroup: MergeSlots<FormKitBaseSlots<Props>, CheckboxGroupSlots>
+    nuxtUIEditor: MergeSlots<FormKitBaseSlots<Props>, EditorSlots>
+    nuxtUIFileUpload: MergeSlots<FormKitBaseSlots<Props>, FileUploadSlots>
     nuxtUIInput: MergeSlots<FormKitBaseSlots<Props>, InputSlots>
     nuxtUIInputDate: MergeSlots<FormKitBaseSlots<Props>, InputDateSlots>
     nuxtUIInputMenu: MergeSlots<FormKitBaseSlots<Props>, InputMenuSlots>

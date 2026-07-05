@@ -506,6 +506,154 @@ const schema = [
 ]
 ```
 
+### nuxtUICalendar
+
+Bare date-grid picker with day, month, and year views, supporting range and multiple selection.
+
+📖 Nuxt UI reference: [Calendar](https://ui.nuxt.com/components/calendar)
+
+**Schema Example:**
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUICalendar',
+    name: 'appointmentDate',
+    label: 'Appointment Date',
+    validation: 'required'
+  }
+]
+```
+
+**With Range:**
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUICalendar',
+    name: 'vacationRange',
+    label: 'Vacation Dates',
+    range: true
+  }
+]
+```
+
+**Key Props:**
+- `type` - `'date'` (default), `'month'`, or `'year'` picker view
+- `range` - Enable selecting a start/end date range
+- `multiple` - Enable selecting multiple individual dates
+- `color` - Theme color for the selected date(s)
+- `size` - `'xs' | 'sm' | 'md' | 'lg' | 'xl'` - controls cell/font size, not the overall footprint
+
+::: tip
+The calendar grid fills its container by default (matching Nuxt UI's own `UCalendar`). Add a width class via `class` on the schema entry (e.g. `class: 'w-1/2'`) to control how much space it takes up.
+:::
+
+### nuxtUIFileUpload
+
+Drag/drop and click-to-browse file input with previews.
+
+📖 Nuxt UI reference: [FileUpload](https://ui.nuxt.com/components/file-upload)
+
+**Schema Example:**
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUIFileUpload',
+    name: 'attachment',
+    label: 'Attachment',
+    accept: 'image/*',
+    validation: 'required'
+  }
+]
+```
+
+**With Multiple Files:**
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUIFileUpload',
+    name: 'documents',
+    label: 'Documents',
+    multiple: true,
+    layout: 'grid'
+  }
+]
+```
+
+**Key Props:**
+- `multiple` - Allow selecting more than one file
+- `accept` - Comma-separated MIME types or extensions (e.g. `'image/png,.pdf'`)
+- `layout` - `'list'` (default) or `'grid'` — only applies when `variant` is `'area'`
+- `position` - `'outside'` (default) or `'inside'` — file list position relative to the dropzone
+- `variant` - `'area'` (default) or `'button'` — `'button'` only works when `multiple` is `false`
+
+### nuxtUIEditor
+
+Tiptap-based rich text editor with a built-in formatting toolbar.
+
+📖 Nuxt UI reference: [Editor](https://ui.nuxt.com/components/editor)
+
+**Schema Example:**
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUIEditor',
+    name: 'body',
+    label: 'Post Body',
+    contentType: 'html',
+    validation: 'required'
+  }
+]
+```
+
+**With Markdown:**
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUIEditor',
+    name: 'notes',
+    label: 'Notes',
+    contentType: 'markdown'
+  }
+]
+```
+
+**With Custom Toolbar Items:**
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUIEditor',
+    name: 'summary',
+    label: 'Summary',
+    toolbarItems: [
+      [{ kind: 'undo', icon: 'i-lucide-undo' }, { kind: 'redo', icon: 'i-lucide-redo' }],
+      [{ kind: 'mark', mark: 'bold', icon: 'i-lucide-bold' }, { kind: 'mark', mark: 'italic', icon: 'i-lucide-italic' }]
+    ]
+  }
+]
+```
+
+**Key Props:**
+- `contentType` - `'html'`, `'markdown'`, or `'json'` — auto-inferred from the value when unset
+- `placeholder` - Placeholder text shown in empty paragraphs, or an object with a `mode: 'firstLine' | 'everyLine'`
+- `markdown` - Options for markdown parsing/serialization
+- `image` - Enable/configure the image extension (`false` to disable)
+- `mention` - Enable/configure the mention extension (`false` to disable)
+- `extensions` - Array of additional Tiptap extensions (e.g. `Underline`, `Emoji`) to register alongside the defaults
+- `toolbar` - Set to `false` to hide the built-in formatting toolbar entirely
+- `toolbarItems` - Override the default toolbar item groups (undo/redo, headings, marks, lists/blocks) — see [Nuxt UI's `EditorToolbarItem`](https://ui.nuxt.com/components/editor#toolbar) for the full `kind` list
+- `editorHandlers` - Custom handler overrides for toolbar item behavior (renamed from Nuxt UI's `handlers` prop to avoid colliding with FormKit's own `context.handlers`)
+
+::: warning
+Unlike every other input, `nuxtUIEditor` has no `color`, `variant`, `size`, or `disabled` prop — it's a Tiptap options wrapper, not a themed Nuxt UI form control. FormKit's disabled state is mapped to Tiptap's `editable` option instead (the editor becomes read-only rather than visually "disabled").
+:::
+
 ## Complete Form Example
 
 Here's a comprehensive example using multiple input types:

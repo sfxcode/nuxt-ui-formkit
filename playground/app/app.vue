@@ -8,6 +8,12 @@ const items = ref<NavigationMenuItem[]>([
     active: true,
     children: [
       {
+        label: 'Calendar',
+        icon: 'i-lucide-calendar-days',
+        description: 'Bare date-grid picker with range and multiple selection.',
+        to: '/components/input/calendar',
+      },
+      {
         label: 'Checkbox',
         icon: 'i-lucide-check',
         description: 'Checkbox component for single selection.',
@@ -24,6 +30,18 @@ const items = ref<NavigationMenuItem[]>([
         icon: 'i-lucide-palette',
         description: 'Color picker for selecting colors in multiple formats.',
         to: '/components/input/color-picker',
+      },
+      {
+        label: 'Editor',
+        icon: 'i-lucide-file-edit',
+        description: 'Tiptap-based rich text editor.',
+        to: '/components/input/editor',
+      },
+      {
+        label: 'FileUpload',
+        icon: 'i-lucide-upload',
+        description: 'Drag/drop and click-to-browse file input.',
+        to: '/components/input/file-upload',
       },
       {
         label: 'Input',

@@ -18,10 +18,13 @@ FormKit Nuxt UI bridges the gap between [FormKit](https://formkit.com/)'s powerf
 
 ## Features
 
-✨ **17 Input Components** - Complete set of FormKit-wrapped Nuxt UI input components
+✨ **20 Input Components** - Complete set of FormKit-wrapped Nuxt UI input components
+- `nuxtUICalendar` - Bare date-grid picker with range/multiple selection
 - `nuxtUICheckbox` - Single checkbox with label and description
 - `nuxtUICheckboxGroup` - Multiple checkbox selection
 - `nuxtUIColorPicker` - Color selection with multiple formats
+- `nuxtUIEditor` - Tiptap-based rich text editor
+- `nuxtUIFileUpload` - Drag/drop and click-to-browse file input
 - `nuxtUIInput` - Text input with various types (text, email, password, etc.)
 - `nuxtUIInputDate` - Date and time picker with range support
 - `nuxtUIInputMenu` - Dropdown menu with searchable options
