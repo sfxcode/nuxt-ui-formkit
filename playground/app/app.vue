@@ -203,6 +203,12 @@ const items = ref<NavigationMenuItem[]>([
         to: '/form/repeater-drag',
       },
       {
+        label: 'Nested Repeater',
+        icon: 'i-lucide-list-tree',
+        description: 'A repeater nested inside another repeater\'s item schema, each level managed independently.',
+        to: '/form/repeater-nested',
+      },
+      {
         label: 'Listbox Transfer',
         icon: 'i-lucide-arrow-left-right',
         description: 'Two-pane transfer list with bidirectional drag-and-drop and reordering.',

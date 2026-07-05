@@ -410,6 +410,44 @@ This example enables drag-and-drop reordering and hides the traditional up/down 
 
 This example requires at least 2 team members and allows a maximum of 10. The delete button will be disabled when only 2 items remain, and add/clone buttons will be disabled when 10 items are reached.
 
+### Nested Repeaters
+
+A `nuxtUIRepeater` can be nested inside another repeater's item schema — each nesting level manages its own items, buttons, and `newItem` independently, so inserting/removing/cloning at one level never affects sibling items at another level:
+
+```vue
+<FormKit
+  type="nuxtUIRepeater"
+  name="employers"
+  label="Work History"
+  :new-item="{ company: '', references: [] }"
+  insert-button-label="Add Employer"
+>
+  <FormKit
+    type="nuxtUIInput"
+    name="company"
+    label="Company"
+    validation="required"
+  />
+
+  <FormKit
+    type="nuxtUIRepeater"
+    name="references"
+    label="References"
+    :new-item="{ name: '' }"
+    insert-button-label="Add Reference"
+  >
+    <FormKit
+      type="nuxtUIInput"
+      name="name"
+      label="Reference Name"
+      validation="required"
+    />
+  </FormKit>
+</FormKit>
+```
+
+The same pattern works in schema-based repeaters — nest a second `nuxtUIRepeater` schema node inside the outer repeater's `children` array.
+
 ## Features
 
 - **Add Items** - Insert new items at the beginning or after specific items
