@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.2.0
+
+[compare changes](https://github.com/sfxcode/nuxt-ui-formkit/compare/v1.1.1...v1.2.0)
+
+### 🚀 Enhancements
+
+- Add Calendar, FileUpload, and Editor as FormKit input components ([45a2c11](https://github.com/sfxcode/nuxt-ui-formkit/commit/45a2c11))
+- Listbox transfer drag-and-drop, live sample forms, and repeater value binding fix ([4e5ffed](https://github.com/sfxcode/nuxt-ui-formkit/commit/4e5ffed))
+
+### 🏡 Chore
+
+- Update dependencies, align pnpm config settings, and clean up .npmrc file ([f4b8078](https://github.com/sfxcode/nuxt-ui-formkit/commit/f4b8078))
+- Update release script to use minor version bumps ([1218b4f](https://github.com/sfxcode/nuxt-ui-formkit/commit/1218b4f))
+
+### ❤️ Contributors
+
+- Sfxcode ([@sfxcode](https://github.com/sfxcode))
+
 ## v1.1.1
 
 [compare changes](https://github.com/sfxcode/nuxt-ui-formkit/compare/v1.1.0...v1.1.1)
