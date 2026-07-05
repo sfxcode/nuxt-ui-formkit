@@ -274,7 +274,7 @@ const schema = reactive([
             $formkit: 'nuxtUIInput',
             name: 'endDate',
             label: 'End Date',
-            if: '$get(current).value !== true',
+            if: '$node.value.current !== true',
             inputType: 'month',
             placeholder: '2023-12',
           },
