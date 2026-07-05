@@ -288,9 +288,12 @@ Refer to the [Nuxt UI documentation](https://ui.nuxt.com/) for component-specifi
 The playground includes comprehensive examples for all components:
 
 ### Input Components
+- [Calendar](./playground/app/pages/components/input/calendar.vue)
 - [Checkbox](./playground/app/pages/components/input/checkbox.vue)
 - [CheckboxGroup](./playground/app/pages/components/input/checkbox-group.vue)
 - [ColorPicker](./playground/app/pages/components/input/color-picker.vue)
+- [Editor](./playground/app/pages/components/input/editor.vue)
+- [FileUpload](./playground/app/pages/components/input/file-upload.vue)
 - [Input](./playground/app/pages/components/input/input.vue)
 - [InputDate](./playground/app/pages/components/input/input-date.vue)
 - [InputMenu](./playground/app/pages/components/input/input-menu.vue)
@@ -313,6 +316,10 @@ The playground includes comprehensive examples for all components:
 - [OutputList](./playground/app/pages/components/output/list.vue)
 - [OutputNumber](./playground/app/pages/components/output/number.vue)
 - [OutputText](./playground/app/pages/components/output/text.vue)
+
+### Repeater
+- [Repeater](./playground/app/pages/form/repeater-sample.vue)
+- [Drag-and-Drop Repeater](./playground/app/pages/form/repeater-drag.vue)
 
 ## Development
 

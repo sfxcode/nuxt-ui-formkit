@@ -19,7 +19,7 @@ hero:
 features:
   - icon: ✅
     title: FormKit Inputs
-    details: Complete set of 17 FormKit-wrapped Nuxt UI input components including text inputs, selects, checkboxes, date pickers, color pickers, and more.
+    details: Complete set of 20 FormKit-wrapped Nuxt UI input components including text inputs, selects, checkboxes, date pickers, color pickers, and more.
   
   - icon: 👁️
     title: Output Components
