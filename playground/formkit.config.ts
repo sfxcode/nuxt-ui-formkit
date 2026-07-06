@@ -2,14 +2,17 @@
 import type { DefaultConfigOptions } from '@formkit/vue'
 import { createAutoAnimatePlugin } from '@formkit/addons'
 import { de, en } from '@formkit/i18n'
-import { nuxtUIInputs, nuxtUIOutputs } from '../src/runtime/formkit/definitions'
-import { addNuxtAsteriskPlugin, createMultiStepPlugin } from '../src/runtime/formkit/plugins'
+import { createNuxtUiFormkitConfig } from '../src/runtime/formkit/createNuxtUiFormkitConfig'
+
+// Assembles nuxtUIInputs/nuxtUIOutputs and the asterisk plugin; multiStep
+// additionally registers createMultiStepPlugin() for nuxtUIMultiStep/nuxtUIStep.
+const nuxtUiFormkitConfig = createNuxtUiFormkitConfig({ multiStep: true })
 
 const config: DefaultConfigOptions = {
   locales: { en, de },
   // Define the active locale
   locale: 'en',
-  inputs: { ...nuxtUIInputs, ...nuxtUIOutputs },
+  inputs: nuxtUiFormkitConfig.inputs,
   // ignore FormKit iconLoader since we use our own icons and don't want to load the default ones
   iconLoader: (_) => {
     return undefined
@@ -30,8 +33,7 @@ const config: DefaultConfigOptions = {
         nuxtUIRepeater: ['input'],
       },
     ),
-    addNuxtAsteriskPlugin,
-    createMultiStepPlugin(),
+    ...nuxtUiFormkitConfig.plugins!,
   ],
 }
 

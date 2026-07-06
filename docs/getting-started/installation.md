@@ -49,16 +49,22 @@ export default defineNuxtConfig({
 
 ## FormKit Configuration
 
-Create a `formkit.config.ts` file in your project root to configure FormKit:
+Create a `formkit.config.ts` file in your project root to configure FormKit. The recommended way is `createNuxtUiFormkitConfig()`, which registers every `nuxtUIXxx` input/output plus this module's own plugins for you - spread its result into your own config alongside whatever else you need (locales, `iconLoader`, other plugins):
 
 ```typescript [formkit.config.ts]
 import type { DefaultConfigOptions } from '@formkit/vue'
 import { createAutoAnimatePlugin } from '@formkit/addons'
 import { en } from '@formkit/i18n'
+import { createNuxtUiFormkitConfig } from '@sfxcode/nuxt-ui-formkit/formkit'
+
+// `multiStep: true` additionally registers `createMultiStepPlugin()` -
+// omit it if you're not using `nuxtUIMultiStep`/`nuxtUIStep`.
+const nuxtUiFormkitConfig = createNuxtUiFormkitConfig({ multiStep: true })
 
 const config: DefaultConfigOptions = {
   locales: { en },
   locale: 'en',
+  inputs: nuxtUiFormkitConfig.inputs,
   plugins: [
     createAutoAnimatePlugin(
       {
@@ -70,12 +76,33 @@ const config: DefaultConfigOptions = {
         form: ['form'],
         nuxtUIRepeater: ['items'],
       }
-    )
+    ),
+    ...nuxtUiFormkitConfig.plugins!,
   ],
 }
 
 export default config
 ```
+
+::: details Escape hatch: fully manual wiring
+If you need finer-grained control (e.g. registering only a subset of inputs), you can still wire everything up yourself instead of using the helper:
+
+```typescript [formkit.config.ts]
+import type { DefaultConfigOptions } from '@formkit/vue'
+import { en } from '@formkit/i18n'
+import { nuxtUIInputs, nuxtUIOutputs } from '@sfxcode/nuxt-ui-formkit/definitions'
+import { addNuxtAsteriskPlugin } from '@sfxcode/nuxt-ui-formkit/plugins'
+
+const config: DefaultConfigOptions = {
+  locales: { en },
+  locale: 'en',
+  inputs: { ...nuxtUIInputs, ...nuxtUIOutputs },
+  plugins: [addNuxtAsteriskPlugin],
+}
+
+export default config
+```
+:::
 
 ## Verify Installation
 

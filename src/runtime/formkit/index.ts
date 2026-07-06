@@ -21,6 +21,7 @@ import type {
 } from '@nuxt/ui'
 
 // Re-export all definitions for external use
+export * from './createNuxtUiFormkitConfig'
 export * from './definitions'
 export * from './plugins'
 

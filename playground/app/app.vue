@@ -220,6 +220,12 @@ const items = ref<NavigationMenuItem[]>([
         description: 'Wizard-style form with tab navigation and per-step validation gating.',
         to: '/form/multi-step',
       },
+      {
+        label: 'useFormKitForm Composable',
+        icon: 'i-lucide-square-function',
+        description: 'Submit/reset/error-display wired up from a button living outside the form itself.',
+        to: '/form/form-composable',
+      },
     ],
   },
   {

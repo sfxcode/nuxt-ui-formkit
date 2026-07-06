@@ -60,12 +60,16 @@ FormKit Nuxt UI bridges the gap between [FormKit](https://formkit.com/)'s powerf
 - `FUDataView` - Read-only data display with schema support
 - `FUDataDebug` - Development tool for form debugging
 
+⚙️ **Config Helper** - One-line `formkit.config.ts` setup
+- `createNuxtUiFormkitConfig` - Assembles all `nuxtUIXxx` inputs/outputs and this module's plugins into `{ inputs, plugins }` you spread into your own config
+
 🔧 **Composables & Utilities** - Reusable form logic
 - `useFormKitSchema` - Schema-based form generation with element builders
 - `useFormKitInput` - Input component utilities and prop handling
 - `useFormKitOutput` - Output component utilities and prop handling
 - `useFormKitRepeater` - Repeater insert/remove/clone/move/drag handlers
 - `useFormKitMultiStep` - Multi-step tab-item mapping and navigation bridging
+- `useFormKitForm` - Submit/reset/error-management wrapper for a form's imperative APIs, callable from outside the form
 - `colorConverter` - Color format conversion utilities
 - `durationConverter` - Duration format conversion utilities
 
@@ -329,6 +333,9 @@ The playground includes comprehensive examples for all components:
 
 ### Multi-Step
 - [Multi-Step Form](./playground/app/pages/form/multi-step.vue)
+
+### Form Composable
+- [useFormKitForm](./playground/app/pages/form/form-composable.vue)
 
 ## Development
 
