@@ -106,6 +106,7 @@ export default defineConfig({
           { text: 'Input Components', link: '/components/inputs' },
           { text: 'Output Components', link: '/components/outputs' },
           { text: 'Repeater', link: '/components/repeater' },
+          { text: 'Multi-Step', link: '/components/multi-step' },
           { text: 'FUDataView', link: '/components/data-view' },
           { text: 'FUDataEdit', link: '/components/data-edit' },
         ],

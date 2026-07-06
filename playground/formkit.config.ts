@@ -3,7 +3,7 @@ import type { DefaultConfigOptions } from '@formkit/vue'
 import { createAutoAnimatePlugin } from '@formkit/addons'
 import { de, en } from '@formkit/i18n'
 import { nuxtUIInputs, nuxtUIOutputs } from '../src/runtime/formkit/definitions'
-import { addNuxtAsteriskPlugin } from '../src/runtime/formkit/plugins'
+import { addNuxtAsteriskPlugin, createMultiStepPlugin } from '../src/runtime/formkit/plugins'
 
 const config: DefaultConfigOptions = {
   locales: { en, de },
@@ -31,6 +31,7 @@ const config: DefaultConfigOptions = {
       },
     ),
     addNuxtAsteriskPlugin,
+    createMultiStepPlugin(),
   ],
 }
 

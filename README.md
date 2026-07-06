@@ -43,6 +43,10 @@ FormKit Nuxt UI bridges the gap between [FormKit](https://formkit.com/)'s powerf
 🔁 **Repeater Component** - Dynamic repeatable form sections
 - `nuxtUIRepeater` - Create dynamic lists with add, remove, clone, and reorder functionality
 
+🧭 **Multi-Step Forms** - Wizard-style forms with tab navigation and validation gating
+- `nuxtUIMultiStep` - Tab-strip wizard container built on `@formkit/addons`' `createMultiStepPlugin`
+- `nuxtUIStep` - A single step's content, with Nuxt UI-styled previous/next actions
+
 📊 **6 Output Components** - Display-only components for read-only data
 - `nuxtUIOutputBoolean` - Boolean display with custom icons
 - `nuxtUIOutputDate` - Formatted date/time display
@@ -60,6 +64,8 @@ FormKit Nuxt UI bridges the gap between [FormKit](https://formkit.com/)'s powerf
 - `useFormKitSchema` - Schema-based form generation with element builders
 - `useFormKitInput` - Input component utilities and prop handling
 - `useFormKitOutput` - Output component utilities and prop handling
+- `useFormKitRepeater` - Repeater insert/remove/clone/move/drag handlers
+- `useFormKitMultiStep` - Multi-step tab-item mapping and navigation bridging
 - `colorConverter` - Color format conversion utilities
 - `durationConverter` - Duration format conversion utilities
 
@@ -320,6 +326,9 @@ The playground includes comprehensive examples for all components:
 ### Repeater
 - [Repeater](./playground/app/pages/form/repeater-sample.vue)
 - [Drag-and-Drop Repeater](./playground/app/pages/form/repeater-drag.vue)
+
+### Multi-Step
+- [Multi-Step Form](./playground/app/pages/form/multi-step.vue)
 
 ## Development
 

@@ -214,6 +214,12 @@ const items = ref<NavigationMenuItem[]>([
         description: 'Two-pane transfer list with bidirectional drag-and-drop and reordering.',
         to: '/form/listbox-transfer',
       },
+      {
+        label: 'Multi-Step Form',
+        icon: 'i-lucide-list-checks',
+        description: 'Wizard-style form with tab navigation and per-step validation gating.',
+        to: '/form/multi-step',
+      },
     ],
   },
   {

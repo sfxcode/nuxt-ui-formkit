@@ -30,6 +30,7 @@ export default defineNuxtConfig({
     optimizeDeps: {
       include: [
         '@formkit/addons',
+        '@formkit/inputs',
       ],
     },
   },

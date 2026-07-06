@@ -1,5 +1,9 @@
 import type { FormKitExtendableSchemaRoot, FormKitNode } from '@formkit/core'
 
+// Re-exported so consumers wiring up `nuxtUIStep`/`nuxtUIMultiStep` don't need
+// a separate `@formkit/addons` import just for the plugin that recognizes them.
+export { createMultiStepPlugin } from '@formkit/addons'
+
 export function addNuxtAsteriskPlugin(node: FormKitNode): void {
   if (!node.props.type.startsWith('nuxtUI') || node.props.type.startsWith('FUOutput'))
     return

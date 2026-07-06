@@ -1,3 +1,4 @@
+import type { FormKitMultiStepSlots, FormKitStepSlots } from '@formkit/addons'
 import type { FormKitBaseSlots, FormKitInputs } from '@formkit/inputs'
 import type {
   CalendarSlots,
@@ -70,6 +71,9 @@ declare module '@formkit/inputs' {
     nuxtUIListbox: {
       type: 'nuxtUIListbox'
     }
+    nuxtUIMultiStep: {
+      type: 'nuxtUIMultiStep'
+    }
     nuxtUIPinInput: {
       type: 'nuxtUIPinInput'
     }
@@ -84,6 +88,9 @@ declare module '@formkit/inputs' {
     }
     nuxtUISlider: {
       type: 'nuxtUISlider'
+    }
+    nuxtUIStep: {
+      type: 'nuxtUIStep'
     }
     nuxtUISwitch: {
       type: 'nuxtUISwitch'
@@ -125,9 +132,11 @@ declare module '@formkit/inputs' {
     nuxtUIInputTags: MergeSlots<FormKitBaseSlots<Props>, InputTagsSlots>
     nuxtUIInputTime: MergeSlots<FormKitBaseSlots<Props>, InputTimeSlots>
     nuxtUIListbox: MergeSlots<FormKitBaseSlots<Props>, ListboxSlots>
+    nuxtUIMultiStep: MergeSlots<FormKitBaseSlots<Props>, FormKitMultiStepSlots<Props>>
     nuxtUIRadioGroup: MergeSlots<FormKitBaseSlots<Props>, RadioGroupSlots>
     nuxtUISelect: MergeSlots<FormKitBaseSlots<Props>, SelectSlots>
     nuxtUISelectMenu: MergeSlots<FormKitBaseSlots<Props>, SelectMenuSlots>
+    nuxtUIStep: MergeSlots<FormKitBaseSlots<Props>, FormKitStepSlots<Props>>
     nuxtUISwitch: MergeSlots<FormKitBaseSlots<Props>, SwitchSlots>
     nuxtUITextarea: MergeSlots<FormKitBaseSlots<Props>, TextareaSlots>
   }
