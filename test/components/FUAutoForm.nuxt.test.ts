@@ -3,6 +3,7 @@ import { defaultConfig, plugin } from '@formkit/vue'
 import { mountSuspended } from '@nuxt/test-utils/runtime'
 import { flushPromises } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
+import { z } from 'zod'
 import FUAutoForm from '../../src/runtime/components/FUAutoForm.vue'
 import {
   nuxtUIInputDefinition,
@@ -89,6 +90,20 @@ describe('fUAutoForm', () => {
   it('derives live FormKit validation from a valibot schema', async () => {
     const wrapper = await mountAutoForm({
       valibotSchema: v.object({ email: v.pipe(v.string(), v.email()) }),
+      overrides: { email: { validationVisibility: 'live' } },
+    })
+    await settle()
+
+    await wrapper.find('input').setValue('not-an-email')
+    await settle()
+
+    expect(wrapper.text()).toContain('valid email')
+    wrapper.unmount()
+  })
+
+  it('derives live FormKit validation from a zod schema', async () => {
+    const wrapper = await mountAutoForm({
+      zodSchema: z.object({ email: z.string().email() }),
       overrides: { email: { validationVisibility: 'live' } },
     })
     await settle()

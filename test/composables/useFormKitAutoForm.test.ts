@@ -1,4 +1,5 @@
 import type { AutoFormOverrides } from '../../src/runtime/composables/useFormKitAutoForm'
+import { CalendarDate, CalendarDateTime } from '@internationalized/date'
 import { describe, expect, it } from 'vitest'
 import { inferFormSchema, useFormKitAutoForm } from '../../src/runtime/composables/useFormKitAutoForm'
 
@@ -38,6 +39,16 @@ describe('inferFormSchema primitives', () => {
   it('maps a Date instance to nuxtUIInputDate with valueType date', () => {
     const [node] = infer({ createdAt: new Date('2024-01-15') })
     expect(node).toEqual({ $formkit: 'nuxtUIInputDate', name: 'createdAt', label: 'Created At', valueType: 'date' })
+  })
+
+  it('maps a CalendarDate instance to nuxtUIInputDate with valueType calendar', () => {
+    const [node] = infer({ dueOn: new CalendarDate(2024, 1, 15) })
+    expect(node).toEqual({ $formkit: 'nuxtUIInputDate', name: 'dueOn', label: 'Due On', valueType: 'calendar' })
+  })
+
+  it('maps a CalendarDateTime instance to nuxtUIInputDate with valueType calendar', () => {
+    const [node] = infer({ startsAt: new CalendarDateTime(2024, 1, 15, 9, 30) })
+    expect(node).toEqual({ $formkit: 'nuxtUIInputDate', name: 'startsAt', label: 'Starts At', valueType: 'calendar' })
   })
 
   it('maps an ISO date-only string to nuxtUIInputDate with valueType iso', () => {

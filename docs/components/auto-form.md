@@ -1,11 +1,11 @@
 ---
 title: FUAutoForm Component
-description: Render a complete form without writing a schema - inputs are inferred from your data's value shapes or from a Valibot schema, with an override map for fine-tuning.
+description: Render a complete form without writing a schema - inputs are inferred from your data's value shapes, or from a Valibot or Zod schema, with an override map for fine-tuning.
 ---
 
 ## Overview
 
-`FUAutoForm` infers a `FUDataEdit` schema instead of requiring you to write one. Pass a plain data object and every field gets a matching input based on its value type; or pass a Valibot schema and inputs, labels, and validation rules are derived from the schema's own metadata. The inferred schema is handed to `FUDataEdit` unchanged, so everything you know about `FUDataEdit` (props, events, slots) applies as-is.
+`FUAutoForm` infers a `FUDataEdit` schema instead of requiring you to write one. Pass a plain data object and every field gets a matching input based on its value type; or pass a Valibot or Zod schema and inputs, labels, and validation rules are derived from the schema's own structure. The inferred schema is handed to `FUDataEdit` unchanged, so everything you know about `FUDataEdit` (props, events, slots) applies as-is.
 
 ```vue
 <template>
@@ -39,6 +39,7 @@ function handleSave(data: any) {
 | string containing a line break | `nuxtUITextarea` |
 | ISO date string (`2024-01-15` or full ISO-8601 datetime) | `nuxtUIInputDate` with `valueType: 'iso'` (round-trips as string) |
 | `Date` instance | `nuxtUIInputDate` with `valueType: 'date'` |
+| `@internationalized/date` `CalendarDate`/`CalendarDateTime`/`ZonedDateTime` instance | `nuxtUIInputDate` with `valueType: 'calendar'` (round-trips as the native `DateValue`) |
 | `number` | `nuxtUIInputNumber` |
 | `boolean` | `nuxtUISwitch` |
 | array of primitives (or empty array) | `nuxtUIInputTags` |
@@ -102,9 +103,42 @@ const user = ref({ name: '', email: '', age: 18, newsletter: false, contacts: []
 - Unsupported constructs (`picklist`, `union`, `record`, ...) are skipped — add them via `overrides`.
 - When `valibot-schema` is set it drives the schema; `data` remains the value source.
 
+## Zod Schemas
+
+If you already describe your data with [Zod](https://zod.dev), pass the schema instead — same rules apply as Valibot above (required/email/url/length/min/max, nesting, skipped constructs). Zod is introspected via its own public schema getters (`.type`, `.shape`, `.unwrap()`, `.minLength`, `.format`, ...) rather than its internal `_zod.def`; this module does not depend on it.
+
+```vue
+<template>
+  <FUAutoForm
+    :data="user"
+    :zod-schema="schema"
+  />
+</template>
+
+<script setup lang="ts">
+import { z } from 'zod'
+
+const schema = z.object({
+  name: z.string().min(2),
+  email: z.string().email(),
+  age: z.number().min(18).optional(),
+  newsletter: z.boolean(),
+  contacts: z.array(z.object({ email: z.string().email() })),
+})
+
+const user = ref({ name: '', email: '', age: 18, newsletter: false, contacts: [] })
+</script>
+```
+
+- Non-optional entries get `required` (except booleans, same reasoning as Valibot).
+- `.optional()`/`.nullable()`/`.nullish()` entries are not required; a `.default(...)` seeds new repeater rows regardless of where it sits in an `.optional()`/`.default()` chain.
+- Both `.string().email()` chains and the v4 top-level `z.email()` shorthand are recognized.
+- Unsupported constructs (`enum`, `union`, `record`, ...) are skipped — add them via `overrides`.
+- When `zod-schema` is set it drives the schema; `data` remains the value source. If both `valibot-schema` and `zod-schema` are passed, Valibot wins.
+
 ## Re-Inference Contract
 
-The schema is re-inferred only when the `data`, `overrides`, or `valibot-schema` prop **references** change — never while typing. Mutating the bound object does not rebuild the form (rebuilding would re-render the schema and drop input focus); replace the object to re-infer.
+The schema is re-inferred only when the `data`, `overrides`, `valibot-schema`, or `zod-schema` prop **references** change — never while typing. Mutating the bound object does not rebuild the form (rebuilding would re-render the schema and drop input focus); replace the object to re-infer.
 
 ## Props
 
@@ -113,6 +147,7 @@ The schema is re-inferred only when the `data`, `overrides`, or `valibot-schema`
 | `data` | `Object` | `null` | Data object to infer from; also seeds the form value (v-model supported) |
 | `overrides` | `AutoFormOverrides` | `undefined` | Dot-path keyed map of partial schema nodes or `false` |
 | `valibotSchema` | `Object` | `undefined` | Valibot object schema to derive inputs/validation from |
+| `zodSchema` | `Object` | `undefined` | Zod object schema to derive inputs/validation from |
 
 All other props, events (`@data-saved`, `@on-reset`), and slots are passed through to [`FUDataEdit`](/components/data-edit) unchanged — `submit-label`, `show-reset`, `debug-data`, `debug-schema`, and so on.
 
@@ -121,7 +156,7 @@ All other props, events (`@data-saved`, `@on-reset`), and slots are passed throu
 The inference utilities are auto-imported and usable standalone — for example to tweak the inferred schema before handing it to `FUDataEdit` yourself:
 
 ```ts
-const { inferFormSchema, inferFormSchemaFromValibot } = useFormKitAutoForm()
+const { inferFormSchema, inferFormSchemaFromValibot, inferFormSchemaFromZod } = useFormKitAutoForm()
 
 const schema = inferFormSchema(user, { email: { validation: 'required|email' } })
 ```
