@@ -109,6 +109,7 @@ export default defineConfig({
           { text: 'Multi-Step', link: '/components/multi-step' },
           { text: 'FUDataView', link: '/components/data-view' },
           { text: 'FUDataEdit', link: '/components/data-edit' },
+          { text: 'FUAutoForm', link: '/components/auto-form' },
         ],
       },
       {

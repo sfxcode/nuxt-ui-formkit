@@ -226,6 +226,12 @@ const items = ref<NavigationMenuItem[]>([
         description: 'Submit/reset/error-display wired up from a button living outside the form itself.',
         to: '/form/form-composable',
       },
+      {
+        label: 'AutoForm',
+        icon: 'i-lucide-wand-sparkles',
+        description: 'Schema-free forms inferred from data value shapes or a Valibot schema, with overrides.',
+        to: '/form/auto-form',
+      },
     ],
   },
   {

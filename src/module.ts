@@ -23,7 +23,7 @@ export default defineNuxtModule<ModuleOptions>({
 
     const NPM_PCK_FORMKIT_NUXT_UI = '@sfxcode/nuxt-ui-formkit'
 
-    const componentNames = ['FUDataView', 'FUDataEdit', 'FUDataDebug']
+    const componentNames = ['FUDataView', 'FUDataEdit', 'FUDataDebug', 'FUAutoForm']
     componentNames.forEach(name =>
       addComponent({
         name,
