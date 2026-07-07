@@ -39,6 +39,13 @@ async function settle() {
   await flushPromises()
 }
 
+// The repeater's per-row action buttons are icon-only (no label text), so
+// `.text()` can't disambiguate delete/clone/move - find by the iconify
+// class UIcon renders instead (`i-lucide-trash` -> `iconify i-lucide:trash`).
+function findButtonByIcon(wrapper: Awaited<ReturnType<typeof mountAutoForm>>, iconName: string) {
+  return wrapper.findAll('button').find(button => button.find(`.iconify.i-lucide\\:${iconName}`).exists())
+}
+
 describe('fUAutoForm', () => {
   it('renders inferred inputs for mixed data shapes', async () => {
     const wrapper = await mountAutoForm({
@@ -70,6 +77,30 @@ describe('fUAutoForm', () => {
     const values = wrapper.findAll('input').map(input => input.element.value)
     expect(values).toContain('a@example.com')
     expect(values).toContain('b@example.com')
+    wrapper.unmount()
+  })
+
+  it('renders a horizontal, right-aligned button group with working clone/delete on inferred repeaters', async () => {
+    const wrapper = await mountAutoForm({
+      data: { contacts: [{ email: 'a@example.com' }, { email: 'b@example.com' }] },
+    })
+    await settle()
+
+    const buttonGroup = wrapper.find('[id^="formkit-item-"] > div:last-child')
+    expect(buttonGroup.classes()).toEqual(expect.arrayContaining(['flex', 'gap-2', 'justify-end']))
+
+    const cloneButton = findButtonByIcon(wrapper, 'copy')
+    expect(cloneButton).toBeDefined()
+    await cloneButton!.trigger('click')
+    await settle()
+    expect(wrapper.findAll('[id^="formkit-item-"]')).toHaveLength(3)
+
+    const deleteButton = findButtonByIcon(wrapper, 'trash')
+    expect(deleteButton).toBeDefined()
+    await deleteButton!.trigger('click')
+    await settle()
+    expect(wrapper.findAll('[id^="formkit-item-"]')).toHaveLength(2)
+
     wrapper.unmount()
   })
 

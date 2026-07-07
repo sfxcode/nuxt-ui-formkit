@@ -129,6 +129,24 @@ describe('inferFormSchema nested structures', () => {
     ])
   })
 
+  it('enables clone/delete and right-aligns the button group on an inferred repeater', () => {
+    const [node] = infer({ contacts: [{ email: 'tom@example.com' }] })
+    expect(node).toMatchObject({
+      displayCloneButton: true,
+      displayDeleteButton: true,
+      buttonGroupClass: 'flex gap-2 justify-end',
+    })
+  })
+
+  it('lets overrides turn off repeater button defaults', () => {
+    const [node] = infer(
+      { contacts: [{ email: 'tom@example.com' }] },
+      { contacts: { displayCloneButton: false } },
+    )
+    expect(node?.displayCloneButton).toBe(false)
+    expect(node?.displayDeleteButton).toBe(true)
+  })
+
   it('infers repeater children from the first element only', () => {
     const [node] = infer({ rows: [{ a: 'x' }, { a: 'y', b: 1 }] })
     expect((node?.children as InferredNode[]).map(child => child.name)).toEqual(['a'])

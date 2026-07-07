@@ -49,6 +49,14 @@ function handleSave(data: any) {
 
 Labels are humanized from key names: `firstName` becomes `First Name`, `email_address` becomes `Email Address`.
 
+An inferred `nuxtUIRepeater` ships usable out of the box: `displayCloneButton`/`displayDeleteButton` are enabled (both are opt-in on `nuxtUIRepeater` itself, hidden unless explicitly turned on) and `buttonGroupClass` is set to `'flex gap-2 justify-end'` so the per-row action buttons lay out horizontally, right-aligned. Override any of the three per field to change this:
+
+```ts
+overrides: {
+  contacts: { displayCloneButton: false, buttonGroupClass: 'flex gap-1' },
+}
+```
+
 ## Overrides
 
 The `overrides` prop adjusts, replaces, adds, or removes inferred fields. Keys are dot-paths into your data; values are either a partial schema node or `false`.

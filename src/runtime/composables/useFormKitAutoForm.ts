@@ -7,6 +7,18 @@ export type AutoFormOverrides = Record<string, Record<string, unknown> | boolean
 
 type AutoFormSchemaNode = Record<string, unknown>
 
+// `nuxtUIRepeater`'s clone/delete buttons are opt-in (hidden unless a
+// consumer explicitly passes these props), and its per-row button group has
+// no default layout - a schema-free repeater still needs to be directly
+// usable without hand-authoring these three props onto every inferred
+// array-of-objects field, so they're the inferred default. `overrides` can
+// still turn any of this off per field.
+const REPEATER_BUTTON_DEFAULTS = {
+  displayCloneButton: true,
+  displayDeleteButton: true,
+  buttonGroupClass: 'flex gap-2 justify-end',
+}
+
 // Anchored to full YYYY-MM-DD (optionally a full ISO-8601 datetime) so plain
 // numeric strings like '123' or partial dates never become date inputs.
 const ISO_DATE_PATTERN = /^\d{4}-\d{2}-\d{2}(?:[T ]\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?(?:Z|[+-]\d{2}:?\d{2})?)?$/
@@ -99,6 +111,7 @@ function inferNode(name: string, value: unknown, overrides: AutoFormOverrides | 
         label,
         newItem: blankItem(first),
         children: inferNodes(first, overrides, path),
+        ...REPEATER_BUTTON_DEFAULTS,
       }
     }
     return { $formkit: 'nuxtUIInputTags', name, label }
@@ -281,6 +294,7 @@ function inferValibotNode(name: string, entry: ValibotLikeSchema, overrides: Aut
           ...base,
           newItem: blankItemFromValibot(item.entries),
           children: inferValibotNodes(item.entries, overrides, path),
+          ...REPEATER_BUTTON_DEFAULTS,
         }
       }
       return { $formkit: 'nuxtUIInputTags', ...base }
@@ -430,6 +444,7 @@ function inferZodNode(name: string, entry: ZodLikeSchema, overrides: AutoFormOve
           ...base,
           newItem: blankItemFromZod(item.shape),
           children: inferZodNodes(item.shape, overrides, path),
+          ...REPEATER_BUTTON_DEFAULTS,
         }
       }
       return { $formkit: 'nuxtUIInputTags', ...base }
