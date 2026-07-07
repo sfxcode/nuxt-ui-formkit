@@ -59,6 +59,7 @@ FormKit Nuxt UI bridges the gap between [FormKit](https://formkit.com/)'s powerf
 - `FUDataEdit` - Edit forms with schema-based configuration
 - `FUDataView` - Read-only data display with schema support
 - `FUDataDebug` - Development tool for form debugging
+- `FUAutoForm` - Schema-free forms: inputs inferred from your data's value shapes or a Valibot schema, with an override map for fine-tuning
 
 ⚙️ **Config Helper** - One-line `formkit.config.ts` setup
 - `createNuxtUiFormkitConfig` - Assembles all `nuxtUIXxx` inputs/outputs and this module's plugins into `{ inputs, plugins }` you spread into your own config
@@ -70,6 +71,7 @@ FormKit Nuxt UI bridges the gap between [FormKit](https://formkit.com/)'s powerf
 - `useFormKitRepeater` - Repeater insert/remove/clone/move/drag handlers
 - `useFormKitMultiStep` - Multi-step tab-item mapping and navigation bridging
 - `useFormKitForm` - Submit/reset/error-management wrapper for a form's imperative APIs, callable from outside the form
+- `useFormKitAutoForm` - Schema inference from data value shapes or Valibot schemas (`inferFormSchema`/`inferFormSchemaFromValibot`)
 - `colorConverter` - Color format conversion utilities
 - `durationConverter` - Duration format conversion utilities
 
