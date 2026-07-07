@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.2.2
+
+[compare changes](https://github.com/sfxcode/nuxt-ui-formkit/compare/v1.2.1...v1.2.2)
+
+### 🚀 Enhancements
+
+- Extract useFormKitRepeater composable, fix value sync, add min/max validation and nested support ([effc3bf](https://github.com/sfxcode/nuxt-ui-formkit/commit/effc3bf))
+- Add nuxtUIMultiStep/nuxtUIStep multi-step form inputs ([a0ca090](https://github.com/sfxcode/nuxt-ui-formkit/commit/a0ca090))
+- Add useFormKitForm composable and createNuxtUiFormkitConfig helper ([e050c8d](https://github.com/sfxcode/nuxt-ui-formkit/commit/e050c8d))
+- Add FUAutoForm component for schema-free forms ([8e5f9b2](https://github.com/sfxcode/nuxt-ui-formkit/commit/8e5f9b2))
+- Infer CalendarDate values and Zod schemas in FUAutoForm ([c0c4ac4](https://github.com/sfxcode/nuxt-ui-formkit/commit/c0c4ac4))
+- Enable clone/delete and right-align buttons on inferred repeaters ([2c7c48b](https://github.com/sfxcode/nuxt-ui-formkit/commit/2c7c48b))
+
+### ✅ Tests
+
+- Add FormKit registration, mount, and value-binding regression coverage ([1d1e4d5](https://github.com/sfxcode/nuxt-ui-formkit/commit/1d1e4d5))
+
+### ❤️ Contributors
+
+- Sfxcode ([@sfxcode](https://github.com/sfxcode))
+
 ## v1.2.1
 
 [compare changes](https://github.com/sfxcode/nuxt-ui-formkit/compare/v1.2.0...v1.2.1)
