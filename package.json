@@ -92,6 +92,7 @@
     "@formkit/nuxt": "^2.1.0",
     "@nuxt/kit": "4.4.8",
     "@nuxt/ui": "^4.9.0",
+    "@standard-schema/spec": "^1.1.0",
     "@vue/compiler-dom": "^3.5.39"
   },
   "devDependencies": {

@@ -36,6 +36,24 @@ const props = useFormKitOutput(context, {
 })
 ```
 
+### useFormKitForm
+
+Helper composable for driving a `<FormKit type="form">` from outside code - submit, reset, errors, and (optionally) [Standard Schema](/components/standard-schema) validation.
+
+```typescript
+import { useFormKitForm } from '@sfxcode/nuxt-ui-formkit'
+
+const { submit, reset, isValid, isSubmitted, hasErrors, isLoading } = useFormKitForm('my-form', {
+  standardSchema: registrationSchema, // optional - see /components/standard-schema
+})
+```
+
+**Parameters:**
+- `id` - the FormKit form node's registry id (its `id` prop)
+- `options.standardSchema` *(optional)* - a Standard Schema instance to validate the form against
+
+**Returns:** `submit`, `reset`, `setErrors`, `clearErrors`, `isValid`, `isSubmitted`, `hasErrors`, `isLoading`
+
 ### useFormKitSchema
 
 Schema builder utilities for creating FormKit schemas programmatically.

@@ -61,6 +61,9 @@ FormKit Nuxt UI bridges the gap between [FormKit](https://formkit.com/)'s powerf
 - `FUDataDebug` - Development tool for form debugging
 - `FUAutoForm` - Schema-free forms: inputs inferred from your data's value shapes, or a Valibot/Zod schema, with an override map for fine-tuning
 
+🛡️ **Standard Schema Validation** - Validate against Zod/Valibot/ArkType instead of hand-written validation strings
+- `FUDataEdit`'s `standardSchema` prop, or `useFormKitForm`'s `standardSchema` option - errors land on the exact field (including inside a repeater row), respecting each field's own validation-visibility timing
+
 ⚙️ **Config Helper** - One-line `formkit.config.ts` setup
 - `createNuxtUiFormkitConfig` - Assembles all `nuxtUIXxx` inputs/outputs and this module's plugins into `{ inputs, plugins }` you spread into your own config
 
@@ -338,6 +341,9 @@ The playground includes comprehensive examples for all components:
 
 ### Form Composable
 - [useFormKitForm](./playground/app/pages/form/form-composable.vue)
+
+### Standard Schema Validation
+- [Standard Schema Validation](./playground/app/pages/form/standard-schema.vue)
 
 ## Development
 

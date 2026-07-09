@@ -1,8 +1,9 @@
-import { defaultConfig, FormKit, plugin } from '@formkit/vue'
+import { defaultConfig, FormKit, plugin, useFormKitContextById } from '@formkit/vue'
 import { mountSuspended } from '@nuxt/test-utils/runtime'
 import { flushPromises } from '@vue/test-utils'
 import { afterEach, describe, expect, it } from 'vitest'
 import { defineComponent, h, nextTick } from 'vue'
+import { z } from 'zod'
 import { nuxtUIInputDefinition } from '../../src/runtime/formkit/definitions/input'
 import { useFormKitForm } from '../../src/runtime/composables/useFormKitForm'
 
@@ -172,5 +173,80 @@ describe('useFormKitForm', () => {
     await wait()
 
     expect((wrapper.find('input').element as HTMLInputElement).value).toBe('')
+  })
+})
+
+// `FU*.vue` inputs don't yet wire a real DOM `blur` event to
+// `context.handlers.blur` (see brain/backlog.md) - calling it directly here
+// exercises the same `validationVisible` gate a real blur would, independent
+// of that separate, pre-existing gap.
+function mountHostWithSchema(schema: z.ZodType) {
+  const HostComponent = defineComponent({
+    setup(_, { expose }) {
+      const form = useFormKitForm('schema-test-form', { standardSchema: schema })
+      const nodeContext = useFormKitContextById('schema-test-form')
+
+      function blur(name: string) {
+        nodeContext.value?.node.at(name)?.context?.handlers.blur()
+      }
+
+      expose({ form, blur })
+
+      return () => h(FormKit, { type: 'form', id: 'schema-test-form' }, {
+        default: () => h(FormKit, {
+          type: 'nuxtUIInput',
+          name: 'email',
+          label: 'Email',
+          value: 'bad',
+        }),
+      })
+    },
+  })
+
+  return mountSuspended(HostComponent, {
+    global: {
+      plugins: [[plugin, defaultConfig({
+        inputs: { nuxtUIInput: nuxtUIInputDefinition },
+      })]],
+    },
+  })
+}
+
+function useExposedFormWithSchema(wrapper: Awaited<ReturnType<typeof mountHostWithSchema>>) {
+  return (wrapper.vm.$.exposed as unknown as { form: ReturnType<typeof useFormKitForm>, blur: (name: string) => void })
+}
+
+describe('useFormKitForm with a standardSchema', () => {
+  it('surfaces a schema-derived error respecting validationVisibility, and isValid reflects it the same way it reflects a rule failure', async () => {
+    const schema = z.object({ email: z.email() })
+
+    const wrapper = await mountHostWithSchema(schema)
+    activeWrapper = wrapper
+    await flushPromises()
+    await nextTick()
+    await wait()
+
+    const { form, blur } = useExposedFormWithSchema(wrapper)
+
+    // `isValid` is driven by FormKit's blocking-message ledger, which counts
+    // our `blocking: true` schema messages regardless of visibility - so it
+    // reflects the failure immediately, same as a native rule failure would.
+    expect(form.isValid.value).toBe(false)
+    expect(wrapper.text()).not.toContain('Invalid email address')
+
+    blur('email')
+    await flushPromises()
+    await nextTick()
+    await wait()
+
+    expect(wrapper.text()).toContain('Invalid email address')
+
+    await wrapper.find('input').setValue('ada@example.com')
+    await flushPromises()
+    await nextTick()
+    await wait()
+
+    expect(form.isValid.value).toBe(true)
+    expect(wrapper.text()).not.toContain('Invalid email address')
   })
 })

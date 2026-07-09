@@ -232,6 +232,12 @@ const items = ref<NavigationMenuItem[]>([
         description: 'Schema-free forms inferred from data value shapes or a Valibot schema, with overrides.',
         to: '/form/auto-form',
       },
+      {
+        label: 'Standard Schema Validation',
+        icon: 'i-lucide-shield-check',
+        description: 'Validate a form against a Zod/Valibot/ArkType schema via FUDataEdit\'s standard-schema prop.',
+        to: '/form/standard-schema',
+      },
     ],
   },
   {

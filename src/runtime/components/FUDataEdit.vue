@@ -1,10 +1,12 @@
 <script setup lang='ts'>
 import type { FormKitSchemaDefinition } from '@formkit/core'
+import type { StandardSchemaV1 } from '@standard-schema/spec'
 import type { PropType } from 'vue'
 import { reset } from '@formkit/core'
-import { FormKit, FormKitMessages, FormKitSchema } from '@formkit/vue'
-import { ref, watch } from 'vue'
+import { FormKit, FormKitMessages, FormKitSchema, useFormKitContextById } from '@formkit/vue'
+import { onScopeDispose, ref, watch } from 'vue'
 
+import { attachStandardSchema } from '../composables/useFormKitStandardSchema'
 import FUDataDebug from './FUDataDebug.vue'
 
 const props = defineProps({
@@ -18,6 +20,10 @@ const props = defineProps({
   },
   schema: {
     type: Object as PropType<FormKitSchemaDefinition>,
+    default: null,
+  },
+  standardSchema: {
+    type: Object as PropType<StandardSchemaV1>,
     default: null,
   },
   formClass: {
@@ -74,6 +80,13 @@ const props = defineProps({
   },
 })
 const emit = defineEmits(['dataSaved', 'onReset'])
+
+let detachStandardSchema: (() => void) | undefined
+useFormKitContextById(props.id, (context) => {
+  if (props.standardSchema)
+    detachStandardSchema = attachStandardSchema(context.node, props.standardSchema)
+})
+onScopeDispose(() => detachStandardSchema?.())
 
 const formSchema = ref(props.schema)
 

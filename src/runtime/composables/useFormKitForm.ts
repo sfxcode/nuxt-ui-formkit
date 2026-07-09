@@ -1,7 +1,13 @@
 import type { ErrorMessages } from '@formkit/core'
+import type { StandardSchemaV1 } from '@standard-schema/spec'
 import { clearErrors, reset, setErrors, submitForm } from '@formkit/core'
 import { useFormKitContextById } from '@formkit/vue'
-import { computed, ref } from 'vue'
+import { computed, onScopeDispose, ref } from 'vue'
+import { attachStandardSchema } from './useFormKitStandardSchema'
+
+export interface UseFormKitFormOptions {
+  standardSchema?: StandardSchemaV1
+}
 
 // `submitForm`/`reset`/`setErrors`/`clearErrors`/`getNode` all key off a
 // FormKit node's registry `id`, not its `name` prop - this composable is
@@ -9,8 +15,15 @@ import { computed, ref } from 'vue'
 // outside the form), unlike `useFormKitInput`/`useFormKitOutput`, which take
 // a `FormKitFrameworkContext` directly because they're always called from
 // inside a `createInput`-rendered component.
-export function useFormKitForm(id: string) {
-  const context = useFormKitContextById(id)
+export function useFormKitForm(id: string, options?: UseFormKitFormOptions) {
+  let detachStandardSchema: (() => void) | undefined
+
+  const context = useFormKitContextById(id, (formContext) => {
+    if (options?.standardSchema)
+      detachStandardSchema = attachStandardSchema(formContext.node, options.standardSchema)
+  })
+  onScopeDispose(() => detachStandardSchema?.())
+
   const isLoading = ref(false)
 
   const isValid = computed(() => context.value?.state.valid ?? false)

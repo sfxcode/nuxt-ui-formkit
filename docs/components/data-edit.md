@@ -100,6 +100,15 @@ const schema = [
 ]
 ```
 
+### standardSchema
+- **Type:** `Object` (a [Standard Schema](https://standardschema.dev)-compliant instance, e.g. from Zod or Valibot)
+- **Default:** `null`
+- **Description:** Validates the form's live value against this schema, in addition to any `validation` strings on individual fields. Errors land on the exact field they describe - respecting each field's own `validationVisibility` timing - and block submission while present. See [Standard Schema Validation](/components/standard-schema) for details.
+
+```vue
+<FUDataEdit :standard-schema="registrationSchema" />
+```
+
 ### formClass
 - **Type:** `String`
 - **Default:** `''`

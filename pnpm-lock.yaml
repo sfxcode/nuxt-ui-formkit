@@ -20,6 +20,9 @@ importers:
       '@nuxt/ui':
         specifier: ^4.9.0
         version: 4.9.0(25c61b9c61ae45fadc2ffc1d09ba44ef)
+      '@standard-schema/spec':
+        specifier: ^1.1.0
+        version: 1.1.0
       '@vue/compiler-dom':
         specifier: ^3.5.39
         version: 3.5.39
