@@ -4,6 +4,7 @@ import type { CalendarDate, CalendarDateTime, DateValue, ZonedDateTime } from '@
 import type { PropType } from 'vue'
 import { computed } from 'vue'
 import { useFormKitInput } from '../../utils/useFormKitInput'
+import { createContainerBlurHandler } from '../../utils/useFormKitContainerBlur'
 import type { DateValueType } from '../../utils/dateValueConversion'
 import { fromDateValueOrRange, toDateValue, toDateValueOrRange } from '../../utils/dateValueConversion'
 import type { AvatarProps } from '#ui/components/Avatar.vue'
@@ -61,7 +62,17 @@ const props = defineProps({
   },
 })
 
-const { handleInput, handleChange, isInvalid, styleClass, color, validSlotNames } = useFormKitInput(props.context)
+const { handleInput, handleChange, handleBlur, isInvalid, styleClass, color, validSlotNames } = useFormKitInput(props.context)
+
+// `UInputDate`'s own `@blur` never fires from real segment interaction -
+// its internal `DateField.Root` binding assumes Reka UI aggregates blur
+// across day/month/year segments, but it doesn't (confirmed empirically:
+// `DateField.Root` never declares `blur` as its own emit, so that binding
+// is a native fallthrough on a div that's never itself focused).
+// `@focusout` (which bubbles, unlike `blur`) on the outer component plus a
+// relatedTarget-outside check is what actually detects "focus left the
+// whole date field."
+const handleContainerBlur = createContainerBlurHandler(props.context)
 
 const conversionOptions = computed(() => ({
   granularity: props.context.granularity,
@@ -122,6 +133,8 @@ const minValue = computed(() => toDateValue(props.context.minValue, conversionOp
     :ui="context.ui"
     @change="handleChange"
     @update:model-value="handleInput"
+    @blur="handleBlur"
+    @focusout="handleContainerBlur"
   >
     <template
       v-for="slotName in validSlotNames"

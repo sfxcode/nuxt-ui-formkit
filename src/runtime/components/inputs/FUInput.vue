@@ -41,7 +41,7 @@ const props = defineProps({
   },
 })
 
-const { handleInput, handleChange, isInvalid, styleClass, color, modelValue, validSlotNames } = useFormKitInput(props.context)
+const { handleInput, handleChange, handleBlur, isInvalid, styleClass, color, modelValue, validSlotNames } = useFormKitInput(props.context)
 </script>
 
 <template>
@@ -81,6 +81,7 @@ const { handleInput, handleChange, isInvalid, styleClass, color, modelValue, val
     :ui="context.ui"
     @change="handleChange"
     @update:model-value="handleInput"
+    @blur="handleBlur"
   >
     <template
       v-for="slotName in validSlotNames"

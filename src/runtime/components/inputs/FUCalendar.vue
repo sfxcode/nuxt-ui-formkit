@@ -4,6 +4,7 @@ import type { DateValue } from '@internationalized/date'
 import type { PropType } from 'vue'
 import { computed } from 'vue'
 import { useFormKitInput } from '../../utils/useFormKitInput'
+import { createContainerBlurHandler } from '../../utils/useFormKitContainerBlur'
 import type { DateValueType } from '../../utils/dateValueConversion'
 import { toDateValue, toDateValueOrRangeOrArray, fromDateValueOrRangeOrArray } from '../../utils/dateValueConversion'
 
@@ -50,6 +51,12 @@ const props = defineProps({
 
 const { handleInput, styleClass, color, validSlotNames } = useFormKitInput(props.context)
 
+// `UCalendar` declares no `blur`/`focus` emit at all - `@focusout` (which
+// bubbles) plus a relatedTarget-outside-container check is what detects
+// "focus left the whole calendar grid," same mechanism as the group
+// components in phases 7-8.
+const handleContainerBlur = createContainerBlurHandler(props.context)
+
 const conversionOptions = computed(() => ({ timeZone: props.context.timeZone }))
 
 const modelValue = computed({
@@ -89,6 +96,7 @@ const maxValue = computed(() => toDateValue(props.context.maxValue, conversionOp
     :is-date-unavailable="context.isDateUnavailable"
     :ui="context.ui"
     @update:model-value="handleInput"
+    @focusout="handleContainerBlur"
   >
     <template
       v-for="slotName in validSlotNames"

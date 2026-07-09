@@ -2,6 +2,7 @@
 import type { FormKitFrameworkContext } from '@formkit/core'
 import type { PropType } from 'vue'
 import { useFormKitInput } from '../../utils/useFormKitInput'
+import { createContainerBlurHandler } from '../../utils/useFormKitContainerBlur'
 
 export interface FormKitPinInputProps {
   color?: 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'
@@ -28,7 +29,25 @@ const props = defineProps({
   },
 })
 
-const { handleInput, handleChange, isInvalid, styleClass, color, modelValue } = useFormKitInput(props.context)
+const { handleInput, handleChange, handleBlur, isInvalid, styleClass, color, modelValue } = useFormKitInput(props.context)
+
+// `UPinInput`'s own `blur` emit only fires when `relatedTarget` is `null` or
+// the code is fully entered (`completed`) - confirmed empirically: tabbing
+// away from an *incomplete* PIN to any other real, focusable element never
+// emits it. `@focusout` (Vue's default attrs-fallthrough onto the
+// single-root `PinInputRoot`) plus a relatedTarget-outside-container check
+// catches that missed case too, while still correctly ignoring focus moves
+// between the PIN's own cells.
+const handleContainerBlur = createContainerBlurHandler(props.context)
+
+// `UPinInput` types its own `blur` emit as a generic `Event` (`blur: [event:
+// Event]`), unlike every other component wired so far - `handleBlur` (typed
+// `(event: FocusEvent) => void`) isn't assignable there. It's genuinely a
+// `FocusEvent` at runtime; cast locally rather than widening the shared
+// `useFormKitInput` signature every other component already binds directly.
+function handlePinBlur(event: Event) {
+  handleBlur(event as FocusEvent)
+}
 </script>
 
 <template>
@@ -57,5 +76,7 @@ const { handleInput, handleChange, isInvalid, styleClass, color, modelValue } = 
     :ui="context.ui"
     @change="handleChange"
     @update:model-value="handleInput"
+    @blur="handlePinBlur"
+    @focusout="handleContainerBlur"
   />
 </template>

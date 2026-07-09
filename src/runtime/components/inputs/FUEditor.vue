@@ -3,6 +3,7 @@ import type { FormKitFrameworkContext } from '@formkit/core'
 import type { AnyExtension } from '@tiptap/core'
 import type { PropType } from 'vue'
 import { useFormKitInput } from '../../utils/useFormKitInput'
+import { createContainerBlurHandler } from '../../utils/useFormKitContainerBlur'
 
 export interface FormKitEditorHandler {
   canExecute: (editor: unknown, cmd?: unknown) => boolean
@@ -126,61 +127,77 @@ const props = defineProps({
 })
 
 const { handleInput, styleClass, modelValue } = useFormKitInput(props.context)
+
+// `UEditor` sets `inheritAttrs: false` and redirects any extra attrs onto
+// Tiptap's own `EditorContent` element specifically (via its `attributes`
+// option), not its shared root - so `@focusout` can't be bound on
+// `<UEditor>` itself the way it can on the other group components in this
+// plan. Its own `on-blur` prop (Tiptap's `onBlur` callback) isn't a fix
+// either: confirmed empirically that it fires whenever the contenteditable
+// loses focus, including when a user clicks one of *this component's own*
+// toolbar buttons - a false positive, the same "sibling misfire" shape as
+// `FUListbox`'s transfer mode. `UEditor`'s own root (`data-slot="root"`)
+// already contains both the slotted toolbar and the editor content, so
+// wrapping it in our own `<div>` and binding `@focusout` there - not on
+// `<UEditor>` - reaches that real container via plain DOM bubbling instead.
+const handleContainerBlur = createContainerBlurHandler(props.context)
 </script>
 
 <template>
-  <UEditor
-    :id="context.id"
-    v-model="modelValue"
-    v-bind="{ ...context?.attrs }"
-    :class="styleClass"
-    :editable="!context?.disabled"
-    :style="context?.attrs.style"
-    :content-type="context.contentType"
-    :starter-kit="context.starterKit"
-    :placeholder="context.placeholder"
-    :markdown="context.markdown"
-    :image="context.image"
-    :mention="context.mention"
-    :handlers="context.editorHandlers"
-    :extensions="context.extensions"
-    :autofocus="context.autofocus"
-    :ui="context.ui"
-    @update:model-value="handleInput"
-  >
-    <template #default="{ editor, handlers }">
-      <UEditorToolbar
-        v-if="context.toolbar !== false"
-        :editor="editor"
-        :items="context.toolbarItems ?? DEFAULT_EDITOR_TOOLBAR_ITEMS"
-        class="border-b border-default px-2 py-1 mb-2 flex-wrap"
-      />
-      <UEditorToolbar
-        v-if="context.bubbleToolbar !== false"
-        :editor="editor"
-        :items="context.bubbleToolbarItems ?? DEFAULT_BUBBLE_TOOLBAR_ITEMS"
-        layout="bubble"
-        :should-show="bubbleToolbarShouldShow"
-      />
-      <UEditorDragHandle
-        v-if="context.dragHandle"
-        :editor="editor"
-      />
-      <UEditorSuggestionMenu
-        v-if="context.suggestionMenu"
-        :editor="editor"
-        :items="context.suggestionMenuItems ?? DEFAULT_SUGGESTION_MENU_ITEMS"
-      />
-      <UEditorMentionMenu
-        v-if="context.mentionItems?.length"
-        :editor="editor"
-        :items="context.mentionItems"
-      />
-      <component
-        :is="context.slots.default"
-        v-if="context?.slots?.default"
-        v-bind="{ ...context, editor, handlers }"
-      />
-    </template>
-  </UEditor>
+  <div @focusout="handleContainerBlur">
+    <UEditor
+      :id="context.id"
+      v-model="modelValue"
+      v-bind="{ ...context?.attrs }"
+      :class="styleClass"
+      :editable="!context?.disabled"
+      :style="context?.attrs.style"
+      :content-type="context.contentType"
+      :starter-kit="context.starterKit"
+      :placeholder="context.placeholder"
+      :markdown="context.markdown"
+      :image="context.image"
+      :mention="context.mention"
+      :handlers="context.editorHandlers"
+      :extensions="context.extensions"
+      :autofocus="context.autofocus"
+      :ui="context.ui"
+      @update:model-value="handleInput"
+    >
+      <template #default="{ editor, handlers }">
+        <UEditorToolbar
+          v-if="context.toolbar !== false"
+          :editor="editor"
+          :items="context.toolbarItems ?? DEFAULT_EDITOR_TOOLBAR_ITEMS"
+          class="border-b border-default px-2 py-1 mb-2 flex-wrap"
+        />
+        <UEditorToolbar
+          v-if="context.bubbleToolbar !== false"
+          :editor="editor"
+          :items="context.bubbleToolbarItems ?? DEFAULT_BUBBLE_TOOLBAR_ITEMS"
+          layout="bubble"
+          :should-show="bubbleToolbarShouldShow"
+        />
+        <UEditorDragHandle
+          v-if="context.dragHandle"
+          :editor="editor"
+        />
+        <UEditorSuggestionMenu
+          v-if="context.suggestionMenu"
+          :editor="editor"
+          :items="context.suggestionMenuItems ?? DEFAULT_SUGGESTION_MENU_ITEMS"
+        />
+        <UEditorMentionMenu
+          v-if="context.mentionItems?.length"
+          :editor="editor"
+          :items="context.mentionItems"
+        />
+        <component
+          :is="context.slots.default"
+          v-if="context?.slots?.default"
+          v-bind="{ ...context, editor, handlers }"
+        />
+      </template>
+    </UEditor>
+  </div>
 </template>

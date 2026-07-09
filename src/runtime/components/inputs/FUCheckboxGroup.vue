@@ -2,6 +2,7 @@
 import type { FormKitFrameworkContext } from '@formkit/core'
 import type { PropType } from 'vue'
 import { useFormKitInput } from '../../utils/useFormKitInput'
+import { createContainerBlurHandler } from '../../utils/useFormKitContainerBlur'
 
 export interface CheckboxOption {
   value: string | number | boolean
@@ -36,6 +37,13 @@ const props = defineProps({
 })
 
 const { handleInput, handleChange, styleClass, color, modelValue, items, validSlotNames } = useFormKitInput(props.context)
+
+// `UCheckboxGroup`'s root is a non-focusable `<fieldset>` wrapping several
+// genuinely focusable checkbox items - native `blur` doesn't bubble, so
+// `@focusout` (which does) plus a relatedTarget-outside-container check is
+// what actually detects "focus left the whole group," not just moved
+// between its own items.
+const handleContainerBlur = createContainerBlurHandler(props.context)
 </script>
 
 <template>
@@ -60,6 +68,7 @@ const { handleInput, handleChange, styleClass, color, modelValue, items, validSl
     :name="context.name"
     @change="handleChange"
     @update:model-value="handleInput"
+    @focusout="handleContainerBlur"
   >
     <template
       v-for="slotName in validSlotNames"

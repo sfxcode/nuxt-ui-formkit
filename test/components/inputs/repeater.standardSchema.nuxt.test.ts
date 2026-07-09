@@ -1,5 +1,3 @@
-import type { FormKitNode } from '@formkit/core'
-import { isNode } from '@formkit/core'
 import { defaultConfig, FormKit, FormKitSchema, plugin, useFormKitContextById } from '@formkit/vue'
 import { mountSuspended } from '@nuxt/test-utils/runtime'
 import { flushPromises } from '@vue/test-utils'
@@ -45,6 +43,7 @@ const repeaterSchema = [
 
 function mountRepeaterForm(value: object) {
   return mountSuspended(FormKit, {
+    attachTo: document.body,
     props: {
       type: 'form',
       id: 'repeater-schema-form',
@@ -74,18 +73,12 @@ async function settle() {
   await wait()
 }
 
-// `FU*.vue` inputs don't yet wire a real DOM `blur` event to
-// `context.handlers.blur` (see brain/backlog.md) - calling it directly here
-// exercises the same `validationVisible` gate a real blur would, independent
-// of that separate, pre-existing gap. Walked manually (not via `node.at()`,
-// which has its own self/sibling-relative semantics unrelated to this bug)
-// to reach a specific row's field regardless of the addressing issue under
-// test.
-function blurRowEmail(formNode: FormKitNode, rowIndex: number) {
-  const listNode = formNode.children.filter(isNode).find(child => child.name === 'items' && child.type === 'list')
-  const row = listNode?.children.filter(isNode).find(child => String(child.name) === String(rowIndex))
-  const emailNode = row?.children.filter(isNode).find(child => child.name === 'email')
-  emailNode?.context?.handlers.blur()
+// Blurs the email input inside a specific repeater row, addressed by its
+// rendered position (`[id^="formkit-item-"]` row wrappers, same convention
+// already used elsewhere in this file for row-level assertions).
+async function blurRowEmail(wrapper: Awaited<ReturnType<typeof mountRepeaterForm>>, rowIndex: number) {
+  const row = wrapper.findAll('[id^="formkit-item-"]')[rowIndex]
+  await row?.find('input').trigger('blur')
 }
 
 describe('attachStandardSchema against a nuxtUIRepeater', () => {
@@ -105,9 +98,9 @@ describe('attachStandardSchema against a nuxtUIRepeater', () => {
     attachStandardSchema(formNode, schema)
     await settle()
 
-    blurRowEmail(formNode, 0)
-    blurRowEmail(formNode, 1)
-    blurRowEmail(formNode, 2)
+    await blurRowEmail(wrapper, 0)
+    await blurRowEmail(wrapper, 1)
+    await blurRowEmail(wrapper, 2)
     await settle()
 
     const items = wrapper.findAll('[id^="formkit-item-"]')
@@ -125,10 +118,10 @@ describe('attachStandardSchema against a nuxtUIRepeater', () => {
     await insertButton!.trigger('click')
     await settle()
 
-    blurRowEmail(formNode, 0)
-    blurRowEmail(formNode, 1)
-    blurRowEmail(formNode, 2)
-    blurRowEmail(formNode, 3)
+    await blurRowEmail(wrapper, 0)
+    await blurRowEmail(wrapper, 1)
+    await blurRowEmail(wrapper, 2)
+    await blurRowEmail(wrapper, 3)
     await settle()
 
     const itemsAfterInsert = wrapper.findAll('[id^="formkit-item-"]')

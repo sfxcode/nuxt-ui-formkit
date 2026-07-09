@@ -2,6 +2,7 @@
 import type { FormKitFrameworkContext } from '@formkit/core'
 import { computed, nextTick, ref, watch, type PropType } from 'vue'
 import { useFormKitInput } from '../../utils/useFormKitInput'
+import { createContainerBlurHandler } from '../../utils/useFormKitContainerBlur'
 
 export interface ListboxItem {
   label?: string
@@ -64,6 +65,22 @@ const props = defineProps({
 })
 
 const { handleInput, handleChange, isInvalid, styleClass, color, modelValue, items, validSlotNames } = useFormKitInput(props.context)
+
+// `UListbox` declares no `blur` emit at all - `@focusout` (which bubbles,
+// unlike `blur`) plus a relatedTarget-outside-container check is what
+// detects "focus left this listbox." In single mode that's bound directly
+// on the one `<UListbox>`, whose `event.currentTarget` correctly scopes the
+// check to itself.
+//
+// Transfer mode needs a different scope: confirmed empirically that binding
+// this per-instance on *both* the source and target `<UListbox>`es misfires
+// - moving focus from source to target (a legitimate transfer) makes the
+// source's own `currentTarget`-scoped check see the target as "outside
+// itself" and blur the whole shared field. Both listboxes drive the same
+// `props.context`, so the real container is the *outer* transfer wrapper
+// div (source + buttons + target) - `@focusout` is bound there once
+// instead, so it only fires once focus leaves that whole wrapper.
+const handleContainerBlur = createContainerBlurHandler(props.context)
 
 // Transfer List
 const targetItems = ref<ListboxItem[]>(modelValue.value || [])
@@ -374,6 +391,7 @@ watch(targetItems, (newVal) => {
     :ui="context.ui"
     @change="handleChange"
     @update:model-value="handleInput"
+    @focusout="handleContainerBlur"
   >
     <template
       v-for="slotName in validSlotNames"
@@ -389,6 +407,7 @@ watch(targetItems, (newVal) => {
   <div
     v-if="context.displayMode === 'transfer'"
     class="flex items-stretch gap-4 w-full"
+    @focusout="handleContainerBlur"
   >
     <div
       ref="sourceContainerRef"

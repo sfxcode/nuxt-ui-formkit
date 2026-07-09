@@ -1,4 +1,4 @@
-import { defaultConfig, plugin, useFormKitContextById } from '@formkit/vue'
+import { defaultConfig, plugin } from '@formkit/vue'
 import { mountSuspended } from '@nuxt/test-utils/runtime'
 import { flushPromises } from '@vue/test-utils'
 import { afterEach, describe, expect, it } from 'vitest'
@@ -32,6 +32,7 @@ const emailFormSchema = [
 
 function mountDataEdit(props: Record<string, unknown>) {
   return mountSuspended(FUDataEdit, {
+    attachTo: document.body,
     props: {
       id: 'test-data-edit',
       schema: emailFormSchema,
@@ -43,16 +44,6 @@ function mountDataEdit(props: Record<string, unknown>) {
       })]],
     },
   })
-}
-
-// `FU*.vue` inputs don't yet wire a real DOM `blur` event to
-// `context.handlers.blur` (see brain/backlog.md) - calling it directly here
-// exercises the same `validationVisible` gate a real blur would, independent
-// of that separate, pre-existing gap. `useFormKitContextById` doesn't need a
-// component setup context (confirmed by reading its source - it only reads
-// FormKit's global node registry), so it can be called directly in a test.
-function blurEmail() {
-  useFormKitContextById('test-data-edit').value?.node.at('email')?.context?.handlers.blur()
 }
 
 describe('FUDataEdit standardSchema prop', () => {
@@ -68,7 +59,7 @@ describe('FUDataEdit standardSchema prop', () => {
 
     expect(wrapper.text()).not.toContain('Invalid email address')
 
-    blurEmail()
+    await wrapper.find('input').trigger('blur')
     await settle()
 
     expect(wrapper.text()).toContain('Invalid email address')

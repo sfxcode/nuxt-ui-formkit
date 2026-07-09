@@ -2,6 +2,7 @@
 import type { FormKitFrameworkContext } from '@formkit/core'
 import type { PropType } from 'vue'
 import { useFormKitInput } from '../../utils/useFormKitInput'
+import { createContainerBlurHandler } from '../../utils/useFormKitContainerBlur'
 
 export interface RadioOption {
   value: string | number | boolean
@@ -35,6 +36,11 @@ const props = defineProps({
 })
 
 const { handleInput, handleChange, styleClass, color, modelValue, items, validSlotNames } = useFormKitInput(props.context)
+
+// Same non-focusable-container gap as `FUCheckboxGroup.vue` - see its
+// comment for why `@focusout` plus a relatedTarget-outside-container check
+// is needed instead of a plain (never-firing) `@blur`.
+const handleContainerBlur = createContainerBlurHandler(props.context)
 </script>
 
 <template>
@@ -59,6 +65,7 @@ const { handleInput, handleChange, styleClass, color, modelValue, items, validSl
     :ui="context.ui"
     @change="handleChange"
     @update:model-value="handleInput"
+    @focusout="handleContainerBlur"
   >
     <template
       v-for="slotName in validSlotNames"

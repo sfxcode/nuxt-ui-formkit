@@ -1,4 +1,3 @@
-import type { FormKitNode } from '@formkit/core'
 import { defaultConfig, FormKit, plugin, useFormKitContextById } from '@formkit/vue'
 import { mountSuspended } from '@nuxt/test-utils/runtime'
 import { flushPromises } from '@vue/test-utils'
@@ -20,29 +19,14 @@ afterEach(() => {
   activeWrapper = undefined
 })
 
-// `FU*.vue` input components don't currently wire a real DOM `blur` event to
-// FormKit's `context.handlers.blur` (a separate, pre-existing gap across the
-// whole input library - see backlog), so a `wrapper.trigger('blur')` never
-// reaches FormKit at all yet. Call `handlers.blur()` directly instead - it's
-// the actual public mechanism `@formkit/vue`'s bindings expose for this
-// (confirmed by reading its `bindings.ts`), so this still exercises the real
-// `validationVisible` gate our bridge must respect, independent of that gap.
 function mountHost(schema: z.ZodType) {
   const HostComponent = defineComponent({
-    setup(_, { expose }) {
+    setup() {
       let detach: (() => void) | undefined
-      let formNode: FormKitNode | undefined
       useFormKitContextById('test-form', (context) => {
-        formNode = context.node
         detach = attachStandardSchema(context.node, schema)
       })
       onUnmounted(() => detach?.())
-
-      function blur(name: string) {
-        formNode?.at(name)?.context?.handlers.blur()
-      }
-
-      expose({ blur })
 
       return () => h(FormKit, { type: 'form', id: 'test-form' }, {
         default: () => [
@@ -54,16 +38,13 @@ function mountHost(schema: z.ZodType) {
   })
 
   return mountSuspended(HostComponent, {
+    attachTo: document.body,
     global: {
       plugins: [[plugin, defaultConfig({
         inputs: { nuxtUIInput: nuxtUIInputDefinition },
       })]],
     },
   })
-}
-
-function blurField(wrapper: Awaited<ReturnType<typeof mountHost>>, name: string) {
-  (wrapper.vm.$.exposed as unknown as { blur: (name: string) => void }).blur(name)
 }
 
 function wait(ms: number = 30) {
@@ -93,14 +74,15 @@ describe('attachStandardSchema', () => {
     expect(wrapper.text()).not.toContain(EMAIL_ERROR)
     expect(wrapper.text()).not.toContain(USERNAME_ERROR)
 
-    blurField(wrapper, 'email')
+    const inputs = wrapper.findAll('input')
+    await inputs[0]!.trigger('blur')
     await settle()
 
     expect(wrapper.text()).toContain(EMAIL_ERROR)
     expect(wrapper.text()).not.toContain(USERNAME_ERROR)
 
     // Fix the email field; username is still invalid.
-    await wrapper.find('input').setValue('ada@example.com')
+    await inputs[0]!.setValue('ada@example.com')
     await settle()
 
     expect(wrapper.text()).not.toContain(EMAIL_ERROR)
@@ -108,7 +90,7 @@ describe('attachStandardSchema', () => {
     // Blurring username now proves its error survived the previous run's
     // clear - the diff only cleared the resolved `email` address, not
     // every address, so username's still-failing error is still there.
-    blurField(wrapper, 'username')
+    await inputs[1]!.trigger('blur')
     await settle()
 
     expect(wrapper.text()).toContain(USERNAME_ERROR)

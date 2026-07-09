@@ -35,7 +35,13 @@ const props = defineProps({
   },
 })
 
-const { handleInput, handleChange, isInvalid, styleClass, color, modelValue, validSlotNames } = useFormKitInput(props.context)
+const { handleInput, handleChange, handleBlur, isInvalid, styleClass, color, modelValue, validSlotNames } = useFormKitInput(props.context)
+
+// `UFileUpload` doesn't declare `blur` in its own emits - `@blur` below
+// relies on its `inheritAttrs: false` + manual `$attrs` spread directly onto
+// the hidden native `<input type="file">`, not a documented public
+// contract. A future `@nuxt/ui` upgrade changing that internal detail is
+// the expected failure mode if this ever silently regresses.
 </script>
 
 <template>
@@ -70,6 +76,7 @@ const { handleInput, handleChange, isInvalid, styleClass, color, modelValue, val
     :ui="context.ui"
     @change="handleChange"
     @update:model-value="handleInput"
+    @blur="handleBlur"
   >
     <template
       v-for="slotName in validSlotNames"

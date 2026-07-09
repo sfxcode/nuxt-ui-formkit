@@ -2,6 +2,7 @@
 import type { FormKitFrameworkContext } from '@formkit/core'
 import type { PropType } from 'vue'
 import { useFormKitInput } from '../../utils/useFormKitInput'
+import { createContainerBlurHandler } from '../../utils/useFormKitContainerBlur'
 import type { Time } from '@internationalized/date'
 import type { AvatarProps } from '#ui/components/Avatar.vue'
 
@@ -47,7 +48,13 @@ const props = defineProps({
   },
 })
 
-const { handleInput, handleChange, isInvalid, styleClass, color, modelValue, validSlotNames } = useFormKitInput(props.context)
+const { handleInput, handleChange, handleBlur, isInvalid, styleClass, color, modelValue, validSlotNames } = useFormKitInput(props.context)
+
+// Same `DateField.Root`-based aggregation gap as `FUInputDate.vue` - see
+// its comment for why `@blur` alone never fires from real segment
+// interaction, and `@focusout` plus a relatedTarget-outside check is
+// needed instead.
+const handleContainerBlur = createContainerBlurHandler(props.context)
 </script>
 
 <template>
@@ -87,6 +94,8 @@ const { handleInput, handleChange, isInvalid, styleClass, color, modelValue, val
     :ui="context.ui"
     @change="handleChange"
     @update:model-value="handleInput"
+    @blur="handleBlur"
+    @focusout="handleContainerBlur"
   >
     <template
       v-for="slotName in validSlotNames"
