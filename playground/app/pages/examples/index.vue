@@ -164,7 +164,7 @@ const examples = [
                 variant="soft"
                 trailing-icon="i-heroicons-arrow-right"
                 label="View Example"
-                @click.stop="navigateTo(example.route)"
+                @click.stop="() => { navigateTo(example.route) }"
               />
             </div>
           </template>
@@ -248,13 +248,13 @@ const examples = [
               label="Back to Main Demo"
               icon="i-heroicons-arrow-left"
               variant="outline"
-              @click="navigateTo('/')"
+              @click="() => { navigateTo('/') }"
             />
             <UButton
               label="View Documentation"
               icon="i-heroicons-book-open"
               trailing-icon="i-heroicons-arrow-top-right-on-square"
-              @click="navigateTo('/form/without-schema')"
+              @click="() => { navigateTo('/form/without-schema') }"
             />
           </div>
         </div>

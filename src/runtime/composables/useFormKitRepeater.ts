@@ -61,7 +61,11 @@ export function useFormKitRepeater() {
         }
 
         node.context.insertNode = (parentNode: FormKitNode) => (): void => {
-          if (parentNode && Array.isArray(parentNode._value)) {
+          // Guards on `.value` (not `._value`) specifically so the
+          // `Array.isArray` check narrows the same property used below - both
+          // are typed `unknown` on a bare `FormKitNode`, and TS doesn't know
+          // they're the same array, so checking one doesn't narrow the other.
+          if (parentNode && Array.isArray(parentNode.value)) {
             const newArray: object[] = [{ ...newItem }, ...parentNode.value]
             parentNode.input(newArray, false)
             syncOuterValue(newArray)
@@ -75,7 +79,7 @@ export function useFormKitRepeater() {
           }
         }
         node.context.addNode = (parentNode: FormKitNode, index: number) => (): void => {
-          if (parentNode && Array.isArray(parentNode._value)) {
+          if (parentNode && Array.isArray(parentNode.value)) {
             const array: object[] = parentNode.value
             array.splice(index + 1, 0, { ...newItem })
             parentNode.input(array, false)
@@ -83,7 +87,7 @@ export function useFormKitRepeater() {
           }
         }
         node.context.cloneNode = (parentNode: FormKitNode, index: number) => (): void => {
-          if (parentNode && Array.isArray(parentNode._value)) {
+          if (parentNode && Array.isArray(parentNode.value)) {
             const item: object = parentNode.value[index]
             const array: object[] = parentNode.value
             array.splice(index + 1, 0, { ...item })
@@ -101,7 +105,7 @@ export function useFormKitRepeater() {
           }
         }
         node.context.moveNodeDown = (parentNode: FormKitNode, index: number) => (): void => {
-          if (parentNode && Array.isArray(parentNode._value)) {
+          if (parentNode && Array.isArray(parentNode.value)) {
             if (index < parentNode.value.length - 1) {
               const newArray = swapElements(parentNode.value as object[], index, index + 1)
               parentNode.input(newArray, false)
@@ -128,7 +132,7 @@ export function useFormKitRepeater() {
         }
         node.context.dropNode = (parentNode: FormKitNode, targetIndex: number) => (event?: DragEvent): void => {
           event?.preventDefault()
-          if (!parentNode || !Array.isArray(parentNode._value)) {
+          if (!parentNode || !Array.isArray(parentNode.value)) {
             dragOverIndex = null
             return
           }

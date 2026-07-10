@@ -1,4 +1,4 @@
-import type { FormKitTypeDefinition } from '@formkit/core'
+import type { FormKitSchemaNode, FormKitTypeDefinition } from '@formkit/core'
 import { createInput } from '@formkit/vue'
 import { useFormKitRepeater } from '../../composables/useFormKitRepeater'
 import { useFormKitSchema } from '../../composables/useFormKitSchema'
@@ -7,7 +7,7 @@ const { addList, addElement, addListGroup, addComponent } = useFormKitSchema()
 const { addRepeaterHandler } = useFormKitRepeater()
 
 function addButtonGroup(buttonGroupClass: string = '', buttonGroupItemClass: string = '', buttonSize: string, render: string = 'true') {
-  const addActionButtonComponent = (onClick: string = '', icon: string = '', color: string = '', render: string = 'true', disabled: string = 'false'): object => {
+  const addActionButtonComponent = (onClick: string = '', icon: string = '', color: string = '', render: string = 'true', disabled: string = 'false'): FormKitSchemaNode => {
     return addElement('div', [addComponent('UButton', { onClick, icon, color, disabled, size: buttonSize })], { class: buttonGroupItemClass }, render)
   }
 
@@ -49,7 +49,11 @@ export const nuxtUIRepeaterDefinition: FormKitTypeDefinition = createInput(
       addListGroup([
         addElement('div', [
           addDragHandle('$internalDragHandleClass', '$dragHandleIconName', '$renderDragHandle'),
-          { children: '$slots.default' },
+          // A bare `{ children }` node (no `$el`/`$cmp`/`$formkit` discriminant)
+          // is not representable by `FormKitSchemaNode`'s own type, but
+          // FormKit's schema compiler accepts it at runtime as a slot
+          // passthrough - cast rather than widen the shared `FormKitSchemaNode` type.
+          { children: '$slots.default' } as FormKitSchemaNode,
           addButtonGroup('$buttonGroupClass', '$buttonGroupItemClass', '$buttonSize', '$renderButtons'),
         ], {
           id: '$getListItemId($index)',

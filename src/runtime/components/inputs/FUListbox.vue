@@ -108,6 +108,13 @@ const sourceItems = computed(() => {
 // hardcoded below to render the drag handle and optional sort icons.
 const transferSlotNames = computed(() => validSlotNames.value.filter(name => name !== 'item-trailing'))
 
+// `context.defaultValue` is `unknown` (this module's own loose
+// `FormKitListboxProps` declaration); with `:multiple="true"` (both
+// transfer-mode `<UListbox>`s below), Vue's generic prop inference narrows
+// `default-value` to `any[] | undefined` specifically, so `unknown` doesn't
+// satisfy it. Cast once here rather than at each of the two identical bindings.
+const transferDefaultValue = computed(() => props.context.defaultValue as unknown[] | undefined)
+
 const sourceContainerRef = ref<HTMLElement>()
 const targetContainerRef = ref<HTMLElement>()
 // Source has no independent ordering (it's `items` minus whatever's in
@@ -123,7 +130,15 @@ const dragOverPosition = ref<'before' | 'after' | null>(null)
 // Renders the insertion-line indicator without mutating the underlying target
 // items (which would risk leaking the indicator class back into the source
 // list, since both share the same item object references).
-const targetDisplayItems = computed(() => {
+// Typed `any[]`, matching `sourceItems`' own effective type just above (it
+// resolves loosely through `items`, which is itself untyped `context.options`/
+// `context.attrs.items`) - `targetItems` alone is more strictly typed
+// (`ListboxItem[]`, this file's own declaration), which otherwise makes only
+// this computed's `:items` binding fail against `UListbox`'s actual
+// `ListboxItem` type (its `chip`/`avatar` fields are typed more narrowly
+// than this module's own public `ListboxItem`, e.g. `chip?: ChipProps`
+// rather than `string | number | Record<string, unknown>`).
+const targetDisplayItems = computed<Record<string, unknown>[]>(() => {
   if (props.context.displayMode !== 'transfer' || !Array.isArray(targetItems.value))
     return []
   return targetItems.value.map((item, index) => {
@@ -436,7 +451,7 @@ watch(targetItems, (newVal) => {
         :orientation="context.orientation"
         :selection-behavior="context.selectionBehavior"
         :disabled="!!context?.disabled"
-        :default-value="context.defaultValue"
+        :default-value="transferDefaultValue"
         :multiple="true"
         :value-key="context.valueKey"
         :label-key="context.labelKey"
@@ -538,7 +553,7 @@ watch(targetItems, (newVal) => {
         :orientation="context.orientation"
         :selection-behavior="context.selectionBehavior"
         :disabled="!!context?.disabled"
-        :default-value="context.defaultValue"
+        :default-value="transferDefaultValue"
         :multiple="true"
         :value-key="context.valueKey"
         :label-key="context.labelKey"

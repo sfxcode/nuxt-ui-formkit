@@ -15,7 +15,7 @@ const props = defineProps({
     default: 'formkit_form',
   },
   data: {
-    type: Object,
+    type: Object as PropType<Record<string, unknown>>,
     default: null,
   },
   schema: {
@@ -90,14 +90,14 @@ onScopeDispose(() => detachStandardSchema?.())
 
 const formSchema = ref(props.schema)
 
-const formData = defineModel<FormKitSchemaDefinition>()
+const formData = defineModel<Record<string, unknown>>()
 
 // Watch for changes to props and update internal refs
 watch(() => props.schema, (newSchema: FormKitSchemaDefinition) => {
   formSchema.value = newSchema
 }, { deep: true })
 
-watch(() => props.data, (newData: object) => {
+watch(() => props.data, (newData: Record<string, unknown>) => {
   if (newData && newData !== formData.value) {
     formData.value = newData
   }

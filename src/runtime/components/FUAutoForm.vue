@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-import type { FormKitSchemaDefinition, FormKitSchemaNode } from '@formkit/core'
+import type { FormKitSchemaNode } from '@formkit/core'
 import type { PropType } from 'vue'
 import type { AutoFormOverrides, ValibotLikeSchema, ZodLikeSchema } from '../composables/useFormKitAutoForm'
 import { ref, watch } from 'vue'
@@ -12,7 +12,7 @@ defineOptions({ inheritAttrs: false })
 
 const props = defineProps({
   data: {
-    type: Object,
+    type: Object as PropType<Record<string, unknown>>,
     default: null,
   },
   overrides: {
@@ -29,10 +29,10 @@ const props = defineProps({
   },
 })
 
-const formData = defineModel<FormKitSchemaDefinition>()
+const formData = defineModel<Record<string, unknown>>()
 
 if (!formData.value && props.data) {
-  formData.value = props.data as FormKitSchemaDefinition
+  formData.value = props.data
 }
 
 function buildSchema(data: object | null): FormKitSchemaNode[] {

@@ -1,5 +1,7 @@
+import type { FormKitSchemaAttributes, FormKitSchemaComponent, FormKitSchemaFormKit, FormKitSchemaNode } from '@formkit/core'
+
 export function useFormKitSchema() {
-  const addComponent = (component: string = 'UButton', props: object = {}, render: string | boolean = true, formKitAttrs: object = {}): object => {
+  const addComponent = (component: string = 'UButton', props: Record<string, unknown> = {}, render: string | boolean = true, formKitAttrs: Record<string, unknown> = {}): FormKitSchemaComponent => {
     return {
       $cmp: component,
       if: render.toString(),
@@ -8,7 +10,7 @@ export function useFormKitSchema() {
     }
   }
 
-  const addElement = (element: string = 'div', children: unknown[] | string = [], attrs: object = {}, render: string | boolean = true, formKitAttrs: object = {}): object => {
+  const addElement = (element: string = 'div', children: FormKitSchemaNode[] | string = [], attrs: FormKitSchemaAttributes = {}, render: string | boolean = true, formKitAttrs: Record<string, unknown> = {}): FormKitSchemaNode => {
     return {
       $el: element,
       if: render.toString(),
@@ -18,7 +20,7 @@ export function useFormKitSchema() {
     }
   }
 
-  const addGroup = (name: string, children: object[] = [], render: string | boolean = true, formKitAttrs: object = {}) => {
+  const addGroup = (name: string, children: FormKitSchemaNode[] = [], render: string | boolean = true, formKitAttrs: Record<string, unknown> = {}): FormKitSchemaFormKit => {
     return {
       $formkit: 'group',
       if: render.toString(),
@@ -28,7 +30,7 @@ export function useFormKitSchema() {
     }
   }
 
-  const addList = (name: string, children: object[] = [], dynamic: boolean = true, render: string | boolean = true, formKitAttrs: object = {}) => {
+  const addList = (name: string, children: FormKitSchemaNode[] = [], dynamic: boolean = true, render: string | boolean = true, formKitAttrs: Record<string, unknown> = {}): FormKitSchemaFormKit => {
     return {
       $formkit: 'list',
       if: render.toString(),
@@ -39,7 +41,7 @@ export function useFormKitSchema() {
     }
   }
 
-  const addListGroup = (children: object[] = [], render: string | boolean = true, formKitAttrs: object = {}) => {
+  const addListGroup = (children: FormKitSchemaNode[] = [], render: string | boolean = true, formKitAttrs: Record<string, unknown> = {}): FormKitSchemaFormKit => {
     return {
       $formkit: 'group',
       if: render.toString(),
@@ -51,7 +53,7 @@ export function useFormKitSchema() {
     }
   }
 
-  const addElementsInOuterDiv = (children: object[] = [], innerClass: string = '', outerClass: string = '', label: string = '', help: string = '', render: string | boolean = true) => {
+  const addElementsInOuterDiv = (children: FormKitSchemaNode[] = [], innerClass: string = '', outerClass: string = '', label: string = '', help: string = '', render: string | boolean = true): FormKitSchemaNode => {
     const inner = addElement('div', children, { class: innerClass, style: 'position: relative;' })
     const labelDiv = addElement('label', [label], { class: 'formkit-label' })
     const wrapperDiv = addElement('div', [labelDiv, inner], { class: 'formkit-wrapper' })

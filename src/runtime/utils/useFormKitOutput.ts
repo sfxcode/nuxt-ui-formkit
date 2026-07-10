@@ -66,12 +66,22 @@ export function useFormKitOutput(context: FormKitFrameworkContext) {
     return iconSizeMap[size] || iconSizeMap.md
   })
 
+  // `context`'s index signature types every custom schema prop (`leadingIcon`,
+  // `leading`, `icon`, ...) as `unknown` - combining several `unknown`s through
+  // `||`/`&&` makes TS infer `{} | null` rather than `string | null` for the
+  // whole expression. Cast each operand to its actual intended type first.
   const leadingIconName = computed<string | null>(() => {
-    return context.leadingIcon || (context.leading && context.icon) || null
+    const leadingIcon = context.leadingIcon as string | undefined
+    const leading = context.leading as boolean | undefined
+    const icon = context.icon as string | undefined
+    return leadingIcon || (leading && icon) || null
   })
 
   const trailingIconName = computed<string | null>(() => {
-    return context.trailingIcon || (context.trailing && context.icon) || null
+    const trailingIcon = context.trailingIcon as string | undefined
+    const trailing = context.trailing as boolean | undefined
+    const icon = context.icon as string | undefined
+    return trailingIcon || (trailing && icon) || null
   })
 
   return {

@@ -2,12 +2,9 @@ import { describe, expect, it, vi } from 'vitest'
 import type { FormKitFrameworkContext } from '@formkit/core'
 import { useFormKitInput } from '../../src/runtime/utils/useFormKitInput'
 
-// Helper type for partial contexts in tests
-type PartialContext = Partial<FormKitFrameworkContext>
-
 describe('useFormKitInput', () => {
   it('returns invalid state when validation is visible and not valid', () => {
-    const context: PartialContext = {
+    const context = {
       state: {
         validationVisible: true,
         valid: false,
@@ -18,7 +15,7 @@ describe('useFormKitInput', () => {
   })
 
   it('returns valid state when validation is not visible or valid', () => {
-    const context: PartialContext = {
+    const context = {
       state: {
         validationVisible: false,
         valid: true,
@@ -29,7 +26,7 @@ describe('useFormKitInput', () => {
   })
 
   it('returns correct style class when invalid', () => {
-    const context: PartialContext = {
+    const context = {
       state: {
         validationVisible: true,
         valid: false,
