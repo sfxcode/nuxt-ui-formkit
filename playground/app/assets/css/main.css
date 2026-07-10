@@ -37,3 +37,10 @@
 .formkit-form {
   @apply space-y-3;
 }
+
+.formkit-actions {
+  @apply pt-4 flex gap-2;
+}
+
+
+
