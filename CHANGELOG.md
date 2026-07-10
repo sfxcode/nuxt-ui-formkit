@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.2.4
+
+[compare changes](https://github.com/sfxcode/nuxt-ui-formkit/compare/v1.2.3...v1.2.4)
+
+### 🚀 Enhancements
+
+- Add useFormKitOverlay composable for promise-based overlay forms ([b2fe439](https://github.com/sfxcode/nuxt-ui-formkit/commit/b2fe439))
+
+### 🩹 Fixes
+
+- Wire a real DOM blur event to FormKit's validationVisibility across all inputs ([8a45ddd](https://github.com/sfxcode/nuxt-ui-formkit/commit/8a45ddd))
+
+### 🏡 Chore
+
+- Ignore .obsidian and add a formkit-actions playground utility class ([4d4772a](https://github.com/sfxcode/nuxt-ui-formkit/commit/4d4772a))
+
+### ❤️ Contributors
+
+- Sfxcode ([@sfxcode](https://github.com/sfxcode))
+
 ## v1.2.3
 
 [compare changes](https://github.com/sfxcode/nuxt-ui-formkit/compare/v1.2.2...v1.2.3)
