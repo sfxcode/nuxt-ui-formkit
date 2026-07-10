@@ -54,6 +54,25 @@ const { submit, reset, isValid, isSubmitted, hasErrors, isLoading } = useFormKit
 
 **Returns:** `submit`, `reset`, `setErrors`, `clearErrors`, `isValid`, `isSubmitted`, `hasErrors`, `isLoading`
 
+### useFormKitOverlay
+
+Opens [`FUDataEdit`](/components/data-edit) or [`FUAutoForm`](/components/auto-form) in a `UModal`/`USlideover` via Nuxt UI's `useOverlay` - see [the full guide](/components/overlay) for details.
+
+```typescript
+import { useFormKitOverlay } from '@sfxcode/nuxt-ui-formkit'
+
+const overlay = useFormKitOverlay()
+
+const result = await overlay.edit({ data, schema, title }) // hand-written schema
+const inferred = await overlay.auto({ data, title }) // schema inferred via FUAutoForm
+```
+
+**Parameters (`edit`):** `data`, `schema`, `title` *(optional)*, `as` *(optional, `'modal' | 'slideover'`, default `'modal'`)*
+
+**Parameters (`auto`):** `data`/`valibotSchema`/`zodSchema`/`overrides` *(optional)*, `title` *(optional)*, `as` *(optional)*
+
+**Returns:** `{ edit, auto }`, each resolving to the saved data or `null` on cancel/dismiss
+
 ### useFormKitSchema
 
 Schema builder utilities for creating FormKit schemas programmatically.

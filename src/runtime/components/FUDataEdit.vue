@@ -108,7 +108,13 @@ if (props.data) {
 }
 
 function handleSave() {
-  emit('dataSaved', formData.value)
+  // `FormKitSchema` mutates whatever object it's given as `:data` in place,
+  // adding its own internal `slots` key (see `node_modules/@formkit/vue`'s
+  // `FormKitSchema` setup) - since that's the same `formData` object bound
+  // via `v-model` above, strip it back out before handing the value to
+  // consumers via `dataSaved`.
+  const { slots: _slots, ...data } = (formData.value ?? {}) as Record<string, unknown>
+  emit('dataSaved', data)
 }
 
 function handleReset() {

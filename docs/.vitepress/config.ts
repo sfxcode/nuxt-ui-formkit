@@ -111,6 +111,7 @@ export default defineConfig({
           { text: 'FUDataEdit', link: '/components/data-edit' },
           { text: 'FUAutoForm', link: '/components/auto-form' },
           { text: 'Standard Schema Validation', link: '/components/standard-schema' },
+          { text: 'useFormKitOverlay', link: '/components/overlay' },
         ],
       },
       {

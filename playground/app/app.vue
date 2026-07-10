@@ -238,6 +238,12 @@ const items = ref<NavigationMenuItem[]>([
         description: 'Validate a form against a Zod/Valibot/ArkType schema via FUDataEdit\'s standard-schema prop.',
         to: '/form/standard-schema',
       },
+      {
+        label: 'useFormKitOverlay Composable',
+        icon: 'i-lucide-panel-right',
+        description: 'Promise-based modal/slideover forms: await overlay.edit({ data, schema, title }).',
+        to: '/form/overlay-form',
+      },
     ],
   },
   {

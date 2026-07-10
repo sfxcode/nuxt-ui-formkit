@@ -75,6 +75,7 @@ FormKit Nuxt UI bridges the gap between [FormKit](https://formkit.com/)'s powerf
 - `useFormKitMultiStep` - Multi-step tab-item mapping and navigation bridging
 - `useFormKitForm` - Submit/reset/error-management wrapper for a form's imperative APIs, callable from outside the form
 - `useFormKitAutoForm` - Schema inference from data value shapes, Valibot, or Zod schemas (`inferFormSchema`/`inferFormSchemaFromValibot`/`inferFormSchemaFromZod`)
+- `useFormKitOverlay` - Promise-based modal/slideover forms: `await overlay.edit({ data, schema, title })` (or `.auto(...)` for a schema-free version), resolving to the saved data or `null` on cancel
 - `colorConverter` - Color format conversion utilities
 - `durationConverter` - Duration format conversion utilities
 
