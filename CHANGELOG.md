@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.2.5
+
+[compare changes](https://github.com/sfxcode/nuxt-ui-formkit/compare/v1.2.4...v1.2.5)
+
+### 🩹 Fixes
+
+- Resolve all vue-tsc type errors across root and playground ([1a959d6](https://github.com/sfxcode/nuxt-ui-formkit/commit/1a959d6))
+- Forward the ui prop to Nuxt UI theming across all Input and Output components ([18a55f2](https://github.com/sfxcode/nuxt-ui-formkit/commit/18a55f2))
+- Correct stale type-registration whitelist exceptions ([835458f](https://github.com/sfxcode/nuxt-ui-formkit/commit/835458f))
+
+### 🏡 Chore
+
+- Pin typescript to ~6.0.3 ([b5c3fcd](https://github.com/sfxcode/nuxt-ui-formkit/commit/b5c3fcd))
+
+### ❤️ Contributors
+
+- Sfxcode ([@sfxcode](https://github.com/sfxcode))
+
 ## v1.2.4
 
 [compare changes](https://github.com/sfxcode/nuxt-ui-formkit/compare/v1.2.3...v1.2.4)
