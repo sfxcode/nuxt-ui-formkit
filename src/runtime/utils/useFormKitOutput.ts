@@ -1,11 +1,33 @@
-import { computed } from 'vue'
+import { computed, onBeforeUnmount, ref } from 'vue'
 import type { FormKitFrameworkContext } from '@formkit/core'
 
 type ColorType = 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'
 type SizeType = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
 type VariantType = 'outline' | 'soft' | 'subtle' | 'ghost' | 'none'
 
+export interface FormKitOutputUi {
+  /** Merged into `containerClass` - Output components have no themeable Nuxt UI root to forward to. */
+  root?: string
+  /** Merged into `iconClass`, applied to every `FUIcon` an Output component renders. */
+  icon?: string
+  /** Forwarded unmodified to `UBadge`'s own `:ui` prop (`FUOutputList`'s badge display mode only). */
+  badge?: Record<string, unknown>
+}
+
 export function useFormKitOutput(context: FormKitFrameworkContext) {
+  // `context.ui` is reserved by @formkit/vue for its own internal UI-message
+  // store state - same collision as `useFormKitInput.ts`, see
+  // brain/notes/formkit-ui-prop-context-collision.md. Track the real `ui`
+  // value via the `prop:ui` FormKit event instead of reading `context.ui`.
+  const ui = ref<FormKitOutputUi | undefined>(context?.node?.props?.ui)
+  const uiReceipt = context?.node?.on?.('prop:ui', ({ payload }) => {
+    ui.value = payload as FormKitOutputUi | undefined
+  })
+  onBeforeUnmount(() => {
+    if (uiReceipt !== undefined)
+      context?.node?.off?.(uiReceipt)
+  })
+
   const colorClass = computed(() => {
     const color = (context.color ?? 'neutral') as ColorType
     const colorMap: Record<ColorType, string> = {
@@ -50,6 +72,7 @@ export function useFormKitOutput(context: FormKitFrameworkContext) {
       colorClass.value,
       sizeClass.value,
       variantClass.value,
+      ui.value?.root,
       context?.attrs?.class,
     ].filter(Boolean).join(' ')
   })
@@ -63,7 +86,7 @@ export function useFormKitOutput(context: FormKitFrameworkContext) {
       lg: 'h-6 w-6',
       xl: 'h-7 w-7',
     }
-    return iconSizeMap[size] || iconSizeMap.md
+    return [iconSizeMap[size] || iconSizeMap.md, ui.value?.icon].filter(Boolean).join(' ')
   })
 
   // `context`'s index signature types every custom schema prop (`leadingIcon`,
@@ -92,5 +115,6 @@ export function useFormKitOutput(context: FormKitFrameworkContext) {
     iconClass,
     leadingIconName,
     trailingIconName,
+    ui,
   }
 }

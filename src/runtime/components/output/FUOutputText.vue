@@ -2,6 +2,7 @@
 import type { FormKitFrameworkContext } from '@formkit/core'
 import type { PropType } from 'vue'
 import { computed, getCurrentInstance } from 'vue'
+import type { FormKitOutputUi } from '../../utils/useFormKitOutput'
 import { useFormKitOutput } from '../../utils/useFormKitOutput'
 import { convertColorToHex } from '../../utils/colorConverter'
 import { formattedDuration } from '../../utils/durationConverter'
@@ -18,6 +19,7 @@ export interface FormKitOutputTextProps {
   trailingIcon?: string
   variant?: 'outline' | 'soft' | 'subtle' | 'ghost' | 'none'
   outputType?: 'text' | 'email' | 'url' | 'tel' | 'color' | 'duration' | 'i18n'
+  ui?: FormKitOutputUi
 }
 
 const props = defineProps({

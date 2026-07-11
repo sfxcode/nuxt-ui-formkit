@@ -26,7 +26,7 @@ const props = defineProps({
   },
 })
 
-const { handleInput, handleChange, handleBlur, styleClass, color, modelValue, validSlotNames } = useFormKitInput(props.context)
+const { handleInput, handleChange, handleBlur, styleClass, color, modelValue, validSlotNames, ui } = useFormKitInput(props.context)
 
 // `USwitch` doesn't declare `blur` in its own emits - `@blur` below relies
 // on its `inheritAttrs: false` + manual `$attrs` spread onto the internal
@@ -55,7 +55,7 @@ const { handleInput, handleChange, handleBlur, styleClass, color, modelValue, va
     :true-value="context.trueValue"
     :false-value="context.falseValue"
     :autofocus="context.autofocus"
-    :ui="context.ui"
+    :ui="ui"
     @change="handleChange"
     @update:model-value="handleInput"
     @blur="handleBlur"

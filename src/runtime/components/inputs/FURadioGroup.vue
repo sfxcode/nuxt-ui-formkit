@@ -35,7 +35,7 @@ const props = defineProps({
   },
 })
 
-const { handleInput, handleChange, styleClass, color, modelValue, items, validSlotNames } = useFormKitInput(props.context)
+const { handleInput, handleChange, styleClass, color, modelValue, items, validSlotNames, ui } = useFormKitInput(props.context)
 
 // Same non-focusable-container gap as `FUCheckboxGroup.vue` - see its
 // comment for why `@focusout` plus a relatedTarget-outside-container check
@@ -62,7 +62,7 @@ const handleContainerBlur = createContainerBlurHandler(props.context)
     :description-key="context.descriptionKey"
     :loop="context.loop ?? false"
     :name="context.name"
-    :ui="context.ui"
+    :ui="ui"
     @change="handleChange"
     @update:model-value="handleInput"
     @focusout="handleContainerBlur"

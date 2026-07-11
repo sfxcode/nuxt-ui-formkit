@@ -2,6 +2,7 @@
 import type { FormKitFrameworkContext } from '@formkit/core'
 import type { PropType } from 'vue'
 import { computed } from 'vue'
+import type { FormKitOutputUi } from '../../utils/useFormKitOutput'
 import { useFormKitOutput } from '../../utils/useFormKitOutput'
 import type { FormKitIconProps } from './FUIcon.vue'
 import FUIcon from './FUIcon.vue'
@@ -17,6 +18,7 @@ export interface FormKitOutputLinkProps {
   variant?: 'outline' | 'soft' | 'subtle' | 'ghost' | 'none'
   target?: '_blank' | '_self' | '_parent' | '_top'
   rel?: string
+  ui?: FormKitOutputUi
 }
 
 const props = defineProps({

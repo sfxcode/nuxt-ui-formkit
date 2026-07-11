@@ -1,7 +1,21 @@
-import { computed } from 'vue'
+import { computed, onBeforeUnmount, ref } from 'vue'
 import type { FormKitFrameworkContext } from '@formkit/core'
 
 export function useFormKitInput(context: FormKitFrameworkContext) {
+  // `context.ui` is reserved by @formkit/vue for its own internal UI-message
+  // store state, colliding with this library's `ui` prop (forwarded to Nuxt
+  // UI's `:ui` theming prop) - the consumer's value lands on `node.props.ui`
+  // but never reaches `context.ui`. Track it separately via the `prop:ui`
+  // FormKit event instead of reading the poisoned `context.ui` field.
+  const ui = ref(context?.node?.props?.ui)
+  const uiReceipt = context?.node?.on?.('prop:ui', ({ payload }) => {
+    ui.value = payload
+  })
+  onBeforeUnmount(() => {
+    if (uiReceipt !== undefined)
+      context?.node?.off?.(uiReceipt)
+  })
+
   const isInvalid = computed(() => {
     return context?.state?.validationVisible && !context?.state?.valid
   })
@@ -56,5 +70,5 @@ export function useFormKitInput(context: FormKitFrameworkContext) {
     return []
   })
 
-  return { isInvalid, validSlotNames, styleClass, color, handleBlur, handleChange, handleInput, handleSelect, modelValue, items }
+  return { isInvalid, validSlotNames, styleClass, color, handleBlur, handleChange, handleInput, handleSelect, modelValue, items, ui }
 }

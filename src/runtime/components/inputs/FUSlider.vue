@@ -25,7 +25,7 @@ const props = defineProps({
   },
 })
 
-const { handleInput, handleChange, styleClass, color, modelValue } = useFormKitInput(props.context)
+const { handleInput, handleChange, styleClass, color, modelValue, ui } = useFormKitInput(props.context)
 </script>
 
 <template>
@@ -48,7 +48,7 @@ const { handleInput, handleChange, styleClass, color, modelValue } = useFormKitI
     :max="context.max"
     :step="context.step"
     :min-steps-between-thumbs="context.minStepsBetweenThumbs"
-    :ui="context.ui"
+    :ui="ui"
     @change="handleChange"
     @update:model-value="handleInput"
   />

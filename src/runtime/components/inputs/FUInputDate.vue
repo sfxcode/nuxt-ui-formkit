@@ -62,7 +62,7 @@ const props = defineProps({
   },
 })
 
-const { handleInput, handleChange, handleBlur, isInvalid, styleClass, color, validSlotNames } = useFormKitInput(props.context)
+const { handleInput, handleChange, handleBlur, isInvalid, styleClass, color, validSlotNames, ui } = useFormKitInput(props.context)
 
 // `UInputDate`'s own `@blur` never fires from real segment interaction -
 // its internal `DateField.Root` binding assumes Reka UI aggregates blur
@@ -130,7 +130,7 @@ const minValue = computed(() => toDateValue(props.context.minValue, conversionOp
     :max-value="maxValue"
     :min-value="minValue"
     :is-date-unavailable="context.isDateUnavailable"
-    :ui="context.ui"
+    :ui="ui"
     @change="handleChange"
     @update:model-value="handleInput"
     @blur="handleBlur"

@@ -1,6 +1,7 @@
 <script setup lang='ts'>
 import type { FormKitFrameworkContext } from '@formkit/core'
 import { computed } from 'vue'
+import type { FormKitOutputUi } from '../../utils/useFormKitOutput'
 import { useFormKitOutput } from '../../utils/useFormKitOutput'
 import type { PropType } from 'vue'
 import type { FormKitIconProps } from './FUIcon.vue'
@@ -19,6 +20,7 @@ export interface FormKitOutputBooleanProps {
   trueIcon?: string
   trueValue?: string
   variant?: 'outline' | 'soft' | 'subtle' | 'ghost' | 'none'
+  ui?: FormKitOutputUi
 }
 
 const props = defineProps({

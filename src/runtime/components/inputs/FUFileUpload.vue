@@ -35,7 +35,7 @@ const props = defineProps({
   },
 })
 
-const { handleInput, handleChange, handleBlur, isInvalid, styleClass, color, modelValue, validSlotNames } = useFormKitInput(props.context)
+const { handleInput, handleChange, handleBlur, isInvalid, styleClass, color, modelValue, validSlotNames, ui } = useFormKitInput(props.context)
 
 // `UFileUpload` doesn't declare `blur` in its own emits - `@blur` below
 // relies on its `inheritAttrs: false` + manual `$attrs` spread directly onto
@@ -73,7 +73,7 @@ const { handleInput, handleChange, handleBlur, isInvalid, styleClass, color, mod
     :file-delete-icon="context.fileDeleteIcon"
     :preview="context.preview"
     :name="context.name"
-    :ui="context.ui"
+    :ui="ui"
     @change="handleChange"
     @update:model-value="handleInput"
     @blur="handleBlur"

@@ -18,7 +18,7 @@ const props = defineProps({
   },
 })
 
-const { handleInput, handleChange, styleClass, modelValue } = useFormKitInput(props.context)
+const { handleInput, handleChange, styleClass, modelValue, ui } = useFormKitInput(props.context)
 </script>
 
 <template>
@@ -32,7 +32,7 @@ const { handleInput, handleChange, styleClass, modelValue } = useFormKitInput(pr
     :size="context.size ?? 'md'"
     :format="context.format || 'hex'"
     :throttle="context.throttle"
-    :ui="context.ui"
+    :ui="ui"
     @change="handleChange"
     @update:model-value="handleInput"
   />

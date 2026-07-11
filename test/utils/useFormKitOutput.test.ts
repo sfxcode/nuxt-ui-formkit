@@ -432,6 +432,47 @@ describe('useFormKitOutput - trailingIconName', () => {
   })
 })
 
+describe('useFormKitOutput - ui prop merge', () => {
+  it('merges ui.root into containerClass alongside color/size/variant, not overriding them', () => {
+    const context: PartialContext = {
+      color: 'primary',
+      size: 'lg',
+      variant: 'soft',
+      node: { props: { ui: { root: 'my-distinctive-root-class' } } } as unknown as PartialContext['node'],
+    }
+    const { containerClass } = useFormKitOutput(context as unknown as FormKitFrameworkContext)
+    expect(containerClass.value).toContain('my-distinctive-root-class')
+    expect(containerClass.value).toContain('text-primary')
+    expect(containerClass.value).toContain('text-lg')
+    expect(containerClass.value).toContain('bg-gray-100 dark:bg-gray-800 rounded-md')
+  })
+
+  it('merges ui.icon into iconClass alongside the size-derived class, not overriding it', () => {
+    const context: PartialContext = {
+      size: 'sm',
+      node: { props: { ui: { icon: 'my-distinctive-icon-class' } } } as unknown as PartialContext['node'],
+    }
+    const { iconClass } = useFormKitOutput(context as unknown as FormKitFrameworkContext)
+    expect(iconClass.value).toContain('my-distinctive-icon-class')
+    expect(iconClass.value).toContain('h-4 w-4')
+  })
+
+  it('exposes ui.badge unmodified for components to forward directly to a real Nuxt UI :ui target', () => {
+    const context: PartialContext = {
+      node: { props: { ui: { badge: { base: 'my-distinctive-badge-class' } } } } as unknown as PartialContext['node'],
+    }
+    const { ui } = useFormKitOutput(context as unknown as FormKitFrameworkContext)
+    expect(ui.value?.badge).toEqual({ base: 'my-distinctive-badge-class' })
+  })
+
+  it('leaves containerClass/iconClass unaffected when no ui prop is set', () => {
+    const context: PartialContext = {}
+    const { containerClass, iconClass } = useFormKitOutput(context as unknown as FormKitFrameworkContext)
+    expect(containerClass.value).toBe('inline-flex items-center gap-2 text-gray-900 dark:text-gray-100 text-base')
+    expect(iconClass.value).toBe('h-5 w-5')
+  })
+})
+
 describe('useFormKitOutput - edge cases', () => {
   it('handles completely empty context', () => {
     const context: PartialContext = {}

@@ -2,6 +2,7 @@
 import type { FormKitFrameworkContext } from '@formkit/core'
 import type { PropType } from 'vue'
 import { computed } from 'vue'
+import type { FormKitOutputUi } from '../../utils/useFormKitOutput'
 import { useFormKitOutput } from '../../utils/useFormKitOutput'
 import type { FormKitIconProps } from './FUIcon.vue'
 import FUIcon from './FUIcon.vue'
@@ -18,6 +19,7 @@ export interface FormKitOutputListProps {
   trailing?: boolean
   trailingIcon?: string
   variant?: 'outline' | 'soft' | 'subtle' | 'ghost' | 'none'
+  ui?: FormKitOutputUi
 }
 
 const props = defineProps({
@@ -74,7 +76,7 @@ const badgeVariant = computed(() => {
   return variant
 })
 
-const { containerClass, iconClass, leadingIconName, trailingIconName } = useFormKitOutput(props.context)
+const { containerClass, iconClass, leadingIconName, trailingIconName, ui } = useFormKitOutput(props.context)
 </script>
 
 <template>
@@ -158,6 +160,7 @@ const { containerClass, iconClass, leadingIconName, trailingIconName } = useForm
         :variant="badgeVariant"
         :size="context.size"
         :class="itemClass"
+        :ui="ui?.badge"
       >
         {{ item }}
       </UBadge>
