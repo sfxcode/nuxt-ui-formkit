@@ -8,14 +8,12 @@ const currentDir = dirname(fileURLToPath(import.meta.url))
 const inputsDir = resolve(currentDir, '../src/runtime/components/inputs')
 const formkitIndexSource = readFileSync(resolve(currentDir, '../src/runtime/formkit/index.ts'), 'utf-8')
 
-// nuxtUIRepeater is built directly from schema primitives in definitions/repeater.ts,
-// not a wrapper around a Nuxt UI .vue component - it has no FU*.vue file and is
-// intentionally absent from FormKitInputProps (and, by extension, FormKitInputSlots).
-const NO_VUE_FILE = ['nuxtUIRepeater']
-
-// These NuxtUI components don't export a dedicated `*Slots` type, so there's nothing
-// to augment FormKitInputSlots with for them.
-const NO_SLOTS_TYPE = ['nuxtUIRepeater', 'nuxtUIColorPicker', 'nuxtUIPinInput', 'nuxtUISlider']
+// These NuxtUI components don't export a dedicated `*Slots` type (confirmed against
+// @nuxt/ui's own .d.ts files, not assumed), so there's nothing to augment
+// FormKitInputSlots with for them. nuxtUIRepeater is schema-based (definitions/repeater.ts)
+// with no wrapped Nuxt UI component, but still gets a minimal FormKitBaseSlots-only entry -
+// it is not an exception here.
+const NO_SLOTS_TYPE = ['nuxtUIColorPicker', 'nuxtUISlider']
 
 function vueFileToInputKey(fileName: string): string {
   return fileName.replace(/^FU/, 'nuxtUI').replace(/\.vue$/, '')
@@ -50,7 +48,7 @@ describe('formkit input registration completeness', () => {
     expect(nuxtUIInputs).toHaveProperty(key)
   })
 
-  it.each(Object.keys(nuxtUIInputs).filter(key => !NO_VUE_FILE.includes(key)))(
+  it.each(Object.keys(nuxtUIInputs))(
     'declares FormKitInputProps for %s',
     (key) => {
       expect(propsKeys.has(key)).toBe(true)
@@ -63,13 +61,6 @@ describe('formkit input registration completeness', () => {
       expect(slotsKeys.has(key)).toBe(true)
     },
   )
-
-  it('does not silently grow the FormKitInputProps exception list', () => {
-    for (const key of NO_VUE_FILE) {
-      expect(Object.keys(nuxtUIInputs)).toContain(key)
-      expect(propsKeys.has(key)).toBe(false)
-    }
-  })
 
   it('does not silently grow the FormKitInputSlots exception list', () => {
     for (const key of NO_SLOTS_TYPE) {

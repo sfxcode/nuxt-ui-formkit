@@ -17,6 +17,7 @@ import type {
   InputTagsSlots,
   InputTimeSlots,
   ListboxSlots,
+  PinInputSlots,
   SwitchSlots,
 } from '@nuxt/ui'
 
@@ -81,6 +82,9 @@ declare module '@formkit/inputs' {
     nuxtUIRadioGroup: {
       type: 'nuxtUIRadioGroup'
     }
+    nuxtUIRepeater: {
+      type: 'nuxtUIRepeater'
+    }
     nuxtUISelect: {
       type: 'nuxtUISelect'
     }
@@ -134,7 +138,9 @@ declare module '@formkit/inputs' {
     nuxtUIInputTime: MergeSlots<FormKitBaseSlots<Props>, InputTimeSlots>
     nuxtUIListbox: MergeSlots<FormKitBaseSlots<Props>, ListboxSlots>
     nuxtUIMultiStep: MergeSlots<FormKitBaseSlots<Props>, FormKitMultiStepSlots<Props>>
+    nuxtUIPinInput: MergeSlots<FormKitBaseSlots<Props>, PinInputSlots>
     nuxtUIRadioGroup: MergeSlots<FormKitBaseSlots<Props>, RadioGroupSlots>
+    nuxtUIRepeater: FormKitBaseSlots<Props>
     nuxtUISelect: MergeSlots<FormKitBaseSlots<Props>, SelectSlots>
     nuxtUISelectMenu: MergeSlots<FormKitBaseSlots<Props>, SelectMenuSlots>
     nuxtUIStep: MergeSlots<FormKitBaseSlots<Props>, FormKitStepSlots<Props>>
