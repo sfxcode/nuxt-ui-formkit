@@ -72,7 +72,7 @@ const { handleInput, handleChange, handleBlur, isInvalid, styleClass, color, mod
     :file-delete="context.fileDelete"
     :file-delete-icon="context.fileDeleteIcon"
     :preview="context.preview"
-    :name="context.name"
+    :name="context.node.name"
     :ui="ui"
     @change="handleChange"
     @update:model-value="handleInput"

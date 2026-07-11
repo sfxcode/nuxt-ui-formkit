@@ -61,6 +61,7 @@ export interface FormKitInputMenuProps {
   list?: string
   autocomplete?: string & {} | 'on' | 'off'
   searchTerm?: string
+  name?: string
   ui?: Record<string, unknown>
 }
 
@@ -78,6 +79,7 @@ const { handleInput, handleChange, handleBlur, isInvalid, styleClass, color, mod
   <UInputMenu
     :id="context.id"
     v-model="modelValue"
+    :name="context.node.name"
     v-bind="{ ...context?.attrs }"
     :class="styleClass"
     :disabled="!!context?.disabled"

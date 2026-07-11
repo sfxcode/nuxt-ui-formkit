@@ -28,7 +28,7 @@ export const nuxtUICalendarDefinition: FormKitTypeDefinition = createInput(FUCal
 })
 
 export const nuxtUICheckboxDefinition: FormKitTypeDefinition = createInput(FUCheckbox, {
-  props: ['label', 'description', 'color', 'variant', 'size', 'indicator', 'icon', 'indeterminateIcon', 'trueValue', 'falseValue', 'autofocus', 'ui'],
+  props: ['label', 'description', 'color', 'variant', 'size', 'indicator', 'icon', 'indeterminateIcon', 'trueValue', 'falseValue', 'autofocus', 'name', 'ui'],
   family: 'NuxtUIInput',
 })
 
@@ -63,7 +63,7 @@ export const nuxtUIInputDateDefinition: FormKitTypeDefinition = createInput(FUIn
 })
 
 export const nuxtUIInputMenuDefinition: FormKitTypeDefinition = createInput(FUInputMenu, {
-  props: ['options', 'inputType', 'placeholder', 'color', 'variant', 'size', 'autofocus', 'autofocusDelay', 'trailingIcon', 'selectedIcon', 'deleteIcon', 'clear', 'clearIcon', 'arrow', 'portal', 'virtualize', 'content', 'mode', 'by', 'open', 'valueKey', 'labelKey', 'descriptionKey', 'multiple', 'highlight', 'fixed', 'createItem', 'filterFields', 'ignoreFilter', 'defaultOpen', 'resetSearchTermOnBlur', 'resetSearchTermOnSelect', 'resetModelValueOnClear', 'highlightOnHover', 'openOnClick', 'openOnFocus', 'icon', 'leading', 'leadingIcon', 'trailing', 'loading', 'loadingIcon', 'list', 'autocomplete', 'searchTerm', 'ui'],
+  props: ['options', 'inputType', 'placeholder', 'color', 'variant', 'size', 'autofocus', 'autofocusDelay', 'trailingIcon', 'selectedIcon', 'deleteIcon', 'clear', 'clearIcon', 'arrow', 'portal', 'virtualize', 'content', 'mode', 'by', 'open', 'valueKey', 'labelKey', 'descriptionKey', 'multiple', 'highlight', 'fixed', 'createItem', 'filterFields', 'ignoreFilter', 'defaultOpen', 'resetSearchTermOnBlur', 'resetSearchTermOnSelect', 'resetModelValueOnClear', 'highlightOnHover', 'openOnClick', 'openOnFocus', 'icon', 'leading', 'leadingIcon', 'trailing', 'loading', 'loadingIcon', 'list', 'autocomplete', 'searchTerm', 'name', 'ui'],
   family: 'NuxtUIInput',
 })
 
@@ -83,12 +83,12 @@ export const nuxtUIInputTimeDefinition: FormKitTypeDefinition = createInput(FUIn
 })
 
 export const nuxtUIListboxDefinition: FormKitTypeDefinition = createInput(FUListbox, {
-  props: ['options', 'as', 'color', 'size', 'by', 'orientation', 'selectionBehavior', 'disabled', 'defaultValue', 'multiple', 'valueKey', 'labelKey', 'descriptionKey', 'loading', 'loadingIcon', 'filter', 'filterFields', 'ignoreFilter', 'selectedIcon', 'virtualize', 'highlight', 'highlightOnHover', 'autofocus', 'autofocusDelay', 'searchTerm', 'ui', 'displayMode', 'transferLeftHeaderText', 'transferRightHeaderText', 'transferAll', 'transferHeaderClass', 'transferSortIcons', 'transferItemDraggable'],
+  props: ['options', 'as', 'color', 'size', 'by', 'orientation', 'selectionBehavior', 'disabled', 'defaultValue', 'multiple', 'valueKey', 'labelKey', 'descriptionKey', 'loading', 'loadingIcon', 'filter', 'filterFields', 'ignoreFilter', 'selectedIcon', 'virtualize', 'highlight', 'highlightOnHover', 'autofocus', 'autofocusDelay', 'searchTerm', 'name', 'ui', 'displayMode', 'transferLeftHeaderText', 'transferRightHeaderText', 'transferAll', 'transferHeaderClass', 'transferSortIcons', 'transferItemDraggable'],
   family: 'NuxtUIInput',
 })
 
 export const nuxtUIPinInputDefinition: FormKitTypeDefinition = createInput(FUPinInput, {
-  props: ['color', 'variant', 'size', 'length', 'autofocus', 'autofocusDelay', 'highlight', 'fixed', 'defaultValue', 'mask', 'otp', 'separator', 'type', 'placeholder', 'ui'],
+  props: ['color', 'variant', 'size', 'length', 'autofocus', 'autofocusDelay', 'highlight', 'fixed', 'defaultValue', 'mask', 'otp', 'separator', 'type', 'placeholder', 'name', 'ui'],
   family: 'NuxtUIInput',
 })
 
@@ -98,12 +98,12 @@ export const nuxtUIRadioGroupDefinition: FormKitTypeDefinition = createInput(FUR
 })
 
 export const nuxtUISelectDefinition: FormKitTypeDefinition = createInput(FUSelect, {
-  props: ['options', 'placeholder', 'color', 'variant', 'size', 'selectedIcon', 'arrow', 'portal', 'content', 'valueKey', 'labelKey', 'descriptionKey', 'defaultValue', 'multiple', 'highlight', 'fixed', 'autofocus', 'autofocusDelay', 'open', 'defaultOpen', 'autocomplete', 'icon', 'avatar', 'leading', 'leadingIcon', 'trailing', 'trailingIcon', 'loading', 'loadingIcon', 'ui'],
+  props: ['options', 'placeholder', 'color', 'variant', 'size', 'selectedIcon', 'arrow', 'portal', 'content', 'valueKey', 'labelKey', 'descriptionKey', 'defaultValue', 'multiple', 'highlight', 'fixed', 'autofocus', 'autofocusDelay', 'open', 'defaultOpen', 'autocomplete', 'icon', 'avatar', 'leading', 'leadingIcon', 'trailing', 'trailingIcon', 'loading', 'loadingIcon', 'name', 'ui'],
   family: 'NuxtUIInput',
 })
 
 export const nuxtUISelectMenuDefinition: FormKitTypeDefinition = createInput(FUSelectMenu, {
-  props: ['options', 'placeholder', 'searchInput', 'color', 'variant', 'size', 'icon', 'avatar', 'leading', 'leadingIcon', 'trailing', 'trailingIcon', 'loading', 'loadingIcon', 'selectedIcon', 'clear', 'clearIcon', 'arrow', 'portal', 'virtualize', 'content', 'by', 'valueKey', 'labelKey', 'descriptionKey', 'defaultValue', 'multiple', 'highlight', 'fixed', 'createItem', 'filterFields', 'ignoreFilter', 'autofocus', 'autofocusDelay', 'open', 'defaultOpen', 'resetSearchTermOnBlur', 'resetSearchTermOnSelect', 'resetModelValueOnClear', 'highlightOnHover', 'searchTerm', 'ui'],
+  props: ['options', 'placeholder', 'searchInput', 'color', 'variant', 'size', 'icon', 'avatar', 'leading', 'leadingIcon', 'trailing', 'trailingIcon', 'loading', 'loadingIcon', 'selectedIcon', 'clear', 'clearIcon', 'arrow', 'portal', 'virtualize', 'content', 'by', 'valueKey', 'labelKey', 'descriptionKey', 'defaultValue', 'multiple', 'highlight', 'fixed', 'createItem', 'filterFields', 'ignoreFilter', 'autofocus', 'autofocusDelay', 'open', 'defaultOpen', 'resetSearchTermOnBlur', 'resetSearchTermOnSelect', 'resetModelValueOnClear', 'highlightOnHover', 'searchTerm', 'name', 'ui'],
   family: 'NuxtUIInput',
 })
 
@@ -113,7 +113,7 @@ export const nuxtUISliderDefinition: FormKitTypeDefinition = createInput(FUSlide
 })
 
 export const nuxtUISwitchDefinition: FormKitTypeDefinition = createInput(FUSwitch, {
-  props: ['color', 'size', 'loading', 'loadingIcon', 'checkedIcon', 'uncheckedIcon', 'label', 'description', 'defaultValue', 'trueValue', 'falseValue', 'autofocus', 'ui'],
+  props: ['color', 'size', 'loading', 'loadingIcon', 'checkedIcon', 'uncheckedIcon', 'label', 'description', 'defaultValue', 'trueValue', 'falseValue', 'autofocus', 'name', 'ui'],
   family: 'NuxtUIInput',
 })
 

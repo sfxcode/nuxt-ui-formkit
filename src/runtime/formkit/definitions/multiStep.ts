@@ -1,5 +1,5 @@
 import type { FormKitTypeDefinition } from '@formkit/core'
-import { disablesChildren } from '@formkit/inputs'
+import { disablesChildren, localize } from '@formkit/inputs'
 import { createInput } from '@formkit/vue'
 import { useFormKitMultiStep } from '../../composables/useFormKitMultiStep'
 import { useFormKitSchema } from '../../composables/useFormKitSchema'
@@ -22,14 +22,14 @@ export const nuxtUIStepDefinition: FormKitTypeDefinition = createInput(
     addElement('div', '$slots.default', { class: 'formkit-step-inner' }),
     addElement('div', [
       addStepActionButton(
-        { if: '$previousLabel', then: '$previousLabel', else: 'Previous' },
+        { if: '$previousLabel', then: '$previousLabel', else: '$ui.prev.value' },
         '$handlers.previous',
         '$previousAttrs',
         '$isFirstStep === false',
         'outline',
       ),
       addStepActionButton(
-        { if: '$nextLabel', then: '$nextLabel', else: 'Next' },
+        { if: '$nextLabel', then: '$nextLabel', else: '$ui.next.value' },
         '$handlers.next',
         '$nextAttrs',
         '$isLastStep === false || $stepIndex === 0',
@@ -50,7 +50,11 @@ export const nuxtUIStepDefinition: FormKitTypeDefinition = createInput(
     forceTypeProp: 'step',
     family: 'NuxtUIInput',
     props: ['beforeStepChange', 'nextAttrs', 'nextLabel', 'previousAttrs', 'previousLabel', 'validStepIcon', 'ui', 'stepActionsClass'],
-    features: [disablesChildren, addStepHandler],
+    // `localize('next')`/`localize('prev')` seed the `node.store` "ui" messages
+    // that `$ui.next.value`/`$ui.prev.value` (in the schema above) read - without
+    // them the schema expression resolves to nothing. Matches `@formkit/addons`'
+    // own `step` input definition, which includes the same two features.
+    features: [disablesChildren, addStepHandler, localize('next'), localize('prev')],
   },
   {
     // `createInput()` always wraps the given schema in FormKit's standard

@@ -19,6 +19,7 @@ export interface FormKitPinInputProps {
   separator?: number | number[]
   type?: 'text' | 'number'
   placeholder?: string
+  name?: string
   ui?: Record<string, unknown>
 }
 
@@ -54,6 +55,7 @@ function handlePinBlur(event: Event) {
   <UPinInput
     :id="context.id"
     v-model="modelValue"
+    :name="context.node.name"
     v-bind="{ ...context?.attrs }"
     :default-value="context.defaultValue"
     :class="styleClass"

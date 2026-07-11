@@ -63,6 +63,7 @@ export interface FormKitSelectMenuProps {
   resetModelValueOnClear?: boolean
   highlightOnHover?: boolean
   searchTerm?: string
+  name?: string
   ui?: Record<string, unknown>
 }
 
@@ -80,6 +81,7 @@ const { handleInput, handleChange, isInvalid, styleClass, color, modelValue, ite
   <USelectMenu
     :id="context.id"
     v-model="modelValue"
+    :name="context.node.name"
     v-bind="{ ...context?.attrs }"
     :class="styleClass"
     :disabled="!!context?.disabled"

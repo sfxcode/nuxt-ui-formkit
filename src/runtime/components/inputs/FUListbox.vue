@@ -54,6 +54,7 @@ export interface FormKitListboxProps {
   autofocus?: boolean
   autofocusDelay?: number
   searchTerm?: string
+  name?: string
   ui?: Record<string, unknown>
 }
 
@@ -375,6 +376,7 @@ watch(targetItems, (newVal) => {
     v-if="!context.displayMode || context.displayMode === 'single'"
     :id="context.id"
     v-model="modelValue"
+    :name="context.node.name"
     v-bind="{ ...context?.attrs }"
     :class="styleClass"
     :style="context?.attrs.style"
@@ -441,6 +443,7 @@ watch(targetItems, (newVal) => {
       <UListbox
         :id="context.id + '-transfer-left'"
         v-model="sourceSelection"
+        :name="context.node.name + '-transfer-left'"
         v-bind="{ ...context?.attrs }"
         :class="styleClass"
         :style="context?.attrs.style"
@@ -543,6 +546,7 @@ watch(targetItems, (newVal) => {
       <UListbox
         :id="context.id + '-transfer-right'"
         v-model="targetSelection"
+        :name="context.node.name + '-transfer-right'"
         v-bind="{ ...context?.attrs }"
         :class="styleClass"
         :style="context?.attrs.style"

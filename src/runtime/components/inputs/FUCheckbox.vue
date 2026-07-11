@@ -16,6 +16,7 @@ export interface FormKitCheckboxProps {
   trueValue?: unknown
   falseValue?: unknown
   autofocus?: false | true | 'true' | 'false'
+  name?: string
   ui?: Record<string, unknown>
 }
 
@@ -39,6 +40,7 @@ const { handleInput, handleChange, handleBlur, styleClass, modelValue, color, va
   <UCheckbox
     :id="context.id"
     v-model="modelValue"
+    :name="context.node.name"
     v-bind="{ ...context?.attrs }"
     :class="styleClass"
     :disabled="!!context?.disabled"

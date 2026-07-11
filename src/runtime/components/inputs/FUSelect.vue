@@ -36,6 +36,7 @@ export interface FormKitSelectProps {
   trailingIcon?: string
   loading?: boolean
   loadingIcon?: string
+  name?: string
   ui?: Record<string, unknown>
 }
 
@@ -53,6 +54,7 @@ const { handleInput, handleChange, isInvalid, color, styleClass, modelValue, ite
   <USelect
     :id="context.id"
     v-model="modelValue"
+    :name="context.node.name"
     v-bind="{ ...context?.attrs }"
     :class="styleClass"
     :disabled="!!context?.disabled"
