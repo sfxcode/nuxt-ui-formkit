@@ -96,6 +96,27 @@ const schema = v.object({
 })
 ```
 
+## Cross-Field Validation
+
+Cross-field checks like password confirmation don't need a Standard Schema at all - FormKit's own built-in rules from `@formkit/rules` (`confirm`, `require_one`, `date_after_node`, `date_before_node`, ...) already work unmodified against every `nuxtUI*` input, since they operate purely at the validation-rule level (`node.at(address)`) with no dependency on this module's custom `nuxtUI*` type/family names:
+
+```vue
+<template>
+  <FUDataEdit :data="registration" :schema="formSchema" />
+</template>
+
+<script setup lang="ts">
+const registration = ref({ password: '', confirmPassword: '' })
+
+const formSchema = [
+  { $formkit: 'nuxtUIInput', name: 'password', label: 'Password', inputType: 'password', validation: 'required|length:8' },
+  { $formkit: 'nuxtUIInput', name: 'confirmPassword', label: 'Confirm Password', inputType: 'password', validation: 'required|confirm:password' },
+]
+</script>
+```
+
+`confirmPassword`'s `confirm:password` rule reads the sibling `password` node's value via `node.at('password')` and fails until both match. Note this is different from some `@formkit/addons` plugins, which silently no-op against `nuxtUI*` inputs because they gate on FormKit's native type/family strings - plain validation rules like `confirm` have no such dependency and just work identically across every `nuxtUI*` input.
+
 ## Related
 
 - [FUDataEdit](/components/data-edit) - the `standard-schema` prop
