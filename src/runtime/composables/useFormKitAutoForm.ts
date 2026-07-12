@@ -174,6 +174,106 @@ export function inferFormSchema(data: Record<string, unknown>, overrides?: AutoF
   return inferNodes(data, overrides) as FormKitSchemaNode[]
 }
 
+function isFilled(value: unknown): boolean {
+  if (value === undefined || value === null) {
+    return false
+  }
+  if (typeof value === 'string') {
+    return value !== ''
+  }
+  if (Array.isArray(value)) {
+    return value.length > 0
+  }
+  return true
+}
+
+// Column-wise view of the samples: one array per key (union across all
+// samples), positionally aligned so a sample missing the key contributes
+// `undefined` - that gap is what makes the field non-required.
+function transposeSamples(samples: Record<string, unknown>[]): Record<string, unknown[]> {
+  const columns: Record<string, unknown[]> = {}
+  for (const sample of samples) {
+    for (const key of Object.keys(sample)) {
+      columns[key] ??= samples.map(entry => entry[key])
+    }
+  }
+  return columns
+}
+
+function inferSampleNode(name: string, values: unknown[], overrides: AutoFormOverrides | undefined, path: string): AutoFormSchemaNode | undefined {
+  const presentValues = values.filter(value => value !== undefined && value !== null)
+  if (presentValues.length === 0) {
+    return undefined
+  }
+  const filledValues = presentValues.filter(isFilled)
+  const required = filledValues.length === values.length
+  // Falling back to the first present value keeps e.g. an all-empty-string
+  // column inferrable as a text input - it just won't be required.
+  const representative = filledValues[0] ?? presentValues[0]
+  const label = humanizeKey(name)
+  // `required` on a switch would force the boolean to true, which is not
+  // what an always-present boolean sample value means.
+  const validation = required && typeof representative !== 'boolean' ? 'required' : undefined
+  const base: AutoFormSchemaNode = validation ? { name, label, validation } : { name, label }
+  if (typeof representative === 'boolean') {
+    return { $formkit: 'nuxtUISwitch', ...base }
+  }
+  if (typeof representative === 'number') {
+    return { $formkit: 'nuxtUIInputNumber', ...base }
+  }
+  if (representative instanceof Date) {
+    return { $formkit: 'nuxtUIInputDate', ...base, valueType: 'date' }
+  }
+  if (isDateValue(representative)) {
+    return { $formkit: 'nuxtUIInputDate', ...base, valueType: 'calendar' }
+  }
+  if (typeof representative === 'string') {
+    if (isIsoDateString(representative)) {
+      return { $formkit: 'nuxtUIInputDate', ...base, valueType: 'iso' }
+    }
+    if (representative.includes('\n')) {
+      return { $formkit: 'nuxtUITextarea', ...base }
+    }
+    return { $formkit: 'nuxtUIInput', ...base }
+  }
+  if (Array.isArray(representative)) {
+    const [first] = representative
+    if (isPlainObject(first)) {
+      // Rows from every sample's array, not just the representative's -
+      // a key that only appears in another sample's rows would otherwise
+      // be missed.
+      const rows = presentValues.filter(Array.isArray).flat().filter(isPlainObject)
+      return {
+        $formkit: 'nuxtUIRepeater',
+        ...base,
+        newItem: blankItem(rows[0] ?? first),
+        children: inferSampleNodes(rows, overrides, path),
+        ...REPEATER_BUTTON_DEFAULTS,
+      }
+    }
+    return { $formkit: 'nuxtUIInputTags', ...base }
+  }
+  if (isPlainObject(representative)) {
+    return { $formkit: 'group', name, children: inferSampleNodes(presentValues.filter(isPlainObject), overrides, path) }
+  }
+  return undefined
+}
+
+function inferSampleNodes(samples: Record<string, unknown>[], overrides?: AutoFormOverrides, pathPrefix = ''): AutoFormSchemaNode[] {
+  return buildNodes(transposeSamples(samples), (key, values, path) => inferSampleNode(key, values, overrides, path), overrides, pathPrefix)
+}
+
+export function inferFormSchemaFromSamples(samples: Record<string, unknown>[], overrides?: AutoFormOverrides): FormKitSchemaNode[] {
+  if (!Array.isArray(samples)) {
+    return []
+  }
+  const records = samples.filter(isPlainObject)
+  if (records.length === 0) {
+    return []
+  }
+  return inferSampleNodes(records, overrides) as FormKitSchemaNode[]
+}
+
 // Structural duck-type for introspecting Valibot 1.x schemas without
 // importing valibot: every construct is plain data (kind/type plus one
 // shape field), confirmed against valibot@1.4.2.
@@ -471,5 +571,5 @@ export function inferFormSchemaFromZod(schema: object, overrides?: AutoFormOverr
 }
 
 export function useFormKitAutoForm() {
-  return { inferFormSchema, inferFormSchemaFromValibot, inferFormSchemaFromZod }
+  return { inferFormSchema, inferFormSchemaFromSamples, inferFormSchemaFromValibot, inferFormSchemaFromZod }
 }

@@ -3,7 +3,7 @@ import type { FormKitSchemaNode } from '@formkit/core'
 import type { PropType } from 'vue'
 import type { AutoFormOverrides, ValibotLikeSchema, ZodLikeSchema } from '../composables/useFormKitAutoForm'
 import { ref, watch } from 'vue'
-import { inferFormSchema, inferFormSchemaFromValibot, inferFormSchemaFromZod } from '../composables/useFormKitAutoForm'
+import { inferFormSchema, inferFormSchemaFromSamples, inferFormSchemaFromValibot, inferFormSchemaFromZod } from '../composables/useFormKitAutoForm'
 import FUDataEdit from './FUDataEdit.vue'
 
 // All FUDataEdit props/listeners pass through via $attrs instead of being
@@ -12,7 +12,7 @@ defineOptions({ inheritAttrs: false })
 
 const props = defineProps({
   data: {
-    type: Object as PropType<Record<string, unknown>>,
+    type: [Object, Array] as PropType<Record<string, unknown> | Record<string, unknown>[]>,
     default: null,
   },
   overrides: {
@@ -31,7 +31,8 @@ const props = defineProps({
 
 const formData = defineModel<Record<string, unknown>>()
 
-if (!formData.value && props.data) {
+// An array of samples is schema-inference input, not the live form value.
+if (!formData.value && props.data && !Array.isArray(props.data)) {
   formData.value = props.data
 }
 
@@ -41,6 +42,9 @@ function buildSchema(data: object | null): FormKitSchemaNode[] {
   }
   if (props.zodSchema) {
     return inferFormSchemaFromZod(props.zodSchema, props.overrides)
+  }
+  if (Array.isArray(data)) {
+    return inferFormSchemaFromSamples(data as Record<string, unknown>[], props.overrides)
   }
   return inferFormSchema((data ?? formData.value ?? {}) as Record<string, unknown>, props.overrides)
 }

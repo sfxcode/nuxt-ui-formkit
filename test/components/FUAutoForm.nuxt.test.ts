@@ -104,6 +104,38 @@ describe('fUAutoForm', () => {
     wrapper.unmount()
   })
 
+  it('infers fields and required-ness from an array of sample records without seeding the model', async () => {
+    const wrapper = await mountAutoForm({
+      data: [
+        { name: 'Tom', nickname: 'T' },
+        { name: 'Anna' },
+      ],
+      overrides: { name: { validationVisibility: 'live' } },
+    })
+    await settle()
+
+    expect(wrapper.text()).toContain('Name')
+    expect(wrapper.text()).toContain('Nickname')
+
+    // The samples array is inference input, not the form value - inputs
+    // start empty and the v-model is never set to the raw array.
+    expect(wrapper.findAll('input').map(input => input.element.value)).toEqual(['', ''])
+    for (const [value] of wrapper.emitted('update:modelValue') ?? []) {
+      expect(Array.isArray(value)).toBe(false)
+    }
+
+    // `name` is filled in every sample -> required; `nickname` is missing
+    // from one sample -> not required.
+    const [nameInput] = wrapper.findAll('input')
+    await nameInput!.setValue('x')
+    await settle()
+    await nameInput!.setValue('')
+    await settle()
+    expect(wrapper.text()).toContain('Name is required')
+    expect(wrapper.text()).not.toContain('Nickname is required')
+    wrapper.unmount()
+  })
+
   it('applies overrides: type swap and field suppression', async () => {
     const wrapper = await mountAutoForm({
       data: { name: 'Tom', bio: 'short', internalId: 7 },
