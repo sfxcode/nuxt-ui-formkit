@@ -21,6 +21,7 @@ import FUSelectMenu from '../../../runtime/components/inputs/FUSelectMenu.vue'
 import FUSlider from '../../../runtime/components/inputs/FUSlider.vue'
 import FUSwitch from '../../../runtime/components/inputs/FUSwitch.vue'
 import FUTextarea from '../../../runtime/components/inputs/FUTextarea.vue'
+import FUTree from '../../../runtime/components/inputs/FUTree.vue'
 
 export const nuxtUICalendarDefinition: FormKitTypeDefinition = createInput(FUCalendar, {
   props: ['type', 'range', 'multiple', 'color', 'variant', 'size', 'weekNumbers', 'monthControls', 'yearControls', 'viewControl', 'defaultValue', 'minValue', 'maxValue', 'isDateDisabled', 'isDateUnavailable', 'ui', 'valueType', 'timeZone'],
@@ -119,5 +120,10 @@ export const nuxtUISwitchDefinition: FormKitTypeDefinition = createInput(FUSwitc
 
 export const nuxtUITextareaDefinition: FormKitTypeDefinition = createInput(FUTextarea, {
   props: ['color', 'size', 'variant', 'placeholder', 'autofocus', 'autofocusDelay', 'autoresize', 'autoresizeDelay', 'rows', 'maxrows', 'highlight', 'fixed', 'icon', 'avatar', 'leading', 'leadingIcon', 'trailing', 'trailingIcon', 'loading', 'loadingIcon', 'cols', 'dirname', 'maxlength', 'minlength', 'wrap', 'ui'],
+  family: 'NuxtUIInput',
+})
+
+export const nuxtUITreeDefinition: FormKitTypeDefinition = createInput(FUTree, {
+  props: ['color', 'size', 'disabled', 'multiple', 'nested', 'virtualize', 'labelKey', 'trailingIcon', 'expandedIcon', 'collapsedIcon', 'expanded', 'defaultExpanded', 'selectionBehavior', 'propagateSelect', 'bubbleSelect', 'ui', 'items', 'options'],
   family: 'NuxtUIInput',
 })

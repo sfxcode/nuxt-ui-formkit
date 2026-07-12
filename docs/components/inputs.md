@@ -292,6 +292,56 @@ const schema = [
 - `by` - Key or comparator used to match the selected value
 - `open` - Controlled open state of the menu
 
+### nuxtUITree
+
+Hierarchical selection input for nested data — categories, org charts, file trees, permission trees.
+
+📖 Nuxt UI reference: [Tree](https://ui.nuxt.com/components/tree)
+
+**Schema Example:**
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUITree',
+    name: 'category',
+    label: 'Category',
+    options: [
+      {
+        label: 'Electronics',
+        icon: 'i-lucide-cpu',
+        defaultExpanded: true,
+        children: [
+          { label: 'Laptops' },
+          { label: 'Phones' },
+        ],
+      },
+      {
+        label: 'Clothing',
+        icon: 'i-lucide-shirt',
+        children: [
+          { label: 'Men' },
+          { label: 'Women' },
+        ],
+      },
+    ],
+  },
+]
+```
+
+::: info
+The field's value is the **selected item only** — whatever shape you gave that item in `options` (e.g. `{ label: 'Laptops' }` above). Expanding/collapsing nodes is separate, uncontrolled UI state that never becomes part of the field's value, the same way `FUSelectMenu`'s `open`/`defaultOpen` are plain display props rather than part of `modelValue`. Selecting a node and toggling its expanded state are also independent interactions — clicking a row does both at once, but keyboard `ArrowLeft`/`ArrowRight` toggles expand without changing the selection.
+:::
+
+**Key Props:**
+- `options` - Array of `{ label, icon, children, defaultExpanded, disabled, ... }` objects; `children` nests recursively to any depth
+- `multiple` - Allow selecting more than one item (the value becomes an array)
+- `labelKey` - Key used to read each item's label (defaults to `'label'`)
+- `nested` - Render children inside their parent (`true`, default) vs. a flattened single-level list
+- `virtualize` - Enable virtualization for large trees (`true`, or `{ overscan, estimateSize }`)
+- `expandedIcon` / `collapsedIcon` / `trailingIcon` - Icons shown next to expandable parent nodes
+- `selectionBehavior` - `'toggle'` or `'replace'` selection behavior
+
 ## Boolean Inputs
 
 ### nuxtUICheckbox

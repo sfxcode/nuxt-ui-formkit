@@ -18,7 +18,7 @@ FormKit Nuxt UI bridges the gap between [FormKit](https://formkit.com/)'s powerf
 
 ## Features
 
-✨ **20 Input Components** - Complete set of FormKit-wrapped Nuxt UI input components
+✨ **21 Input Components** - Complete set of FormKit-wrapped Nuxt UI input components
 - `nuxtUICalendar` - Bare date-grid picker with range/multiple selection
 - `nuxtUICheckbox` - Single checkbox with label and description
 - `nuxtUICheckboxGroup` - Multiple checkbox selection
@@ -39,6 +39,7 @@ FormKit Nuxt UI bridges the gap between [FormKit](https://formkit.com/)'s powerf
 - `nuxtUISlider` - Range slider for numeric values
 - `nuxtUISwitch` - Toggle switch for boolean states
 - `nuxtUITextarea` - Multi-line text input with autoresize
+- `nuxtUITree` - Hierarchical selection input (categories, org charts, file trees)
 
 🔁 **Repeater Component** - Dynamic repeatable form sections
 - `nuxtUIRepeater` - Create dynamic lists with add, remove, clone, and reorder functionality

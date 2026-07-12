@@ -128,6 +128,12 @@ const items = ref<NavigationMenuItem[]>([
         description: 'Textarea component with various types and validations.',
         to: '/components/input/textarea',
       },
+      {
+        label: 'Tree',
+        icon: 'i-lucide-folder-tree',
+        description: 'Hierarchical selection input for nested data.',
+        to: '/components/input/tree',
+      },
     ],
   },
   {

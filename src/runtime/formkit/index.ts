@@ -19,6 +19,7 @@ import type {
   ListboxSlots,
   PinInputSlots,
   SwitchSlots,
+  TreeSlots,
 } from '@nuxt/ui'
 
 // Re-export all definitions for external use
@@ -103,6 +104,9 @@ declare module '@formkit/inputs' {
     nuxtUITextarea: {
       type: 'nuxtUITextarea'
     }
+    nuxtUITree: {
+      type: 'nuxtUITree'
+    }
     // Output Components
     nuxtUIOutputText: {
       type: 'nuxtUIOutputText'
@@ -146,5 +150,6 @@ declare module '@formkit/inputs' {
     nuxtUIStep: MergeSlots<FormKitBaseSlots<Props>, FormKitStepSlots<Props>>
     nuxtUISwitch: MergeSlots<FormKitBaseSlots<Props>, SwitchSlots>
     nuxtUITextarea: MergeSlots<FormKitBaseSlots<Props>, TextareaSlots>
+    nuxtUITree: MergeSlots<FormKitBaseSlots<Props>, TreeSlots>
   }
 }
