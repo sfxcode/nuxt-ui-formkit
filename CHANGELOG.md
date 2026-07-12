@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.2.6
+
+[compare changes](https://github.com/sfxcode/nuxt-ui-formkit/compare/v1.2.5...v1.2.6)
+
+### 🚀 Enhancements
+
+- Infer FUAutoForm schema from a list of sample records ([8cd9a32](https://github.com/sfxcode/nuxt-ui-formkit/commit/8cd9a32))
+- Add nuxtUITree/FUTree.vue for hierarchical selection ([35aae58](https://github.com/sfxcode/nuxt-ui-formkit/commit/35aae58))
+
+### 🩹 Fixes
+
+- Forward the FormKit field name via context.node.name, not context.name ([ea7515b](https://github.com/sfxcode/nuxt-ui-formkit/commit/ea7515b))
+
+### 📖 Documentation
+
+- Add cross-field validation example to standard-schema page ([b68d3c7](https://github.com/sfxcode/nuxt-ui-formkit/commit/b68d3c7))
+
+### ❤️ Contributors
+
+- Sfxcode ([@sfxcode](https://github.com/sfxcode))
+
 ## v1.2.5
 
 [compare changes](https://github.com/sfxcode/nuxt-ui-formkit/compare/v1.2.4...v1.2.5)
