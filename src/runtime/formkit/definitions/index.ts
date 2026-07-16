@@ -1,4 +1,4 @@
-import { nuxtUICalendarDefinition, nuxtUICheckboxDefinition, nuxtUICheckboxGroupDefinition, nuxtUIColorPickerDefinition, nuxtUIEditorDefinition, nuxtUIFileUploadDefinition, nuxtUIInputDateDefinition, nuxtUIInputDefinition, nuxtUIInputMenuDefinition, nuxtUIInputNumberDefinition, nuxtUIInputTagsDefinition, nuxtUIInputTimeDefinition, nuxtUIListboxDefinition, nuxtUIPinInputDefinition, nuxtUIRadioGroupDefinition, nuxtUISelectDefinition, nuxtUISelectMenuDefinition, nuxtUISliderDefinition, nuxtUISwitchDefinition, nuxtUITextareaDefinition, nuxtUITreeDefinition } from './input'
+import { nuxtUICalendarDefinition, nuxtUICheckboxDefinition, nuxtUICheckboxGroupDefinition, nuxtUIColorPickerDefinition, nuxtUIEditorDefinition, nuxtUIFileUploadDefinition, nuxtUIInputDateDefinition, nuxtUIInputDefinition, nuxtUIInputMenuDefinition, nuxtUIInputNumberDefinition, nuxtUIInputRatingDefinition, nuxtUIInputTagsDefinition, nuxtUIInputTimeDefinition, nuxtUIListboxDefinition, nuxtUIPinInputDefinition, nuxtUIRadioGroupDefinition, nuxtUISelectDefinition, nuxtUISelectMenuDefinition, nuxtUISliderDefinition, nuxtUISwitchDefinition, nuxtUITextareaDefinition, nuxtUITreeDefinition } from './input'
 import { nuxtUIMultiStepDefinition, nuxtUIStepDefinition } from './multiStep'
 import { nuxtUIOutputBooleanDefinition, nuxtUIOutputDateDefinition, nuxtUIOutputLinkDefinition, nuxtUIOutputListDefinition, nuxtUIOutputNumberDefinition, nuxtUIOutputTextDefinition } from './output'
 import { nuxtUIRepeaterDefinition } from './repeater'
@@ -19,6 +19,7 @@ export const nuxtUIInputs = {
   nuxtUIInputDate: nuxtUIInputDateDefinition,
   nuxtUIInputMenu: nuxtUIInputMenuDefinition,
   nuxtUIInputNumber: nuxtUIInputNumberDefinition,
+  nuxtUIInputRating: nuxtUIInputRatingDefinition,
   nuxtUIInputTags: nuxtUIInputTagsDefinition,
   nuxtUIInputTime: nuxtUIInputTimeDefinition,
   nuxtUIListbox: nuxtUIListboxDefinition,

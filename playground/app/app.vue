@@ -68,6 +68,12 @@ const items = ref<NavigationMenuItem[]>([
         to: '/components/input/input-number',
       },
       {
+        label: 'InputRating',
+        icon: 'i-lucide-star',
+        description: 'Star-based rating input for numeric value selection.',
+        to: '/components/input/input-rating',
+      },
+      {
         label: 'InputTags',
         icon: 'i-lucide-tags',
         description: 'Tag input component with validation and customization.',

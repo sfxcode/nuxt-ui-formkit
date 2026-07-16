@@ -11,6 +11,7 @@ import FUInput from '../../../runtime/components/inputs/FUInput.vue'
 import FUInputDate from '../../../runtime/components/inputs/FUInputDate.vue'
 import FUInputMenu from '../../../runtime/components/inputs/FUInputMenu.vue'
 import FUInputNumber from '../../../runtime/components/inputs/FUInputNumber.vue'
+import FUInputRating from '../../../runtime/components/inputs/FUInputRating.vue'
 import FUInputTags from '../../../runtime/components/inputs/FUInputTags.vue'
 import FUInputTime from '../../../runtime/components/inputs/FUInputTime.vue'
 import FUListbox from '../../../runtime/components/inputs/FUListbox.vue'
@@ -70,6 +71,11 @@ export const nuxtUIInputMenuDefinition: FormKitTypeDefinition = createInput(FUIn
 
 export const nuxtUIInputNumberDefinition: FormKitTypeDefinition = createInput(FUInputNumber, {
   props: ['placeholder', 'color', 'variant', 'size', 'highlight', 'fixed', 'orientation', 'increment', 'incrementIcon', 'incrementDisabled', 'decrement', 'decrementIcon', 'decrementDisabled', 'autofocus', 'autofocusDelay', 'min', 'max', 'step', 'stepSnapping', 'formatOptions', 'disableWheelChange', 'invertWheelChange', 'focusOnChange', 'locale', 'list', 'autocomplete', 'ui'],
+  family: 'NuxtUIInput',
+})
+
+export const nuxtUIInputRatingDefinition: FormKitTypeDefinition = createInput(FUInputRating, {
+  props: ['color', 'size', 'orientation', 'icon', 'emptyIcon', 'readonly', 'clearable', 'hoverable', 'length', 'step', 'defaultValue', 'name', 'ui'],
   family: 'NuxtUIInput',
 })
 

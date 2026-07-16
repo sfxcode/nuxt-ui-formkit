@@ -18,7 +18,7 @@ FormKit Nuxt UI bridges the gap between [FormKit](https://formkit.com/)'s powerf
 
 ## Features
 
-✨ **21 Input Components** - Complete set of FormKit-wrapped Nuxt UI input components
+✨ **22 Input Components** - Complete set of FormKit-wrapped Nuxt UI input components
 - `nuxtUICalendar` - Bare date-grid picker with range/multiple selection
 - `nuxtUICheckbox` - Single checkbox with label and description
 - `nuxtUICheckboxGroup` - Multiple checkbox selection
@@ -29,6 +29,7 @@ FormKit Nuxt UI bridges the gap between [FormKit](https://formkit.com/)'s powerf
 - `nuxtUIInputDate` - Date and time picker with range support
 - `nuxtUIInputMenu` - Dropdown menu with searchable options
 - `nuxtUIInputNumber` - Number input with increment/decrement buttons
+- `nuxtUIInputRating` - Star-based rating input for numeric values
 - `nuxtUIInputTags` - Tag input with custom delimiters
 - `nuxtUIInputTime` - Time picker with 12/24-hour format
 - `nuxtUIListbox` - Listbox for single/multiple selection with filtering (for use with transfer mode lucide icons must be installed additionally)
@@ -315,6 +316,7 @@ The playground includes comprehensive examples for all components:
 - [InputDate](./playground/app/pages/components/input/input-date.vue)
 - [InputMenu](./playground/app/pages/components/input/input-menu.vue)
 - [InputNumber](./playground/app/pages/components/input/input-number.vue)
+- [InputRating](./playground/app/pages/components/input/input-rating.vue)
 - [InputTags](./playground/app/pages/components/input/input-tags.vue)
 - [InputTime](./playground/app/pages/components/input/input-time.vue)
 - [Listbox](./playground/app/pages/components/input/listbox.vue)

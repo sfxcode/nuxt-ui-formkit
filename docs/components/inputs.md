@@ -602,6 +602,34 @@ const schema = [
 - `type` - `'text'` (default) or `'number'`
 - `separator` - Insert a separator between inputs (index or list of indexes)
 
+### nuxtUIInputRating
+
+Star-based rating input for numeric values.
+
+📖 Nuxt UI reference: [InputRating](https://ui.nuxt.com/components/input-rating)
+
+**Schema Example:**
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUIInputRating',
+    name: 'satisfaction',
+    label: 'Satisfaction',
+    length: 5,
+    validation: 'required'
+  }
+]
+```
+
+**Key Props:**
+- `length` - Number of rating items to render (default `5`)
+- `step` - Granularity of each rating item (`1`, `0.5`, `0.25`, or `0.1`)
+- `icon` / `emptyIcon` - Custom icons for filled/empty states
+- `clearable` - Clicking the current value resets it to `0`
+- `hoverable` - Preview the value under the pointer on hover
+- `readonly` - Non-interactive display mode
+
 ### nuxtUISlider
 
 Range slider for numeric values.
