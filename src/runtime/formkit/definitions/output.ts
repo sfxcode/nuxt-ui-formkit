@@ -7,6 +7,10 @@ import FUOutputText from '../../../runtime/components/output/FUOutputText.vue'
 import FUOutputLink from '../../../runtime/components/output/FUOutputLink.vue'
 import FUOutputNumber from '../../../runtime/components/output/FUOutputNumber.vue'
 import FUOutputList from '../../../runtime/components/output/FUOutputList.vue'
+import FUOutputProgress from '../../../runtime/components/output/FUOutputProgress.vue'
+import FUOutputRating from '../../../runtime/components/output/FUOutputRating.vue'
+import FUOutputUser from '../../../runtime/components/output/FUOutputUser.vue'
+import FUOutputBadge from '../../../runtime/components/output/FUOutputBadge.vue'
 
 export const nuxtUIOutputTextDefinition: FormKitTypeDefinition = createInput(FUOutputText, {
   props: ['size', 'color', 'variant', 'icon', 'leadingIcon', 'trailingIcon', 'leading', 'trailing', 'onIconClicked', 'onLeadingIconClicked', 'onTrailingIconClicked', 'outputType', 'ui'],
@@ -35,5 +39,25 @@ export const nuxtUIOutputNumberDefinition: FormKitTypeDefinition = createInput(F
 
 export const nuxtUIOutputListDefinition: FormKitTypeDefinition = createInput(FUOutputList, {
   props: ['size', 'color', 'variant', 'icon', 'leadingIcon', 'trailingIcon', 'leading', 'trailing', 'listType', 'separator', 'itemClass', 'onIconClicked', 'onLeadingIconClicked', 'onTrailingIconClicked', 'ui'],
+  family: 'NuxtUIOutput',
+})
+
+export const nuxtUIOutputProgressDefinition: FormKitTypeDefinition = createInput(FUOutputProgress, {
+  props: ['size', 'color', 'variant', 'icon', 'leadingIcon', 'trailingIcon', 'leading', 'trailing', 'onIconClicked', 'onLeadingIconClicked', 'onTrailingIconClicked', 'max', 'status', 'orientation', 'animation', 'ui'],
+  family: 'NuxtUIOutput',
+})
+
+export const nuxtUIOutputRatingDefinition: FormKitTypeDefinition = createInput(FUOutputRating, {
+  props: ['size', 'color', 'variant', 'icon', 'leadingIcon', 'trailingIcon', 'leading', 'trailing', 'onIconClicked', 'onLeadingIconClicked', 'onTrailingIconClicked', 'length', 'emptyIcon', 'orientation', 'ui'],
+  family: 'NuxtUIOutput',
+})
+
+export const nuxtUIOutputUserDefinition: FormKitTypeDefinition = createInput(FUOutputUser, {
+  props: ['size', 'color', 'variant', 'icon', 'leadingIcon', 'trailingIcon', 'leading', 'trailing', 'onIconClicked', 'onLeadingIconClicked', 'onTrailingIconClicked', 'orientation', 'chip', 'ui'],
+  family: 'NuxtUIOutput',
+})
+
+export const nuxtUIOutputBadgeDefinition: FormKitTypeDefinition = createInput(FUOutputBadge, {
+  props: ['size', 'color', 'variant', 'icon', 'leadingIcon', 'trailingIcon', 'leading', 'trailing', 'onIconClicked', 'onLeadingIconClicked', 'onTrailingIconClicked', 'badgeIcon', 'square', 'ui'],
   family: 'NuxtUIOutput',
 })

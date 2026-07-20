@@ -130,6 +130,18 @@ declare module '@formkit/inputs' {
     nuxtUIOutputList: {
       type: 'nuxtUIOutputList'
     }
+    nuxtUIOutputProgress: {
+      type: 'nuxtUIOutputProgress'
+    }
+    nuxtUIOutputRating: {
+      type: 'nuxtUIOutputRating'
+    }
+    nuxtUIOutputUser: {
+      type: 'nuxtUIOutputUser'
+    }
+    nuxtUIOutputBadge: {
+      type: 'nuxtUIOutputBadge'
+    }
   }
 
   interface FormKitInputSlots<Props extends FormKitInputs<Props>> {

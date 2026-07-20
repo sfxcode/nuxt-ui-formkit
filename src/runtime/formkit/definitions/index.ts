@@ -1,6 +1,6 @@
 import { nuxtUICalendarDefinition, nuxtUICheckboxDefinition, nuxtUICheckboxGroupDefinition, nuxtUIColorPickerDefinition, nuxtUIEditorDefinition, nuxtUIFileUploadDefinition, nuxtUIInputDateDefinition, nuxtUIInputDefinition, nuxtUIInputMenuDefinition, nuxtUIInputNumberDefinition, nuxtUIInputRatingDefinition, nuxtUIInputTagsDefinition, nuxtUIInputTimeDefinition, nuxtUIListboxDefinition, nuxtUIPinInputDefinition, nuxtUIRadioGroupDefinition, nuxtUISelectDefinition, nuxtUISelectMenuDefinition, nuxtUISliderDefinition, nuxtUISwitchDefinition, nuxtUITextareaDefinition, nuxtUITreeDefinition } from './input'
 import { nuxtUIMultiStepDefinition, nuxtUIStepDefinition } from './multiStep'
-import { nuxtUIOutputBooleanDefinition, nuxtUIOutputDateDefinition, nuxtUIOutputLinkDefinition, nuxtUIOutputListDefinition, nuxtUIOutputNumberDefinition, nuxtUIOutputTextDefinition } from './output'
+import { nuxtUIOutputBadgeDefinition, nuxtUIOutputBooleanDefinition, nuxtUIOutputDateDefinition, nuxtUIOutputLinkDefinition, nuxtUIOutputListDefinition, nuxtUIOutputNumberDefinition, nuxtUIOutputProgressDefinition, nuxtUIOutputRatingDefinition, nuxtUIOutputTextDefinition, nuxtUIOutputUserDefinition } from './output'
 import { nuxtUIRepeaterDefinition } from './repeater'
 
 // Re-export all individual definitions
@@ -37,10 +37,14 @@ export const nuxtUIInputs = {
 }
 
 export const nuxtUIOutputs = {
+  nuxtUIOutputBadge: nuxtUIOutputBadgeDefinition,
   nuxtUIOutputBoolean: nuxtUIOutputBooleanDefinition,
   nuxtUIOutputDate: nuxtUIOutputDateDefinition,
   nuxtUIOutputLink: nuxtUIOutputLinkDefinition,
   nuxtUIOutputList: nuxtUIOutputListDefinition,
   nuxtUIOutputNumber: nuxtUIOutputNumberDefinition,
+  nuxtUIOutputProgress: nuxtUIOutputProgressDefinition,
+  nuxtUIOutputRating: nuxtUIOutputRatingDefinition,
   nuxtUIOutputText: nuxtUIOutputTextDefinition,
+  nuxtUIOutputUser: nuxtUIOutputUserDefinition,
 }

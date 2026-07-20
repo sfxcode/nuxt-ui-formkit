@@ -178,6 +178,32 @@ const outputSchema = reactive([
     label: 'Biography',
     variant: 'soft',
   },
+  {
+    $formkit: 'nuxtUIOutputProgress',
+    name: 'storageUsed',
+    label: 'Storage Used',
+    status: true,
+    color: 'info',
+    leadingIcon: 'i-heroicons-server',
+  },
+  {
+    $formkit: 'nuxtUIOutputRating',
+    name: 'rating',
+    label: 'Rating',
+    color: 'warning',
+  },
+  {
+    $formkit: 'nuxtUIOutputUser',
+    name: 'profile',
+    label: 'Profile',
+  },
+  {
+    $formkit: 'nuxtUIOutputBadge',
+    name: 'subscriptionTier',
+    label: 'Plan',
+    color: 'primary',
+    variant: 'subtle',
+  },
 ])
 
 const outputData = ref({
@@ -195,6 +221,14 @@ const outputData = ref({
   skills: ['Frontend Development', 'UI/UX Design', 'API Integration'],
   portfolio: 'https://portfolio.johndoe.dev',
   bio: 'Passionate full-stack developer with 5+ years of experience building modern web applications.',
+  storageUsed: 72,
+  rating: 4,
+  profile: {
+    name: 'John Doe',
+    description: 'Full-stack Developer',
+    avatar: { text: 'JD' },
+  },
+  subscriptionTier: 'Premium',
 })
 </script>
 

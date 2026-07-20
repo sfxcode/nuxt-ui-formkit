@@ -12,6 +12,12 @@ export interface FormKitOutputUi {
   icon?: string
   /** Forwarded unmodified to `UBadge`'s own `:ui` prop (`FUOutputList`'s badge display mode only). */
   badge?: Record<string, unknown>
+  /** Forwarded unmodified to `UProgress`'s own `:ui` prop (`FUOutputProgress` only). */
+  progress?: Record<string, unknown>
+  /** Forwarded unmodified to `UInputRating`'s own `:ui` prop (`FUOutputRating` only). */
+  rating?: Record<string, unknown>
+  /** Forwarded unmodified to `UUser`'s own `:ui` prop (`FUOutputUser` only). */
+  user?: Record<string, unknown>
 }
 
 export function useFormKitOutput(context: FormKitFrameworkContext) {

@@ -250,6 +250,69 @@ const metricsSchema = [
 </script>
 ```
 
+### nuxtUIOutputProgress
+
+Display a numeric value as a progress bar.
+
+**Schema Example:**
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUIOutputProgress',
+    name: 'storageUsed',
+    label: 'Storage Used',
+    max: 100,
+    status: true,
+    color: 'primary'
+  },
+  {
+    $formkit: 'nuxtUIOutputProgress',
+    name: 'quotaUsed',
+    label: 'Quota',
+    max: 500,
+    status: true,
+    color: 'warning'
+  }
+]
+```
+
+**Notes:**
+- The field's value is the current progress amount, not a percentage - it's read against `max` (defaults to `100`).
+- `status: true` overlays the computed percentage as text; omit it for a bare bar.
+- `orientation: 'vertical'` renders a vertical bar instead of the default horizontal one.
+
+### nuxtUIOutputRating
+
+Display a numeric rating as a read-only row of stars.
+
+**Schema Example:**
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUIOutputRating',
+    name: 'reviewScore',
+    label: 'Review Score',
+    length: 5,
+    color: 'warning'
+  },
+  {
+    $formkit: 'nuxtUIOutputRating',
+    name: 'satisfaction',
+    label: 'Satisfaction',
+    length: 10,
+    size: 'sm',
+    orientation: 'horizontal'
+  }
+]
+```
+
+**Notes:**
+- The field's value is the current rating; `length` (default `5`) sets the number of stars, not `max`.
+- This component is always read-only - it wraps the same star widget as `nuxtUIInputRating`, but forces Nuxt UI's `readonly` mode so clicking a star never changes the value.
+- `icon`/`emptyIcon` customize the filled/empty star glyphs; `color`/`size` follow the same values as every other Output component.
+
 ### nuxtUIOutputDate
 
 Display dates and times with customizable formatting.
@@ -408,6 +471,89 @@ const projectSchema = [
 ]
 </script>
 ```
+
+## Status Outputs
+
+### nuxtUIOutputBadge
+
+Display a single value as a status badge.
+
+::: tip
+Not to be confused with `nuxtUIOutputList`'s `listType: 'badge'` mode just above - that renders an **array** as multiple badges (e.g. a list of tags). `nuxtUIOutputBadge` is for a **single** status value (e.g. `"Active"`, `"Pending"`).
+:::
+
+**Schema Example:**
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUIOutputBadge',
+    name: 'status',
+    label: 'Status',
+    color: 'success',
+    variant: 'subtle'
+  },
+  {
+    $formkit: 'nuxtUIOutputBadge',
+    name: 'priority',
+    label: 'Priority',
+    color: 'error',
+    variant: 'solid',
+    badgeIcon: 'i-heroicons-exclamation-triangle'
+  }
+]
+```
+
+**Notes:**
+- `badgeIcon` renders an icon *inside* the badge pill - distinct from the common `leadingIcon`/`trailingIcon`, which render an external icon beside it.
+- `variant` accepts this library's usual `outline | soft | subtle | ghost | none`, but the underlying `UBadge` only supports `outline | soft | subtle | solid` - `ghost` and `none` both map to `soft`.
+
+## Profile Outputs
+
+### nuxtUIOutputUser
+
+Display a name, description, and avatar together as a profile-style entry.
+
+::: warning
+Unlike every other Output component, this field's **value is an object**, not a scalar: `{ name?, description?, avatar? }`. `avatar` mirrors Nuxt UI's own `Avatar` props (`src`, `alt`, `icon`, `text`).
+:::
+
+**Schema Example:**
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUIOutputUser',
+    name: 'author',
+    label: 'Author',
+    orientation: 'horizontal'
+  },
+  {
+    $formkit: 'nuxtUIOutputUser',
+    name: 'assignee',
+    label: 'Assigned To',
+    chip: true
+  }
+]
+
+const data = {
+  author: {
+    name: 'Jane Doe',
+    description: 'Senior Engineer',
+    avatar: { src: 'https://example.com/jane.png' }
+  },
+  assignee: {
+    name: 'John Smith',
+    description: 'Online now',
+    avatar: { text: 'JS' }
+  }
+}
+```
+
+**Notes:**
+- `avatar.src` shows an image; omit it and `avatar.text`/`avatar.icon` render initials or an icon instead.
+- `chip: true` overlays a status indicator (e.g. online/offline) on the avatar, using Nuxt UI's default chip styling; pass a `Chip` props object instead of `true` to customize it.
+- `orientation: 'vertical'` stacks the avatar above the name/description instead of side-by-side.
 
 ## Complete User Profile Example
 

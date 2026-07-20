@@ -101,7 +101,7 @@
     "@codemirror/view": "^6.43.6",
     "@iconify-json/heroicons": "^1.2.3",
     "@iconify-json/lucide": "^1.2.118",
-    "@iconify-json/simple-icons": "^1.2.90",
+    "@iconify-json/simple-icons": "^1.2.91",
     "@nuxt/devtools": "4.0.0-alpha.7",
     "@nuxt/eslint-config": "^1.16.0",
     "@nuxt/kit": "^4.5.0",
@@ -124,7 +124,7 @@
     "vitepress": "2.0.0-alpha.17",
     "vitest": "^4.1.10",
     "vue": "^3.5.40",
-    "vue-i18n": "^11.4.6",
+    "vue-i18n": "^11.4.7",
     "vue-tsc": "^3.3.7",
     "zod": "^4.4.3"
   },

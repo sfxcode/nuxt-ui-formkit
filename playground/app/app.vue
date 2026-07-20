@@ -148,6 +148,12 @@ const items = ref<NavigationMenuItem[]>([
     active: false,
     children: [
       {
+        label: 'OutputBadge',
+        icon: 'i-lucide-badge',
+        description: 'Single-value status badge with colors, variants, and an inner icon.',
+        to: '/components/output/badge',
+      },
+      {
         label: 'OutputBoolean',
         icon: 'i-lucide-toggle-left',
         description: 'Boolean display with custom true/false values and icons.',
@@ -178,10 +184,28 @@ const items = ref<NavigationMenuItem[]>([
         to: '/components/output/number',
       },
       {
+        label: 'OutputProgress',
+        icon: 'i-lucide-gauge',
+        description: 'Progress bar display with status text, sizes, colors, and orientation.',
+        to: '/components/output/progress',
+      },
+      {
+        label: 'OutputRating',
+        icon: 'i-lucide-star',
+        description: 'Read-only star rating display with custom length, icons, sizes, and colors.',
+        to: '/components/output/rating',
+      },
+      {
         label: 'OutputText',
         icon: 'i-lucide-file-text',
         description: 'Read-only text display with icons and styling.',
         to: '/components/output/text',
+      },
+      {
+        label: 'OutputUser',
+        icon: 'i-lucide-user-round',
+        description: 'Profile display combining avatar, name, and description.',
+        to: '/components/output/user',
       },
     ],
   },
