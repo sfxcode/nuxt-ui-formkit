@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.2.9
+
+[compare changes](https://github.com/sfxcode/nuxt-ui-formkit/compare/v1.2.8...v1.2.9)
+
+### 🚀 Enhancements
+
+- Add Progress, Rating, User, and Badge output components ([042a9b5](https://github.com/sfxcode/nuxt-ui-formkit/commit/042a9b5))
+
+### 🩹 Fixes
+
+- Use Nuxt UI semantic tokens in output components for dark mode ([123154b](https://github.com/sfxcode/nuxt-ui-formkit/commit/123154b))
+
+### ❤️ Contributors
+
+- Sfxcode ([@sfxcode](https://github.com/sfxcode))
+
 ## v1.2.8
 
 [compare changes](https://github.com/sfxcode/nuxt-ui-formkit/compare/v1.2.7...v1.2.8)
