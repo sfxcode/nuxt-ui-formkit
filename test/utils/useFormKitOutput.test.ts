@@ -9,7 +9,7 @@ describe('useFormKitOutput - colorClass', () => {
   it('returns neutral color by default', () => {
     const context: PartialContext = {}
     const { colorClass } = useFormKitOutput(context as unknown as FormKitFrameworkContext)
-    expect(colorClass.value).toBe('text-gray-900 dark:text-gray-100')
+    expect(colorClass.value).toBe('text-highlighted')
   })
 
   it('returns primary color class', () => {
@@ -65,7 +65,7 @@ describe('useFormKitOutput - colorClass', () => {
       color: 'neutral',
     }
     const { colorClass } = useFormKitOutput(context as unknown as FormKitFrameworkContext)
-    expect(colorClass.value).toBe('text-gray-900 dark:text-gray-100')
+    expect(colorClass.value).toBe('text-highlighted')
   })
 
   it('falls back to neutral for invalid color', () => {
@@ -73,7 +73,7 @@ describe('useFormKitOutput - colorClass', () => {
       color: 'invalid-color' as unknown,
     }
     const { colorClass } = useFormKitOutput(context as unknown as FormKitFrameworkContext)
-    expect(colorClass.value).toBe('text-gray-900 dark:text-gray-100')
+    expect(colorClass.value).toBe('text-highlighted')
   })
 })
 
@@ -145,7 +145,7 @@ describe('useFormKitOutput - variantClass', () => {
       variant: 'outline',
     }
     const { variantClass } = useFormKitOutput(context as unknown as FormKitFrameworkContext)
-    expect(variantClass.value).toBe('border border-gray-300 dark:border-gray-700 rounded-md px-2 py-1')
+    expect(variantClass.value).toBe('border border-default rounded-md px-2 py-1')
   })
 
   it('returns soft variant class', () => {
@@ -153,7 +153,7 @@ describe('useFormKitOutput - variantClass', () => {
       variant: 'soft',
     }
     const { variantClass } = useFormKitOutput(context as unknown as FormKitFrameworkContext)
-    expect(variantClass.value).toBe('bg-gray-100 dark:bg-gray-800 rounded-md')
+    expect(variantClass.value).toBe('bg-elevated rounded-md')
   })
 
   it('returns subtle variant class', () => {
@@ -161,7 +161,7 @@ describe('useFormKitOutput - variantClass', () => {
       variant: 'subtle',
     }
     const { variantClass } = useFormKitOutput(context as unknown as FormKitFrameworkContext)
-    expect(variantClass.value).toBe('bg-gray-50 dark:bg-gray-900 rounded-md')
+    expect(variantClass.value).toBe('bg-muted rounded-md')
   })
 
   it('returns ghost variant class', () => {
@@ -169,7 +169,7 @@ describe('useFormKitOutput - variantClass', () => {
       variant: 'ghost',
     }
     const { variantClass } = useFormKitOutput(context as unknown as FormKitFrameworkContext)
-    expect(variantClass.value).toBe('hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md')
+    expect(variantClass.value).toBe('hover:bg-elevated rounded-md')
   })
 
   it('returns none variant class explicitly', () => {
@@ -193,7 +193,7 @@ describe('useFormKitOutput - containerClass', () => {
   it('returns base container classes by default', () => {
     const context: PartialContext = {}
     const { containerClass } = useFormKitOutput(context as unknown as FormKitFrameworkContext)
-    expect(containerClass.value).toBe('inline-flex items-center gap-2 text-gray-900 dark:text-gray-100 text-base')
+    expect(containerClass.value).toBe('inline-flex items-center gap-2 text-highlighted text-base')
   })
 
   it('combines color, size, and variant classes', () => {
@@ -203,7 +203,7 @@ describe('useFormKitOutput - containerClass', () => {
       variant: 'soft',
     }
     const { containerClass } = useFormKitOutput(context as unknown as FormKitFrameworkContext)
-    expect(containerClass.value).toBe('inline-flex items-center gap-2 text-primary text-lg bg-gray-100 dark:bg-gray-800 rounded-md')
+    expect(containerClass.value).toBe('inline-flex items-center gap-2 text-primary text-lg bg-elevated rounded-md')
   })
 
   it('includes custom class from attrs', () => {
@@ -222,7 +222,7 @@ describe('useFormKitOutput - containerClass', () => {
       attrs: {},
     }
     const { containerClass } = useFormKitOutput(context as unknown as FormKitFrameworkContext)
-    expect(containerClass.value).toBe('inline-flex items-center gap-2 text-gray-900 dark:text-gray-100 text-base')
+    expect(containerClass.value).toBe('inline-flex items-center gap-2 text-highlighted text-base')
   })
 
   it('combines all properties including custom class', () => {
@@ -238,7 +238,7 @@ describe('useFormKitOutput - containerClass', () => {
     expect(containerClass.value).toContain('inline-flex items-center gap-2')
     expect(containerClass.value).toContain('text-success')
     expect(containerClass.value).toContain('text-sm')
-    expect(containerClass.value).toContain('border border-gray-300 dark:border-gray-700 rounded-md px-2 py-1')
+    expect(containerClass.value).toContain('border border-default rounded-md px-2 py-1')
     expect(containerClass.value).toContain('my-custom-class')
   })
 
@@ -250,7 +250,7 @@ describe('useFormKitOutput - containerClass', () => {
       },
     }
     const { containerClass } = useFormKitOutput(context as unknown as FormKitFrameworkContext)
-    expect(containerClass.value).toBe('inline-flex items-center gap-2 text-gray-900 dark:text-gray-100 text-base')
+    expect(containerClass.value).toBe('inline-flex items-center gap-2 text-highlighted text-base')
   })
 })
 
@@ -444,7 +444,7 @@ describe('useFormKitOutput - ui prop merge', () => {
     expect(containerClass.value).toContain('my-distinctive-root-class')
     expect(containerClass.value).toContain('text-primary')
     expect(containerClass.value).toContain('text-lg')
-    expect(containerClass.value).toContain('bg-gray-100 dark:bg-gray-800 rounded-md')
+    expect(containerClass.value).toContain('bg-elevated rounded-md')
   })
 
   it('merges ui.icon into iconClass alongside the size-derived class, not overriding it', () => {
@@ -468,7 +468,7 @@ describe('useFormKitOutput - ui prop merge', () => {
   it('leaves containerClass/iconClass unaffected when no ui prop is set', () => {
     const context: PartialContext = {}
     const { containerClass, iconClass } = useFormKitOutput(context as unknown as FormKitFrameworkContext)
-    expect(containerClass.value).toBe('inline-flex items-center gap-2 text-gray-900 dark:text-gray-100 text-base')
+    expect(containerClass.value).toBe('inline-flex items-center gap-2 text-highlighted text-base')
     expect(iconClass.value).toBe('h-5 w-5')
   })
 })
@@ -478,7 +478,7 @@ describe('useFormKitOutput - edge cases', () => {
     const context: PartialContext = {}
     const result = useFormKitOutput(context as unknown as FormKitFrameworkContext)
 
-    expect(result.colorClass.value).toBe('text-gray-900 dark:text-gray-100')
+    expect(result.colorClass.value).toBe('text-highlighted')
     expect(result.sizeClass.value).toBe('text-base')
     expect(result.variantClass.value).toBe('')
     expect(result.iconClass.value).toBe('h-5 w-5')
@@ -501,7 +501,7 @@ describe('useFormKitOutput - edge cases', () => {
 
     expect(result.colorClass.value).toBe('text-primary')
     expect(result.sizeClass.value).toBe('text-lg')
-    expect(result.variantClass.value).toBe('bg-gray-100 dark:bg-gray-800 rounded-md')
+    expect(result.variantClass.value).toBe('bg-elevated rounded-md')
     expect(result.iconClass.value).toBe('h-6 w-6')
     expect(result.leadingIconName.value).toBe('i-heroicons-star')
     expect(result.trailingIconName.value).toBe('i-heroicons-arrow-right')
@@ -528,7 +528,7 @@ describe('useFormKitOutput - edge cases', () => {
     }
     const result = useFormKitOutput(context as unknown as FormKitFrameworkContext)
 
-    expect(result.colorClass.value).toBe('text-gray-900 dark:text-gray-100')
+    expect(result.colorClass.value).toBe('text-highlighted')
     expect(result.sizeClass.value).toBe('text-base')
     expect(result.variantClass.value).toBe('')
   })

@@ -37,7 +37,7 @@ export function useFormKitOutput(context: FormKitFrameworkContext) {
       info: 'text-info',
       warning: 'text-warning',
       error: 'text-error',
-      neutral: 'text-gray-900 dark:text-gray-100',
+      neutral: 'text-highlighted',
     }
     return colorMap[color] || colorMap.neutral
   })
@@ -57,10 +57,10 @@ export function useFormKitOutput(context: FormKitFrameworkContext) {
   const variantClass = computed(() => {
     const variant = (context.variant ?? 'none') as VariantType
     const variantMap: Record<VariantType, string> = {
-      outline: 'border border-gray-300 dark:border-gray-700 rounded-md px-2 py-1',
-      soft: 'bg-gray-100 dark:bg-gray-800 rounded-md',
-      subtle: 'bg-gray-50 dark:bg-gray-900 rounded-md',
-      ghost: 'hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md',
+      outline: 'border border-default rounded-md px-2 py-1',
+      soft: 'bg-elevated rounded-md',
+      subtle: 'bg-muted rounded-md',
+      ghost: 'hover:bg-elevated rounded-md',
       none: '',
     }
     return variantMap[variant] || variantMap.none
