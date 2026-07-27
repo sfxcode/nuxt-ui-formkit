@@ -286,20 +286,7 @@ const items = ref<NavigationMenuItem[]>([
     label: 'Live Samples',
     icon: 'i-lucide-sparkles',
     active: false,
-    children: [
-      {
-        label: 'User Registration',
-        icon: 'i-lucide-user-plus',
-        description: 'Shop account sign-up with conditional business fields and a repeater for extra addresses.',
-        to: '/samples/user-registration',
-      },
-      {
-        label: 'Hotel Reservation',
-        icon: 'i-lucide-bed-double',
-        description: 'Multi-room booking with a repeater and per-room-type conditional fields.',
-        to: '/samples/hotel-reservation',
-      },
-    ],
+    to: '/samples',
   },
   {
     label: 'Playground',

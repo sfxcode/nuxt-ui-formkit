@@ -5,7 +5,7 @@ const examples = [
     title: 'Contact Form',
     description: 'A comprehensive support contact form with conditional fields based on priority level. Features subject categorization, priority selection, and automatic phone field for urgent requests.',
     icon: 'i-heroicons-envelope',
-    route: '/examples/contact-form',
+    route: '/samples/contact-form',
     features: [
       'Subject categorization',
       'Priority-based fields',
@@ -17,7 +17,7 @@ const examples = [
     title: 'User Profile',
     description: 'Complete user profile management form with personal information, preferences, and notification settings. Includes timezone, language, and privacy controls.',
     icon: 'i-heroicons-user-circle',
-    route: '/examples/user-profile',
+    route: '/samples/user-profile',
     features: [
       'Personal details',
       'Preferences & settings',
@@ -29,7 +29,7 @@ const examples = [
     title: 'Event Registration',
     description: 'Conference registration form with conditional logic for in-person vs virtual attendance. Includes accessibility accommodations, session selection, and dietary preferences.',
     icon: 'i-heroicons-calendar-days',
-    route: '/examples/event-registration',
+    route: '/samples/event-registration',
     features: [
       'Conditional attendance fields',
       'Accessibility options',
@@ -41,7 +41,7 @@ const examples = [
     title: 'Job Application',
     description: 'Comprehensive job application with dynamic work experience repeater, education history, skills selection, and cover letter. Perfect for recruitment workflows.',
     icon: 'i-heroicons-briefcase',
-    route: '/examples/job-application',
+    route: '/samples/job-application',
     features: [
       'Repeater for work history',
       'Skills multi-select',
@@ -53,12 +53,36 @@ const examples = [
     title: 'E-commerce Checkout',
     description: 'Full-featured checkout form with shipping/billing addresses, payment information, and order summary. Includes gift options and same-as-billing toggle.',
     icon: 'i-heroicons-shopping-cart',
-    route: '/examples/checkout-form',
+    route: '/samples/checkout-form',
     features: [
       'Shipping & billing',
       'Payment processing',
       'Gift options',
       'Order summary sidebar',
+    ],
+  },
+  {
+    title: 'User Registration',
+    description: 'Shop account signup supporting both individual and business customers. Includes conditional company fields, password confirmation, and a repeater for additional shipping addresses.',
+    icon: 'i-heroicons-user-plus',
+    route: '/samples/user-registration',
+    features: [
+      'Individual vs business account',
+      'Conditional company fields',
+      'Additional address repeater',
+      'Password confirmation',
+    ],
+  },
+  {
+    title: 'Hotel Reservation',
+    description: 'Multi-room hotel booking form with a room repeater, each room configurable independently by type, guest count, and amenities. Includes payment and cancellation policy agreement.',
+    icon: 'i-heroicons-building-office-2',
+    route: '/samples/hotel-reservation',
+    features: [
+      'Repeater for multiple rooms',
+      'Per-room-type conditional extras',
+      'Payment method selection',
+      'Cancellation policy agreement',
     ],
   },
 ]
@@ -254,7 +278,7 @@ const examples = [
               label="View Documentation"
               icon="i-heroicons-book-open"
               trailing-icon="i-heroicons-arrow-top-right-on-square"
-              @click="() => { navigateTo('/form/without-schema') }"
+              @click="() => { navigateTo('https://sfxcode.github.io/nuxt-ui-formkit/', { external: true, open: { target: '_blank' } }) }"
             />
           </div>
         </div>
