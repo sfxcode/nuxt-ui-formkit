@@ -1,5 +1,6 @@
 import { computed, onBeforeUnmount, ref } from 'vue'
 import type { FormKitFrameworkContext } from '@formkit/core'
+import type { FUIconTooltip } from '../components/output/FUIcon.vue'
 
 type ColorType = 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'
 type SizeType = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
@@ -113,6 +114,20 @@ export function useFormKitOutput(context: FormKitFrameworkContext) {
     return trailingIcon || (trailing && icon) || null
   })
 
+  const leadingTooltip = computed<FUIconTooltip | undefined>(() => {
+    const leadingIconTooltip = context.leadingIconTooltip as FUIconTooltip | undefined
+    const leading = context.leading as boolean | undefined
+    const iconTooltip = context.iconTooltip as FUIconTooltip | undefined
+    return leadingIconTooltip || (leading && iconTooltip) || undefined
+  })
+
+  const trailingTooltip = computed<FUIconTooltip | undefined>(() => {
+    const trailingIconTooltip = context.trailingIconTooltip as FUIconTooltip | undefined
+    const trailing = context.trailing as boolean | undefined
+    const iconTooltip = context.iconTooltip as FUIconTooltip | undefined
+    return trailingIconTooltip || (trailing && iconTooltip) || undefined
+  })
+
   return {
     colorClass,
     sizeClass,
@@ -121,6 +136,8 @@ export function useFormKitOutput(context: FormKitFrameworkContext) {
     iconClass,
     leadingIconName,
     trailingIconName,
+    leadingTooltip,
+    trailingTooltip,
     ui,
   }
 }
