@@ -754,6 +754,22 @@ All output components support:
 - `color` - Component color
 - `size` - Component size
 
+### Icon Tooltips
+
+Every `icon`/`leadingIcon`/`trailingIcon` pair described above also accepts a matching `*Tooltip` prop - `iconTooltip`, `leadingIconTooltip`, `trailingIconTooltip` (plus `trueIconTooltip`/`falseIconTooltip` on `nuxtUIOutputBoolean`, matching its `trueIcon`/`falseIcon`). Each accepts any Nuxt UI [`Tooltip`](https://ui.nuxt.com/components/tooltip) prop except `class` (e.g. `text`, `content`, `arrow`, `delayDuration`) as a plain object. No tooltip is rendered unless one is supplied.
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUIOutputText',
+    name: 'userName',
+    label: 'Username',
+    leadingIcon: 'i-lucide-user',
+    leadingIconTooltip: { text: 'Unique account identifier' }
+  }
+]
+```
+
 ## Use Cases
 
 - ✅

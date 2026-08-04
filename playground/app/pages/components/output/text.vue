@@ -281,6 +281,14 @@ const outputTextSchema = [
     outputType: 'duration',
     leadingIcon: 'i-heroicons-clock',
   },
+  {
+    $formkit: 'nuxtUIOutputText',
+    name: 'output36',
+    value: 'johndoe',
+    label: 'Username',
+    leadingIcon: 'i-heroicons-check-badge',
+    leadingIconTooltip: { text: 'This username has been verified' },
+  },
 ]
 </script>
 
@@ -402,6 +410,21 @@ const outputTextSchema = [
           <FUDataView
             :data="{}"
             :schema="outputTextSchema.slice(19, 22)"
+          />
+        </section>
+
+        <USeparator />
+
+        <section>
+          <h2 class="text-2xl font-semibold mb-4">
+            Icon Tooltips
+          </h2>
+          <p class="text-muted-foreground mb-6">
+            Hover the icon to show a tooltip - pass a `leadingIconTooltip`/`trailingIconTooltip`/`iconTooltip` object (any Nuxt UI Tooltip prop except `class`).
+          </p>
+          <FUDataView
+            :data="{}"
+            :schema="outputTextSchema.slice(35, 36)"
           />
         </section>
       </div>
