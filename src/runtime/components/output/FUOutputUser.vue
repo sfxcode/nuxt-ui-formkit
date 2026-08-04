@@ -4,7 +4,7 @@ import type { PropType } from 'vue'
 import { computed } from 'vue'
 import type { FormKitOutputUi } from '../../utils/useFormKitOutput'
 import { useFormKitOutput } from '../../utils/useFormKitOutput'
-import type { FormKitIconProps } from './FUIcon.vue'
+import type { FormKitIconProps, FUIconTooltip } from './FUIcon.vue'
 import FUIcon from './FUIcon.vue'
 
 // Mirrors UUser's own `avatar` prop shape (a subset - UUser itself allows any
@@ -27,12 +27,15 @@ export interface FormKitOutputUserProps {
   chip?: boolean | Record<string, unknown>
   color?: 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'
   icon?: string
+  iconTooltip?: FUIconTooltip
   leading?: boolean
   leadingIcon?: string
+  leadingIconTooltip?: FUIconTooltip
   orientation?: 'horizontal' | 'vertical'
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
   trailing?: boolean
   trailingIcon?: string
+  trailingIconTooltip?: FUIconTooltip
   variant?: 'outline' | 'soft' | 'subtle' | 'ghost' | 'none'
   ui?: FormKitOutputUi
 }
@@ -49,7 +52,7 @@ const props = defineProps({
 // to `context._value` unmodified (see phase 8's mount check).
 const userValue = computed(() => props.context._value as FormKitOutputUserValue | undefined)
 
-const { containerClass, iconClass, leadingIconName, trailingIconName, ui } = useFormKitOutput(props.context)
+const { containerClass, iconClass, leadingIconName, trailingIconName, leadingTooltip, trailingTooltip, ui } = useFormKitOutput(props.context)
 </script>
 
 <template>
@@ -62,6 +65,7 @@ const { containerClass, iconClass, leadingIconName, trailingIconName, ui } = use
       v-if="leadingIconName"
       :name="leadingIconName as string"
       :class="iconClass"
+      :tooltip="leadingTooltip"
       :on-click="context?.onLeadingIconClicked"
     />
 
@@ -79,6 +83,7 @@ const { containerClass, iconClass, leadingIconName, trailingIconName, ui } = use
       v-if="trailingIconName"
       :name="trailingIconName as string"
       :class="iconClass"
+      :tooltip="trailingTooltip"
       :on-click="context?.onTrailingIconClicked"
     />
   </div>

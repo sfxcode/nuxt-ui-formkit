@@ -6,17 +6,20 @@ import type { FormKitOutputUi } from '../../utils/useFormKitOutput'
 import { useFormKitOutput } from '../../utils/useFormKitOutput'
 import { convertColorToHex } from '../../utils/colorConverter'
 import { formattedDuration } from '../../utils/durationConverter'
-import type { FormKitIconProps } from './FUIcon.vue'
+import type { FormKitIconProps, FUIconTooltip } from './FUIcon.vue'
 import FUIcon from './FUIcon.vue'
 
 export interface FormKitOutputTextProps {
   color?: 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'
   icon?: string
+  iconTooltip?: FUIconTooltip
   leading?: boolean
   leadingIcon?: string
+  leadingIconTooltip?: FUIconTooltip
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
   trailing?: boolean
   trailingIcon?: string
+  trailingIconTooltip?: FUIconTooltip
   variant?: 'outline' | 'soft' | 'subtle' | 'ghost' | 'none'
   outputType?: 'text' | 'email' | 'url' | 'tel' | 'color' | 'duration' | 'i18n'
   ui?: FormKitOutputUi
@@ -90,7 +93,7 @@ const colorStyle = computed(() => {
   return ' '
 })
 
-const { containerClass, iconClass, leadingIconName, trailingIconName } = useFormKitOutput(props.context)
+const { containerClass, iconClass, leadingIconName, trailingIconName, leadingTooltip, trailingTooltip } = useFormKitOutput(props.context)
 </script>
 
 <template>
@@ -104,6 +107,7 @@ const { containerClass, iconClass, leadingIconName, trailingIconName } = useForm
       :name="leadingIconName as string"
       :class="iconClass"
       :style="colorStyle"
+      :tooltip="leadingTooltip"
       :on-click="context?.onLeadingIconClicked"
     />
 
@@ -128,6 +132,7 @@ const { containerClass, iconClass, leadingIconName, trailingIconName } = useForm
       :name="trailingIconName as string"
       :class="iconClass"
       :style="colorStyle"
+      :tooltip="trailingTooltip"
       :on-click="context?.onTrailingIconClicked"
     />
   </div>

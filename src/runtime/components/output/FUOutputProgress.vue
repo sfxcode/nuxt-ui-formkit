@@ -4,21 +4,24 @@ import type { PropType } from 'vue'
 import { computed } from 'vue'
 import type { FormKitOutputUi } from '../../utils/useFormKitOutput'
 import { useFormKitOutput } from '../../utils/useFormKitOutput'
-import type { FormKitIconProps } from './FUIcon.vue'
+import type { FormKitIconProps, FUIconTooltip } from './FUIcon.vue'
 import FUIcon from './FUIcon.vue'
 
 export interface FormKitOutputProgressProps {
   animation?: 'carousel' | 'carousel-inverse' | 'swing' | 'elastic'
   color?: 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'
   icon?: string
+  iconTooltip?: FUIconTooltip
   leading?: boolean
   leadingIcon?: string
+  leadingIconTooltip?: FUIconTooltip
   max?: number
   orientation?: 'horizontal' | 'vertical'
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
   status?: boolean
   trailing?: boolean
   trailingIcon?: string
+  trailingIconTooltip?: FUIconTooltip
   variant?: 'outline' | 'soft' | 'subtle' | 'ghost' | 'none'
   ui?: FormKitOutputUi
 }
@@ -46,7 +49,7 @@ const progressSizeClass = computed(() => {
   return props.context.orientation === 'vertical' ? 'min-h-32' : 'min-w-32 flex-1'
 })
 
-const { containerClass, iconClass, leadingIconName, trailingIconName, ui } = useFormKitOutput(props.context)
+const { containerClass, iconClass, leadingIconName, trailingIconName, leadingTooltip, trailingTooltip, ui } = useFormKitOutput(props.context)
 </script>
 
 <template>
@@ -59,6 +62,7 @@ const { containerClass, iconClass, leadingIconName, trailingIconName, ui } = use
       v-if="leadingIconName"
       :name="leadingIconName as string"
       :class="iconClass"
+      :tooltip="leadingTooltip"
       :on-click="context?.onLeadingIconClicked"
     />
 
@@ -78,6 +82,7 @@ const { containerClass, iconClass, leadingIconName, trailingIconName, ui } = use
       v-if="trailingIconName"
       :name="trailingIconName as string"
       :class="iconClass"
+      :tooltip="trailingTooltip"
       :on-click="context?.onTrailingIconClicked"
     />
   </div>

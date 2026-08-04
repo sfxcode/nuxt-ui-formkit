@@ -4,17 +4,20 @@ import type { PropType } from 'vue'
 import { computed } from 'vue'
 import type { FormKitOutputUi } from '../../utils/useFormKitOutput'
 import { useFormKitOutput } from '../../utils/useFormKitOutput'
-import type { FormKitIconProps } from './FUIcon.vue'
+import type { FormKitIconProps, FUIconTooltip } from './FUIcon.vue'
 import FUIcon from './FUIcon.vue'
 
 export interface FormKitOutputLinkProps {
   color?: 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'
   icon?: string
+  iconTooltip?: FUIconTooltip
   leading?: boolean
   leadingIcon?: string
+  leadingIconTooltip?: FUIconTooltip
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
   trailing?: boolean
   trailingIcon?: string
+  trailingIconTooltip?: FUIconTooltip
   variant?: 'outline' | 'soft' | 'subtle' | 'ghost' | 'none'
   target?: '_blank' | '_self' | '_parent' | '_top'
   rel?: string
@@ -53,7 +56,7 @@ const displayValue = computed(() => {
   return linkUrl
 })
 
-const { containerClass, iconClass, leadingIconName, trailingIconName } = useFormKitOutput(props.context)
+const { containerClass, iconClass, leadingIconName, trailingIconName, leadingTooltip, trailingTooltip } = useFormKitOutput(props.context)
 
 const linkClass = computed(() => {
   const classes = [
@@ -73,6 +76,7 @@ const linkClass = computed(() => {
       v-if="leadingIconName"
       :name="leadingIconName as string"
       :class="iconClass"
+      :tooltip="leadingTooltip"
       :on-click="context?.onLeadingIconClicked"
     />
     <ULink
@@ -98,6 +102,7 @@ const linkClass = computed(() => {
       v-if="trailingIconName"
       :name="trailingIconName as string"
       :class="iconClass"
+      :tooltip="trailingTooltip"
       :on-click="context?.onTrailingIconClicked"
     />
   </div>

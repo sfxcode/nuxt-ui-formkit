@@ -4,20 +4,25 @@ import { computed } from 'vue'
 import type { FormKitOutputUi } from '../../utils/useFormKitOutput'
 import { useFormKitOutput } from '../../utils/useFormKitOutput'
 import type { PropType } from 'vue'
-import type { FormKitIconProps } from './FUIcon.vue'
+import type { FormKitIconProps, FUIconTooltip } from './FUIcon.vue'
 import FUIcon from './FUIcon.vue'
 
 export interface FormKitOutputBooleanProps {
   color?: 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'
   falseIcon?: string
+  falseIconTooltip?: FUIconTooltip
   falseValue?: string
   icon?: string
+  iconTooltip?: FUIconTooltip
   leading?: boolean
   leadingIcon?: string
+  leadingIconTooltip?: FUIconTooltip
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
   trailing?: boolean
   trailingIcon?: string
+  trailingIconTooltip?: FUIconTooltip
   trueIcon?: string
+  trueIconTooltip?: FUIconTooltip
   trueValue?: string
   variant?: 'outline' | 'soft' | 'subtle' | 'ghost' | 'none'
   ui?: FormKitOutputUi
@@ -49,7 +54,17 @@ const booleanIcon = computed(() => {
   return undefined
 })
 
-const { containerClass, iconClass, leadingIconName, trailingIconName } = useFormKitOutput(props.context)
+const booleanIconTooltip = computed(() => {
+  if (booleanValue.value && props.context.trueIconTooltip) {
+    return props.context.trueIconTooltip
+  }
+  if (!booleanValue.value && props.context.falseIconTooltip) {
+    return props.context.falseIconTooltip
+  }
+  return undefined
+})
+
+const { containerClass, iconClass, leadingIconName, trailingIconName, leadingTooltip, trailingTooltip } = useFormKitOutput(props.context)
 </script>
 
 <template>
@@ -62,12 +77,14 @@ const { containerClass, iconClass, leadingIconName, trailingIconName } = useForm
       v-if="leadingIconName"
       :name="leadingIconName as string"
       :class="iconClass"
+      :tooltip="leadingTooltip"
       :on-click="context?.onLeadingIconClicked"
     />
     <FUIcon
       v-if="booleanIcon"
       :name="booleanIcon"
       :class="iconClass"
+      :tooltip="booleanIconTooltip"
       :on-click="context?.onIconClicked"
     />
     <span>{{ displayValue }}</span>
@@ -75,6 +92,7 @@ const { containerClass, iconClass, leadingIconName, trailingIconName } = useForm
       v-if="trailingIconName"
       :name="trailingIconName as string"
       :class="iconClass"
+      :tooltip="trailingTooltip"
       :on-click="context?.onTrailingIconClicked"
     />
   </div>

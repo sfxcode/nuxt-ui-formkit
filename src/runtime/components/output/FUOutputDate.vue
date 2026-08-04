@@ -4,21 +4,24 @@ import type { PropType } from 'vue'
 import { computed } from 'vue'
 import type { FormKitOutputUi } from '../../utils/useFormKitOutput'
 import { useFormKitOutput } from '../../utils/useFormKitOutput'
-import type { FormKitIconProps } from './FUIcon.vue'
+import type { FormKitIconProps, FUIconTooltip } from './FUIcon.vue'
 import FUIcon from './FUIcon.vue'
 
 export interface FormKitOutputDateProps {
   color?: 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'
   dateStyle?: 'short' | 'medium' | 'long' | 'full'
   icon?: string
+  iconTooltip?: FUIconTooltip
   leading?: boolean
   leadingIcon?: string
+  leadingIconTooltip?: FUIconTooltip
   locale?: string
   relative?: boolean
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
   timeStyle?: 'short' | 'medium' | 'long'
   trailing?: boolean
   trailingIcon?: string
+  trailingIconTooltip?: FUIconTooltip
   variant?: 'outline' | 'soft' | 'subtle' | 'ghost' | 'none'
   ui?: FormKitOutputUi
 }
@@ -43,7 +46,7 @@ const dateValue = computed(() => {
   }
 })
 
-const { containerClass, iconClass, leadingIconName, trailingIconName } = useFormKitOutput(props.context)
+const { containerClass, iconClass, leadingIconName, trailingIconName, leadingTooltip, trailingTooltip } = useFormKitOutput(props.context)
 </script>
 
 <template>
@@ -56,6 +59,7 @@ const { containerClass, iconClass, leadingIconName, trailingIconName } = useForm
       v-if="leadingIconName"
       :name="leadingIconName as string"
       :class="iconClass"
+      :tooltip="leadingTooltip"
       :on-click="context?.onLeadingIconClicked"
     />
     <NuxtTime
@@ -71,6 +75,7 @@ const { containerClass, iconClass, leadingIconName, trailingIconName } = useForm
       v-if="trailingIconName"
       :name="trailingIconName as string"
       :class="iconClass"
+      :tooltip="trailingTooltip"
       :on-click="context?.onTrailingIconClicked"
     />
   </div>
