@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.2.11
+
+[compare changes](https://github.com/sfxcode/nuxt-ui-formkit/compare/v1.2.10...v1.2.11)
+
+### 🚀 Enhancements
+
+- Add tooltip support to FUIcon component ([3a88cf6](https://github.com/sfxcode/nuxt-ui-formkit/commit/3a88cf6))
+- Add tooltip support to output components ([82d6ca5](https://github.com/sfxcode/nuxt-ui-formkit/commit/82d6ca5))
+- Add tooltip support for icons in output components ([5c4fd53](https://github.com/sfxcode/nuxt-ui-formkit/commit/5c4fd53))
+- Add tests for tooltip support in FUIcon and FUOutputText components ([c41f984](https://github.com/sfxcode/nuxt-ui-formkit/commit/c41f984))
+- Register UTooltip and UUser components in Nuxt plugin ([906d7f4](https://github.com/sfxcode/nuxt-ui-formkit/commit/906d7f4))
+- Add icon tooltip support to output documentation and examples ([cc5cba1](https://github.com/sfxcode/nuxt-ui-formkit/commit/cc5cba1))
+
+### 🏡 Chore
+
+- Update dependencies in package.json ([ef2170a](https://github.com/sfxcode/nuxt-ui-formkit/commit/ef2170a))
+
+### ❤️ Contributors
+
+- Sfxcode ([@sfxcode](https://github.com/sfxcode))
+
 ## v1.2.10
 
 [compare changes](https://github.com/sfxcode/nuxt-ui-formkit/compare/v1.2.9...v1.2.10)
