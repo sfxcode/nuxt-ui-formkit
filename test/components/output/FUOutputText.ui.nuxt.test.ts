@@ -2,7 +2,8 @@ import { defaultConfig, FormKit, plugin } from '@formkit/vue'
 import { mountSuspended } from '@nuxt/test-utils/runtime'
 import { flushPromises } from '@vue/test-utils'
 import { afterEach, describe, expect, it } from 'vitest'
-import { nextTick } from 'vue'
+import { defineComponent, h, nextTick } from 'vue'
+import UApp from '@nuxt/ui/components/App.vue'
 import { nuxtUIOutputTextDefinition } from '../../../src/runtime/formkit/definitions/output'
 
 async function settle() {
@@ -41,5 +42,38 @@ describe('FUOutputText ui prop', () => {
 
     const icon = wrapper.find('.my-distinctive-icon-class')
     expect(icon.exists()).toBe(true)
+  })
+})
+
+describe('FUOutputText icon tooltip props', () => {
+  // `UTooltip` needs a `TooltipProvider` context, only present inside a real
+  // `<UApp>` root (same requirement as `UEditor`'s toolbar - see
+  // test/components/inputs/FUEditor.ui.nuxt.test.ts).
+  it('wires leadingIconTooltip through to the rendered leading icon', async () => {
+    const Host = defineComponent({
+      setup() {
+        return () => h(UApp, null, {
+          default: () => h(FormKit, {
+            type: 'nuxtUIOutputText',
+            id: 'output-text-tooltip-test',
+            modelValue: 'Hello world',
+            leadingIcon: 'i-heroicons-check-circle',
+            leadingIconTooltip: { text: 'Verified' },
+          }),
+        })
+      },
+    })
+
+    const wrapper = await mountSuspended(Host, {
+      global: {
+        plugins: [[plugin, defaultConfig({ inputs: { nuxtUIOutputText: nuxtUIOutputTextDefinition } })]],
+      },
+    })
+    activeWrapper = wrapper
+    await settle()
+
+    const icon = wrapper.find('.iconify')
+    expect(icon.exists()).toBe(true)
+    expect(icon.attributes('data-state')).toBe('closed')
   })
 })
