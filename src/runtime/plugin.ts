@@ -1,5 +1,5 @@
 import { defineNuxtPlugin } from '#app'
-import { UButton, UIcon, UTabs } from '#components'
+import { UButton, UIcon, UTabs, UTooltip, UUser } from '#components'
 
 export default defineNuxtPlugin((_nuxtApp) => {
   // Register Nuxt UI components for FormKit schema usage
@@ -7,4 +7,6 @@ export default defineNuxtPlugin((_nuxtApp) => {
   _nuxtApp.vueApp.component('UButton', UButton)
   _nuxtApp.vueApp.component('UIcon', UIcon)
   _nuxtApp.vueApp.component('UTabs', UTabs)
+  _nuxtApp.vueApp.component('UUser', UUser)
+  _nuxtApp.vueApp.component('UTooltip', UTooltip)
 })
