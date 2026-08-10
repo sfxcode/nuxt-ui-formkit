@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.2.12
+
+[compare changes](https://github.com/sfxcode/nuxt-ui-formkit/compare/v1.2.11...v1.2.12)
+
+### 🏡 Chore
+
+- Update dependencies in package.json - nuxt 4.5.2 ([9e28682](https://github.com/sfxcode/nuxt-ui-formkit/commit/9e28682))
+
+### ❤️ Contributors
+
+- Sfxcode ([@sfxcode](https://github.com/sfxcode))
+
 ## v1.2.11
 
 [compare changes](https://github.com/sfxcode/nuxt-ui-formkit/compare/v1.2.10...v1.2.11)
