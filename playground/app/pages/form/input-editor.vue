@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type { FormKitSchemaDefinition } from '@formkit/core'
 
-const { schemaToEditorData, editorDataToSchema, editorDataToJson, editorDataToCode } = useInputEditor()
-const { editorSchema } = useInputEditorSchema()
+const { schemaToEditorData, editorDataToSchema, editorDataToJson, editorDataToCode } = useFormKitEditor()
+const { editorSchema } = useFormKitEditorSchema()
 
 const toast = useToast()
 
@@ -52,8 +52,8 @@ async function copyCode() {
         validation, and options, and watch the generated schema and live preview update as you type.
       </p>
       <p class="text-muted">
-        <code>useInputEditor</code> converts between the edited form data and a real FormKit schema node;
-        <code>useInputEditorSchema</code> builds the property-editor form itself.
+        <code>useFormKitEditor</code> converts between the edited form data and a real FormKit schema node;
+        <code>useFormKitEditorSchema</code> builds the property-editor form itself.
       </p>
     </div>
 
