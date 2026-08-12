@@ -280,7 +280,19 @@ const items = ref<NavigationMenuItem[]>([
         description: 'Promise-based modal/slideover forms: await overlay.edit({ data, schema, title }).',
         to: '/form/overlay-form',
       },
+      {
+        label: 'Input Editor',
+        icon: 'i-lucide-sliders-horizontal',
+        description: 'A FormKit form that edits another field\'s properties - pick a type, fill in label/validation/options, see the generated schema and live preview update.',
+        to: '/form/input-editor',
+      },
     ],
+  },
+  {
+    label: 'Form Builder',
+    icon: 'i-lucide-layout-template',
+    active: false,
+    to: '/form-builder',
   },
   {
     label: 'Live Samples',
