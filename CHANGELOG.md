@@ -5,6 +5,35 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.3.0
+
+[compare changes](https://github.com/sfxcode/nuxt-ui-formkit/compare/v1.2.12...v1.3.0)
+
+### 🚀 Enhancements
+
+- Implement input editor and schema for FormKit properties ([71922d5](https://github.com/sfxcode/nuxt-ui-formkit/commit/71922d5))
+- Add input editor component for FormKit properties ([c8206f2](https://github.com/sfxcode/nuxt-ui-formkit/commit/c8206f2))
+- Implement form builder component with drag-and-drop field templates ([82758cd](https://github.com/sfxcode/nuxt-ui-formkit/commit/82758cd))
+- Add Input Editor and Form Builder links to navigation ([19d9f6c](https://github.com/sfxcode/nuxt-ui-formkit/commit/19d9f6c))
+- Enhance USelect and USelectMenu components with responsive width adjustments ([234e753](https://github.com/sfxcode/nuxt-ui-formkit/commit/234e753))
+- Implement structured field editor for FormKit properties with sync capabilities ([87da8d3](https://github.com/sfxcode/nuxt-ui-formkit/commit/87da8d3))
+- Rename input editor functions to align with FormKit naming conventions ([7511e9d](https://github.com/sfxcode/nuxt-ui-formkit/commit/7511e9d))
+
+### 🩹 Fixes
+
+- Prevent FUDataEdit's default submit button from showing in form builder ([b0956e4](https://github.com/sfxcode/nuxt-ui-formkit/commit/b0956e4))
+- Make Input Editor's $get() ids unique per mount to avoid registry races ([08f8540](https://github.com/sfxcode/nuxt-ui-formkit/commit/08f8540))
+- Force h3Version 1 in vitest Nuxt environment to avoid unsafe h3-next import ([20079a6](https://github.com/sfxcode/nuxt-ui-formkit/commit/20079a6))
+
+### 🏡 Chore
+
+- Update release script to use minor versioning for changelogen ([c524640](https://github.com/sfxcode/nuxt-ui-formkit/commit/c524640))
+- Update sass-embedded to version 1.102.0 ([82db2c4](https://github.com/sfxcode/nuxt-ui-formkit/commit/82db2c4))
+
+### ❤️ Contributors
+
+- Sfxcode ([@sfxcode](https://github.com/sfxcode))
+
 ## v1.2.12
 
 [compare changes](https://github.com/sfxcode/nuxt-ui-formkit/compare/v1.2.11...v1.2.12)
