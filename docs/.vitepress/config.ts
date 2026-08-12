@@ -112,6 +112,7 @@ export default defineConfig({
           { text: 'FUAutoForm', link: '/components/auto-form' },
           { text: 'Standard Schema Validation', link: '/components/standard-schema' },
           { text: 'useFormKitOverlay', link: '/components/overlay' },
+          { text: 'useFormKitEditor', link: '/components/input-editor' },
         ],
       },
       {

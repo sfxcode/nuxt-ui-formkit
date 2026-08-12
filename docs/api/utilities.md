@@ -100,6 +100,26 @@ const schema = [
 - `addList(name, children, dynamic, render, formKitAttrs)` - Add a FormKit list
 - `addListGroup(children, render, formKitAttrs)` - Add a repeating list group
 
+### useFormKitEditor / useFormKitEditorSchema
+
+Builds a form that edits the properties of another FormKit schema node (type, label, validation, options, ...) and converts its data back into a real `{ $formkit: ... }` node - see [the full guide](/components/input-editor) for details.
+
+```typescript
+import { useFormKitEditor, useFormKitEditorSchema } from '@sfxcode/nuxt-ui-formkit'
+
+const { schemaToEditorData, editorDataToSchema } = useFormKitEditor()
+const { editorSchema } = useFormKitEditorSchema() // pass `false` to lock the field type
+
+const formData = ref(schemaToEditorData({ $formkit: 'nuxtUIInput', name: 'field' }))
+const generatedField = computed(() => editorDataToSchema(formData.value))
+```
+
+**Parameters (`useFormKitEditorSchema`):** `isChangeTypePossible` *(optional, `boolean`, default `true`)*
+
+**Returns (`useFormKitEditor`):** `inputNames`, `outputNames`, `inputNamesWithOptions`, `inputNamesWithLegend`, `schemaToEditorData`, `editorDataToSchema`, `editorDataToJson`, `editorDataToCode`
+
+**Returns (`useFormKitEditorSchema`):** `editorSchema`, `fieldTypeOptions`, `typeOptions`
+
 ## Components
 
 ### FUDataEdit
