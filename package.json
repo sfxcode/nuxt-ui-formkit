@@ -117,7 +117,7 @@
     "jsdom": "^30.0.1",
     "mkdist": "^2.4.1",
     "nuxt": "^4.5.2",
-    "sass-embedded": "^1.100.0",
+    "sass-embedded": "^1.102.0",
     "typescript": "~6.0.3",
     "unbuild": "^3.6.1",
     "valibot": "^1.4.2",
