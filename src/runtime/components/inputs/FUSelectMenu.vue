@@ -78,12 +78,17 @@ const { handleInput, handleChange, isInvalid, styleClass, color, modelValue, ite
 </script>
 
 <template>
+  <!-- Nuxt UI's own USelectMenu shrinks its trigger to whatever's currently
+  selected (or just the chevron, unselected) - `w-fit min-w-48` keeps it from
+  collapsing that small while still growing for longer option labels, rather
+  than forcing every instance to one fixed width. Only applies when the
+  consumer hasn't already set their own `class`. -->
   <USelectMenu
     :id="context.id"
     v-model="modelValue"
     :name="context.node.name"
     v-bind="{ ...context?.attrs }"
-    :class="styleClass"
+    :class="[styleClass, !context?.attrs?.class && 'w-fit min-w-48']"
     :disabled="!!context?.disabled"
     :style="context?.attrs.style"
     :color="color"
