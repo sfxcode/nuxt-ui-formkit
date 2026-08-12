@@ -42,6 +42,12 @@ interface FormTemplate {
 
 const toast = useToast()
 const { addElement } = useFormKitSchema()
+const { schemaToEditorData, editorDataToSchema } = useFormKitEditor()
+// `false` - a canvas field's type is already fixed by whichever palette
+// template created it; the structured editor here only edits its
+// properties, not what kind of field it is (drag a new one in for that).
+const { editorSchema } = useFormKitEditorSchema(false)
+const fieldEditorSchema = editorSchema()
 
 // ---------------------------------------------------------------------------
 // Id generation
@@ -336,6 +342,12 @@ const selectedId = ref<string | null>(null)
 
 const selectedField = computed(() => fields.value.find(field => field.id === selectedId.value) ?? null)
 
+// The structured editor (`fieldEditorSchema`) only understands `$formkit`
+// nodes - a `$el` node (Heading/Paragraph/Divider from the Layout category)
+// has a completely different shape (`$el`/`attrs`/`children`, no
+// `name`/`validation`/etc.), so it only gets the raw JSON editor.
+const isFormKitField = computed(() => Boolean(selectedField.value?.node.$formkit))
+
 function uniqueName(hint: string) {
   const existing = new Set(fields.value.map(field => field.node.name).filter(Boolean))
   if (!existing.has(hint))
@@ -554,14 +566,56 @@ function performDrop(event: DragEvent, targetId: string | null, position: 'befor
 }
 
 // ---------------------------------------------------------------------------
-// Properties panel - reuses the same JsonEditor + text/parse pattern the
-// Playground sample (pages/playground.vue) uses for its schema editor.
+// Properties panel - two editors for the same selected field, kept in sync:
+//   - `fieldEditorSchema` (from useFormKitEditorSchema/useFormKitEditor, the same
+//     composables the Input Editor sample is built on) for a friendly,
+//     structured form.
+//   - the raw JsonEditor + text/parse pattern the Playground sample
+//     (pages/playground.vue) uses for its schema editor, for full control.
 // ---------------------------------------------------------------------------
 const propertiesText = ref('')
+const editorFormData = ref<Record<string, unknown>>({})
+
+// Guards the `editorFormData` watch below from re-running `editorDataToSchema`
+// (which normalizes key order) while `editorFormData` is being reset from a
+// selection change or a raw-JSON edit, rather than a genuine structured-form
+// edit - `nextTick` because `watch` flushes async, so a synchronous flag reset
+// right after the assignment would already be back to `false` by the time
+// the watch callback actually runs.
+let syncingEditorForm = false
+function releaseSyncGuard() {
+  syncingEditorForm = false
+}
+
+// `section` (which Properties tab - Base/Display/.../Attributes - is shown)
+// is UI-only state, not a real schema property, so a plain
+// `schemaToEditorData(node)` drops it and the tabs reset to nothing selected
+// whenever the raw JSON is edited. Carry the current tab forward instead,
+// defaulting to Base whenever there isn't one to carry forward.
+function toEditorFormData(node: SchemaNode): Record<string, unknown> {
+  const currentSection = typeof editorFormData.value.section === 'string' ? editorFormData.value.section : 'base'
+  return { section: currentSection, ...schemaToEditorData(node) }
+}
 
 watch(selectedId, () => {
   propertiesText.value = selectedField.value ? JSON.stringify(selectedField.value.node, null, 2) : ''
+  syncingEditorForm = true
+  // Always back to Base on a fresh selection - unlike `toEditorFormData`,
+  // this doesn't carry the previous field's tab forward.
+  editorFormData.value = selectedField.value ? { section: 'base', ...schemaToEditorData(selectedField.value.node) } : {}
+  nextTick(releaseSyncGuard)
 })
+
+watch(editorFormData, () => {
+  if (syncingEditorForm || !selectedField.value)
+    return
+  const index = fields.value.findIndex(field => field.id === selectedId.value)
+  if (index === -1)
+    return
+  const newNode = editorDataToSchema(editorFormData.value) as SchemaNode
+  fields.value[index] = { ...fields.value[index]!, node: newNode }
+  propertiesText.value = JSON.stringify(newNode, null, 2)
+}, { deep: true })
 
 function updateFieldProperties(value: string) {
   if (!selectedField.value)
@@ -571,6 +625,9 @@ function updateFieldProperties(value: string) {
     const index = fields.value.findIndex(field => field.id === selectedId.value)
     if (index !== -1)
       fields.value[index] = { ...fields.value[index]!, node: parsed }
+    syncingEditorForm = true
+    editorFormData.value = toEditorFormData(parsed)
+    nextTick(releaseSyncGuard)
   }
   catch (error) {
     // Keep the current value while the JSON is mid-edit / invalid, same as
@@ -908,9 +965,31 @@ function onPreviewSaved(data: unknown) {
                 @click="removeField(selectedField.id)"
               />
             </div>
-            <p class="mb-2 text-xs text-muted">
-              Edit any property below - the same JSON editor used in the Playground sample. Changes apply live
-              to the canvas and preview.
+            <template v-if="isFormKitField">
+              <p class="mb-2 text-xs text-muted">
+                Edit this field with the structured form below, or drop into the raw JSON - the same editor used
+                in the Playground sample. Both stay in sync and apply live to the canvas and preview.
+              </p>
+              <FUDataEdit
+                id="form-builder-field-editor"
+                v-model="editorFormData"
+                :schema="fieldEditorSchema"
+              >
+                <template #submit />
+              </FUDataEdit>
+
+              <USeparator class="my-4" />
+            </template>
+            <p
+              v-else
+              class="mb-2 text-xs text-muted"
+            >
+              Layout elements (<code>$el</code>) don't have structured properties - edit them directly as JSON
+              below.
+            </p>
+
+            <p class="mb-2 text-xs font-medium text-muted">
+              Raw JSON
             </p>
             <JsonEditor
               v-model="propertiesText"
@@ -974,6 +1053,7 @@ function onPreviewSaved(data: unknown) {
           This renders the real FormKit + Nuxt UI components exactly as end users will see them.
         </p>
         <FUDataEdit
+          id="form-builder-preview"
           :data="previewData"
           :schema="previewSchema"
           @data-saved="onPreviewSaved"

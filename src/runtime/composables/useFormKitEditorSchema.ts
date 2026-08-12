@@ -1,10 +1,10 @@
 import { useFormKitSchema } from './useFormKitSchema'
-import { useInputEditor } from './useInputEditor'
+import { useFormKitEditor } from './useFormKitEditor.ts'
 
 /**
  * Builds the FormKit schema for a form that edits the properties of a
  * single FormKit schema node - pick a field type, fill in its label,
- * validation, options, etc., and `useInputEditor().editorDataToSchema()`
+ * validation, options, etc., and `useFormKitEditor().editorDataToSchema()`
  * turns the resulting form data back into a real `{ $formkit: ... }` node.
  *
  * Every field below sets `preserve: true` - the "section" switcher hides
@@ -12,9 +12,9 @@ import { useInputEditor } from './useInputEditor'
  * is dropped the moment it's hidden (e.g. switching from the Validation tab
  * back to Base would otherwise wipe out the validation rule just entered).
  */
-export function useInputEditorSchema() {
+export function useFormKitEditorSchema(isChangeTypePossible: boolean = true) {
   const { addElement } = useFormKitSchema()
-  const { inputNames, outputNames, inputNamesWithOptions, inputNamesWithLegend } = useInputEditor()
+  const { inputNames, outputNames, inputNamesWithOptions, inputNamesWithLegend } = useFormKitEditor()
 
   function ifGet(fieldName: string, value: string) {
     return `$get(${fieldName}).value === '${value}'`
@@ -69,8 +69,14 @@ export function useInputEditorSchema() {
         $formkit: 'nuxtUISelectMenu',
         // `$get()` addresses nodes by `id`, not `name` - this has to match
         // the identifier used in `ifGet('_dollar_formkit', ...)` below.
+        // Disabled rather than hidden (`if: false`) when type-switching is
+        // turned off - hiding would unmount this node entirely, and every
+        // other `$get('_dollar_formkit')` comparison below (legend vs label,
+        // the Options tab's capability check) would then find nothing and
+        // always evaluate false.
         id: '_dollar_formkit',
         name: '_dollar_formkit',
+        disabled: !isChangeTypePossible,
         label: 'Field Type',
         value: 'nuxtUIInput',
         // Without `valueKey`, nuxtUISelectMenu's model value is the whole
@@ -98,6 +104,10 @@ export function useInputEditorSchema() {
         legend: 'Properties',
         options: sectionOptions,
         orientation: 'horizontal',
+        // Nuxt UI's horizontal RadioGroup fieldset is `flex flex-row` with no
+        // wrap by default - in the narrow Properties panel that overflows
+        // instead of dropping "Attributes" etc. to a second line.
+        ui: { fieldset: 'flex-wrap' },
         value: 'base',
         key: 'schema_section',
         preserve: true,
@@ -255,6 +265,12 @@ export function useInputEditorSchema() {
       },
 
       // --- Options (only for field types with an options/items list) --------
+      // `listClass`/`listItemClass` match the flex row layout from the
+      // Repeater sample (pages/form/repeater-sample.vue); `draggable` +
+      // `displayDragHandle` add drag-and-drop reordering the way the
+      // Drag-and-Drop Repeater sample (pages/form/repeater-drag.vue) does -
+      // `hideMoveButtons` follows that same sample's convention of hiding the
+      // up/down buttons once dragging covers reordering.
       addElement('p', 'The selected field type does not use an options list.', { class: 'text-muted text-sm' }, `${ifSection('options')} && ${notOptionsCapableIf}`),
       {
         $formkit: 'nuxtUIRepeater',
@@ -262,9 +278,21 @@ export function useInputEditorSchema() {
         name: 'options',
         label: 'Options',
         help: 'Shown to the user as label, submitted as value.',
+        listClass: 'grid gap-2',
+        listItemClass: 'flex items-start gap-2',
         insertButtonLabel: 'Add Option',
         alwaysDisplayInsertButton: true,
         displayDeleteButton: true,
+        draggable: true,
+        displayDragHandle: true,
+        // Each row's children render with their own label above their input
+        // (like every other field), but the drag handle and delete button
+        // don't have one - `items-start` alone lines them up with the
+        // *labels*, not the inputs below. `mt-6` nudges both down to roughly
+        // where the inputs start instead.
+        dragHandleClass: 'mt-6 cursor-grab active:cursor-grabbing text-muted',
+        buttonGroupClass: 'mt-6 shrink-0',
+        hideMoveButtons: true,
         newItem: { label: '', value: '' },
         key: 'schema_options',
         preserve: true,
@@ -273,11 +301,13 @@ export function useInputEditorSchema() {
             $formkit: 'nuxtUIInput',
             label: 'Label',
             name: 'label',
+            outerClass: 'w-48',
           },
           {
             $formkit: 'nuxtUIInput',
             label: 'Value',
             name: 'value',
+            outerClass: 'w-48',
           },
         ],
       },
@@ -289,9 +319,21 @@ export function useInputEditorSchema() {
         name: 'attrs',
         label: 'Extra Properties',
         help: 'Any additional schema property this field type supports (e.g. rows, min, max, icon).',
+        listClass: 'grid gap-2',
+        listItemClass: 'flex items-start gap-2',
         insertButtonLabel: 'Add Property',
         alwaysDisplayInsertButton: true,
         displayDeleteButton: true,
+        draggable: true,
+        displayDragHandle: true,
+        // Each row's children render with their own label above their input
+        // (like every other field), but the drag handle and delete button
+        // don't have one - `items-start` alone lines them up with the
+        // *labels*, not the inputs below. `mt-6` nudges both down to roughly
+        // where the inputs start instead.
+        dragHandleClass: 'mt-6 cursor-grab active:cursor-grabbing text-muted',
+        buttonGroupClass: 'mt-6 shrink-0',
+        hideMoveButtons: true,
         newItem: { attrKey: '', attrValue: '' },
         key: 'schema_attrs',
         preserve: true,
@@ -300,11 +342,13 @@ export function useInputEditorSchema() {
             $formkit: 'nuxtUIInput',
             label: 'Property',
             name: 'attrKey',
+            outerClass: 'w-48',
           },
           {
             $formkit: 'nuxtUIInput',
             label: 'Value',
             name: 'attrValue',
+            outerClass: 'w-48',
           },
         ],
       },

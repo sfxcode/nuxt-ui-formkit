@@ -16,12 +16,12 @@ type EditorData = Record<string, unknown> & {
 /**
  * Converts between a single FormKit schema node (`{ $formkit: 'nuxtUIInput', ... }`)
  * and the "editor data" shape used by the property-editor form built in
- * `useInputEditorSchema`. The editor form is itself a FormKit form, so its
+ * `useFormKitEditorSchema`. The editor form is itself a FormKit form, so its
  * field names can't collide with FormKit's own `$`-prefixed schema syntax -
  * `_dollar_formkit` stands in for `$formkit` while editing and gets mapped
  * back on the way out.
  */
-export function useInputEditor() {
+export function useFormKitEditor() {
   // Types whose Nuxt UI component accepts an `options`/`items` list of
   // `{ label, value }` entries - these get the editor's "Options" section.
   const inputNamesWithOptions = ['nuxtUICheckboxGroup', 'nuxtUIInputMenu', 'nuxtUIListbox', 'nuxtUIRadioGroup', 'nuxtUISelect', 'nuxtUISelectMenu', 'nuxtUITree']
