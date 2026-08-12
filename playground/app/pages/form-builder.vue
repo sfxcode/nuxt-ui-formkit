@@ -975,7 +975,15 @@ function onPreviewSaved(data: unknown) {
                 v-model="editorFormData"
                 :schema="fieldEditorSchema"
               >
-                <template #submit />
+                <!-- Not self-closing on purpose: FUDataEdit's own `#submit`
+                slot falls back to its default Save button when the content
+                you give it renders zero real vnodes (Vue's `renderSlot`
+                treats "provided but empty" the same as "not provided" for
+                fallback purposes) - an empty `<span>` is a real vnode, so
+                the fallback never kicks in and nothing visible shows here. -->
+                <template #submit>
+                  <span />
+                </template>
               </FUDataEdit>
 
               <USeparator class="my-4" />
