@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.3.1
+
+[compare changes](https://github.com/sfxcode/nuxt-ui-formkit/compare/v1.3.0...v1.3.1)
+
+### 📖 Documentation
+
+- Add useFormKitEditor/useFormKitEditorSchema documentation ([45299a3](https://github.com/sfxcode/nuxt-ui-formkit/commit/45299a3))
+
+### 🏡 Chore
+
+- Update release script to use patch versioning for changelogen ([cdde3f6](https://github.com/sfxcode/nuxt-ui-formkit/commit/cdde3f6))
+- Update dependencies to latest versions ([c2d9fbd](https://github.com/sfxcode/nuxt-ui-formkit/commit/c2d9fbd))
+- Update Nuxt UI version to 4.11.0 in footer ([52b0187](https://github.com/sfxcode/nuxt-ui-formkit/commit/52b0187))
+- Update @codemirror/state, @codemirror/view, @iconify-json/lucide, @iconify-json/simple-icons, and zod to latest versions ([fe0057f](https://github.com/sfxcode/nuxt-ui-formkit/commit/fe0057f))
+- Update @nuxt/devtools to version 4.0.0-alpha.16 and related dependencies ([2b33a88](https://github.com/sfxcode/nuxt-ui-formkit/commit/2b33a88))
+
+### ❤️ Contributors
+
+- Sfxcode ([@sfxcode](https://github.com/sfxcode))
+
 ## v1.3.0
 
 [compare changes](https://github.com/sfxcode/nuxt-ui-formkit/compare/v1.2.12...v1.3.0)
