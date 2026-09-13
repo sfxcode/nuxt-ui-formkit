@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.3.3
+
+[compare changes](https://github.com/sfxcode/nuxt-ui-formkit/compare/v1.3.2...v1.3.3)
+
+### 🩹 Fixes
+
+- **blur:** Wire real DOM blur on FUSelect, FUSelectMenu, and FUSlider ([69b3e8e](https://github.com/sfxcode/nuxt-ui-formkit/commit/69b3e8e))
+
+### 🏡 Chore
+
+- Update dependencies to latest versions ([ccc4471](https://github.com/sfxcode/nuxt-ui-formkit/commit/ccc4471))
+
+### ❤️ Contributors
+
+- Sfxcode ([@sfxcode](https://github.com/sfxcode))
+
 ## v1.3.2
 
 [compare changes](https://github.com/sfxcode/nuxt-ui-formkit/compare/v1.3.1...v1.3.2)
