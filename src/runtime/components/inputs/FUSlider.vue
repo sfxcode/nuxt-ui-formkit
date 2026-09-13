@@ -2,6 +2,7 @@
 import type { FormKitFrameworkContext } from '@formkit/core'
 import type { PropType } from 'vue'
 import { useFormKitInput } from '../../utils/useFormKitInput'
+import { createContainerBlurHandler } from '../../utils/useFormKitContainerBlur'
 
 export interface FormKitSliderProps {
   color?: 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'
@@ -26,6 +27,13 @@ const props = defineProps({
 })
 
 const { handleInput, handleChange, styleClass, color, modelValue, ui } = useFormKitInput(props.context)
+
+// `USlider` declares no `blur`/`focus` emit at all (`defineEmits(["change"])`
+// only) and forwards attrs onto `SliderRoot`, a single container wrapping
+// one-or-more `SliderThumb` elements - the thumbs, not the root, are what's
+// actually focusable, and native `blur` doesn't bubble. Same mechanism as
+// `FUCalendar`/`FURadioGroup`: bind to `@focusout` (which bubbles) instead.
+const handleContainerBlur = createContainerBlurHandler(props.context)
 </script>
 
 <template>
@@ -51,5 +59,6 @@ const { handleInput, handleChange, styleClass, color, modelValue, ui } = useForm
     :ui="ui"
     @change="handleChange"
     @update:model-value="handleInput"
+    @focusout="handleContainerBlur"
   />
 </template>

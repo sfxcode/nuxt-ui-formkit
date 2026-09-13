@@ -161,6 +161,8 @@ const schema = [
 **Key Props:**
 - `content` - Positioning/behavior config for the dropdown content
 
+**Blur/validation behavior:** `validationVisibility: 'blur'` (FormKit's default) reveals validation messages once the dropdown has been opened and closed at least once — Nuxt UI's `USelect` only emits a `blur` event synthetically on that open→close transition, since its trigger has no native blur listener of its own. Tabbing through the trigger without ever opening the dropdown does not trigger this reveal. Set `validationVisibility: 'live'` on the field if messages need to appear without an open/close cycle.
+
 ### nuxtUISelectMenu
 
 Advanced select with grouping and multiple selection support.
@@ -202,6 +204,8 @@ const schema = [
 - `size` - Component size
 - `content` - Positioning/behavior config for the dropdown content
 - `by` - Key or comparator used to match the selected value
+
+**Blur/validation behavior:** `validationVisibility: 'blur'` (FormKit's default) reveals validation messages both when the dropdown is opened and closed, and when the trigger is simply focused and blurred without ever opening it — a real DOM blur listener is wired on the underlying trigger either way.
 
 ### nuxtUIListbox
 
