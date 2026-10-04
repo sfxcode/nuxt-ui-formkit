@@ -1,5 +1,5 @@
 import { defineConfig } from 'vitepress'
-import { version } from '../../package.json'
+import pkg from '../../package.json' with { type: 'json' }
 
 export default defineConfig({
   title: 'Nuxt UI FormKit',
@@ -42,13 +42,6 @@ export default defineConfig({
   vite: {
     build: {
       chunkSizeWarningLimit: 1000,
-      rollupOptions: {
-        output: {
-          manualChunks: {
-            theme: ['vitepress/theme'],
-          },
-        },
-      },
     },
   },
 
@@ -80,7 +73,7 @@ export default defineConfig({
         link: 'https://nuxt-ui-formkit.netlify.app/',
       },
       {
-        text: version,
+        text: pkg.version,
         items: [
           { text: 'Changelog', link: 'https://github.com/sfxcode/nuxt-ui-formkit/blob/main/CHANGELOG.md' },
           { text: 'Contributing', link: 'https://github.com/sfxcode/nuxt-ui-formkit/blob/main/.github/CONTRIBUTING.md' },
