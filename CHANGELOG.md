@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.3.4
+
+[compare changes](https://github.com/sfxcode/nuxt-ui-formkit/compare/v1.3.3...v1.3.4)
+
+### 📖 Documentation
+
+- **overlay:** Clarify behavior of edit() and auto() regarding promise resolution ([a6bec3f](https://github.com/sfxcode/nuxt-ui-formkit/commit/a6bec3f))
+
+### 🏡 Chore
+
+- Update dependencies to latest versions ([4557bd9](https://github.com/sfxcode/nuxt-ui-formkit/commit/4557bd9))
+
+### ❤️ Contributors
+
+- Sfxcode ([@sfxcode](https://github.com/sfxcode))
+
 ## v1.3.3
 
 [compare changes](https://github.com/sfxcode/nuxt-ui-formkit/compare/v1.3.2...v1.3.3)
