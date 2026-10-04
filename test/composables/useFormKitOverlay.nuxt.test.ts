@@ -213,13 +213,15 @@ describe('useFormKitOverlay', () => {
 
   // `useOverlay.create()` registers exactly one fixed-id overlay entry per
   // component - calling `.open()` again before the first resolves reuses
-  // that same entry (see `useOverlay.js`'s `open()`: it overwrites
-  // `overlay.resolvePromise` on every call). The overview's own "explicitly
-  // out of scope" section flags stacking/nested overlays as untested; this
-  // documents, rather than assumes, what actually happens for the narrower
-  // case of calling `edit()` twice without awaiting the first - a caller
-  // mistake, not a supported nested-overlay UI pattern.
-  it('documents what happens when a second edit() is called before the first resolves: the first promise never settles, the second takes over the single overlay instance', async () => {
+  // that same entry. Since @nuxt/ui 4.11.3, `useOverlay.js`'s `open()` pushes
+  // each caller's resolver onto `overlay.resolvers` and `close()` resolves
+  // all of them with the same value (before, `open()` overwrote a single
+  // `overlay.resolvePromise`, orphaning the first promise forever). The
+  // overview's own "explicitly out of scope" section flags stacking/nested
+  // overlays as untested; this documents, rather than assumes, what actually
+  // happens for the narrower case of calling `edit()` twice without awaiting
+  // the first - a caller mistake, not a supported nested-overlay UI pattern.
+  it('documents what happens when a second edit() is called before the first resolves: the second takes over the single overlay instance, and both promises settle with its result', async () => {
     const wrapper = await mountHost()
     activeWrapper = wrapper
     await settle()
@@ -240,7 +242,9 @@ describe('useFormKitOverlay', () => {
     await settle()
 
     expect(await racedResult(secondResult)).toEqual({ resolved: true, value: { name: 'Bob' } })
-    expect(await racedResult(firstResult)).toEqual({ resolved: false, value: undefined })
+    // The first call's promise is not orphaned, but it receives the second
+    // call's submitted data - not anything derived from its own `{ name: 'Ada' }`.
+    expect(await racedResult(firstResult)).toEqual({ resolved: true, value: { name: 'Bob' } })
   })
 })
 

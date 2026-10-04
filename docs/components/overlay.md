@@ -106,7 +106,7 @@ Both methods return `Promise<unknown>`, resolving to the saved data or `null`.
 
 ## One Overlay Instance at a Time
 
-`edit()` and `auto()` each reuse a single registered overlay instance across calls, rather than stacking a new one per invocation. Calling either again before the previous call's promise has resolved doesn't open a second, independent overlay - it replaces the first one's data/title in place, and **the first call's promise never resolves** (its resolver is discarded, not rejected). Always `await` an `edit()`/`auto()` call (or otherwise ensure it has resolved) before starting another from the same composable instance.
+`edit()` and `auto()` each reuse a single registered overlay instance across calls, rather than stacking a new one per invocation. Calling either again before the previous call's promise has resolved doesn't open a second, independent overlay - it replaces the first one's data/title in place, and when that overlay closes **both promises resolve with the same result** - the first call receives the second call's submitted data (or `null` on dismissal), not anything derived from its own `data`. Always `await` an `edit()`/`auto()` call (or otherwise ensure it has resolved) before starting another from the same composable instance.
 
 ## Next Steps
 
