@@ -164,6 +164,12 @@ describe('convertColorToHex', () => {
       expect(convertColorToHex('   ')).toBe('#000000')
     })
 
+    it('does not throw on non-string values', () => {
+      expect(convertColorToHex(123456 as unknown as string)).toBe('#000000')
+      expect(convertColorToHex(0 as unknown as string)).toBe('#000000')
+      expect(convertColorToHex({} as unknown as string)).toBe('#000000')
+    })
+
     it('handles invalid color formats', () => {
       expect(convertColorToHex('invalid')).toBe('#000000')
       expect(convertColorToHex('not-a-color')).toBe('#000000')

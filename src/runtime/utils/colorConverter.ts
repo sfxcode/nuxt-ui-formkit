@@ -2,8 +2,12 @@
  * Converts various color formats to hex
  * Supports: hex, rgb, rgba, hsl, hsla, cmyk, lab
  */
-export function convertColorToHex(color: string): string {
+export function convertColorToHex(color: unknown): string {
   if (!color)
+    return '#000000'
+
+  // A field can hold a number or object; treat anything that isn't a color string as unparseable.
+  if (typeof color !== 'string')
     return '#000000'
 
   const trimmedColor = color.trim()
