@@ -1,5 +1,5 @@
 import type { Ref } from 'vue'
-import { watch } from 'vue'
+import { ref, watch } from 'vue'
 
 /**
  * Shared by `FUDataEditOverlay.vue`/`FUAutoFormOverlay.vue`: both need to
@@ -17,8 +17,14 @@ import { watch } from 'vue'
  * cycle's Save/Cancel and silently no-op, leaving that later promise pending
  * forever.
  */
-export function useOverlayCloseResolution(open: Ref<boolean>, emit: (event: 'close', value: unknown) => void) {
+export function useOverlayCloseResolution(
+  open: Ref<boolean>,
+  emit: (event: 'close', value: unknown) => void,
+  options: { shouldConfirm?: () => boolean } = {},
+) {
   let hasResolved = false
+  // True while the "discard unsaved changes?" prompt is showing.
+  const confirming = ref(false)
 
   function resolveOnce(value: unknown) {
     if (hasResolved)
@@ -28,11 +34,44 @@ export function useOverlayCloseResolution(open: Ref<boolean>, emit: (event: 'clo
   }
 
   watch(open, (isOpen) => {
-    if (isOpen)
+    if (isOpen) {
       hasResolved = false
-    else
+      confirming.value = false
+    }
+    else {
       resolveOnce(null)
+    }
   })
 
-  return { resolveOnce }
+  // Every dismissal route (Cancel button, header X, Esc, backdrop) funnels
+  // through here. `UModal`/`USlideover` only report Esc/backdrop/X as their
+  // `open` v-model going `false` - and the X sits inside a Reka `DialogClose`,
+  // so `dismissible` can't block it - so the wrapper binds `open` one-way and
+  // routes `update:open` through `onUpdateOpen` instead: if the guard says
+  // there's something to lose, `open` is simply never set to `false`.
+  function requestClose() {
+    if (options.shouldConfirm?.()) {
+      confirming.value = true
+      return
+    }
+    resolveOnce(null)
+  }
+
+  function onUpdateOpen(value: boolean) {
+    if (value)
+      open.value = true
+    else
+      requestClose()
+  }
+
+  function discard() {
+    confirming.value = false
+    resolveOnce(null)
+  }
+
+  function keepEditing() {
+    confirming.value = false
+  }
+
+  return { resolveOnce, confirming, requestClose, onUpdateOpen, discard, keepEditing }
 }

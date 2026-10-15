@@ -9,6 +9,8 @@ export interface FormKitOverlayEditOptions {
   schema: FormKitSchemaDefinition
   title?: string
   as?: 'modal' | 'slideover'
+  /** Ask before discarding unsaved edits on Cancel/Esc/backdrop/X. Default false. */
+  confirmDiscard?: boolean
 }
 
 export interface FormKitOverlayAutoOptions {
@@ -18,6 +20,8 @@ export interface FormKitOverlayAutoOptions {
   overrides?: AutoFormOverrides
   title?: string
   as?: 'modal' | 'slideover'
+  /** Ask before discarding unsaved edits on Cancel/Esc/backdrop/X. Default false. */
+  confirmDiscard?: boolean
 }
 
 // `useOverlay()` itself is a `createSharedComposable` - every call anywhere
@@ -64,6 +68,7 @@ export function useFormKitOverlay() {
       schema: options.schema,
       title: options.title,
       as: options.as ?? 'modal',
+      confirmDiscard: options.confirmDiscard ?? false,
     })
   }
 
@@ -78,6 +83,7 @@ export function useFormKitOverlay() {
       overrides: options.overrides,
       title: options.title,
       as: options.as ?? 'modal',
+      confirmDiscard: options.confirmDiscard ?? false,
     })
   }
 
