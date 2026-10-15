@@ -1,17 +1,9 @@
 import type { FormKitNode } from '@formkit/core'
 import { defaultConfig, FormKit, plugin } from '@formkit/vue'
 import { mountSuspended } from '@nuxt/test-utils/runtime'
-import { flushPromises } from '@vue/test-utils'
 import { afterEach, describe, expect, it } from 'vitest'
-import { nextTick } from 'vue'
 import { nuxtUITreeDefinition } from '../../../src/runtime/formkit/definitions/input'
-import { wait } from '../../support/wait'
-
-async function settle() {
-  await flushPromises()
-  await nextTick()
-  await wait()
-}
+import { settleAndWait } from '../../support/settle'
 
 let activeWrapper: Awaited<ReturnType<typeof mountSuspended>> | undefined
 afterEach(() => {
@@ -67,7 +59,7 @@ describe('FUTree blur wiring', () => {
   it('reveals the validation message only once focus leaves the whole tree, not between its own items', async () => {
     const wrapper = await mountTree({ modelValue: undefined, validation: 'required' })
     activeWrapper = wrapper
-    await settle()
+    await settleAndWait()
 
     const node = exposedNode(wrapper)
     const items = wrapper.findAll('button[data-slot="link"]')
@@ -79,9 +71,9 @@ describe('FUTree blur wiring', () => {
     const first = items[0]!.element as HTMLElement
     const second = items[1]!.element as HTMLElement
     first.focus()
-    await settle()
+    await settleAndWait()
     second.focus()
-    await settle()
+    await settleAndWait()
 
     expect(node.context?.state.blurred).toBe(false)
     expect(wrapper.text()).not.toContain('is required.')
@@ -89,7 +81,7 @@ describe('FUTree blur wiring', () => {
     const outsideButton = document.createElement('button')
     document.body.appendChild(outsideButton)
     outsideButton.focus()
-    await settle()
+    await settleAndWait()
 
     expect(node.context?.state.blurred).toBe(true)
     expect(wrapper.text()).toContain('is required.')
@@ -101,7 +93,7 @@ describe('FUTree value shape', () => {
   it('sets the field value to the selected (possibly deeply nested) item', async () => {
     const wrapper = await mountTree({ modelValue: undefined })
     activeWrapper = wrapper
-    await settle()
+    await settleAndWait()
 
     const node = exposedNode(wrapper)
     const links = wrapper.findAll('button[data-slot="link"]')
@@ -113,7 +105,7 @@ describe('FUTree value shape', () => {
     // `Orange` only exercises the select half, since it has no children to
     // toggle.
     await orangeLink!.trigger('click')
-    await settle()
+    await settleAndWait()
 
     expect(node.context?._value).toMatchObject({ label: 'Orange' })
   })
@@ -121,14 +113,14 @@ describe('FUTree value shape', () => {
   it('does not change the field value when a parent is expanded/collapsed via keyboard, only via selection', async () => {
     const wrapper = await mountTree({ modelValue: undefined })
     activeWrapper = wrapper
-    await settle()
+    await settleAndWait()
 
     const node = exposedNode(wrapper)
     let links = wrapper.findAll('button[data-slot="link"]')
     const orangeLink = links.find(link => link.text().includes('Orange'))
     expect(orangeLink).toBeDefined()
     await orangeLink!.trigger('click')
-    await settle()
+    await settleAndWait()
     expect(node.context?._value).toMatchObject({ label: 'Orange' })
 
     // Reka-ui's TreeItem keyboard handling toggles expand on ArrowLeft/
@@ -137,16 +129,16 @@ describe('FUTree value shape', () => {
     // expand/collapse alone never touches the field's value.
     const citrusLink = wrapper.findAll('button[data-slot="link"]').find(link => link.text().includes('Citrus'))!
     ;(citrusLink.element as HTMLElement).focus()
-    await settle()
+    await settleAndWait()
 
     await citrusLink.trigger('keydown', { key: 'ArrowLeft' })
-    await settle()
+    await settleAndWait()
 
     expect(wrapper.findAll('button[data-slot="link"]').some(link => link.text().includes('Orange'))).toBe(false)
     expect(node.context?._value).toMatchObject({ label: 'Orange' })
 
     await citrusLink.trigger('keydown', { key: 'ArrowRight' })
-    await settle()
+    await settleAndWait()
 
     links = wrapper.findAll('button[data-slot="link"]')
     expect(links.some(link => link.text().includes('Orange'))).toBe(true)

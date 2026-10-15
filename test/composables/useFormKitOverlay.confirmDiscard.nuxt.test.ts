@@ -1,18 +1,13 @@
 import { defaultConfig, plugin } from '@formkit/vue'
 import { mountSuspended } from '@nuxt/test-utils/runtime'
-import { DOMWrapper, flushPromises } from '@vue/test-utils'
+import { DOMWrapper } from '@vue/test-utils'
 import UApp from '@nuxt/ui/components/App.vue'
 import { afterEach, describe, expect, it } from 'vitest'
-import { defineComponent, h, nextTick } from 'vue'
+import { defineComponent, h } from 'vue'
 import { useFormKitOverlay } from '../../src/runtime/composables/useFormKitOverlay'
 import { nuxtUIInputDefinition } from '../../src/runtime/formkit/definitions/input'
 import { wait } from '../support/wait'
-
-async function settle() {
-  await flushPromises()
-  await nextTick()
-  await wait()
-}
+import { settleAndWait } from '../support/settle'
 
 // A hung `edit()` promise (dismissal that never resolves) would otherwise
 // hang the whole test rather than fail a normal assertion - racing against a
@@ -83,9 +78,9 @@ const confirmPrompt = () => body().find('[role="alertdialog"]')
 async function openEdit(options: { confirmDiscard?: boolean, as?: 'modal' | 'slideover' } = {}) {
   const wrapper = await mountHost()
   activeWrapper = wrapper
-  await settle()
+  await settleAndWait()
   const resultPromise = exposedOverlay(wrapper).edit({ data: { name: 'Ada' }, schema, title: 'Edit Person', ...options })
-  await settle()
+  await settleAndWait()
   // Wrapped: returning the bare promise from an async fn would make callers
   // await the overlay's own (still pending) result.
   return { resultPromise }
@@ -93,7 +88,7 @@ async function openEdit(options: { confirmDiscard?: boolean, as?: 'modal' | 'sli
 
 async function makeDirty() {
   await body().find('input').setValue('Ada Lovelace')
-  await settle()
+  await settleAndWait()
 }
 
 const pressEscape = () => document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
@@ -103,7 +98,7 @@ describe('useFormKitOverlay confirmDiscard', () => {
     const { resultPromise: result } = await openEdit({ confirmDiscard: true })
 
     await buttonByLabel('Cancel')!.trigger('click')
-    await settle()
+    await settleAndWait()
 
     expect(await racedResult(result)).toEqual({ resolved: true, value: null })
   })
@@ -113,13 +108,13 @@ describe('useFormKitOverlay confirmDiscard', () => {
     await makeDirty()
 
     await buttonByLabel('Cancel')!.trigger('click')
-    await settle()
+    await settleAndWait()
 
     expect(confirmPrompt().exists()).toBe(true)
     expect((await racedResult(result, 150)).resolved).toBe(false)
 
     await body().find('[data-testid="discard-keep"]').trigger('click')
-    await settle()
+    await settleAndWait()
 
     expect(confirmPrompt().exists()).toBe(false)
     expect(body().text()).toContain('Edit Person')
@@ -131,9 +126,9 @@ describe('useFormKitOverlay confirmDiscard', () => {
     await makeDirty()
 
     await buttonByLabel('Cancel')!.trigger('click')
-    await settle()
+    await settleAndWait()
     await body().find('[data-testid="discard-confirm"]').trigger('click')
-    await settle()
+    await settleAndWait()
 
     expect(await racedResult(result)).toEqual({ resolved: true, value: null })
   })
@@ -143,7 +138,7 @@ describe('useFormKitOverlay confirmDiscard', () => {
     await makeDirty()
 
     pressEscape()
-    await settle()
+    await settleAndWait()
 
     expect(confirmPrompt().exists()).toBe(true)
     expect((await racedResult(result, 150)).resolved).toBe(false)
@@ -154,7 +149,7 @@ describe('useFormKitOverlay confirmDiscard', () => {
     await makeDirty()
 
     await body().find('[data-slot="overlay"]').trigger('pointerdown')
-    await settle()
+    await settleAndWait()
 
     expect(confirmPrompt().exists()).toBe(true)
     expect((await racedResult(result, 150)).resolved).toBe(false)
@@ -165,7 +160,7 @@ describe('useFormKitOverlay confirmDiscard', () => {
     await makeDirty()
 
     await body().find('[data-slot="close"]').trigger('click')
-    await settle()
+    await settleAndWait()
 
     expect(confirmPrompt().exists()).toBe(true)
     expect((await racedResult(result, 150)).resolved).toBe(false)
@@ -175,10 +170,10 @@ describe('useFormKitOverlay confirmDiscard', () => {
     const { resultPromise: result } = await openEdit({ confirmDiscard: true })
     await makeDirty()
     await body().find('input').setValue('Ada')
-    await settle()
+    await settleAndWait()
 
     pressEscape()
-    await settle()
+    await settleAndWait()
 
     expect(await racedResult(result)).toEqual({ resolved: true, value: null })
   })
@@ -188,7 +183,7 @@ describe('useFormKitOverlay confirmDiscard', () => {
     await makeDirty()
 
     await body().find('button[type="submit"]').trigger('click')
-    await settle()
+    await settleAndWait()
 
     expect(await racedResult(result)).toEqual({ resolved: true, value: { name: 'Ada Lovelace' } })
   })
@@ -198,7 +193,7 @@ describe('useFormKitOverlay confirmDiscard', () => {
     await makeDirty()
 
     await buttonByLabel('Cancel')!.trigger('click')
-    await settle()
+    await settleAndWait()
 
     expect(confirmPrompt().exists()).toBe(true)
     expect((await racedResult(result, 150)).resolved).toBe(false)
@@ -209,7 +204,7 @@ describe('useFormKitOverlay confirmDiscard', () => {
     await makeDirty()
 
     pressEscape()
-    await settle()
+    await settleAndWait()
 
     expect(confirmPrompt().exists()).toBe(false)
     expect(await racedResult(result)).toEqual({ resolved: true, value: null })
@@ -218,19 +213,19 @@ describe('useFormKitOverlay confirmDiscard', () => {
   it('guards auto() overlays too (dirty-behavior is forwarded through FUAutoForm)', async () => {
     const wrapper = await mountHost()
     activeWrapper = wrapper
-    await settle()
+    await settleAndWait()
     const result = exposedOverlay(wrapper).auto({ data: { name: 'Ada' }, title: 'Auto', confirmDiscard: true })
-    await settle()
+    await settleAndWait()
     await makeDirty()
 
     pressEscape()
-    await settle()
+    await settleAndWait()
 
     expect(confirmPrompt().exists()).toBe(true)
     expect((await racedResult(result, 150)).resolved).toBe(false)
 
     await body().find('[data-testid="discard-confirm"]').trigger('click')
-    await settle()
+    await settleAndWait()
     expect(await racedResult(result)).toEqual({ resolved: true, value: null })
   })
 })

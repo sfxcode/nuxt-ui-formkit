@@ -1,12 +1,11 @@
 import { defaultConfig, FormKit, plugin, useFormKitContextById } from '@formkit/vue'
 import { mountSuspended } from '@nuxt/test-utils/runtime'
-import { flushPromises } from '@vue/test-utils'
 import { afterEach, describe, expect, it } from 'vitest'
-import { defineComponent, h, nextTick, onUnmounted } from 'vue'
+import { defineComponent, h, onUnmounted } from 'vue'
 import { z } from 'zod'
 import { nuxtUIInputDefinition } from '../../src/runtime/formkit/definitions/input'
 import { attachStandardSchema } from '../../src/runtime/composables/useFormKitStandardSchema'
-import { wait } from '../support/wait'
+import { settleAndWait } from '../support/settle'
 
 const EMAIL_ERROR = 'Invalid email address'
 const USERNAME_ERROR = 'Too small: expected string to have >=3 characters'
@@ -48,12 +47,6 @@ function mountHost(schema: z.ZodType) {
   })
 }
 
-async function settle() {
-  await flushPromises()
-  await nextTick()
-  await wait()
-}
-
 describe('attachStandardSchema', () => {
   it('respects validationVisibility, and diff-clears only the resolved address', async () => {
     const schema = z.object({
@@ -63,7 +56,7 @@ describe('attachStandardSchema', () => {
 
     const wrapper = await mountHost(schema)
     activeWrapper = wrapper
-    await settle()
+    await settleAndWait()
 
     // Both fields are invalid, but neither has been blurred/dirtied yet -
     // `type: 'validation'` messages stay hidden until then, same as native
@@ -73,14 +66,14 @@ describe('attachStandardSchema', () => {
 
     const inputs = wrapper.findAll('input')
     await inputs[0]!.trigger('blur')
-    await settle()
+    await settleAndWait()
 
     expect(wrapper.text()).toContain(EMAIL_ERROR)
     expect(wrapper.text()).not.toContain(USERNAME_ERROR)
 
     // Fix the email field; username is still invalid.
     await inputs[0]!.setValue('ada@example.com')
-    await settle()
+    await settleAndWait()
 
     expect(wrapper.text()).not.toContain(EMAIL_ERROR)
 
@@ -88,7 +81,7 @@ describe('attachStandardSchema', () => {
     // clear - the diff only cleared the resolved `email` address, not
     // every address, so username's still-failing error is still there.
     await inputs[1]!.trigger('blur')
-    await settle()
+    await settleAndWait()
 
     expect(wrapper.text()).toContain(USERNAME_ERROR)
     expect(wrapper.text()).not.toContain(EMAIL_ERROR)

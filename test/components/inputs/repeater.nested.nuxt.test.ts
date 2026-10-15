@@ -1,10 +1,10 @@
 import { FormKit, FormKitSchema, defaultConfig, plugin } from '@formkit/vue'
 import { mountSuspended } from '@nuxt/test-utils/runtime'
-import { flushPromises } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
-import { h, nextTick } from 'vue'
+import { h } from 'vue'
 import { nuxtUIInputDefinition } from '../../../src/runtime/formkit/definitions/input'
 import { nuxtUIRepeaterDefinition } from '../../../src/runtime/formkit/definitions/repeater'
+import { settle } from '../../support/settle'
 
 // Nesting a nuxtUIRepeater inside another repeater's per-item schema had never
 // been exercised (see plan 03 phase 4). This mirrors FUDataEdit's own
@@ -80,8 +80,7 @@ describe('nuxtUIRepeater nesting: a repeater inside another repeater\'s item sch
         { company: 'Globex', references: [{ name: 'Carol' }] },
       ],
     })
-    await flushPromises()
-    await nextTick()
+    await settle()
 
     const values = textInputs(wrapper)
     expect(values).toEqual(expect.arrayContaining(['Acme', 'Globex', 'Alice', 'Bob', 'Carol']))
@@ -100,16 +99,14 @@ describe('nuxtUIRepeater nesting: a repeater inside another repeater\'s item sch
         { company: 'Globex', references: [{ name: 'Carol' }] },
       ],
     })
-    await flushPromises()
-    await nextTick()
+    await settle()
 
     const acmeItem = findEmployerItem(wrapper, 'Acme')
     const addReferenceButton = acmeItem.findAll('button').find(button => button.text().includes('Add Reference'))
     expect(addReferenceButton).toBeDefined()
 
     await addReferenceButton!.trigger('click')
-    await flushPromises()
-    await nextTick()
+    await settle()
 
     expect(findEmployerItem(wrapper, 'Acme').findAll('[id^="formkit-item-"]')).toHaveLength(3)
     expect(findEmployerItem(wrapper, 'Globex').findAll('[id^="formkit-item-"]')).toHaveLength(1)
@@ -123,15 +120,13 @@ describe('nuxtUIRepeater nesting: a repeater inside another repeater\'s item sch
         { company: 'Globex', references: [{ name: 'Carol' }] },
       ],
     })
-    await flushPromises()
-    await nextTick()
+    await settle()
 
     const addEmployerButton = wrapper.findAll('button').find(button => button.text().includes('Add Employer'))
     expect(addEmployerButton).toBeDefined()
 
     await addEmployerButton!.trigger('click')
-    await flushPromises()
-    await nextTick()
+    await settle()
 
     expect(findEmployerItem(wrapper, 'Acme').findAll('[id^="formkit-item-"]')).toHaveLength(2)
     expect(findEmployerItem(wrapper, 'Globex').findAll('[id^="formkit-item-"]')).toHaveLength(1)
@@ -144,8 +139,7 @@ describe('nuxtUIRepeater nesting: a repeater inside another repeater\'s item sch
         { company: 'Globex', references: [{ name: 'Carol' }] },
       ],
     })
-    await flushPromises()
-    await nextTick()
+    await settle()
 
     const acmeItem = findEmployerItem(wrapper, 'Acme')
     const firstReference = acmeItem.findAll('[id^="formkit-item-"]')[0]!
@@ -153,8 +147,7 @@ describe('nuxtUIRepeater nesting: a repeater inside another repeater\'s item sch
     expect(removeButton.exists()).toBe(true)
 
     await removeButton.trigger('click')
-    await flushPromises()
-    await nextTick()
+    await settle()
 
     expect(findEmployerItem(wrapper, 'Acme').findAll('[id^="formkit-item-"]')).toHaveLength(1)
     expect(findEmployerItem(wrapper, 'Globex').findAll('[id^="formkit-item-"]')).toHaveLength(1)

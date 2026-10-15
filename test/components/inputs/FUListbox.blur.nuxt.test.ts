@@ -1,17 +1,9 @@
 import type { FormKitNode } from '@formkit/core'
 import { defaultConfig, FormKit, plugin } from '@formkit/vue'
 import { mountSuspended } from '@nuxt/test-utils/runtime'
-import { flushPromises } from '@vue/test-utils'
 import { afterEach, describe, expect, it } from 'vitest'
-import { nextTick } from 'vue'
 import { nuxtUIListboxDefinition } from '../../../src/runtime/formkit/definitions/input'
-import { wait } from '../../support/wait'
-
-async function settle() {
-  await flushPromises()
-  await nextTick()
-  await wait()
-}
+import { settleAndWait } from '../../support/settle'
 
 let activeWrapper: Awaited<ReturnType<typeof mountSuspended>> | undefined
 afterEach(() => {
@@ -44,7 +36,7 @@ describe('FUListbox blur wiring (single mode)', () => {
       },
     })
     activeWrapper = wrapper
-    await settle()
+    await settleAndWait()
 
     const node = exposedNode(wrapper)
     const items = wrapper.findAll('[role="option"]')
@@ -56,9 +48,9 @@ describe('FUListbox blur wiring (single mode)', () => {
     const first = items[0]!.element as HTMLElement
     const second = items[1]!.element as HTMLElement
     first.focus()
-    await settle()
+    await settleAndWait()
     second.focus()
-    await settle()
+    await settleAndWait()
 
     expect(node.context?.state.blurred).toBe(false)
     expect(wrapper.text()).not.toContain('is required.')
@@ -66,7 +58,7 @@ describe('FUListbox blur wiring (single mode)', () => {
     const outsideButton = document.createElement('button')
     document.body.appendChild(outsideButton)
     outsideButton.focus()
-    await settle()
+    await settleAndWait()
 
     expect(node.context?.state.blurred).toBe(true)
     expect(wrapper.text()).toContain('is required.')
@@ -96,7 +88,7 @@ describe('FUListbox blur wiring (transfer mode)', () => {
       },
     })
     activeWrapper = wrapper
-    await settle()
+    await settleAndWait()
 
     const node = exposedNode(wrapper)
     const transferRoot = wrapper.find('.flex.items-stretch.gap-4.w-full')
@@ -114,9 +106,9 @@ describe('FUListbox blur wiring (transfer mode)', () => {
 
     // A legitimate transfer: source -> target must not misfire either side.
     sourceItem!.focus()
-    await settle()
+    await settleAndWait()
     targetItem!.focus()
-    await settle()
+    await settleAndWait()
 
     expect(node.context?.state.blurred).toBe(false)
 
@@ -124,7 +116,7 @@ describe('FUListbox blur wiring (transfer mode)', () => {
     const outsideButton = document.createElement('button')
     document.body.appendChild(outsideButton)
     outsideButton.focus()
-    await settle()
+    await settleAndWait()
 
     expect(node.context?.state.blurred).toBe(true)
     outsideButton.remove()

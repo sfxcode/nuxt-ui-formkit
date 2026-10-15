@@ -1,10 +1,9 @@
 import type { FormKitNode } from '@formkit/core'
 import { FormKit } from '@formkit/vue'
-import { flushPromises } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
-import { nextTick } from 'vue'
 import { nuxtUIRepeaterDefinition } from '../../../src/runtime/formkit/definitions/repeater'
 import { mountFormKit } from '../../support/mountFormKit'
+import { settle } from '../../support/settle'
 
 function mountRepeater(value: object[], props: Record<string, unknown> = {}) {
   return mountFormKit({
@@ -50,8 +49,7 @@ describe('nuxtUIRepeater regression: pre-populated array value binding', () => {
     expect(insertButton).toBeDefined()
 
     await insertButton!.trigger('click')
-    await flushPromises()
-    await nextTick()
+    await settle()
 
     expect(wrapper.findAll('[id^="formkit-item-"]')).toHaveLength(3)
   })
@@ -65,8 +63,7 @@ describe('nuxtUIRepeater regression: pre-populated array value binding', () => {
     expect(removeButton.exists()).toBe(true)
 
     await removeButton.trigger('click')
-    await flushPromises()
-    await nextTick()
+    await settle()
 
     expect(wrapper.findAll('[id^="formkit-item-"]')).toHaveLength(1)
   })
@@ -78,8 +75,7 @@ describe('nuxtUIRepeater regression: pre-populated array value binding', () => {
     expect(insertButton).toBeDefined()
 
     await insertButton!.trigger('click')
-    await flushPromises()
-    await nextTick()
+    await settle()
 
     const emitted = wrapper.emitted('update:modelValue')
     expect(emitted).toBeDefined()
@@ -94,8 +90,7 @@ describe('nuxtUIRepeater regression: pre-populated array value binding', () => {
     const removeButton = firstItem!.find('button')
 
     await removeButton.trigger('click')
-    await flushPromises()
-    await nextTick()
+    await settle()
 
     const emitted = wrapper.emitted('update:modelValue')
     expect(emitted).toBeDefined()
@@ -107,8 +102,7 @@ describe('nuxtUIRepeater regression: pre-populated array value binding', () => {
 describe('nuxtUIRepeater minItems/maxItems validation', () => {
   it('reports invalid when the seeded value violates minItems', async () => {
     const wrapper = await mountRepeater([{ title: 'First' }], { minItems: 2 })
-    await flushPromises()
-    await nextTick()
+    await settle()
 
     const listNode = findListNode(wrapper)
     expect(listNode.context?.state.valid).toBe(false)
@@ -116,8 +110,7 @@ describe('nuxtUIRepeater minItems/maxItems validation', () => {
 
   it('reports valid when the seeded value satisfies minItems/maxItems', async () => {
     const wrapper = await mountRepeater([{ title: 'First' }, { title: 'Second' }], { minItems: 2, maxItems: 5 })
-    await flushPromises()
-    await nextTick()
+    await settle()
 
     const listNode = findListNode(wrapper)
     expect(listNode.context?.state.valid).toBe(true)

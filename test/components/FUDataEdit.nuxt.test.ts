@@ -1,12 +1,10 @@
 import { defaultConfig, plugin } from '@formkit/vue'
 import { mountSuspended } from '@nuxt/test-utils/runtime'
-import { flushPromises } from '@vue/test-utils'
 import { afterEach, describe, expect, it } from 'vitest'
-import { nextTick } from 'vue'
 import { z } from 'zod'
 import FUDataEdit from '../../src/runtime/components/FUDataEdit.vue'
 import { nuxtUIInputDefinition } from '../../src/runtime/formkit/definitions/input'
-import { wait } from '../support/wait'
+import { settleAndWait } from '../support/settle'
 
 // Same reuse-of-id concern noted in useFormKitForm.nuxt.test.ts - every test
 // shares the `test-data-edit` id in FormKit's global registry.
@@ -16,12 +14,6 @@ afterEach(() => {
   activeWrapper?.unmount()
   activeWrapper = undefined
 })
-
-async function settle() {
-  await flushPromises()
-  await nextTick()
-  await wait()
-}
 
 const emailFormSchema = [
   { $formkit: 'nuxtUIInput', name: 'email', label: 'Email' },
@@ -52,12 +44,12 @@ describe('FUDataEdit standardSchema prop', () => {
       standardSchema: schema,
     })
     activeWrapper = wrapper
-    await settle()
+    await settleAndWait()
 
     expect(wrapper.text()).not.toContain('Invalid email address')
 
     await wrapper.find('input').trigger('blur')
-    await settle()
+    await settleAndWait()
 
     expect(wrapper.text()).toContain('Invalid email address')
 
@@ -66,17 +58,17 @@ describe('FUDataEdit standardSchema prop', () => {
     // while any blocking message (native rule or, per this bridge,
     // schema-derived) is present, so `dataSaved` should not fire yet.
     await wrapper.find('form').trigger('submit')
-    await settle()
+    await settleAndWait()
 
     expect(wrapper.emitted('dataSaved')).toBeUndefined()
 
     await wrapper.find('input').setValue('ada@example.com')
-    await settle()
+    await settleAndWait()
 
     expect(wrapper.text()).not.toContain('Invalid email address')
 
     await wrapper.find('form').trigger('submit')
-    await settle()
+    await settleAndWait()
 
     expect(wrapper.emitted('dataSaved')).toBeTruthy()
   })
@@ -86,10 +78,10 @@ describe('FUDataEdit standardSchema prop', () => {
       data: { email: 'anything' },
     })
     activeWrapper = wrapper
-    await settle()
+    await settleAndWait()
 
     await wrapper.find('form').trigger('submit')
-    await settle()
+    await settleAndWait()
 
     expect(wrapper.emitted('dataSaved')).toBeTruthy()
   })

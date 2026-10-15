@@ -1,18 +1,11 @@
 import type { FormKitNode } from '@formkit/core'
 import { defaultConfig, FormKit, plugin } from '@formkit/vue'
 import { mountSuspended } from '@nuxt/test-utils/runtime'
-import { flushPromises } from '@vue/test-utils'
 import { afterEach, describe, expect, it } from 'vitest'
-import { defineComponent, h, nextTick } from 'vue'
+import { defineComponent, h } from 'vue'
 import UApp from '@nuxt/ui/components/App.vue'
 import { nuxtUIEditorDefinition } from '../../../src/runtime/formkit/definitions/input'
-import { wait } from '../../support/wait'
-
-async function settle() {
-  await flushPromises()
-  await nextTick()
-  await wait()
-}
+import { settleAndWait } from '../../support/settle'
 
 let activeWrapper: Awaited<ReturnType<typeof mountSuspended>> | undefined
 afterEach(() => {
@@ -52,7 +45,7 @@ describe('FUEditor blur wiring', () => {
   it('reveals the validation message only after a real DOM blur, not before', async () => {
     const wrapper = await mountEditorInApp({ modelValue: '', validation: 'required' })
     activeWrapper = wrapper
-    await settle()
+    await settleAndWait()
 
     const node = exposedNode(wrapper)
     const contentEditable = wrapper.find('[contenteditable="true"]').element as HTMLElement
@@ -67,11 +60,11 @@ describe('FUEditor blur wiring', () => {
     // test, and the component's own comment, for why a plain `blur` isn't
     // enough here).
     contentEditable.focus()
-    await settle()
+    await settleAndWait()
     const outsideButton = document.createElement('button')
     document.body.appendChild(outsideButton)
     outsideButton.focus()
-    await settle()
+    await settleAndWait()
 
     expect(node.context?.state.blurred).toBe(true)
     expect(wrapper.text()).toContain('is required.')
@@ -81,7 +74,7 @@ describe('FUEditor blur wiring', () => {
   it('does not misfire when focus moves from the editor content to one of its own toolbar buttons', async () => {
     const wrapper = await mountEditorInApp({ modelValue: '', validation: 'required' })
     activeWrapper = wrapper
-    await settle()
+    await settleAndWait()
 
     const node = exposedNode(wrapper)
     const contentEditable = wrapper.find('[contenteditable="true"]').element as HTMLElement
@@ -89,9 +82,9 @@ describe('FUEditor blur wiring', () => {
     expect(toolbarButton).toBeDefined()
 
     contentEditable.focus()
-    await settle()
+    await settleAndWait()
     toolbarButton.focus()
-    await settle()
+    await settleAndWait()
 
     expect(node.context?.state.blurred).toBe(false)
     expect(wrapper.text()).not.toContain('is required.')

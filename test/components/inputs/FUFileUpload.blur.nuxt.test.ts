@@ -1,14 +1,8 @@
 import type { FormKitNode } from '@formkit/core'
-import { flushPromises } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
-import { nextTick } from 'vue'
 import { nuxtUIFileUploadDefinition } from '../../../src/runtime/formkit/definitions/input'
 import { mountFormKit } from '../../support/mountFormKit'
-
-async function settle() {
-  await flushPromises()
-  await nextTick()
-}
+import { settle } from '../../support/settle'
 
 function exposedNode(wrapper: Awaited<ReturnType<typeof mountFormKit>>): FormKitNode {
   return (wrapper.vm.$.exposed as unknown as { node: FormKitNode }).node

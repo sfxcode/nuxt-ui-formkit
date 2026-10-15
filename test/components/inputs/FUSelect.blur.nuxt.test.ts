@@ -1,11 +1,9 @@
 import type { FormKitNode } from '@formkit/core'
 import { defaultConfig, FormKit, plugin } from '@formkit/vue'
 import { mountSuspended } from '@nuxt/test-utils/runtime'
-import { flushPromises } from '@vue/test-utils'
 import { afterEach, describe, expect, it } from 'vitest'
-import { nextTick } from 'vue'
 import { nuxtUISelectDefinition } from '../../../src/runtime/formkit/definitions/input'
-import { wait } from '../../support/wait'
+import { settleAndWait } from '../../support/settle'
 
 // jsdom implements no Pointer Capture API at all; reka-ui's `SelectTrigger`
 // calls `target.hasPointerCapture()`/`releasePointerCapture()` when a real
@@ -20,12 +18,6 @@ if (!Element.prototype.setPointerCapture) {
 }
 if (!Element.prototype.releasePointerCapture) {
   Element.prototype.releasePointerCapture = () => {}
-}
-
-async function settle() {
-  await flushPromises()
-  await nextTick()
-  await wait()
 }
 
 let activeWrapper: Awaited<ReturnType<typeof mountSuspended>> | undefined
@@ -57,7 +49,7 @@ describe('FUSelect blur wiring', () => {
   it('reveals the validation message once the dropdown has been opened and closed', async () => {
     const wrapper = await mountSelect()
     activeWrapper = wrapper
-    await settle()
+    await settleAndWait()
 
     const node = exposedNode(wrapper)
     expect(node.context?.state.blurred).toBe(false)
@@ -70,7 +62,7 @@ describe('FUSelect blur wiring', () => {
     // pointerdown internally (see `Select.vue`'s `onTriggerClick`), which is
     // what actually flips reka-ui's open state.
     await trigger.trigger('click')
-    await settle()
+    await settleAndWait()
     expect((trigger.element as HTMLElement).getAttribute('data-state')).toBe('open')
 
     // Closing it - here via Escape, which reka-ui's `DismissableLayer`
@@ -78,7 +70,7 @@ describe('FUSelect blur wiring', () => {
     // `USelect`'s synthetic `blur` emit (from `onUpdateOpen(false)`), the
     // only DOM-driven blur signal it has.
     await trigger.trigger('keydown', { key: 'Escape' })
-    await settle()
+    await settleAndWait()
 
     expect((trigger.element as HTMLElement).getAttribute('data-state')).toBe('closed')
     expect(node.context?.state.blurred).toBe(true)
@@ -88,7 +80,7 @@ describe('FUSelect blur wiring', () => {
   it('does NOT reveal the validation message when the trigger is tabbed through without ever opening the dropdown (documented residual gap)', async () => {
     const wrapper = await mountSelect()
     activeWrapper = wrapper
-    await settle()
+    await settleAndWait()
 
     const node = exposedNode(wrapper)
     expect(node.context?.state.blurred).toBe(false)
@@ -96,13 +88,13 @@ describe('FUSelect blur wiring', () => {
 
     const trigger = wrapper.find('[role="combobox"]').element as HTMLElement
     trigger.focus()
-    await settle()
+    await settleAndWait()
     expect(document.activeElement).toBe(trigger)
 
     const outsideButton = document.createElement('button')
     document.body.appendChild(outsideButton)
     outsideButton.focus()
-    await settle()
+    await settleAndWait()
 
     // Confirmed, not assumed: `USelect` only ever emits `blur` synthetically
     // from its dropdown's open->close transition (`onUpdateOpen`) - its

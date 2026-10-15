@@ -1,11 +1,9 @@
 import type { FormKitNode } from '@formkit/core'
 import { defaultConfig, FormKit, plugin } from '@formkit/vue'
 import { mountSuspended } from '@nuxt/test-utils/runtime'
-import { flushPromises } from '@vue/test-utils'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { nextTick } from 'vue'
 import { nuxtUISliderDefinition } from '../../../src/runtime/formkit/definitions/input'
-import { wait } from '../../support/wait'
+import { settleAndWait } from '../../support/settle'
 
 // jsdom has no ResizeObserver; reka-ui's SliderRoot reads its own size via
 // one on mount - unrelated to the blur wiring this test targets.
@@ -15,12 +13,6 @@ class ResizeObserverStub {
   disconnect() {}
 }
 vi.stubGlobal('ResizeObserver', ResizeObserverStub)
-
-async function settle() {
-  await flushPromises()
-  await nextTick()
-  await wait()
-}
 
 let activeWrapper: Awaited<ReturnType<typeof mountSuspended>> | undefined
 afterEach(() => {
@@ -49,7 +41,7 @@ describe('FUSlider blur wiring', () => {
       },
     })
     activeWrapper = wrapper
-    await settle()
+    await settleAndWait()
 
     const node = exposedNode(wrapper)
     expect(node.context?.state.blurred).toBe(false)
@@ -60,7 +52,7 @@ describe('FUSlider blur wiring', () => {
 
     const thumb = thumbs[0]!.element as HTMLElement
     thumb.focus()
-    await settle()
+    await settleAndWait()
 
     expect(node.context?.state.blurred).toBe(false)
     expect(wrapper.text()).not.toContain('is required.')
@@ -68,7 +60,7 @@ describe('FUSlider blur wiring', () => {
     const outsideButton = document.createElement('button')
     document.body.appendChild(outsideButton)
     outsideButton.focus()
-    await settle()
+    await settleAndWait()
 
     expect(node.context?.state.blurred).toBe(true)
     expect(wrapper.text()).toContain('is required.')
@@ -96,7 +88,7 @@ describe('FUSlider blur wiring', () => {
       },
     })
     activeWrapper = wrapper
-    await settle()
+    await settleAndWait()
 
     const node = exposedNode(wrapper)
     expect(node.context?.state.blurred).toBe(false)
@@ -109,9 +101,9 @@ describe('FUSlider blur wiring', () => {
     const second = thumbs[1]!.element as HTMLElement
 
     first.focus()
-    await settle()
+    await settleAndWait()
     second.focus()
-    await settle()
+    await settleAndWait()
 
     expect(node.context?.state.blurred).toBe(false)
     expect(wrapper.text()).not.toContain('is required.')
@@ -119,7 +111,7 @@ describe('FUSlider blur wiring', () => {
     const outsideButton = document.createElement('button')
     document.body.appendChild(outsideButton)
     outsideButton.focus()
-    await settle()
+    await settleAndWait()
 
     expect(node.context?.state.blurred).toBe(true)
     expect(wrapper.text()).toContain('is required.')

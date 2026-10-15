@@ -2,11 +2,11 @@ import { createMultiStepPlugin } from '@formkit/addons'
 import { de } from '@formkit/i18n'
 import { FormKit, FormKitSchema, defaultConfig, plugin } from '@formkit/vue'
 import { mountSuspended } from '@nuxt/test-utils/runtime'
-import { flushPromises } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
-import { h, nextTick } from 'vue'
+import { h } from 'vue'
 import { nuxtUIInputDefinition } from '../../../src/runtime/formkit/definitions/input'
 import { nuxtUIMultiStepDefinition, nuxtUIStepDefinition } from '../../../src/runtime/formkit/definitions/multiStep'
+import { settle } from '../../support/settle'
 
 // Mirrors multiStep.nuxt.test.ts's own mounting pattern.
 const wizardSchema = [
@@ -59,8 +59,7 @@ function mountWizardWithLocale(locale: string) {
 describe('nuxtUIMultiStep Previous/Next i18n', () => {
   it('resolves the Next button label through FormKit i18n when a non-English locale is active, not the English default', async () => {
     const wrapper = await mountWizardWithLocale('de')
-    await flushPromises()
-    await nextTick()
+    await settle()
 
     const buttons = wrapper.findAll('button').map(button => button.text())
     expect(buttons).toContain('Weiter')
@@ -69,8 +68,7 @@ describe('nuxtUIMultiStep Previous/Next i18n', () => {
 
   it('still shows the English default when the active locale is en', async () => {
     const wrapper = await mountWizardWithLocale('en')
-    await flushPromises()
-    await nextTick()
+    await settle()
 
     const buttons = wrapper.findAll('button').map(button => button.text())
     expect(buttons).toContain('Next')

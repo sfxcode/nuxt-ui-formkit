@@ -1,13 +1,12 @@
 import { defaultConfig, FormKit, plugin, useFormKitContextById } from '@formkit/vue'
 import { mountSuspended } from '@nuxt/test-utils/runtime'
-import { flushPromises } from '@vue/test-utils'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import type { PropType } from 'vue'
 import { defineComponent, h, nextTick } from 'vue'
 import { z } from 'zod'
 import { nuxtUIInputDefinition } from '../../src/runtime/formkit/definitions/input'
 import { useFormKitForm } from '../../src/runtime/composables/useFormKitForm'
-import { wait } from '../support/wait'
+import { settle, settleAndWait } from '../support/settle'
 
 // `useFormKitForm` is meant to be called from arbitrary consumer code (e.g. a
 // submit button outside the form), not from inside a `createInput`-rendered
@@ -76,9 +75,7 @@ function useExposedForm(wrapper: Awaited<ReturnType<typeof mountHost>>) {
 describe('useFormKitForm', () => {
   it('reports isDirty once a field differs from its initial value', async () => {
     const wrapper = await mountHost()
-    await flushPromises()
-    await nextTick()
-    await wait()
+    await settleAndWait()
 
     const form = useExposedForm(wrapper)
     expect(form.isDirty.value).toBe(false)
@@ -90,9 +87,7 @@ describe('useFormKitForm', () => {
 
   it('with dirtyBehavior="compare", isDirty clears when the value is edited back', async () => {
     const wrapper = await mountHost({ dirtyBehavior: 'compare', initial: { email: 'start@example.com' } })
-    await flushPromises()
-    await nextTick()
-    await wait()
+    await settleAndWait()
 
     const form = useExposedForm(wrapper)
     await wrapper.find('input').setValue('ada@example.com')
@@ -104,9 +99,7 @@ describe('useFormKitForm', () => {
 
   it('clears isDirty after reset()', async () => {
     const wrapper = await mountHost()
-    await flushPromises()
-    await nextTick()
-    await wait()
+    await settleAndWait()
 
     const form = useExposedForm(wrapper)
     await wrapper.find('input').setValue('ada@example.com')
@@ -118,43 +111,33 @@ describe('useFormKitForm', () => {
 
   it('reflects isValid/hasErrors as the form is filled in', async () => {
     const wrapper = await mountHost()
-    await flushPromises()
-    await nextTick()
-    await wait()
+    await settleAndWait()
 
     const form = useExposedForm(wrapper)
     expect(form.isValid.value).toBe(false)
 
     await wrapper.find('input').setValue('ada@example.com')
-    await flushPromises()
-    await nextTick()
-    await wait()
+    await settleAndWait()
 
     await vi.waitFor(() => expect(form.isValid.value).toBe(true))
   })
 
   it('marks the form submitted via submit()', async () => {
     const wrapper = await mountHost()
-    await flushPromises()
-    await nextTick()
-    await wait()
+    await settleAndWait()
 
     const form = useExposedForm(wrapper)
     expect(form.isSubmitted.value).toBe(false)
 
     form.submit()
-    await flushPromises()
-    await nextTick()
-    await wait()
+    await settleAndWait()
 
     expect(form.isSubmitted.value).toBe(true)
   })
 
   it('toggles isLoading around an async handler passed to submit()', async () => {
     const wrapper = await mountHost()
-    await flushPromises()
-    await nextTick()
-    await wait()
+    await settleAndWait()
 
     const form = useExposedForm(wrapper)
     expect(form.isLoading.value).toBe(false)
@@ -169,31 +152,24 @@ describe('useFormKitForm', () => {
     expect(form.isLoading.value).toBe(true)
 
     resolveWork()
-    await flushPromises()
-    await nextTick()
+    await settle()
 
     expect(form.isLoading.value).toBe(false)
   })
 
   it('setErrors/clearErrors add and remove visible error messages', async () => {
     const wrapper = await mountHost()
-    await flushPromises()
-    await nextTick()
-    await wait()
+    await settleAndWait()
 
     const form = useExposedForm(wrapper)
     form.setErrors('Something went wrong')
-    await flushPromises()
-    await nextTick()
-    await wait()
+    await settleAndWait()
 
     expect(wrapper.text()).toContain('Something went wrong')
     expect(form.hasErrors.value).toBe(true)
 
     form.clearErrors()
-    await flushPromises()
-    await nextTick()
-    await wait()
+    await settleAndWait()
 
     expect(wrapper.text()).not.toContain('Something went wrong')
     expect(form.hasErrors.value).toBe(false)
@@ -201,21 +177,15 @@ describe('useFormKitForm', () => {
 
   it('reset() clears the form back to its default value', async () => {
     const wrapper = await mountHost()
-    await flushPromises()
-    await nextTick()
-    await wait()
+    await settleAndWait()
 
     await wrapper.find('input').setValue('ada@example.com')
-    await flushPromises()
-    await nextTick()
-    await wait()
+    await settleAndWait()
     expect((wrapper.find('input').element as HTMLInputElement).value).toBe('ada@example.com')
 
     const form = useExposedForm(wrapper)
     form.reset()
-    await flushPromises()
-    await nextTick()
-    await wait()
+    await settleAndWait()
 
     expect((wrapper.find('input').element as HTMLInputElement).value).toBe('')
   })
@@ -267,9 +237,7 @@ describe('useFormKitForm with a standardSchema', () => {
 
     const wrapper = await mountHostWithSchema(schema)
     activeWrapper = wrapper
-    await flushPromises()
-    await nextTick()
-    await wait()
+    await settleAndWait()
 
     const { form, blur } = useExposedFormWithSchema(wrapper)
 
@@ -280,16 +248,12 @@ describe('useFormKitForm with a standardSchema', () => {
     expect(wrapper.text()).not.toContain('Invalid email address')
 
     blur('email')
-    await flushPromises()
-    await nextTick()
-    await wait()
+    await settleAndWait()
 
     expect(wrapper.text()).toContain('Invalid email address')
 
     await wrapper.find('input').setValue('ada@example.com')
-    await flushPromises()
-    await nextTick()
-    await wait()
+    await settleAndWait()
 
     expect(form.isValid.value).toBe(true)
     expect(wrapper.text()).not.toContain('Invalid email address')

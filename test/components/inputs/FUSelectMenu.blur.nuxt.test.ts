@@ -1,10 +1,9 @@
 import type { FormKitNode } from '@formkit/core'
 import { defaultConfig, FormKit, plugin } from '@formkit/vue'
 import { mountSuspended } from '@nuxt/test-utils/runtime'
-import { flushPromises } from '@vue/test-utils'
 import { afterEach, beforeAll, describe, expect, it } from 'vitest'
-import { nextTick } from 'vue'
 import { nuxtUISelectMenuDefinition } from '../../../src/runtime/formkit/definitions/input'
+import { settle } from '../../support/settle'
 
 // jsdom has no `scrollIntoView` - reka-ui's Combobox content positioning
 // calls it once the dropdown is placed, unrelated to the blur wiring this
@@ -13,12 +12,6 @@ beforeAll(() => {
   if (!Element.prototype.scrollIntoView)
     Element.prototype.scrollIntoView = () => {}
 })
-
-async function settle() {
-  await flushPromises()
-  await nextTick()
-  await nextTick()
-}
 
 let activeWrapper: Awaited<ReturnType<typeof mountSuspended>> | undefined
 afterEach(() => {

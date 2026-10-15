@@ -1,17 +1,9 @@
 import type { FormKitNode } from '@formkit/core'
 import { defaultConfig, FormKit, plugin } from '@formkit/vue'
 import { mountSuspended } from '@nuxt/test-utils/runtime'
-import { flushPromises } from '@vue/test-utils'
 import { afterEach, describe, expect, it } from 'vitest'
-import { nextTick } from 'vue'
 import { nuxtUICheckboxGroupDefinition, nuxtUIRadioGroupDefinition } from '../../../src/runtime/formkit/definitions/input'
-import { wait } from '../../support/wait'
-
-async function settle() {
-  await flushPromises()
-  await nextTick()
-  await wait()
-}
+import { settleAndWait } from '../../support/settle'
 
 // Real inter-item vs. leave-the-group focus tracking needs genuine DOM
 // focus (`document.activeElement`), which only works once the tree is
@@ -42,7 +34,7 @@ describe('FUCheckboxGroup blur wiring', () => {
       },
     })
     activeWrapper = wrapper
-    await settle()
+    await settleAndWait()
 
     const node = exposedNode(wrapper)
     const items = wrapper.findAll('[role="checkbox"]')
@@ -54,9 +46,9 @@ describe('FUCheckboxGroup blur wiring', () => {
     const first = items[0]!.element as HTMLElement
     const second = items[1]!.element as HTMLElement
     first.focus()
-    await settle()
+    await settleAndWait()
     second.focus()
-    await settle()
+    await settleAndWait()
 
     expect(node.context?.state.blurred).toBe(false)
     expect(wrapper.text()).not.toContain('is required.')
@@ -64,7 +56,7 @@ describe('FUCheckboxGroup blur wiring', () => {
     const outsideButton = document.createElement('button')
     document.body.appendChild(outsideButton)
     outsideButton.focus()
-    await settle()
+    await settleAndWait()
 
     expect(node.context?.state.blurred).toBe(true)
     expect(wrapper.text()).toContain('is required.')
@@ -87,7 +79,7 @@ describe('FURadioGroup blur wiring', () => {
       },
     })
     activeWrapper = wrapper
-    await settle()
+    await settleAndWait()
 
     const node = exposedNode(wrapper)
     const items = wrapper.findAll('[role="radio"]')
@@ -99,9 +91,9 @@ describe('FURadioGroup blur wiring', () => {
     const first = items[0]!.element as HTMLElement
     const second = items[1]!.element as HTMLElement
     first.focus()
-    await settle()
+    await settleAndWait()
     second.focus()
-    await settle()
+    await settleAndWait()
 
     expect(node.context?.state.blurred).toBe(false)
     expect(wrapper.text()).not.toContain('is required.')
@@ -109,7 +101,7 @@ describe('FURadioGroup blur wiring', () => {
     const outsideButton = document.createElement('button')
     document.body.appendChild(outsideButton)
     outsideButton.focus()
-    await settle()
+    await settleAndWait()
 
     expect(node.context?.state.blurred).toBe(true)
     expect(wrapper.text()).toContain('is required.')

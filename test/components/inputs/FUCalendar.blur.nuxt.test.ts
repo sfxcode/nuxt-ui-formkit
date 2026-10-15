@@ -1,17 +1,9 @@
 import type { FormKitNode } from '@formkit/core'
 import { defaultConfig, FormKit, plugin } from '@formkit/vue'
 import { mountSuspended } from '@nuxt/test-utils/runtime'
-import { flushPromises } from '@vue/test-utils'
 import { afterEach, describe, expect, it } from 'vitest'
-import { nextTick } from 'vue'
 import { nuxtUICalendarDefinition } from '../../../src/runtime/formkit/definitions/input'
-import { wait } from '../../support/wait'
-
-async function settle() {
-  await flushPromises()
-  await nextTick()
-  await wait()
-}
+import { settleAndWait } from '../../support/settle'
 
 let activeWrapper: Awaited<ReturnType<typeof mountSuspended>> | undefined
 afterEach(() => {
@@ -37,7 +29,7 @@ describe('FUCalendar blur wiring', () => {
       },
     })
     activeWrapper = wrapper
-    await settle()
+    await settleAndWait()
 
     const node = exposedNode(wrapper)
     // The grid also renders non-focusable "padding" cells for adjacent
@@ -54,9 +46,9 @@ describe('FUCalendar blur wiring', () => {
     const first = cells[0]!.element as HTMLElement
     const second = cells[1]!.element as HTMLElement
     first.focus()
-    await settle()
+    await settleAndWait()
     second.focus()
-    await settle()
+    await settleAndWait()
 
     expect(node.context?.state.blurred).toBe(false)
     expect(wrapper.text()).not.toContain('is required.')
@@ -64,7 +56,7 @@ describe('FUCalendar blur wiring', () => {
     const outsideButton = document.createElement('button')
     document.body.appendChild(outsideButton)
     outsideButton.focus()
-    await settle()
+    await settleAndWait()
 
     expect(node.context?.state.blurred).toBe(true)
     expect(wrapper.text()).toContain('is required.')
@@ -85,14 +77,14 @@ describe('FUCalendar blur wiring', () => {
       },
     })
     activeWrapper = wrapper
-    await settle()
+    await settleAndWait()
 
     const node = exposedNode(wrapper)
     const nextMonthButton = wrapper.findAll('button').find(button => (button.attributes('aria-label') || '').toLowerCase().includes('next'))
     expect(nextMonthButton).toBeDefined()
 
     await nextMonthButton!.trigger('click')
-    await settle()
+    await settleAndWait()
 
     // `createContainerBlurHandler` reads `event.currentTarget` fresh on
     // every dispatch rather than a stored ref, so it shouldn't matter that
@@ -104,16 +96,16 @@ describe('FUCalendar blur wiring', () => {
     const first = cells[0]!.element as HTMLElement
     const second = cells[1]!.element as HTMLElement
     first.focus()
-    await settle()
+    await settleAndWait()
     second.focus()
-    await settle()
+    await settleAndWait()
 
     expect(node.context?.state.blurred).toBe(false)
 
     const outsideButton = document.createElement('button')
     document.body.appendChild(outsideButton)
     outsideButton.focus()
-    await settle()
+    await settleAndWait()
 
     expect(node.context?.state.blurred).toBe(true)
     outsideButton.remove()

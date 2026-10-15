@@ -2,12 +2,11 @@ import { createMultiStepPlugin } from '@formkit/addons'
 import { getNode } from '@formkit/core'
 import { FormKit, FormKitSchema, defaultConfig, plugin } from '@formkit/vue'
 import { mountSuspended } from '@nuxt/test-utils/runtime'
-import { flushPromises } from '@vue/test-utils'
 import { describe, expect, it, vi } from 'vitest'
-import { h, nextTick } from 'vue'
+import { h } from 'vue'
 import { nuxtUIInputDefinition } from '../../../src/runtime/formkit/definitions/input'
 import { nuxtUIMultiStepDefinition, nuxtUIStepDefinition } from '../../../src/runtime/formkit/definitions/multiStep'
-import { wait } from '../../support/wait'
+import { settle, settleAndWait } from '../../support/settle'
 
 // Mirrors repeater.nested.nuxt.test.ts's <FormKit type="form"><FormKitSchema />
 // mounting pattern, since a multi-step's steps are authored as raw `children`
@@ -79,8 +78,7 @@ function tabPanels(wrapper: Awaited<ReturnType<typeof mountWizard>>) {
 describe('nuxtUIMultiStep / nuxtUIStep', () => {
   it('renders one tab per step', async () => {
     const wrapper = await mountWizard()
-    await flushPromises()
-    await nextTick()
+    await settle()
 
     const tabs = tabButtons(wrapper)
     expect(tabs).toHaveLength(2)
@@ -89,8 +87,7 @@ describe('nuxtUIMultiStep / nuxtUIStep', () => {
 
   it('shows the first step and hides the rest on initial mount', async () => {
     const wrapper = await mountWizard()
-    await flushPromises()
-    await nextTick()
+    await settle()
 
     // `hidden` lives on the outer wrapper (an ancestor of the `[role="tabpanel"]`
     // element, not the element itself - see the "does not leak inactive
@@ -103,8 +100,7 @@ describe('nuxtUIMultiStep / nuxtUIStep', () => {
 
   it('does not leak an inactive step\'s label text into the page', async () => {
     const wrapper = await mountWizard()
-    await flushPromises()
-    await nextTick()
+    await settle()
 
     // Regression: `createInput()` always wraps a step's schema in FormKit's
     // standard outer/wrapper/label/inner chrome. The step's own `hidden`
@@ -122,16 +118,13 @@ describe('nuxtUIMultiStep / nuxtUIStep', () => {
 
   it('blocks advancing to the next step while a required field is empty', async () => {
     const wrapper = await mountWizard()
-    await flushPromises()
-    await nextTick()
+    await settle()
 
     const nextButton = wrapper.findAll('button').find(button => button.text() === 'Next')
     expect(nextButton).toBeDefined()
 
     await nextButton!.trigger('click')
-    await flushPromises()
-    await nextTick()
-    await wait()
+    await settleAndWait()
 
     const [firstPanel, secondPanel] = tabPanels(wrapper)
     expect(firstPanel!.isVisible()).toBe(true)
@@ -140,22 +133,17 @@ describe('nuxtUIMultiStep / nuxtUIStep', () => {
 
   it('advances to the next step once the required field is filled, and the tab strip reflects it', async () => {
     const wrapper = await mountWizard()
-    await flushPromises()
-    await nextTick()
+    await settle()
 
     // FormKit doesn't mirror the field `name` onto the rendered DOM input's
     // `name` attribute, so locate it positionally (only one input exists in
     // step one).
     await wrapper.findAll('input')[0]!.setValue('Ada')
-    await flushPromises()
-    await nextTick()
-    await wait()
+    await settleAndWait()
 
     const nextButton = wrapper.findAll('button').find(button => button.text() === 'Next')
     await nextButton!.trigger('click')
-    await flushPromises()
-    await nextTick()
-    await wait()
+    await settleAndWait()
 
     const [firstPanel, secondPanel] = tabPanels(wrapper)
     expect(firstPanel!.isVisible()).toBe(false)
@@ -164,8 +152,7 @@ describe('nuxtUIMultiStep / nuxtUIStep', () => {
 
   it('updates the tab header error badge live, without navigating away', async () => {
     const wrapper = await mountWizard()
-    await flushPromises()
-    await nextTick()
+    await settle()
 
     const firstTabInitially = tabButtons(wrapper)[0]!
     expect(tabBadge(firstTabInitially).exists()).toBe(false)
@@ -178,9 +165,7 @@ describe('nuxtUIMultiStep / nuxtUIStep', () => {
     // invalid (see the "disables" tests below) and a disabled button
     // doesn't dispatch `click` at all.
     getNode('wizard-node')!.next()
-    await flushPromises()
-    await nextTick()
-    await wait()
+    await settleAndWait()
 
     const firstTabAfterBlockedNext = tabButtons(wrapper)[0]!
     const errorBadge = tabBadge(firstTabAfterBlockedNext)
@@ -188,9 +173,7 @@ describe('nuxtUIMultiStep / nuxtUIStep', () => {
     expect(errorBadge.text()).toBe('1')
 
     await wrapper.findAll('input')[0]!.setValue('Ada')
-    await flushPromises()
-    await nextTick()
-    await wait()
+    await settleAndWait()
 
     const firstTabAfterFix = tabButtons(wrapper)[0]!
     const successBadge = tabBadge(firstTabAfterFix)
@@ -200,18 +183,14 @@ describe('nuxtUIMultiStep / nuxtUIStep', () => {
 
   it('disables the "Next" button while the current step is invalid, and re-enables it once fixed', async () => {
     const wrapper = await mountWizard()
-    await flushPromises()
-    await nextTick()
-    await wait()
+    await settleAndWait()
 
     const nextButton = wrapper.findAll('button').find(button => button.text() === 'Next')
     expect(nextButton).toBeDefined()
     expect(nextButton!.attributes('disabled')).toBeDefined()
 
     await wrapper.findAll('input')[0]!.setValue('Ada')
-    await flushPromises()
-    await nextTick()
-    await wait()
+    await settleAndWait()
 
     // Validation settles asynchronously; poll instead of trusting a fixed sleep.
     await vi.waitFor(() => {
@@ -222,17 +201,13 @@ describe('nuxtUIMultiStep / nuxtUIStep', () => {
 
   it('disables an unvisited tab while the current step is invalid, and re-enables it once fixed', async () => {
     const wrapper = await mountWizard()
-    await flushPromises()
-    await nextTick()
-    await wait()
+    await settleAndWait()
 
     const secondTab = tabButtons(wrapper).find(tab => tab.text() === 'Step Two')
     expect(secondTab!.attributes('disabled')).toBeDefined()
 
     await wrapper.findAll('input')[0]!.setValue('Ada')
-    await flushPromises()
-    await nextTick()
-    await wait()
+    await settleAndWait()
 
     await vi.waitFor(() => {
       const secondTabAfterFix = tabButtons(wrapper).find(tab => tab.text() === 'Step Two')
@@ -242,16 +217,13 @@ describe('nuxtUIMultiStep / nuxtUIStep', () => {
 
   it('clicking a tab navigates directly to that step', async () => {
     const wrapper = await mountWizard()
-    await flushPromises()
-    await nextTick()
+    await settle()
 
     // FormKit doesn't mirror the field `name` onto the rendered DOM input's
     // `name` attribute, so locate it positionally (only one input exists in
     // step one).
     await wrapper.findAll('input')[0]!.setValue('Ada')
-    await flushPromises()
-    await nextTick()
-    await wait()
+    await settleAndWait()
 
     const secondTab = tabButtons(wrapper).find(tab => tab.text() === 'Step Two')
     expect(secondTab).toBeDefined()
@@ -260,9 +232,7 @@ describe('nuxtUIMultiStep / nuxtUIStep', () => {
     // plain `click` trigger leaves it inactive in jsdom.
     await secondTab!.trigger('pointerdown')
     await secondTab!.trigger('mousedown')
-    await flushPromises()
-    await nextTick()
-    await wait()
+    await settleAndWait()
 
     const [firstPanel, secondPanel] = tabPanels(wrapper)
     expect(firstPanel!.isVisible()).toBe(false)

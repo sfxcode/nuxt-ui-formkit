@@ -1,17 +1,9 @@
 import type { FormKitNode } from '@formkit/core'
 import { defaultConfig, FormKit, plugin } from '@formkit/vue'
 import { mountSuspended } from '@nuxt/test-utils/runtime'
-import { flushPromises } from '@vue/test-utils'
 import { afterEach, describe, expect, it } from 'vitest'
-import { nextTick } from 'vue'
 import { nuxtUIInputDateDefinition, nuxtUIInputTimeDefinition } from '../../../src/runtime/formkit/definitions/input'
-import { wait } from '../../support/wait'
-
-async function settle() {
-  await flushPromises()
-  await nextTick()
-  await wait()
-}
+import { settleAndWait } from '../../support/settle'
 
 // Real segment-to-segment vs. segment-to-outside focus movement needs
 // genuine DOM focus tracking (`document.activeElement`), which only works
@@ -42,7 +34,7 @@ describe('FUInputDate blur wiring', () => {
       },
     })
     activeWrapper = wrapper
-    await settle()
+    await settleAndWait()
 
     const node = exposedNode(wrapper)
     const segments = wrapper.findAll('[data-segment]:not([data-segment="literal"])')
@@ -55,9 +47,9 @@ describe('FUInputDate blur wiring', () => {
     const first = segments[0]!.element as HTMLElement
     const second = segments[1]!.element as HTMLElement
     first.focus()
-    await settle()
+    await settleAndWait()
     second.focus()
-    await settle()
+    await settleAndWait()
 
     expect(node.context?.state.blurred).toBe(false)
     expect(wrapper.text()).not.toContain('is required.')
@@ -66,7 +58,7 @@ describe('FUInputDate blur wiring', () => {
     const outsideButton = document.createElement('button')
     document.body.appendChild(outsideButton)
     outsideButton.focus()
-    await settle()
+    await settleAndWait()
 
     expect(node.context?.state.blurred).toBe(true)
     expect(wrapper.text()).toContain('is required.')
@@ -88,7 +80,7 @@ describe('FUInputTime blur wiring', () => {
       },
     })
     activeWrapper = wrapper
-    await settle()
+    await settleAndWait()
 
     const node = exposedNode(wrapper)
     const segments = wrapper.findAll('[data-segment]:not([data-segment="literal"])')
@@ -100,9 +92,9 @@ describe('FUInputTime blur wiring', () => {
     const first = segments[0]!.element as HTMLElement
     const second = segments[1]!.element as HTMLElement
     first.focus()
-    await settle()
+    await settleAndWait()
     second.focus()
-    await settle()
+    await settleAndWait()
 
     expect(node.context?.state.blurred).toBe(false)
     expect(wrapper.text()).not.toContain('is required.')
@@ -110,7 +102,7 @@ describe('FUInputTime blur wiring', () => {
     const outsideButton = document.createElement('button')
     document.body.appendChild(outsideButton)
     outsideButton.focus()
-    await settle()
+    await settleAndWait()
 
     expect(node.context?.state.blurred).toBe(true)
     expect(wrapper.text()).toContain('is required.')

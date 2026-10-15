@@ -1,17 +1,9 @@
 import type { FormKitNode } from '@formkit/core'
 import { defaultConfig, FormKit, plugin } from '@formkit/vue'
 import { mountSuspended } from '@nuxt/test-utils/runtime'
-import { flushPromises } from '@vue/test-utils'
 import { afterEach, describe, expect, it } from 'vitest'
-import { nextTick } from 'vue'
 import { nuxtUIPinInputDefinition } from '../../../src/runtime/formkit/definitions/input'
-import { wait } from '../../support/wait'
-
-async function settle() {
-  await flushPromises()
-  await nextTick()
-  await wait()
-}
+import { settleAndWait } from '../../support/settle'
 
 // Real inter-cell vs. leave-the-group focus tracking needs genuine DOM
 // focus (`document.activeElement`), which only works once attached to
@@ -40,7 +32,7 @@ describe('FUPinInput blur wiring', () => {
       },
     })
     activeWrapper = wrapper
-    await settle()
+    await settleAndWait()
 
     const node = exposedNode(wrapper)
     const cells = wrapper.findAll('input')
@@ -53,9 +45,9 @@ describe('FUPinInput blur wiring', () => {
     const cell0 = cells[0]!.element as HTMLInputElement
     const cell1 = cells[1]!.element as HTMLInputElement
     cell0.focus()
-    await settle()
+    await settleAndWait()
     cell1.focus()
-    await settle()
+    await settleAndWait()
 
     expect(node.context?.state.blurred).toBe(false)
     expect(wrapper.text()).not.toContain('is required.')
@@ -65,7 +57,7 @@ describe('FUPinInput blur wiring', () => {
     const outsideButton = document.createElement('button')
     document.body.appendChild(outsideButton)
     outsideButton.focus()
-    await settle()
+    await settleAndWait()
 
     expect(node.context?.state.blurred).toBe(true)
     expect(wrapper.text()).toContain('is required.')

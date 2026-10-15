@@ -1,19 +1,14 @@
 import { defaultConfig, plugin } from '@formkit/vue'
 import { mountSuspended } from '@nuxt/test-utils/runtime'
-import { DOMWrapper, flushPromises } from '@vue/test-utils'
+import { DOMWrapper } from '@vue/test-utils'
 import UApp from '@nuxt/ui/components/App.vue'
 import * as v from 'valibot'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { defineComponent, h, nextTick } from 'vue'
+import { defineComponent, h } from 'vue'
 import { useFormKitOverlay } from '../../src/runtime/composables/useFormKitOverlay'
 import { nuxtUIInputDefinition } from '../../src/runtime/formkit/definitions/input'
 import { wait } from '../support/wait'
-
-async function settle() {
-  await flushPromises()
-  await nextTick()
-  await wait()
-}
+import { settleAndWait } from '../support/settle'
 
 // A hung `edit()` promise (dismissal that never resolves) would otherwise
 // hang the whole test rather than fail a normal assertion - racing against a
@@ -80,11 +75,11 @@ describe('useFormKitOverlay', () => {
   it('opens with the given data/schema/title, and resolves with the saved data on Save', async () => {
     const wrapper = await mountHost()
     activeWrapper = wrapper
-    await settle()
+    await settleAndWait()
 
     const overlay = exposedOverlay(wrapper)
     const resultPromise = overlay.edit({ data: { name: 'Ada' }, schema, title: 'Edit Person' })
-    await settle()
+    await settleAndWait()
 
     expect(body().text()).toContain('Edit Person')
     const input = body().find('input')
@@ -92,7 +87,7 @@ describe('useFormKitOverlay', () => {
 
     await input.setValue('Ada Lovelace')
     await body().find('button[type="submit"]').trigger('click')
-    await settle()
+    await settleAndWait()
 
     await expect(resultPromise).resolves.toEqual({ name: 'Ada Lovelace' })
   })
@@ -100,18 +95,18 @@ describe('useFormKitOverlay', () => {
   it('does not collide across sequential edit() calls, each getting a fresh FormKit id', async () => {
     const wrapper = await mountHost()
     activeWrapper = wrapper
-    await settle()
+    await settleAndWait()
 
     const overlay = exposedOverlay(wrapper)
 
     const firstResult = overlay.edit({ data: { name: 'Ada' }, schema, title: 'First' })
-    await settle()
+    await settleAndWait()
     await body().find('button[type="submit"]').trigger('click')
-    await settle()
+    await settleAndWait()
     await expect(firstResult).resolves.toEqual({ name: 'Ada' })
 
     const secondResult = overlay.edit({ data: { name: 'Bob' }, schema, title: 'Second' })
-    await settle()
+    await settleAndWait()
 
     expect(body().text()).toContain('Second')
     const input = body().find('input')
@@ -119,7 +114,7 @@ describe('useFormKitOverlay', () => {
 
     await input.setValue('Bob Smith')
     await body().find('button[type="submit"]').trigger('click')
-    await settle()
+    await settleAndWait()
 
     await expect(secondResult).resolves.toEqual({ name: 'Bob Smith' })
   })
@@ -127,11 +122,11 @@ describe('useFormKitOverlay', () => {
   it('renders a USlideover instead of a UModal when as: "slideover" is given, with the same save/resolve behavior', async () => {
     const wrapper = await mountHost()
     activeWrapper = wrapper
-    await settle()
+    await settleAndWait()
 
     const overlay = exposedOverlay(wrapper)
     const resultPromise = overlay.edit({ data: { name: 'Ada' }, schema, title: 'Edit Person', as: 'slideover' })
-    await settle()
+    await settleAndWait()
 
     // `USlideover`'s `DialogContent` sets a `data-side` attribute (default
     // `"right"`) that `UModal`'s does not - a reliable DOM-level signal that
@@ -143,7 +138,7 @@ describe('useFormKitOverlay', () => {
     const input = body().find('input')
     await input.setValue('Ada Lovelace')
     await body().find('button[type="submit"]').trigger('click')
-    await settle()
+    await settleAndWait()
 
     await expect(resultPromise).resolves.toEqual({ name: 'Ada Lovelace' })
   })
@@ -151,14 +146,14 @@ describe('useFormKitOverlay', () => {
   it('resolves to null when the explicit Cancel button is clicked', async () => {
     const wrapper = await mountHost()
     activeWrapper = wrapper
-    await settle()
+    await settleAndWait()
 
     const overlay = exposedOverlay(wrapper)
     const resultPromise = overlay.edit({ data: { name: 'Ada' }, schema, title: 'Edit Person' })
-    await settle()
+    await settleAndWait()
 
     await body().find('button[type="button"]').trigger('click')
-    await settle()
+    await settleAndWait()
 
     expect(await racedResult(resultPromise)).toEqual({ resolved: true, value: null })
   })
@@ -166,14 +161,14 @@ describe('useFormKitOverlay', () => {
   it('resolves to null when dismissed via Escape', async () => {
     const wrapper = await mountHost()
     activeWrapper = wrapper
-    await settle()
+    await settleAndWait()
 
     const overlay = exposedOverlay(wrapper)
     const resultPromise = overlay.edit({ data: { name: 'Ada' }, schema, title: 'Edit Person' })
-    await settle()
+    await settleAndWait()
 
     document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
-    await settle()
+    await settleAndWait()
 
     expect(await racedResult(resultPromise)).toEqual({ resolved: true, value: null })
   })
@@ -181,14 +176,14 @@ describe('useFormKitOverlay', () => {
   it('resolves to null when dismissed via a backdrop click', async () => {
     const wrapper = await mountHost()
     activeWrapper = wrapper
-    await settle()
+    await settleAndWait()
 
     const overlay = exposedOverlay(wrapper)
     const resultPromise = overlay.edit({ data: { name: 'Ada' }, schema, title: 'Edit Person' })
-    await settle()
+    await settleAndWait()
 
     await body().find('[data-slot="overlay"]').trigger('pointerdown')
-    await settle()
+    await settleAndWait()
 
     expect(await racedResult(resultPromise)).toEqual({ resolved: true, value: null })
   })
@@ -196,14 +191,14 @@ describe('useFormKitOverlay', () => {
   it('resolves to null when the Cancel button is clicked on a slideover', async () => {
     const wrapper = await mountHost()
     activeWrapper = wrapper
-    await settle()
+    await settleAndWait()
 
     const overlay = exposedOverlay(wrapper)
     const resultPromise = overlay.edit({ data: { name: 'Ada' }, schema, title: 'Edit Person', as: 'slideover' })
-    await settle()
+    await settleAndWait()
 
     await body().find('button[type="button"]').trigger('click')
-    await settle()
+    await settleAndWait()
 
     expect(await racedResult(resultPromise)).toEqual({ resolved: true, value: null })
   })
@@ -221,14 +216,14 @@ describe('useFormKitOverlay', () => {
   it('documents what happens when a second edit() is called before the first resolves: the second takes over the single overlay instance, and both promises settle with its result', async () => {
     const wrapper = await mountHost()
     activeWrapper = wrapper
-    await settle()
+    await settleAndWait()
 
     const overlay = exposedOverlay(wrapper)
 
     const firstResult = overlay.edit({ data: { name: 'Ada' }, schema, title: 'First' })
-    await settle()
+    await settleAndWait()
     const secondResult = overlay.edit({ data: { name: 'Bob' }, schema, title: 'Second' })
-    await settle()
+    await settleAndWait()
 
     // The single registered overlay entry now shows the second call's data -
     // the first call's own open state was overwritten, not stacked alongside it.
@@ -236,7 +231,7 @@ describe('useFormKitOverlay', () => {
     expect(body().text()).not.toContain('First')
 
     await body().find('button[type="submit"]').trigger('click')
-    await settle()
+    await settleAndWait()
 
     expect(await racedResult(secondResult)).toEqual({ resolved: true, value: { name: 'Bob' } })
     // The first call's promise is not orphaned, but it receives the second
@@ -249,11 +244,11 @@ describe('useFormKitOverlay - auto()', () => {
   it('infers a schema from plain data, and resolves with the saved data on Save', async () => {
     const wrapper = await mountHost()
     activeWrapper = wrapper
-    await settle()
+    await settleAndWait()
 
     const overlay = exposedOverlay(wrapper)
     const resultPromise = overlay.auto({ data: { name: 'Ada', role: 'Engineer' }, title: 'Edit Person' })
-    await settle()
+    await settleAndWait()
 
     expect(body().text()).toContain('Edit Person')
     const inputs = body().findAll('input')
@@ -262,7 +257,7 @@ describe('useFormKitOverlay - auto()', () => {
 
     await inputs[0]!.setValue('Ada Lovelace')
     await body().find('button[type="submit"]').trigger('click')
-    await settle()
+    await settleAndWait()
 
     await expect(resultPromise).resolves.toEqual({ name: 'Ada Lovelace', role: 'Engineer' })
   })
@@ -274,7 +269,7 @@ describe('useFormKitOverlay - auto()', () => {
   it('infers a schema from a valibot schema, with real FormKit validation derived from it', async () => {
     const wrapper = await mountHost()
     activeWrapper = wrapper
-    await settle()
+    await settleAndWait()
 
     const overlay = exposedOverlay(wrapper)
     overlay.auto({
@@ -283,10 +278,10 @@ describe('useFormKitOverlay - auto()', () => {
       overrides: { email: { validationVisibility: 'live' } },
       title: 'Edit Email',
     })
-    await settle()
+    await settleAndWait()
 
     await body().find('input').setValue('not-an-email')
-    await settle()
+    await settleAndWait()
 
     await vi.waitFor(() => expect(body().text()).toContain('valid email'))
   })
@@ -294,14 +289,14 @@ describe('useFormKitOverlay - auto()', () => {
   it('resolves to null when the explicit Cancel button is clicked', async () => {
     const wrapper = await mountHost()
     activeWrapper = wrapper
-    await settle()
+    await settleAndWait()
 
     const overlay = exposedOverlay(wrapper)
     const resultPromise = overlay.auto({ data: { name: 'Ada' }, title: 'Edit Person' })
-    await settle()
+    await settleAndWait()
 
     await body().find('button[type="button"]').trigger('click')
-    await settle()
+    await settleAndWait()
 
     expect(await racedResult(resultPromise)).toEqual({ resolved: true, value: null })
   })

@@ -1,14 +1,8 @@
 import { defaultConfig, FormKit, plugin } from '@formkit/vue'
 import { mountSuspended } from '@nuxt/test-utils/runtime'
-import { flushPromises } from '@vue/test-utils'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { nextTick } from 'vue'
 import { nuxtUISliderDefinition } from '../../../src/runtime/formkit/definitions/input'
-
-async function settle() {
-  await flushPromises()
-  await nextTick()
-}
+import { settle } from '../../support/settle'
 
 // jsdom has no ResizeObserver; reka-ui's SliderRoot reads its own size via
 // one on mount (`useSize`), so mounting throws without this stub - unrelated

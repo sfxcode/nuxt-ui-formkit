@@ -1,14 +1,8 @@
 import { defaultConfig, FormKit, plugin } from '@formkit/vue'
 import { mountSuspended } from '@nuxt/test-utils/runtime'
-import { flushPromises } from '@vue/test-utils'
 import { afterEach, describe, expect, it } from 'vitest'
-import { nextTick } from 'vue'
 import { nuxtUIPinInputDefinition } from '../../../src/runtime/formkit/definitions/input'
-
-async function settle() {
-  await flushPromises()
-  await nextTick()
-}
+import { settle } from '../../support/settle'
 
 let activeWrapper: Awaited<ReturnType<typeof mountSuspended>> | undefined
 afterEach(() => {
