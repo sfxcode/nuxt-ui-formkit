@@ -122,7 +122,7 @@ const schema = [
 
 ### nuxtUISelect
 
-Dropdown select with search functionality.
+Dropdown select. It has no search - use [`nuxtUISelectMenu`](#nuxtuiselectmenu) for a searchable select.
 
 📖 Nuxt UI reference: [Select](https://ui.nuxt.com/components/select)
 
@@ -540,7 +540,7 @@ const schema = [
 
 ### nuxtUIColorPicker
 
-Color selection with multiple format support (hex, rgb, hsl).
+Color selection with multiple format support (`hex`, `rgb`, `hsl`, `cmyk`, `lab`).
 
 📖 Nuxt UI reference: [ColorPicker](https://ui.nuxt.com/components/color-picker)
 
@@ -552,10 +552,14 @@ const schema = [
     $formkit: 'nuxtUIColorPicker',
     name: 'themeColor',
     label: 'Theme Color',
-    mode: 'hex'
+    format: 'hex'
   }
 ]
 ```
+
+::: warning No blur wiring
+`nuxtUIColorPicker` doesn't wire a blur event, so FormKit's default `validationVisibility: 'blur'` never reveals its validation messages. Set `validationVisibility: 'live'` on the field.
+:::
 
 ### nuxtUIInputTags
 
@@ -957,15 +961,15 @@ Use schemas for better maintainability and type safety. Use templates only for s
 
 ## Common Props
 
-All input components support:
+Every input supports FormKit's own fields:
 
 - `name` (required) - Field name for form data
 - `label` - Field label text
 - `help` - Help text below field
-- `placeholder` - Placeholder text
 - `validation` - Validation rules
 - `disabled` - Disable the input
-- `size` - Component size
+
+Props like `placeholder` and `size` are forwarded to the wrapped Nuxt UI component, so they only apply where that component has them (a checkbox or switch has no placeholder). Check each component's section above.
 
 ## Next Steps
 

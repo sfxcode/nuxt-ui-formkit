@@ -389,11 +389,12 @@ The playground includes comprehensive examples for all components:
 
 ## Requirements
 
-- Nuxt 4.x
-- Vue 3.x
-- @nuxt/ui 4.3.0+
-- @formkit/vue 1.x
-- @formkit/nuxt 1.x
+- Nuxt 4.x (`>=4.0.0`)
+- Vue 3.5+
+- @nuxt/ui 4.12+ (some features need newer releases: `PinInput` slot types 4.9+, `ProgressGroup` 4.11+)
+- @formkit/nuxt 2.x, added to your `modules` (this module does not install it for you - see [Installation](https://sfxcode.github.io/nuxt-ui-formkit/getting-started/installation))
+
+See [Known limitations](https://sfxcode.github.io/nuxt-ui-formkit/getting-started/known-limitations) for behaviors worth knowing before you build on it.
 
 ## External Module Usage
 

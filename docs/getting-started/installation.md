@@ -6,7 +6,7 @@ Get started with Nuxt UI FormKit by installing the module in your Nuxt applicati
 
 Before you begin, make sure you have the following installed:
 
-- **Node.js** 18.x or higher
+- **Node.js** - a version supported by Nuxt 4
 - **Nuxt** 4.x
 - **pnpm**, **npm**, or **yarn** package manager
 
@@ -38,6 +38,7 @@ Add the module to your `nuxt.config.ts`:
 export default defineNuxtConfig({
   modules: [
     '@nuxt/ui',
+    '@formkit/nuxt',
     '@sfxcode/nuxt-ui-formkit'
   ]
 })
@@ -45,6 +46,10 @@ export default defineNuxtConfig({
 
 ::: info
 **Note:** Make sure to add `@nuxt/ui` before `@sfxcode/nuxt-ui-formkit` in the modules array.
+:::
+
+::: warning `@formkit/nuxt` is required in `modules`
+This module does not register `@formkit/nuxt` for you. It ships as a dependency, but it must be listed in `modules` so Nuxt picks up your `formkit.config.ts` (below). Without it the `nuxtUI*` input types are never registered.
 :::
 
 ## FormKit Configuration
