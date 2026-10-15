@@ -67,44 +67,93 @@ function resolveAddress(root: FormKitNode, address: string): FormKitNode | undef
  * schema-derived message this call ever applied.
  */
 export function attachStandardSchema(node: FormKitNode, schema: StandardSchemaV1): () => void {
-  let previousAddresses = new Set<string>()
+  // Nodes that currently carry a message from this bridge (other than the
+  // root). Tracked by node identity, not address: a repeater row keeps its node
+  // when rows are reordered or removed, so re-resolving old addresses would
+  // clear the wrong node (or none), leaving a stale message behind.
+  let previousTargets = new Set<FormKitNode>()
   let runToken = 0
+  let detached = false
+
+  // FormKit's own `handleSubmit` awaits `node.ledger.settled('validating')`, and
+  // its built-in rule validation signals "still running" with this exact
+  // message. Setting it while the (async) schema is in flight is what makes a
+  // real submit wait for the schema instead of racing it.
+  function markValidating(): void {
+    node.store.set(createMessage({ type: 'state', blocking: true, visible: false, value: true, key: 'validating' }))
+  }
+
+  function applyRootMessages(values: string[]): void {
+    setStandardSchemaMessages(node, values)
+  }
 
   async function validate(): Promise<void> {
+    // The post-attach `node.settled` re-run below can fire after detach.
+    if (detached)
+      return
     const token = ++runToken
-    const result = await schema['~standard'].validate(node.value)
+    markValidating()
+
+    let result: StandardSchemaV1.Result<unknown>
+    try {
+      result = await schema['~standard'].validate(node.value)
+    }
+    catch (error) {
+      if (token !== runToken)
+        return
+      // A throwing/rejecting schema must not leave the form looking valid.
+      console.error('[nuxt-ui-formkit] Standard Schema validation threw:', error)
+      applyRootMessages([`Validation failed: ${error instanceof Error ? error.message : String(error)}`])
+      node.store.remove('validating')
+      return
+    }
+    // A newer run (or detach) owns the `validating` message from here on.
     if (token !== runToken)
       return
 
     const { localErrors, childErrors } = issuesToFormKitErrors(result.issues ?? [])
-    setStandardSchemaMessages(node, localErrors)
 
-    const currentAddresses = new Set(Object.keys(childErrors))
-    for (const address of previousAddresses) {
-      if (currentAddresses.has(address))
-        continue
-      const target = resolveAddress(node, address)
-      if (target)
-        clearStandardSchemaMessages(target)
-    }
+    const resolved = new Map<FormKitNode, string[]>()
+    const rootErrors = [...localErrors]
     for (const [address, messages] of Object.entries(childErrors)) {
       const target = resolveAddress(node, address)
       if (target)
-        setStandardSchemaMessages(target, messages)
+        resolved.set(target, messages)
+      // An issue that can't be pinned to a rendered node (a schema field with
+      // no input, a hidden field, a row that isn't mounted, a key containing the
+      // address delimiter) must still block the form - dropping it would let
+      // data the schema rejects submit as valid. Surface it on the root.
+      else
+        rootErrors.push(...messages.map(message => `${address}: ${message}`))
     }
-    previousAddresses = currentAddresses
+
+    applyRootMessages(rootErrors)
+    for (const target of previousTargets) {
+      if (!resolved.has(target))
+        clearStandardSchemaMessages(target)
+    }
+    for (const [target, messages] of resolved)
+      setStandardSchemaMessages(target, messages)
+    previousTargets = new Set(resolved.keys())
+    node.store.remove('validating')
   }
 
   const receipt = node.on('commit', () => void validate())
   void validate()
+  // Children register after this runs, so the first pass can't resolve nested
+  // addresses; re-run once the tree has settled.
+  void node.settled.then(() => validate())
 
   return function detachStandardSchema(): void {
+    // Invalidate any validation still in flight so it can't re-apply messages
+    // to a node this bridge no longer manages.
+    detached = true
+    runToken++
     node.off(receipt)
+    node.store.remove('validating')
     clearStandardSchemaMessages(node)
-    for (const address of previousAddresses) {
-      const target = resolveAddress(node, address)
-      if (target)
-        clearStandardSchemaMessages(target)
-    }
+    for (const target of previousTargets)
+      clearStandardSchemaMessages(target)
+    previousTargets = new Set()
   }
 }

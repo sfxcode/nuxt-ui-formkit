@@ -21,7 +21,7 @@ export function issuesToFormKitErrors(
 
   for (const issue of issues) {
     const address = issue.path
-      ?.map(item => (typeof item === 'object' ? item.key : item))
+      ?.map(item => String(typeof item === 'object' ? item.key : item))
       .join('.')
 
     if (!address) {

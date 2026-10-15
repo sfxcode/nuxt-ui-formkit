@@ -1,7 +1,9 @@
 import { defaultConfig, FormKit, plugin, useFormKitContextById } from '@formkit/vue'
 import { mountSuspended } from '@nuxt/test-utils/runtime'
-import { afterEach, describe, expect, it } from 'vitest'
+import type { StandardSchemaV1 } from '@standard-schema/spec'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { defineComponent, h, onUnmounted } from 'vue'
+import { getNode } from '@formkit/core'
 import { z } from 'zod'
 import { nuxtUIInputDefinition } from '../../src/runtime/formkit/definitions/input'
 import { attachStandardSchema } from '../../src/runtime/composables/useFormKitStandardSchema'
@@ -19,7 +21,7 @@ afterEach(() => {
   activeWrapper = undefined
 })
 
-function mountHost(schema: z.ZodType) {
+function mountHost(schema: StandardSchemaV1, onSubmit?: () => void) {
   const HostComponent = defineComponent({
     setup() {
       let detach: (() => void) | undefined
@@ -28,7 +30,7 @@ function mountHost(schema: z.ZodType) {
       })
       onUnmounted(() => detach?.())
 
-      return () => h(FormKit, { type: 'form', id: 'test-form' }, {
+      return () => h(FormKit, { type: 'form', id: 'test-form', onSubmit }, {
         default: () => [
           h(FormKit, { type: 'nuxtUIInput', name: 'email', label: 'Email', value: 'bad' }),
           h(FormKit, { type: 'nuxtUIInput', name: 'username', label: 'Username', value: 'ab' }),
@@ -85,5 +87,89 @@ describe('attachStandardSchema', () => {
 
     expect(wrapper.text()).toContain(USERNAME_ERROR)
     expect(wrapper.text()).not.toContain(EMAIL_ERROR)
+  })
+
+  // A hand-rolled Standard Schema lets a test control issue paths and timing.
+  function customSchema(validate: (value: unknown) => StandardSchemaV1.Result<unknown> | Promise<StandardSchemaV1.Result<unknown>>): StandardSchemaV1 {
+    return { '~standard': { version: 1, vendor: 'test', validate } }
+  }
+
+  it('does not let an issue at an unresolvable address slip through: it blocks the form via a root message', async () => {
+    // `ghost` is not a rendered field, so its address can never resolve to a node.
+    const schema = customSchema(() => ({ issues: [{ message: 'Ghost is required', path: ['ghost'] }] }))
+    const wrapper = await mountHost(schema)
+    activeWrapper = wrapper
+    await settleAndWait()
+
+    const form = getNode('test-form')!
+    expect(form.context?.state.valid).toBe(false)
+    const messages = Object.values(form.store).filter(message => message.type === 'validation').map(message => String(message.value))
+    expect(messages.join(' ')).toContain('Ghost is required')
+  })
+
+  it('makes a real submit wait for an async schema instead of racing it', async () => {
+    const onSubmit = vi.fn()
+    const schema = customSchema(async () => {
+      await new Promise(resolve => setTimeout(resolve, 150))
+      return { issues: [{ message: 'Rejected by async check', path: ['email'] }] }
+    })
+    const wrapper = await mountHost(schema, onSubmit)
+    activeWrapper = wrapper
+    await settleAndWait()
+
+    // Submit while the (slow) first validation may still be settling, and again
+    // right after a change that kicks off a fresh run.
+    await wrapper.findAll('input')[0]!.setValue('ada@example.com')
+    await wrapper.find('form').trigger('submit')
+    await new Promise(resolve => setTimeout(resolve, 400))
+
+    expect(onSubmit).not.toHaveBeenCalled()
+  })
+
+  it('does not re-apply messages from a validation that was still in flight when the schema was detached', async () => {
+    let release!: () => void
+    const gate = new Promise<void>((resolve) => {
+      release = resolve
+    })
+    const schema = customSchema(async () => {
+      await gate
+      return { issues: [{ message: 'Late issue', path: [] }] }
+    })
+
+    // The host mounts with a benign schema; the gated one is attached and
+    // detached by hand so only that attachment is under test.
+    const wrapper = await mountHost(customSchema(() => ({ issues: [] })))
+    activeWrapper = wrapper
+    await settleAndWait()
+
+    const form = getNode('test-form')!
+    const detach = attachStandardSchema(form, schema)
+    detach()
+    release()
+    await settleAndWait()
+
+    const lateMessages = Object.values(form.store).filter(message => String(message.value).includes('Late issue'))
+    expect(lateMessages).toEqual([])
+    expect(form.store.validating).toBeUndefined()
+  })
+
+  it('surfaces a throwing schema as a blocking root message instead of an unhandled rejection', async () => {
+    const unhandled = vi.fn()
+    process.on('unhandledRejection', unhandled)
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {})
+    const schema = customSchema(() => {
+      throw new Error('schema blew up')
+    })
+
+    const wrapper = await mountHost(schema)
+    activeWrapper = wrapper
+    await settleAndWait()
+
+    const form = getNode('test-form')!
+    expect(form.context?.state.valid).toBe(false)
+    expect(Object.values(form.store).map(message => String(message.value)).join(' ')).toContain('schema blew up')
+    expect(unhandled).not.toHaveBeenCalled()
+    process.off('unhandledRejection', unhandled)
+    consoleError.mockRestore()
   })
 })
