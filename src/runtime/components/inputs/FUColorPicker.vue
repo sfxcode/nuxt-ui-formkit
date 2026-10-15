@@ -7,7 +7,7 @@ import { useFormKitInput } from '../../utils/useFormKitInput'
 export interface FormKitColorPickerProps {
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
   format?: 'hex' | 'rgb' | 'hsl' | 'cmyk' | 'lab'
-  throttle: number
+  throttle?: number
   ui?: Record<string, unknown>
 }
 

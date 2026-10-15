@@ -20,7 +20,7 @@ export interface FormKitInputTagsProps {
   addOnBlur?: boolean
   duplicate?: boolean
   delimiter?: string | RegExp
-  max: number
+  max?: number
   convertValue?: (value: string) => string
   displayValue?: (value: string) => string
   icon?: string
