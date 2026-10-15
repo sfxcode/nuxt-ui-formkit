@@ -16,15 +16,49 @@ export interface AutosaveOptions {
 
 const PREFIX = 'nuxt-ui-formkit'
 
-// Whether a non-expired draft is stored under `storageKey` (the addons plugin's
-// `{ maxAge, data }` entry shape).
-function readDraft(storageKey: string): boolean {
+const DEFAULT_MAX_AGE = 36e5
+
+// The stored entry under `storageKey`: the addons plugin's `{ maxAge, data }`
+// shape, or `undefined` if there is none or it is unusable. Never throws - the
+// addons plugin's own read does (`JSON.parse` outside any try), and from inside
+// an async handler, so a corrupt entry would reject unhandled on every mount.
+function readEntry(storageKey: string): { maxAge: number, data: object } | undefined {
   try {
     const entry = JSON.parse(localStorage.getItem(storageKey) ?? 'null')
-    return !!entry && typeof entry.data === 'object' && entry.maxAge > Date.now()
+    if (entry && typeof entry === 'object' && entry.data && typeof entry.data === 'object')
+      return entry
   }
   catch {
-    return false
+    // fall through: unreadable storage and corrupt JSON are both "no usable draft"
+  }
+  return undefined
+}
+
+// Remove a stored entry the addons plugin could not read, so it doesn't fail on
+// it again next mount. An expired-but-well-formed entry is left to the addons
+// plugin, which removes it itself.
+function discardUnusableEntry(storageKey: string): void {
+  try {
+    if (localStorage.getItem(storageKey) !== null && !readEntry(storageKey))
+      localStorage.removeItem(storageKey)
+  }
+  catch {
+    // storage unavailable: nothing to discard
+  }
+}
+
+// Whether a non-expired draft is stored under `storageKey`.
+function readDraft(storageKey: string): boolean {
+  const entry = readEntry(storageKey)
+  return !!entry && entry.maxAge > Date.now()
+}
+
+function writeDraft(storageKey: string, data: Record<string, unknown>, maxAge: number): void {
+  try {
+    localStorage.setItem(storageKey, JSON.stringify({ maxAge: Date.now() + maxAge, data }))
+  }
+  catch {
+    // The draft is a convenience; failing to store it must not break the form.
   }
 }
 
@@ -57,6 +91,10 @@ export function createAutosavePlugin(options: AutosaveOptions): FormKitPlugin {
       return
     node.props.useLocalStorage = true
 
+    // Same key the addons plugin computes: `${prefix}-${key}-${node.name}`.
+    const storageKey = `${PREFIX}-${options.key}-${node.name}`
+    discardUnusableEntry(storageKey)
+
     // A debounced save from the last edit (or an echo commit from a bound
     // `v-model`) can fire *after* the submit-time clear and write the draft that
     // was just submitted straight back. Remember what was submitted and refuse
@@ -75,7 +113,13 @@ export function createAutosavePlugin(options: AutosaveOptions): FormKitPlugin {
         if (submitted && eq(submitted, draft))
           return false
         submitted = undefined
-        return draft
+        // Written here rather than returned for the addons plugin to write: its
+        // own `setItem` is outside any try, in an un-awaited timer callback, so a
+        // full or unavailable localStorage (quota, Safari private mode) rejects
+        // unhandled and silently loses the draft. Returning `false` tells it
+        // there is nothing left to save.
+        writeDraft(storageKey, draft, options.maxAge ?? DEFAULT_MAX_AGE)
+        return false
       },
       debounce: options.debounce,
       maxAge: options.maxAge,
@@ -83,8 +127,7 @@ export function createAutosavePlugin(options: AutosaveOptions): FormKitPlugin {
     })
 
     node.on('created', async () => {
-      // Same key the addons plugin computes: `${prefix}-${key}-${node.name}`.
-      const hasDraft = readDraft(`${PREFIX}-${options.key}-${node.name}`)
+      const hasDraft = readDraft(storageKey)
       if (!hasDraft)
         return
       // Snapshot once children have registered their values (so it matches
