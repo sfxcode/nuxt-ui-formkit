@@ -77,7 +77,7 @@ import { createAutosavePlugin } from '@sfxcode/nuxt-ui-formkit/plugins'
 - Give the form a stable `name` - the stored entry is keyed on it, and FormKit's auto-generated names (`form_1`) are not stable across mounts.
 - It attaches to the form root only; nested groups and repeater rows are saved as part of the form's value.
 - The plugin has to be on the form from the start - it loads the saved draft when the form node is created, so it cannot be bolted on later from `useFormKitForm`.
-- A restored draft makes the form dirty (`isDirty`).
+- With `FUDataEdit`, a restored draft is *not* reported as dirty (`isDirty` is `false` right after a restore): the form's initial value is the restored one.
 
 ### useFormKitOverlay
 

@@ -275,6 +275,12 @@ const items = ref<NavigationMenuItem[]>([
         to: '/form/standard-schema',
       },
       {
+        label: 'Autosave',
+        icon: 'i-lucide-save',
+        description: 'FUDataEdit\'s autosave prop persists a draft to localStorage and restores it on the next mount.',
+        to: '/form/form-autosave',
+      },
+      {
         label: 'useFormKitOverlay Composable',
         icon: 'i-lucide-panel-right',
         description: 'Promise-based modal/slideover forms: await overlay.edit({ data, schema, title }).',
