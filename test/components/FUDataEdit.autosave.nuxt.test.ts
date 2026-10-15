@@ -1,3 +1,4 @@
+import { getNode } from '@formkit/core'
 import { defaultConfig, plugin } from '@formkit/vue'
 import { mountSuspended } from '@nuxt/test-utils/runtime'
 import { flushPromises } from '@vue/test-utils'
@@ -50,6 +51,33 @@ describe('FUDataEdit autosave prop', () => {
     await vi.waitFor(() => expect(inputValue(wrapper)).toBe('ada@example.com'))
   })
 
+  it('does not store FormKitSchema\'s internal slots key', async () => {
+    const wrapper = await mountDataEdit({ autosave: 'draft' })
+    await wrapper.find('input').setValue('ada@example.com')
+    await vi.waitFor(() => expect(localStorage.getItem(storageKey('draft'))).toBeTruthy())
+
+    expect(JSON.parse(localStorage.getItem(storageKey('draft'))!).data).toEqual({ email: 'ada@example.com' })
+  })
+
+  it('reports a restored draft as dirty', async () => {
+    let wrapper = await mountDataEdit({ autosave: 'draft' })
+    await wrapper.find('input').setValue('ada@example.com')
+    await vi.waitFor(() => expect(localStorage.getItem(storageKey('draft'))).toBeTruthy())
+    wrapper.unmount()
+
+    wrapper = await mountDataEdit({ autosave: 'draft' })
+    await vi.waitFor(() => expect(inputValue(wrapper)).toBe('ada@example.com'))
+
+    await vi.waitFor(() => expect(getNode('test-autosave')!.context!.state.dirty).toBe(true))
+  })
+
+  it('leaves a form with nothing to restore clean', async () => {
+    await mountDataEdit({ autosave: 'draft' })
+    await new Promise(resolve => setTimeout(resolve, 150))
+
+    expect(getNode('test-autosave')!.context!.state.dirty).toBeFalsy()
+  })
+
   it('clears the saved draft when the form is submitted', async () => {
     const wrapper = await mountDataEdit({ autosave: 'draft' })
     await wrapper.find('input').setValue('ada@example.com')
@@ -58,6 +86,16 @@ describe('FUDataEdit autosave prop', () => {
     await wrapper.find('form').trigger('submit')
 
     await vi.waitFor(() => expect(localStorage.getItem(storageKey('draft'))).toBeNull())
+  })
+
+  it('does not write the submitted draft back when a pending debounced save fires after submit', async () => {
+    const wrapper = await mountDataEdit({ autosave: { key: 'draft', debounce: 150 } })
+    await wrapper.find('input').setValue('ada@example.com')
+    // Submit inside the debounce window, so the save for this edit is still pending.
+    await wrapper.find('form').trigger('submit')
+    await new Promise(resolve => setTimeout(resolve, 400))
+
+    expect(localStorage.getItem(storageKey('draft'))).toBeNull()
   })
 
   it('keeps drafts with different keys separate', async () => {

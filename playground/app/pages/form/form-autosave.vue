@@ -55,7 +55,7 @@ function clearDraft() {
         <code>FUDataEdit</code>'s <code>autosave</code> prop saves the form to <code>localStorage</code> as you type and restores it the next time it mounts.
       </p>
       <p class="text-muted-foreground">
-        Type something, then reload the page - the draft comes back into the inputs. Submitting clears the saved draft (<code>clearOnSubmit</code>). The panel on the right shows the raw stored entry, polled twice a second.
+        Type something, then reload the page - the draft comes back into the inputs and the form is dirty again. Submitting clears the saved draft (<code>clearOnSubmit</code>). The panel on the right shows the raw stored entry, polled twice a second.
       </p>
     </div>
 
