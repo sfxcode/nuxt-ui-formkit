@@ -32,6 +32,19 @@ export function useFormKitInput(context: FormKitFrameworkContext) {
       : context?.color as 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral' || 'primary'
   })
 
+  // The bindings every wrapped input repeats verbatim. Bound with
+  // `v-bind="commonProps"` *after* the `v-bind="{ ...context.attrs }"` spread, so
+  // they win over a same-named attr exactly as the individual `:style`/`:color`/...
+  // bindings did. Deliberately not here: `id` (bound before the attrs spread), and
+  // `class` (Select/SelectMenu extend it), so those stay in each template.
+  const commonProps = computed(() => ({
+    style: context?.attrs?.style,
+    disabled: !!context?.disabled,
+    color: color.value,
+    size: (context?.size as string | undefined) ?? 'md',
+    ui: ui.value,
+  }))
+
   const formKitCreateInputSlots = new Set(['label', 'help', 'messages', 'message', 'input'])
 
   // FormKit slots added by createInput() and should be passed to FormKit not to the wrapped component.
@@ -70,5 +83,5 @@ export function useFormKitInput(context: FormKitFrameworkContext) {
     return []
   })
 
-  return { isInvalid, validSlotNames, styleClass, color, handleBlur, handleChange, handleInput, handleSelect, modelValue, items, ui }
+  return { isInvalid, validSlotNames, styleClass, color, commonProps, handleBlur, handleChange, handleInput, handleSelect, modelValue, items, ui }
 }

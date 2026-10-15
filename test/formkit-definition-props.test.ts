@@ -21,7 +21,7 @@ const CONTEXT_BUILTINS = new Set(['attrs', 'node', 'id', 'disabled', 'label', 'h
 
 // Listed props that are legitimately read by the shared composable rather
 // than the component itself.
-const READ_BY_COMPOSABLE = new Set(['color', 'name', 'options', 'ui'])
+const READ_BY_COMPOSABLE = new Set(['color', 'name', 'options', 'size', 'ui'])
 
 interface DefinitionInfo {
   component: string

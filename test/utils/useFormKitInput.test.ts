@@ -1,6 +1,63 @@
 import { describe, expect, it, vi } from 'vitest'
+import { reactive } from 'vue'
 import type { FormKitFrameworkContext } from '@formkit/core'
 import { useFormKitInput } from '../../src/runtime/utils/useFormKitInput'
+
+describe('useFormKitInput commonProps', () => {
+  const asContext = (context: object) => context as unknown as FormKitFrameworkContext
+
+  it('bundles the bindings every wrapped input repeats', () => {
+    const { commonProps } = useFormKitInput(asContext({
+      state: { validationVisible: false, valid: true },
+      attrs: { style: 'margin: 0' },
+      color: 'success',
+      size: 'lg',
+      disabled: true,
+      node: { props: { ui: { root: 'x' } }, on: () => 'receipt', off: () => {} },
+    }))
+
+    expect(commonProps.value).toEqual({
+      style: 'margin: 0',
+      disabled: true,
+      color: 'success',
+      size: 'lg',
+      ui: { root: 'x' },
+    })
+  })
+
+  it('defaults size to md and coerces disabled to a boolean', () => {
+    const { commonProps } = useFormKitInput(asContext({ state: { validationVisible: false, valid: true }, attrs: {} }))
+
+    expect(commonProps.value.size).toBe('md')
+    expect(commonProps.value.disabled).toBe(false)
+    expect(commonProps.value.color).toBe('primary')
+  })
+
+  it('switches color to error while the field is invalid', () => {
+    const { commonProps } = useFormKitInput(asContext({ state: { validationVisible: true, valid: false }, attrs: {}, color: 'success' }))
+
+    expect(commonProps.value.color).toBe('error')
+  })
+
+  it('stays reactive to the context', () => {
+    const context = reactive({ state: { validationVisible: false, valid: true }, attrs: {}, size: 'sm', disabled: false })
+    const { commonProps } = useFormKitInput(asContext(context))
+    expect(commonProps.value.size).toBe('sm')
+
+    context.size = 'xl'
+    context.disabled = true
+
+    expect(commonProps.value.size).toBe('xl')
+    expect(commonProps.value.disabled).toBe(true)
+  })
+
+  it('leaves class out: it is not identical across inputs (Select/SelectMenu extend it)', () => {
+    const { commonProps } = useFormKitInput(asContext({ state: {}, attrs: { class: 'a' } }))
+
+    expect('class' in commonProps.value).toBe(false)
+    expect('id' in commonProps.value).toBe(false)
+  })
+})
 
 describe('useFormKitInput', () => {
   it('returns invalid state when validation is visible and not valid', () => {
