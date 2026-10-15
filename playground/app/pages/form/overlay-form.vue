@@ -31,6 +31,8 @@ async function editRow(index: number) {
     schema,
     title: `Edit ${rows.value[index]?.name}`,
     as: as.value,
+    // Edit a field, then press Esc or click outside to see the discard prompt.
+    confirmDiscard: true,
   })
 
   if (result)

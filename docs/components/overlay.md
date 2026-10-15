@@ -53,6 +53,14 @@ await overlay.edit({ data, schema, title, as: 'slideover' })
 
 Every way a user can close the overlay besides Save resolves the promise to `null`, never leaving it pending: the built-in Cancel button, <kbd>Esc</kbd>, and clicking outside the modal/slideover (backdrop click) all resolve the same way.
 
+### Confirming before discarding edits
+
+Pass `confirmDiscard: true` to `edit()`/`auto()` and a dirty form no longer closes silently: Cancel, <kbd>Esc</kbd>, a backdrop click and the header close button all show an inline "Discard unsaved changes?" prompt instead. **Discard** resolves the promise to `null`; **Keep editing** returns to the form. A form that is unchanged - or edited back to its original value - closes immediately, and Save is unaffected. It's off by default, so existing callers behave exactly as before.
+
+```typescript
+await overlay.edit({ data, schema, title, confirmDiscard: true })
+```
+
 ## Auto-Inferred Schemas
 
 `auto()` opens the same modal/slideover, but infers the form from your data (or a [Valibot/Zod schema](/components/auto-form)) via `FUAutoForm` instead of requiring a hand-written FormKit schema:
@@ -90,6 +98,7 @@ async function editRegistration(data: object) {
 | `schema` | `FormKitSchemaDefinition` | *(required)* | Hand-written FormKit schema |
 | `title` | `string` | `undefined` | Modal/slideover header title |
 | `as` | `'modal' \| 'slideover'` | `'modal'` | Which Nuxt UI overlay component to render |
+| `confirmDiscard` | `boolean` | `false` | Ask before discarding unsaved edits on Cancel/Esc/backdrop/close |
 
 ### auto(options)
 
@@ -101,6 +110,7 @@ async function editRegistration(data: object) {
 | `overrides` | `AutoFormOverrides` | `undefined` | Dot-path keyed map of partial schema nodes or `false` - see [`FUAutoForm`](/components/auto-form) |
 | `title` | `string` | `undefined` | Modal/slideover header title |
 | `as` | `'modal' \| 'slideover'` | `'modal'` | Which Nuxt UI overlay component to render |
+| `confirmDiscard` | `boolean` | `false` | Ask before discarding unsaved edits on Cancel/Esc/backdrop/close |
 
 Both methods return `Promise<unknown>`, resolving to the saved data or `null`.
 

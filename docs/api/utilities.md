@@ -43,7 +43,7 @@ Helper composable for driving a `<FormKit type="form">` from outside code - subm
 ```typescript
 import { useFormKitForm } from '@sfxcode/nuxt-ui-formkit'
 
-const { submit, reset, isValid, isSubmitted, hasErrors, isLoading } = useFormKitForm('my-form', {
+const { submit, reset, isValid, isSubmitted, isDirty, hasErrors, isLoading } = useFormKitForm('my-form', {
   standardSchema: registrationSchema, // optional - see /components/standard-schema
 })
 ```
@@ -52,7 +52,32 @@ const { submit, reset, isValid, isSubmitted, hasErrors, isLoading } = useFormKit
 - `id` - the FormKit form node's registry id (its `id` prop)
 - `options.standardSchema` *(optional)* - a Standard Schema instance to validate the form against
 
-**Returns:** `submit`, `reset`, `setErrors`, `clearErrors`, `isValid`, `isSubmitted`, `hasErrors`, `isLoading`
+**Returns:** `submit`, `reset`, `setErrors`, `clearErrors`, `isValid`, `isSubmitted`, `isDirty`, `hasErrors`, `isLoading`
+
+`isDirty` is `true` once the form's value differs from its initial value, and `reset()` clears it. By default FormKit's dirty state is *sticky*: it stays `true` after a field is edited back to its original value. Set `dirty-behavior="compare"` on the form (`FUDataEdit` has a `dirtyBehavior` prop) to make it track the live difference instead.
+
+### createAutosavePlugin
+
+Persists a form's value to `localStorage` and restores it on the next mount - draft recovery for long forms. `FUDataEdit` and `FUAutoForm` expose it as the [`autosave` prop](/components/data-edit#autosave); use the plugin directly for a hand-written `<FormKit type="form">`:
+
+```vue
+<FormKit
+  type="form"
+  name="profile"
+  :plugins="[createAutosavePlugin({ key: 'profile-draft' })]"
+>
+```
+
+```typescript
+import { createAutosavePlugin } from '@sfxcode/nuxt-ui-formkit/plugins'
+```
+
+**Options:** `key` (required), `debounce` (ms, default 200), `maxAge` (ms, default 1 hour), `clearOnSubmit` (default `true`).
+
+- Give the form a stable `name` - the stored entry is keyed on it, and FormKit's auto-generated names (`form_1`) are not stable across mounts.
+- It attaches to the form root only; nested groups and repeater rows are saved as part of the form's value.
+- The plugin has to be on the form from the start - it loads the saved draft when the form node is created, so it cannot be bolted on later from `useFormKitForm`.
+- A restored draft makes the form dirty (`isDirty`).
 
 ### useFormKitOverlay
 
@@ -302,7 +327,7 @@ export default defineFormKitConfig({
 - Individual component definitions (e.g., `nuxtUIInputDefinition`, `nuxtUISelectDefinition`)
 
 **From `@sfxcode/nuxt-ui-formkit/plugins`:**
-- FormKit plugins (e.g., `addNuxtAsteriskPlugin`)
+- FormKit plugins (e.g., `addNuxtAsteriskPlugin`, `createAutosavePlugin`)
 
 ## Best Practices
 

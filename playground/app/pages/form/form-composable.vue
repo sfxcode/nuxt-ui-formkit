@@ -33,7 +33,7 @@ function simulateServerError() {
         Submit, reset, and error-display buttons wired up via <code>useFormKitForm</code>, living outside the <code>FormKit</code> form itself.
       </p>
       <p class="text-muted-foreground">
-        Reactive <code>isValid</code>/<code>isSubmitted</code>/<code>hasErrors</code>/<code>isLoading</code> state, plus <code>submit</code>/<code>reset</code>/<code>setErrors</code>/<code>clearErrors</code> wrapping FormKit's imperative APIs.
+        Reactive <code>isValid</code>/<code>isSubmitted</code>/<code>isDirty</code>/<code>hasErrors</code>/<code>isLoading</code> state, plus <code>submit</code>/<code>reset</code>/<code>setErrors</code>/<code>clearErrors</code> wrapping FormKit's imperative APIs.
       </p>
     </div>
 
@@ -95,6 +95,7 @@ function simulateServerError() {
       <div class="text-sm text-muted-foreground space-x-4">
         <span>isValid: <strong>{{ form.isValid.value }}</strong></span>
         <span>isSubmitted: <strong>{{ form.isSubmitted.value }}</strong></span>
+        <span>isDirty: <strong>{{ form.isDirty.value }}</strong></span>
         <span>hasErrors: <strong>{{ form.hasErrors.value }}</strong></span>
         <span>isLoading: <strong>{{ form.isLoading.value }}</strong></span>
       </div>

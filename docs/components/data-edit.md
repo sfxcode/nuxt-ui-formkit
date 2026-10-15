@@ -109,6 +109,24 @@ const schema = [
 <FUDataEdit :standard-schema="registrationSchema" />
 ```
 
+### autosave
+- **Type:** `String | { key: string, debounce?: number, maxAge?: number, clearOnSubmit?: boolean }`
+- **Default:** `null` (off)
+- **Description:** Saves the form's value to `localStorage` as the user types and restores it the next time the form mounts. A string is the draft's key; pass an object to tune `debounce` (ms), `maxAge` (ms, default 1 hour) and `clearOnSubmit` (default `true`). The form's `id` is used as its `name`, so keep `id` stable. Works the same on `FUAutoForm`. See [`createAutosavePlugin`](/api/utilities#createautosaveplugin).
+
+```vue
+<FUDataEdit id="profile" autosave="profile-draft" :data="profile" :schema="schema" />
+```
+
+### dirtyBehavior
+- **Type:** `'touched' | 'compare'`
+- **Default:** `'touched'`
+- **Description:** How FormKit computes the form's dirty state (`useFormKitForm(id).isDirty`). `touched` stays dirty once any field was edited; `compare` clears it again when the value is edited back to the original.
+
+```vue
+<FUDataEdit dirty-behavior="compare" />
+```
+
 ### formClass
 - **Type:** `String`
 - **Default:** `''`
