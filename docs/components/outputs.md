@@ -770,6 +770,10 @@ const schema = [
 ]
 ```
 
+### Icon Accessibility
+
+An icon with a click handler (`onIconClicked`, `onLeadingIconClicked`, `onTrailingIconClicked`) renders as a real `<button type="button">`, so it is keyboard-focusable, activates with Enter/Space and is announced by screen readers. Its accessible name is the icon's tooltip `text` if one is set, otherwise the icon's own name (`i-lucide-eye-off` becomes "eye off") - so give a clickable icon a tooltip `text` for a meaningful label. A non-clickable icon is decorative and hidden from assistive tech, unless it has a tooltip `text`, in which case it is exposed as an image with that text as its label.
+
 ## Use Cases
 
 - ✅
