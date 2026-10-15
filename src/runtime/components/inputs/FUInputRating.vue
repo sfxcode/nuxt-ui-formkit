@@ -13,7 +13,7 @@ export interface FormKitInputRatingProps {
   clearable?: boolean
   hoverable?: boolean
   length?: number
-  step?: number
+  step?: 1 | 0.5 | 0.25 | 0.1
   defaultValue?: number
   name?: string
   ui?: Record<string, unknown>
