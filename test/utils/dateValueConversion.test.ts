@@ -14,6 +14,17 @@ describe('toDateValue', () => {
     expect(toDateValue({})).toBeUndefined()
   })
 
+  it('returns undefined for malformed strings instead of throwing', () => {
+    expect(toDateValue('garbage')).toBeUndefined()
+    expect(toDateValue('2024-13-45')).toBeUndefined()
+    expect(toDateValue('garbage', { granularity: 'minute' })).toBeUndefined()
+  })
+
+  it('converts a date-only string when the granularity includes time', () => {
+    expect(toDateValue('2026-07-05', { granularity: 'minute', hideTimeZone: true })).toEqual(new CalendarDateTime(2026, 7, 5))
+    expect(toDateValue('2026-07-05', { granularity: 'minute', timeZone: 'UTC' })).toBeInstanceOf(ZonedDateTime)
+  })
+
   it('passes an existing DateValue through unchanged', () => {
     const value = new CalendarDate(2026, 7, 5)
     expect(toDateValue(value)).toBe(value)

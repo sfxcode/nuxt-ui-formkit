@@ -1,5 +1,5 @@
 import type { DateValue } from '@internationalized/date'
-import { CalendarDate, CalendarDateTime, ZonedDateTime, fromDate, getLocalTimeZone, parseAbsolute, parseDate, parseDateTime, toCalendarDate, toCalendarDateTime } from '@internationalized/date'
+import { CalendarDate, CalendarDateTime, ZonedDateTime, fromDate, getLocalTimeZone, parseAbsolute, parseDate, parseDateTime, toCalendarDate, toCalendarDateTime, toZoned } from '@internationalized/date'
 
 export type DateValueType = 'calendar' | 'date' | 'iso'
 
@@ -44,14 +44,23 @@ export function toDateValue(value: unknown, options: DateConversionOptions = {})
   }
 
   if (typeof value === 'string') {
-    if (!withTime && ISO_DATE_ONLY.test(value)) {
-      return parseDate(value)
+    // The parsers throw on a malformed string; a bad stored value must not break the render.
+    try {
+      if (ISO_DATE_ONLY.test(value)) {
+        const date = parseDate(value)
+        if (!withTime)
+          return date
+        return options.hideTimeZone ? toCalendarDateTime(date) : toZoned(date, timeZone)
+      }
+      if (withTime && !ISO_HAS_ZONE.test(value)) {
+        return parseDateTime(value)
+      }
+      const zoned = parseAbsolute(value, timeZone)
+      return withTime ? (options.hideTimeZone ? toCalendarDateTime(zoned) : zoned) : toCalendarDate(zoned)
     }
-    if (withTime && !ISO_HAS_ZONE.test(value)) {
-      return parseDateTime(value)
+    catch {
+      return undefined
     }
-    const zoned = parseAbsolute(value, timeZone)
-    return withTime ? (options.hideTimeZone ? toCalendarDateTime(zoned) : zoned) : toCalendarDate(zoned)
   }
 
   return undefined
