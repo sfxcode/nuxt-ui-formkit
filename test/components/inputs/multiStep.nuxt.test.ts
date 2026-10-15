@@ -3,10 +3,11 @@ import { getNode } from '@formkit/core'
 import { FormKit, FormKitSchema, defaultConfig, plugin } from '@formkit/vue'
 import { mountSuspended } from '@nuxt/test-utils/runtime'
 import { flushPromises } from '@vue/test-utils'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { h, nextTick } from 'vue'
 import { nuxtUIInputDefinition } from '../../../src/runtime/formkit/definitions/input'
 import { nuxtUIMultiStepDefinition, nuxtUIStepDefinition } from '../../../src/runtime/formkit/definitions/multiStep'
+import { wait } from '../../support/wait'
 
 // Mirrors repeater.nested.nuxt.test.ts's <FormKit type="form"><FormKitSchema />
 // mounting pattern, since a multi-step's steps are authored as raw `children`
@@ -63,10 +64,6 @@ function mountWizard() {
 // FormKit debounces validation runs with a real timer, and the addon's own
 // step-change gating (`isTargetStepAllowed`) awaits that settling - `flushPromises`
 // only drains microtasks, so a real macrotask tick is needed too.
-function wait(ms: number = 30) {
-  return new Promise(resolve => setTimeout(resolve, ms))
-}
-
 function tabButtons(wrapper: Awaited<ReturnType<typeof mountWizard>>) {
   return wrapper.findAll('[data-slot="trigger"]')
 }
@@ -216,8 +213,11 @@ describe('nuxtUIMultiStep / nuxtUIStep', () => {
     await nextTick()
     await wait()
 
-    const nextButtonAfterFix = wrapper.findAll('button').find(button => button.text() === 'Next')
-    expect(nextButtonAfterFix!.attributes('disabled')).toBeUndefined()
+    // Validation settles asynchronously; poll instead of trusting a fixed sleep.
+    await vi.waitFor(() => {
+      const nextButtonAfterFix = wrapper.findAll('button').find(button => button.text() === 'Next')
+      expect(nextButtonAfterFix!.attributes('disabled')).toBeUndefined()
+    })
   })
 
   it('disables an unvisited tab while the current step is invalid, and re-enables it once fixed', async () => {
@@ -234,8 +234,10 @@ describe('nuxtUIMultiStep / nuxtUIStep', () => {
     await nextTick()
     await wait()
 
-    const secondTabAfterFix = tabButtons(wrapper).find(tab => tab.text() === 'Step Two')
-    expect(secondTabAfterFix!.attributes('disabled')).toBeUndefined()
+    await vi.waitFor(() => {
+      const secondTabAfterFix = tabButtons(wrapper).find(tab => tab.text() === 'Step Two')
+      expect(secondTabAfterFix!.attributes('disabled')).toBeUndefined()
+    })
   })
 
   it('clicking a tab navigates directly to that step', async () => {

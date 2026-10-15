@@ -6,6 +6,7 @@ import { defineComponent, h, nextTick, onUnmounted } from 'vue'
 import { z } from 'zod'
 import { nuxtUIInputDefinition } from '../../src/runtime/formkit/definitions/input'
 import { attachStandardSchema } from '../../src/runtime/composables/useFormKitStandardSchema'
+import { wait } from '../support/wait'
 
 const EMAIL_ERROR = 'Invalid email address'
 const USERNAME_ERROR = 'Too small: expected string to have >=3 characters'
@@ -45,10 +46,6 @@ function mountHost(schema: z.ZodType) {
       })]],
     },
   })
-}
-
-function wait(ms: number = 30) {
-  return new Promise(resolve => setTimeout(resolve, ms))
 }
 
 async function settle() {

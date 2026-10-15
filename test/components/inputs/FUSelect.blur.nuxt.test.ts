@@ -5,6 +5,7 @@ import { flushPromises } from '@vue/test-utils'
 import { afterEach, describe, expect, it } from 'vitest'
 import { nextTick } from 'vue'
 import { nuxtUISelectDefinition } from '../../../src/runtime/formkit/definitions/input'
+import { wait } from '../../support/wait'
 
 // jsdom implements no Pointer Capture API at all; reka-ui's `SelectTrigger`
 // calls `target.hasPointerCapture()`/`releasePointerCapture()` when a real
@@ -19,10 +20,6 @@ if (!Element.prototype.setPointerCapture) {
 }
 if (!Element.prototype.releasePointerCapture) {
   Element.prototype.releasePointerCapture = () => {}
-}
-
-function wait(ms: number = 30) {
-  return new Promise(resolve => setTimeout(resolve, ms))
 }
 
 async function settle() {

@@ -6,10 +6,7 @@ import { afterEach, describe, expect, it } from 'vitest'
 import { defineComponent, h, nextTick } from 'vue'
 import UApp from '@nuxt/ui/components/App.vue'
 import { nuxtUIEditorDefinition } from '../../../src/runtime/formkit/definitions/input'
-
-function wait(ms: number = 30) {
-  return new Promise(resolve => setTimeout(resolve, ms))
-}
+import { wait } from '../../support/wait'
 
 async function settle() {
   await flushPromises()

@@ -5,6 +5,7 @@ import { flushPromises } from '@vue/test-utils'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { nextTick } from 'vue'
 import { nuxtUISliderDefinition } from '../../../src/runtime/formkit/definitions/input'
+import { wait } from '../../support/wait'
 
 // jsdom has no ResizeObserver; reka-ui's SliderRoot reads its own size via
 // one on mount - unrelated to the blur wiring this test targets.
@@ -14,10 +15,6 @@ class ResizeObserverStub {
   disconnect() {}
 }
 vi.stubGlobal('ResizeObserver', ResizeObserverStub)
-
-function wait(ms: number = 30) {
-  return new Promise(resolve => setTimeout(resolve, ms))
-}
 
 async function settle() {
   await flushPromises()

@@ -1,7 +1,26 @@
+import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { defineVitestProject } from '@nuxt/test-utils/config'
 import vue from '@vitejs/plugin-vue'
 import { defineConfig } from 'vitest/config'
+
+// Vite 8 hands the virtual `nuxt-vitest-app-entry` module's importer to the
+// resolver as a root-relative `/node_modules/...` id, so its sibling imports
+// (`./error.js`, `./nuxt.js`, ...) can't be found. Resolve them against the
+// real file location instead.
+const fixNuxtVitestEntryImports = {
+  name: 'fix-nuxt-vitest-app-entry-imports',
+  enforce: 'pre' as const,
+  resolveId(id: string, importer?: string) {
+    if (!id.startsWith('./') || !importer?.includes('nuxt-vitest-app-entry'))
+      return null
+    const cleaned = importer.split('?')[0]!
+    const real = cleaned.startsWith('/node_modules/')
+      ? resolve(fileURLToPath(new URL('.', import.meta.url)), `.${cleaned}`)
+      : cleaned
+    return resolve(dirname(real), id)
+  },
+}
 
 export default defineConfig({
   test: {
@@ -19,9 +38,11 @@ export default defineConfig({
       // referencing a Nuxt UI component) runs in a real Nuxt context via
       // @nuxt/test-utils, pointed at playground/ where this module is wired up.
       defineVitestProject({
+        plugins: [fixNuxtVitestEntryImports],
         test: {
           name: 'nuxt',
           include: ['test/**/*.nuxt.test.ts'],
+          isolate: false,
           environmentOptions: {
             nuxt: {
               rootDir: fileURLToPath(new URL('./playground', import.meta.url)),

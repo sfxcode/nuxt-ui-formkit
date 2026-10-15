@@ -6,6 +6,7 @@ import { nextTick } from 'vue'
 import { z } from 'zod'
 import FUDataEdit from '../../src/runtime/components/FUDataEdit.vue'
 import { nuxtUIInputDefinition } from '../../src/runtime/formkit/definitions/input'
+import { wait } from '../support/wait'
 
 // Same reuse-of-id concern noted in useFormKitForm.nuxt.test.ts - every test
 // shares the `test-data-edit` id in FormKit's global registry.
@@ -15,10 +16,6 @@ afterEach(() => {
   activeWrapper?.unmount()
   activeWrapper = undefined
 })
-
-function wait(ms: number = 30) {
-  return new Promise(resolve => setTimeout(resolve, ms))
-}
 
 async function settle() {
   await flushPromises()

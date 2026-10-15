@@ -1,11 +1,12 @@
 import { defaultConfig, FormKit, plugin, useFormKitContextById } from '@formkit/vue'
 import { mountSuspended } from '@nuxt/test-utils/runtime'
 import { flushPromises } from '@vue/test-utils'
-import { afterEach, describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { defineComponent, h, nextTick } from 'vue'
 import { z } from 'zod'
 import { nuxtUIInputDefinition } from '../../src/runtime/formkit/definitions/input'
 import { useFormKitForm } from '../../src/runtime/composables/useFormKitForm'
+import { wait } from '../support/wait'
 
 // `useFormKitForm` is meant to be called from arbitrary consumer code (e.g. a
 // submit button outside the form), not from inside a `createInput`-rendered
@@ -59,10 +60,6 @@ async function mountHost() {
   return wrapper
 }
 
-function wait(ms: number = 30) {
-  return new Promise(resolve => setTimeout(resolve, ms))
-}
-
 // Matches the `(component.vm.$.exposed as unknown as {...})` pattern already
 // used in repeater.regression.nuxt.test.ts for reading an `expose()`-exposed
 // value with real typing.
@@ -85,7 +82,7 @@ describe('useFormKitForm', () => {
     await nextTick()
     await wait()
 
-    expect(form.isValid.value).toBe(true)
+    await vi.waitFor(() => expect(form.isValid.value).toBe(true))
   })
 
   it('marks the form submitted via submit()', async () => {

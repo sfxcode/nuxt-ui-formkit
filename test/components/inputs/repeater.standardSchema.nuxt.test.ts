@@ -7,6 +7,7 @@ import { z } from 'zod'
 import { attachStandardSchema } from '../../../src/runtime/composables/useFormKitStandardSchema'
 import { nuxtUIInputDefinition } from '../../../src/runtime/formkit/definitions/input'
 import { nuxtUIRepeaterDefinition } from '../../../src/runtime/formkit/definitions/repeater'
+import { wait } from '../../support/wait'
 
 // This is the highest-risk address-resolution case per the plan: a
 // `nuxtUIRepeater`'s outer `input`-type node and its inner `list`-type node
@@ -61,10 +62,6 @@ function mountRepeaterForm(value: object) {
       })]],
     },
   })
-}
-
-function wait(ms: number = 30) {
-  return new Promise(resolve => setTimeout(resolve, ms))
 }
 
 async function settle() {

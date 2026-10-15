@@ -3,14 +3,11 @@ import { mountSuspended } from '@nuxt/test-utils/runtime'
 import { DOMWrapper, flushPromises } from '@vue/test-utils'
 import UApp from '@nuxt/ui/components/App.vue'
 import * as v from 'valibot'
-import { afterEach, describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { defineComponent, h, nextTick } from 'vue'
 import { useFormKitOverlay } from '../../src/runtime/composables/useFormKitOverlay'
 import { nuxtUIInputDefinition } from '../../src/runtime/formkit/definitions/input'
-
-function wait(ms: number = 30) {
-  return new Promise(resolve => setTimeout(resolve, ms))
-}
+import { wait } from '../support/wait'
 
 async function settle() {
   await flushPromises()
@@ -291,7 +288,7 @@ describe('useFormKitOverlay - auto()', () => {
     await body().find('input').setValue('not-an-email')
     await settle()
 
-    expect(body().text()).toContain('valid email')
+    await vi.waitFor(() => expect(body().text()).toContain('valid email'))
   })
 
   it('resolves to null when the explicit Cancel button is clicked', async () => {
