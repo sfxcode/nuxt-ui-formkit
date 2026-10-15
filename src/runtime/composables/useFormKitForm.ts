@@ -28,6 +28,11 @@ export function useFormKitForm(id: string, options?: UseFormKitFormOptions) {
 
   const isValid = computed(() => context.value?.state.valid ?? false)
   const isSubmitted = computed(() => context.value?.state.submitted ?? false)
+  // `state.dirty` compares the committed value against the form's initial
+  // value. FormKit's default is *sticky* (stays true after a field is edited
+  // back to its original value); render the form with `dirtyBehavior="compare"`
+  // for a value that tracks the live difference.
+  const isDirty = computed(() => context.value?.state.dirty ?? false)
   const hasErrors = computed(() => context.value?.state.errors ?? false)
 
   // `submitForm` only triggers FormKit's own validation/submission
@@ -67,6 +72,7 @@ export function useFormKitForm(id: string, options?: UseFormKitFormOptions) {
     clearErrors: clearFormErrors,
     isValid,
     isSubmitted,
+    isDirty,
     hasErrors,
     isLoading,
   }

@@ -2,6 +2,7 @@ import { defaultConfig, FormKit, plugin, useFormKitContextById } from '@formkit/
 import { mountSuspended } from '@nuxt/test-utils/runtime'
 import { flushPromises } from '@vue/test-utils'
 import { afterEach, describe, expect, it, vi } from 'vitest'
+import type { PropType } from 'vue'
 import { defineComponent, h, nextTick } from 'vue'
 import { z } from 'zod'
 import { nuxtUIInputDefinition } from '../../src/runtime/formkit/definitions/input'
@@ -14,11 +15,15 @@ import { wait } from '../support/wait'
 // alongside the actual `<FormKit type="form">` tree, mirroring how a real
 // consumer page would wire a submit button to it.
 const HostComponent = defineComponent({
-  setup(_, { expose }) {
+  props: {
+    dirtyBehavior: { type: String as PropType<'touched' | 'compare'>, default: 'touched' },
+    initial: { type: Object, default: undefined },
+  },
+  setup(props, { expose }) {
     const form = useFormKitForm('test-form')
     expose({ form })
 
-    return () => h(FormKit, { type: 'form', id: 'test-form' }, {
+    return () => h(FormKit, { type: 'form', id: 'test-form', dirtyBehavior: props.dirtyBehavior, value: props.initial }, {
       default: () => h(FormKit, {
         type: 'nuxtUIInput',
         name: 'email',
@@ -42,8 +47,9 @@ afterEach(() => {
   activeWrapper = undefined
 })
 
-async function mountHost() {
+async function mountHost(hostProps: { dirtyBehavior?: 'touched' | 'compare', initial?: Record<string, unknown> } = {}) {
   const wrapper = await mountSuspended(HostComponent, {
+    props: hostProps,
     // `submit()` wraps `@formkit/core`'s `submitForm(id)`, which looks the
     // form up via `document.getElementById(id)` and dispatches a real DOM
     // `submit` event - Vue Test Utils mounts into a detached tree by
@@ -68,6 +74,48 @@ function useExposedForm(wrapper: Awaited<ReturnType<typeof mountHost>>) {
 }
 
 describe('useFormKitForm', () => {
+  it('reports isDirty once a field differs from its initial value', async () => {
+    const wrapper = await mountHost()
+    await flushPromises()
+    await nextTick()
+    await wait()
+
+    const form = useExposedForm(wrapper)
+    expect(form.isDirty.value).toBe(false)
+
+    await wrapper.find('input').setValue('ada@example.com')
+
+    await vi.waitFor(() => expect(form.isDirty.value).toBe(true))
+  })
+
+  it('with dirtyBehavior="compare", isDirty clears when the value is edited back', async () => {
+    const wrapper = await mountHost({ dirtyBehavior: 'compare', initial: { email: 'start@example.com' } })
+    await flushPromises()
+    await nextTick()
+    await wait()
+
+    const form = useExposedForm(wrapper)
+    await wrapper.find('input').setValue('ada@example.com')
+    await vi.waitFor(() => expect(form.isDirty.value).toBe(true))
+
+    await wrapper.find('input').setValue('start@example.com')
+    await vi.waitFor(() => expect(form.isDirty.value).toBe(false))
+  })
+
+  it('clears isDirty after reset()', async () => {
+    const wrapper = await mountHost()
+    await flushPromises()
+    await nextTick()
+    await wait()
+
+    const form = useExposedForm(wrapper)
+    await wrapper.find('input').setValue('ada@example.com')
+    await vi.waitFor(() => expect(form.isDirty.value).toBe(true))
+
+    form.reset()
+    await vi.waitFor(() => expect(form.isDirty.value).toBe(false))
+  })
+
   it('reflects isValid/hasErrors as the form is filled in', async () => {
     const wrapper = await mountHost()
     await flushPromises()
