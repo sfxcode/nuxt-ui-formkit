@@ -2,10 +2,12 @@
 import type { FormKitSchemaDefinition } from '@formkit/core'
 import type { StandardSchemaV1 } from '@standard-schema/spec'
 import type { PropType } from 'vue'
+import type { AutosaveOptions } from '../formkit/plugins/autosave'
 import { reset } from '@formkit/core'
 import { FormKit, FormKitMessages, FormKitSchema, useFormKitContextById } from '@formkit/vue'
 import { onScopeDispose, ref, watch } from 'vue'
 
+import { createAutosavePlugin } from '../formkit/plugins/autosave'
 import { attachStandardSchema } from '../composables/useFormKitStandardSchema'
 import FUDataDebug from './FUDataDebug.vue'
 
@@ -25,6 +27,18 @@ const props = defineProps({
   standardSchema: {
     type: Object as PropType<StandardSchemaV1>,
     default: null,
+  },
+  // A string is the draft's localStorage key; an object also sets
+  // debounce/maxAge/clearOnSubmit (see `createAutosavePlugin`).
+  autosave: {
+    type: [String, Object] as PropType<string | AutosaveOptions>,
+    default: null,
+  },
+  // FormKit's own default is 'touched' (dirty stays true once edited);
+  // 'compare' makes `state.dirty` track the live difference from the initial value.
+  dirtyBehavior: {
+    type: String as PropType<'touched' | 'compare'>,
+    default: 'touched',
   },
   formClass: {
     type: String,
@@ -88,6 +102,12 @@ useFormKitContextById(props.id, (context) => {
 })
 onScopeDispose(() => detachStandardSchema?.())
 
+// Built once per mount: the plugin loads the saved draft in the form node's
+// `created` hook, so it must be on the node from the start.
+const autosavePlugins = props.autosave
+  ? [createAutosavePlugin(typeof props.autosave === 'string' ? { key: props.autosave } : props.autosave)]
+  : []
+
 const formSchema = ref(props.schema)
 
 const formData = defineModel<Record<string, unknown>>()
@@ -128,6 +148,9 @@ function handleReset() {
     <FormKit
       :id="id"
       v-model="formData"
+      :dirty-behavior="dirtyBehavior"
+      :name="autosave ? id : undefined"
+      :plugins="autosavePlugins"
       :form-class="formClass"
       :actions-class="actionsClass"
       type="form"

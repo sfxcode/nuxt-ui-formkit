@@ -4,6 +4,9 @@ import type { FormKitExtendableSchemaRoot, FormKitNode } from '@formkit/core'
 // a separate `@formkit/addons` import just for the plugin that recognizes them.
 export { createMultiStepPlugin } from '@formkit/addons'
 
+export { createAutosavePlugin } from './autosave'
+export type { AutosaveOptions } from './autosave'
+
 export function addNuxtAsteriskPlugin(node: FormKitNode): void {
   // Keyed on `family`, not the `nuxtUI` type prefix: Output definitions share
   // that prefix (`nuxtUIOutput*`) but use the `NuxtUIOutput` family, and a

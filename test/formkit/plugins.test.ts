@@ -9,7 +9,7 @@ describe('plugins module', () => {
   // `createAutosavePlugin` is the one deliberate exception: a per-form opt-in
   // that consumers pass to `<FormKit :plugins>`, never global config.
   it('exports only plugins that createNuxtUiFormkitConfig() can wire', () => {
-    expect(Object.keys(plugins).sort()).toEqual(['addNuxtAsteriskPlugin', 'createMultiStepPlugin'])
+    expect(Object.keys(plugins).sort()).toEqual(['addNuxtAsteriskPlugin', 'createAutosavePlugin', 'createMultiStepPlugin'])
   })
 })
 
