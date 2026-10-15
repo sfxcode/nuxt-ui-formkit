@@ -16,7 +16,7 @@ function sourceFiles(dir: string): string[] {
     const path = join(dir, entry)
     if (statSync(path).isDirectory())
       return sourceFiles(path)
-    return /\.(ts|vue)$/.test(entry) ? [path] : []
+    return /\.(?:ts|vue)$/.test(entry) ? [path] : []
   })
 }
 
