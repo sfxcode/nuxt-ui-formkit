@@ -12,7 +12,7 @@ async function handleSubmit() {
   // useFormKitForm() is what makes that possible, since it looks the form up
   // by its registry `id` rather than needing to be inside the form's own
   // component tree.
-  form.submit(async () => {
+  await form.submit(async () => {
     await new Promise(resolve => setTimeout(resolve, 800))
     console.log('Form Submitted...')
   })

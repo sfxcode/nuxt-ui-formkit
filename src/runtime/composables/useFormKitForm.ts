@@ -1,6 +1,6 @@
-import type { ErrorMessages } from '@formkit/core'
+import type { ErrorMessages, FormKitNode } from '@formkit/core'
 import type { StandardSchemaV1 } from '@standard-schema/spec'
-import { clearErrors, reset, setErrors, submitForm } from '@formkit/core'
+import { clearErrors, getNode, reset, setErrors, submitForm } from '@formkit/core'
 import { useFormKitContextById } from '@formkit/vue'
 import { computed, onScopeDispose, ref } from 'vue'
 import { attachStandardSchema } from './useFormKitStandardSchema'
@@ -35,22 +35,62 @@ export function useFormKitForm(id: string, options?: UseFormKitFormOptions) {
   const isDirty = computed(() => context.value?.state.dirty ?? false)
   const hasErrors = computed(() => context.value?.state.errors ?? false)
 
-  // `submitForm` only triggers FormKit's own validation/submission
-  // lifecycle (running validation, marking the form submitted, and calling
-  // whatever `@submit` handler is bound on the `<FormKit type="form">`
-  // itself) - it has no way to signal when that eventually resolves. A
-  // `handler` here is the caller's *own* async work (e.g. an API call),
-  // wrapped so `isLoading` toggles around it without the caller having to
-  // manage the ref manually. Omit `handler` and set `isLoading` yourself if
-  // you need it tied to something else entirely.
-  function submit(handler?: () => unknown | Promise<unknown>): void {
-    submitForm(id)
-    if (!handler)
-      return
-    isLoading.value = true
-    void Promise.resolve(handler()).finally(() => {
-      isLoading.value = false
+  // The last `handler` failure, cleared when the next handler starts.
+  const error = ref<unknown>(undefined)
+
+  // Resolves with whether the form passed validation, once FormKit has run its
+  // own submit pipeline. FormKit emits `submit-raw` after it has waited out any
+  // in-flight validation and marked the form submitted, and only then decides
+  // between `onSubmit` and `onSubmitInvalid` on the `blocking` ledger - so this
+  // reads that same ledger at the same moment.
+  function waitForSubmitted(node: FormKitNode): Promise<boolean> {
+    return new Promise((resolve) => {
+      const receipt = node.on('submit-raw', () => {
+        node.off(receipt)
+        resolve(!node.ledger.value('blocking'))
+      })
     })
+  }
+
+  let latestSubmit = 0
+
+  // `submitForm` only triggers FormKit's own validation/submission lifecycle -
+  // it has no way to signal when that eventually resolves. A `handler` here is
+  // the caller's *own* async work (e.g. an API call): it runs once, and only if
+  // the form passed validation, with `isLoading` toggled around it and a failure
+  // recorded in `error` and re-thrown through the returned promise (so a caller
+  // that doesn't `await` still sees an unhandled rejection, never silence).
+  // Omit `handler` and set `isLoading` yourself if you need it tied to
+  // something else entirely.
+  async function submit(handler?: () => unknown | Promise<unknown>): Promise<void> {
+    if (!handler) {
+      submitForm(id)
+      return
+    }
+    const node = getNode(id)
+    if (!node)
+      throw new Error(`[nuxt-ui-formkit] useFormKitForm: no form with id "${id}" is mounted`)
+
+    const thisSubmit = ++latestSubmit
+    const passed = waitForSubmitted(node)
+    submitForm(id)
+    // A newer submit() supersedes this one: FormKit runs one pipeline for both,
+    // so only the latest call runs its handler.
+    if (!await passed || thisSubmit !== latestSubmit)
+      return
+
+    error.value = undefined
+    isLoading.value = true
+    try {
+      await handler()
+    }
+    catch (handlerError) {
+      error.value = handlerError
+      throw handlerError
+    }
+    finally {
+      isLoading.value = false
+    }
   }
 
   function resetForm(resetTo?: unknown): void {
@@ -75,5 +115,6 @@ export function useFormKitForm(id: string, options?: UseFormKitFormOptions) {
     isDirty,
     hasErrors,
     isLoading,
+    error,
   }
 }

@@ -43,7 +43,7 @@ Helper composable for driving a `<FormKit type="form">` from outside code - subm
 ```typescript
 import { useFormKitForm } from '@sfxcode/nuxt-ui-formkit'
 
-const { submit, reset, isValid, isSubmitted, isDirty, hasErrors, isLoading } = useFormKitForm('my-form', {
+const { submit, reset, isValid, isSubmitted, isDirty, hasErrors, isLoading, error } = useFormKitForm('my-form', {
   standardSchema: registrationSchema, // optional - see /components/standard-schema
 })
 ```
@@ -52,7 +52,9 @@ const { submit, reset, isValid, isSubmitted, isDirty, hasErrors, isLoading } = u
 - `id` - the FormKit form node's registry id (its `id` prop)
 - `options.standardSchema` *(optional)* - a Standard Schema instance to validate the form against
 
-**Returns:** `submit`, `reset`, `setErrors`, `clearErrors`, `isValid`, `isSubmitted`, `isDirty`, `hasErrors`, `isLoading`
+**Returns:** `submit`, `reset`, `setErrors`, `clearErrors`, `isValid`, `isSubmitted`, `isDirty`, `hasErrors`, `isLoading`, `error`
+
+`submit(handler?)` triggers the form's own submission. A `handler` is your own async work (an API call, say): it runs once, and only if the form passed validation, with `isLoading` set while it runs. If it throws or rejects, `isLoading` is reset, the failure is stored in `error`, and the returned promise rejects - `await` it (or `.catch`) to handle it. `error` clears when the next handler starts. `submit()` with a handler rejects if no form with that `id` is mounted. Calling `submit` again before the first has been validated supersedes it, so only the latest call's handler runs.
 
 `isDirty` is `true` once the form's value differs from its initial value, and `reset()` clears it. By default FormKit's dirty state is *sticky*: it stays `true` after a field is edited back to its original value. Set `dirty-behavior="compare"` on the form (`FUDataEdit` has a `dirtyBehavior` prop) to make it track the live difference instead.
 

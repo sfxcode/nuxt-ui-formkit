@@ -2,11 +2,11 @@ import { defaultConfig, FormKit, plugin, useFormKitContextById } from '@formkit/
 import { mountSuspended } from '@nuxt/test-utils/runtime'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import type { PropType } from 'vue'
-import { defineComponent, h, nextTick } from 'vue'
+import { defineComponent, h } from 'vue'
 import { z } from 'zod'
 import { nuxtUIInputDefinition } from '../../src/runtime/formkit/definitions/input'
 import { useFormKitForm } from '../../src/runtime/composables/useFormKitForm'
-import { settle, settleAndWait } from '../support/settle'
+import { settleAndWait } from '../support/settle'
 
 // `useFormKitForm` is meant to be called from arbitrary consumer code (e.g. a
 // submit button outside the form), not from inside a `createInput`-rendered
@@ -135,26 +135,98 @@ describe('useFormKitForm', () => {
     expect(form.isSubmitted.value).toBe(true)
   })
 
-  it('toggles isLoading around an async handler passed to submit()', async () => {
-    const wrapper = await mountHost()
-    await settleAndWait()
+  describe('submit(handler)', () => {
+    async function mountValidForm() {
+      const wrapper = await mountHost()
+      await settleAndWait()
+      await wrapper.find('input').setValue('ada@example.com')
+      await settleAndWait()
+      const form = useExposedForm(wrapper)
+      await vi.waitFor(() => expect(form.isValid.value).toBe(true))
+      return form
+    }
 
-    const form = useExposedForm(wrapper)
-    expect(form.isLoading.value).toBe(false)
+    it('toggles isLoading around an async handler once the form is valid', async () => {
+      const form = await mountValidForm()
+      expect(form.isLoading.value).toBe(false)
 
-    let resolveWork: () => void = () => {}
-    const work = new Promise<void>((resolve) => {
-      resolveWork = resolve
+      let resolveWork: () => void = () => {}
+      const work = new Promise<void>((resolve) => {
+        resolveWork = resolve
+      })
+
+      const done = form.submit(() => work)
+      await vi.waitFor(() => expect(form.isLoading.value).toBe(true))
+
+      resolveWork()
+      await done
+
+      expect(form.isLoading.value).toBe(false)
     })
 
-    form.submit(() => work)
-    await nextTick()
-    expect(form.isLoading.value).toBe(true)
+    it('does not run the handler when validation fails', async () => {
+      const wrapper = await mountHost()
+      await settleAndWait()
+      const form = useExposedForm(wrapper)
+      const handler = vi.fn()
 
-    resolveWork()
-    await settle()
+      await form.submit(handler)
 
-    expect(form.isLoading.value).toBe(false)
+      expect(handler).not.toHaveBeenCalled()
+      expect(form.isLoading.value).toBe(false)
+      expect(form.isSubmitted.value).toBe(true)
+    })
+
+    it('resets isLoading and reports the error when the handler throws synchronously', async () => {
+      const form = await mountValidForm()
+      const failure = new Error('sync boom')
+
+      await expect(form.submit(() => {
+        throw failure
+      })).rejects.toBe(failure)
+
+      expect(form.isLoading.value).toBe(false)
+      expect(form.error.value).toBe(failure)
+    })
+
+    it('resets isLoading and reports the error when the handler rejects', async () => {
+      const form = await mountValidForm()
+      const failure = new Error('async boom')
+
+      await expect(form.submit(() => Promise.reject(failure))).rejects.toBe(failure)
+
+      expect(form.isLoading.value).toBe(false)
+      expect(form.error.value).toBe(failure)
+    })
+
+    it('clears the previous error on the next successful submit', async () => {
+      const form = await mountValidForm()
+      await form.submit(() => Promise.reject(new Error('first'))).catch(() => {})
+      expect(form.error.value).toBeDefined()
+
+      await form.submit(() => {})
+
+      expect(form.error.value).toBeUndefined()
+    })
+
+    it('runs the handler only once when submit() is called twice before validation settles', async () => {
+      const form = await mountValidForm()
+      const handler = vi.fn()
+
+      await Promise.all([form.submit(handler), form.submit(handler)])
+
+      expect(handler).toHaveBeenCalledTimes(1)
+    })
+
+    it('rejects with a clear error when no form with that id is mounted', async () => {
+      const wrapper = await mountHost()
+      await settleAndWait()
+      const form = useExposedForm(wrapper)
+      wrapper.unmount()
+      activeWrapper = undefined
+
+      await expect(form.submit(() => {})).rejects.toThrow(/no form with id "test-form"/)
+    })
   })
 
   it('setErrors/clearErrors add and remove visible error messages', async () => {
