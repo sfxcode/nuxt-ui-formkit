@@ -35,7 +35,4 @@ export default defineNuxtConfig({
     },
   },
 
-  // FormKit Nuxt UI Module Configuration
-  formkitNuxtUi: { },
-
 })
