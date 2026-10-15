@@ -1,3 +1,9 @@
+// `+'x'` is NaN, which would poison the whole sum; an unparseable part counts as 0.
+const toNumber = (text: string | undefined): number => {
+  const value = +(text?.trim() || '0')
+  return Number.isFinite(value) ? value : 0
+}
+
 export function durationToMinutes(duration: string): number {
   let hours = 0
   let minutes = 0
@@ -5,22 +11,22 @@ export function durationToMinutes(duration: string): number {
   const lowerDuration = duration.toLowerCase()
 
   if (lowerDuration.includes(':')) {
-    const [h, m] = lowerDuration.split(':').map(part => +(part?.trim() || '0'))
+    const [h, m] = lowerDuration.split(':').map(toNumber)
     hours = h ?? 0
     minutes = m ?? 0
   }
   else {
     if (lowerDuration.includes('h')) {
-      hours = +(lowerDuration.split('h')[0]?.trim() || '0')
+      hours = toNumber(lowerDuration.split('h')[0])
       const remainder = lowerDuration.split('h')[1] || ''
 
       if (remainder.includes('m'))
-        minutes = +(remainder.split('m')[0]?.trim() || '0')
+        minutes = toNumber(remainder.split('m')[0])
       else if (/^\d+$/.test(remainder))
         minutes = +remainder
     }
     else if (lowerDuration.includes('m')) {
-      minutes = +(lowerDuration.split('m')[0]?.trim() || '0')
+      minutes = toNumber(lowerDuration.split('m')[0])
     }
     else if (/^\d+$/.test(lowerDuration)) {
       minutes = +lowerDuration

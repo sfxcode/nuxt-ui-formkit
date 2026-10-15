@@ -50,6 +50,13 @@ it('formats hours and minutes duration', () => {
   expect(formattedDuration('135M')).toBe('2h 15m')
 })
 
+it('treats unparseable parts as zero instead of returning NaN', () => {
+  expect(durationToMinutes('a:b')).toBe(0)
+  expect(durationToMinutes('1:x')).toBe(60)
+  expect(durationToMinutes('xh30m')).toBe(30)
+  expect(formattedDuration('a:b')).toBe('0')
+})
+
 it('handles non-numeric duration values', () => {
   expect(durationToMinutes('h')).toBe(0)
   expect(durationToMinutes('m')).toBe(0)
