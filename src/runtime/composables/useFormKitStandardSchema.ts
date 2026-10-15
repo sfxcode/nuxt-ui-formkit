@@ -75,13 +75,37 @@ export function attachStandardSchema(node: FormKitNode, schema: StandardSchemaV1
   let runToken = 0
   let detached = false
 
+  // True while a schema run owns the `validating` message (see below).
+  let schemaRunning = false
+
   // FormKit's own `handleSubmit` awaits `node.ledger.settled('validating')`, and
   // its built-in rule validation signals "still running" with this exact
   // message. Setting it while the (async) schema is in flight is what makes a
-  // real submit wait for the schema instead of racing it.
+  // real submit wait for the schema instead of racing it. It can't be a
+  // distinct key: the ledger counter submit waits on matches `key === 'validating'`.
+  //
+  // The key is a single slot per node, so a node with its own async validation
+  // rule shares it with this bridge. Ours is tagged with `meta.source` so each
+  // side can tell whose it is: we only remove our own (never a rule's still
+  // running), and re-assert ours when a rule's removal would hide a schema run
+  // that hasn't finished.
   function markValidating(): void {
-    node.store.set(createMessage({ type: 'state', blocking: true, visible: false, value: true, key: 'validating' }))
+    // Already blocking (a rule's, or ours); a rule's removal re-asserts ours below.
+    if (node.store.validating)
+      return
+    node.store.set(createMessage({ type: 'state', blocking: true, visible: false, value: true, key: 'validating', meta: { source: STANDARD_SCHEMA_SOURCE } }))
   }
+
+  function releaseValidating(): void {
+    schemaRunning = false
+    if (node.store.validating?.meta.source === STANDARD_SCHEMA_SOURCE)
+      node.store.remove('validating')
+  }
+
+  const removedReceipt = node.on('message-removed', ({ payload }) => {
+    if (schemaRunning && payload.key === 'validating' && payload.meta.source !== STANDARD_SCHEMA_SOURCE)
+      markValidating()
+  })
 
   function applyRootMessages(values: string[]): void {
     setStandardSchemaMessages(node, values)
@@ -92,6 +116,7 @@ export function attachStandardSchema(node: FormKitNode, schema: StandardSchemaV1
     if (detached)
       return
     const token = ++runToken
+    schemaRunning = true
     markValidating()
 
     let result: StandardSchemaV1.Result<unknown>
@@ -104,7 +129,7 @@ export function attachStandardSchema(node: FormKitNode, schema: StandardSchemaV1
       // A throwing/rejecting schema must not leave the form looking valid.
       console.error('[nuxt-ui-formkit] Standard Schema validation threw:', error)
       applyRootMessages([`Validation failed: ${error instanceof Error ? error.message : String(error)}`])
-      node.store.remove('validating')
+      releaseValidating()
       return
     }
     // A newer run (or detach) owns the `validating` message from here on.
@@ -135,7 +160,7 @@ export function attachStandardSchema(node: FormKitNode, schema: StandardSchemaV1
     for (const [target, messages] of resolved)
       setStandardSchemaMessages(target, messages)
     previousTargets = new Set(resolved.keys())
-    node.store.remove('validating')
+    releaseValidating()
   }
 
   const receipt = node.on('commit', () => void validate())
@@ -150,7 +175,8 @@ export function attachStandardSchema(node: FormKitNode, schema: StandardSchemaV1
     detached = true
     runToken++
     node.off(receipt)
-    node.store.remove('validating')
+    node.off(removedReceipt)
+    releaseValidating()
     clearStandardSchemaMessages(node)
     for (const target of previousTargets)
       clearStandardSchemaMessages(target)

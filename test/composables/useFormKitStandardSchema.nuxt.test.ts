@@ -3,7 +3,8 @@ import { mountSuspended } from '@nuxt/test-utils/runtime'
 import type { StandardSchemaV1 } from '@standard-schema/spec'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { defineComponent, h, onUnmounted } from 'vue'
-import { getNode } from '@formkit/core'
+import { createNode, getNode } from '@formkit/core'
+import { createValidationPlugin } from '@formkit/validation'
 import { z } from 'zod'
 import { nuxtUIInputDefinition } from '../../src/runtime/formkit/definitions/input'
 import { attachStandardSchema } from '../../src/runtime/composables/useFormKitStandardSchema'
@@ -171,5 +172,58 @@ describe('attachStandardSchema', () => {
     expect(unhandled).not.toHaveBeenCalled()
     process.off('unhandledRejection', unhandled)
     consoleError.mockRestore()
+  })
+})
+
+// FormKit's own rule validation and this bridge both signal "still running" with
+// the one `validating` message on the node (submit waits on a ledger counter
+// keyed to it), so a root node that has its own async rule shares the slot. Each
+// side finishing must not hide the other still running.
+describe('attachStandardSchema alongside the node\'s own async validation rule', () => {
+  const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
+
+  function rootWithRule(ruleMs: number) {
+    return createNode({
+      type: 'group',
+      name: 'form',
+      // A non-empty value: FormKit skips a rule for an empty one, so it would finish instantly.
+      value: { filled: true },
+      props: { validation: 'slow' },
+      plugins: [createValidationPlugin({ slow: async () => {
+        await wait(ruleMs)
+        return true
+      } })],
+    })
+  }
+
+  function schemaTakingMs(ms: number): StandardSchemaV1 {
+    return { '~standard': { version: 1, vendor: 'test', validate: async () => {
+      await wait(ms)
+      return { value: {} }
+    } } }
+  }
+
+  it('keeps the form validating while the schema is still running after the rule finishes', async () => {
+    const node = rootWithRule(20)
+    const detach = attachStandardSchema(node, schemaTakingMs(250))
+
+    await wait(120)
+    expect(node.store.validating).toBeDefined()
+
+    await wait(300)
+    expect(node.store.validating).toBeUndefined()
+    detach()
+  })
+
+  it('keeps the form validating while the rule is still running after the schema finishes', async () => {
+    const node = rootWithRule(250)
+    const detach = attachStandardSchema(node, schemaTakingMs(20))
+
+    await wait(120)
+    expect(node.store.validating).toBeDefined()
+
+    await wait(300)
+    expect(node.store.validating).toBeUndefined()
+    detach()
   })
 })
