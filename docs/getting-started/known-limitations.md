@@ -18,7 +18,7 @@ Most of these fail **silently** - no error, no warning, just a missing label or 
 
 FormKit reveals validation messages on `blur` by default, and Nuxt UI components don't all emit one.
 
-- **`nuxtUIColorPicker` has no blur wiring.** `validationVisibility: 'blur'` never reveals its errors - use `'live'`.
+- **`nuxtUIColorPicker` is pointer-only.** Nothing inside `UColorPicker` is focusable, so "blur" means releasing the pointer after picking a color; keyboard users can't operate it at all.
 - **`nuxtUISelect` reveals on dropdown close only.** Tabbing through without opening it shows nothing. Use `'live'`, or `nuxtUISelectMenu`, which has no such gap. See [Selection Components](/components/inputs#nuxtuiselect).
 - **`required` passes for a boolean `false`.** On `nuxtUICheckbox`/`nuxtUISwitch`, use the `accepted` rule instead.
 

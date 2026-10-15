@@ -557,8 +557,8 @@ const schema = [
 ]
 ```
 
-::: warning No blur wiring
-`nuxtUIColorPicker` doesn't wire a blur event, so FormKit's default `validationVisibility: 'blur'` never reveals its validation messages. Set `validationVisibility: 'live'` on the field.
+::: info Blur/validation behavior
+`UColorPicker` is pointer-only - nothing inside it is focusable - so there is no real blur. Instead, the end of a pointer interaction on the picker (releasing the mouse after picking a color) counts as the field being touched, and FormKit's default `validationVisibility: 'blur'` reveals validation messages at that moment. Keyboard users can't operate the picker at all (a Nuxt UI limitation).
 :::
 
 ### nuxtUIInputTags
