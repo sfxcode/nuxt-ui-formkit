@@ -45,7 +45,14 @@ export function createContainerBlurHandler(context: FormKitFrameworkContext): (e
     const focusEvent = event as FocusEvent
     const container = focusEvent.currentTarget as HTMLElement | null
     const related = focusEvent.relatedTarget as Node | null
-    // Fails open when the container isn't available - silently never
+    // A null `relatedTarget` counts as "left": focus went somewhere that can't
+    // be named (a click on non-focusable space, another window, a button
+    // Safari doesn't focus). A native input fires `blur` in the same cases, so
+    // this keeps these inputs consistent with the rest of the form. Deferring
+    // to `document.activeElement` was considered and rejected - see
+    // brain/notes/blur-null-relatedtarget-is-left.
+    //
+    // Also fails open when the container isn't available - silently never
     // firing blur would reproduce the exact bug this helper exists to fix,
     // so an indeterminate case still counts as "left."
     if (!container || !related || !container.contains(related))
