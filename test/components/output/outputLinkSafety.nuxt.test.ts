@@ -41,6 +41,15 @@ describe('FUOutputLink safety', () => {
     expect(link.attributes('rel')).toContain('noopener')
   })
 
+  it('keeps noopener noreferrer on a _blank link when a custom rel is given', async () => {
+    const wrapper = await mountOutput('nuxtUIOutputLink', 'https://example.com', { rel: 'nofollow' })
+
+    const rel = wrapper.find('a').attributes('rel') ?? ''
+    expect(rel).toContain('nofollow')
+    expect(rel).toContain('noopener')
+    expect(rel).toContain('noreferrer')
+  })
+
   it('does not throw on a numeric value', async () => {
     const wrapper = await mountOutput('nuxtUIOutputLink', 12345)
 

@@ -50,12 +50,16 @@ const linkTarget = computed(() => {
   return props.context.target ?? (isExternal.value ? '_blank' : undefined)
 })
 
+// A custom `rel` is kept, but a `_blank` link always also gets `noopener noreferrer`.
 const linkRel = computed(() => {
-  if (props.context.rel)
-    return props.context.rel
-  if (isExternal.value && linkTarget.value === '_blank')
-    return 'noopener noreferrer'
-  return undefined
+  const tokens = String(props.context.rel ?? '').split(/\s+/).filter(Boolean)
+  if (linkTarget.value === '_blank') {
+    for (const token of ['noopener', 'noreferrer']) {
+      if (!tokens.includes(token))
+        tokens.push(token)
+    }
+  }
+  return tokens.length ? tokens.join(' ') : undefined
 })
 
 const { containerClass, iconClass, leadingIconName, trailingIconName, leadingTooltip, trailingTooltip } = useFormKitOutput(props.context)
