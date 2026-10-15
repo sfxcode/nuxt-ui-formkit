@@ -3,6 +3,7 @@ import type { FormKitFrameworkContext } from '@formkit/core'
 import type { PropType } from 'vue'
 import { computed } from 'vue'
 import type { FormKitOutputUi } from '../../utils/useFormKitOutput'
+import { toSafeHref } from '../../utils/safeUrl'
 import { useFormKitOutput } from '../../utils/useFormKitOutput'
 import type { FormKitIconProps, FUIconTooltip } from './FUIcon.vue'
 import FUIcon from './FUIcon.vue'
@@ -31,7 +32,12 @@ const props = defineProps({
   },
 })
 
-const linkUrl = computed(() => props.context._value ?? '')
+// What gets shown, whatever the value is (a number is shown as-is, not a crash).
+const displayValue = computed(() => String(props.context._value ?? ''))
+
+// What gets linked: only a URL with a safe scheme. A data-driven
+// `javascript:`/`data:` value renders as plain text instead of a live link.
+const linkUrl = computed(() => toSafeHref(props.context._value) ?? '')
 
 const isExternal = computed(() => {
   const url = linkUrl.value
@@ -52,18 +58,7 @@ const linkRel = computed(() => {
   return undefined
 })
 
-const displayValue = computed(() => {
-  return linkUrl
-})
-
 const { containerClass, iconClass, leadingIconName, trailingIconName, leadingTooltip, trailingTooltip } = useFormKitOutput(props.context)
-
-const linkClass = computed(() => {
-  const classes = [
-    containerClass.value,
-  ]
-  return classes.filter(Boolean).join(' ')
-})
 </script>
 
 <template>
@@ -79,24 +74,22 @@ const linkClass = computed(() => {
       :tooltip="leadingTooltip"
       :on-click="context?.onLeadingIconClicked"
     />
+    <!-- Container classes/style are applied once, on the wrapper above. -->
     <ULink
       v-if="isExternal"
-      :href="isExternal ? linkUrl : undefined"
+      :href="linkUrl"
       :target="linkTarget"
       :rel="linkRel"
-      :class="linkClass"
-      :style="context?.attrs?.style"
     >
       <span>{{ displayValue }}</span>
     </ULink>
     <NuxtLink
-      v-else
+      v-else-if="linkUrl"
       :to="linkUrl"
-      :class="linkClass"
-      :style="context?.attrs?.style"
     >
       <span>{{ displayValue }}</span>
     </NuxtLink>
+    <span v-else>{{ displayValue }}</span>
 
     <FUIcon
       v-if="trailingIconName"

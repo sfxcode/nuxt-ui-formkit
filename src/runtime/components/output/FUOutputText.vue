@@ -4,6 +4,7 @@ import type { PropType } from 'vue'
 import { computed, getCurrentInstance } from 'vue'
 import type { FormKitOutputUi } from '../../utils/useFormKitOutput'
 import { useFormKitOutput } from '../../utils/useFormKitOutput'
+import { toSafeHref } from '../../utils/safeUrl'
 import { convertColorToHex } from '../../utils/colorConverter'
 import { formattedDuration } from '../../utils/durationConverter'
 import type { FormKitIconProps, FUIconTooltip } from './FUIcon.vue'
@@ -62,8 +63,10 @@ const displayValue = computed(() => {
 
 const isLink = computed(() => ['email', 'url', 'tel'].includes(outputType.value))
 
+// `displayValue` can be a number (or anything else a field holds); a link needs
+// a string, and only a URL with a safe scheme may become a live link.
 const linkHref = computed(() => {
-  const value = displayValue.value
+  const value = String(displayValue.value ?? '')
   if (!value)
     return ''
 
@@ -73,7 +76,7 @@ const linkHref = computed(() => {
     case 'tel':
       return value.startsWith('tel:') ? value : `tel:${value}`
     case 'url':
-      return value
+      return toSafeHref(value) ?? ''
     default:
       return ''
   }
@@ -88,7 +91,7 @@ const colorValue = computed(() => {
 
 const colorStyle = computed(() => {
   if (outputType.value === 'color') {
-    return `color: ${colorValue.value} `
+    return colorValue.value ? `color: ${colorValue.value} ` : ' '
   }
   return ' '
 })
@@ -113,7 +116,7 @@ const { containerClass, iconClass, leadingIconName, trailingIconName, leadingToo
 
     <!-- Link output types (email, url, tel) -->
     <ULink
-      v-if="isLink && displayValue"
+      v-if="isLink && linkHref"
       :href="linkHref"
       :target="outputType === 'url' ? '_blank' : undefined"
       :rel="outputType === 'url' ? 'noopener noreferrer' : undefined"
