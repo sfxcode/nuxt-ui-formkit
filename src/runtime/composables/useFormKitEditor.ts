@@ -132,20 +132,29 @@ export function useFormKitEditor() {
     return JSON.stringify(editorDataToSchema(data))
   }
 
+  // Single-quoted JS string literal; backslashes, quotes and newlines escaped so the output compiles.
+  function quote(value: string): string {
+    return `'${value.replace(/\\/g, '\\\\').replace(/'/g, '\\\'').replace(/\n/g, '\\n').replace(/\r/g, '\\r')}'`
+  }
+
+  function valueToCode(value: unknown): string {
+    if (Array.isArray(value))
+      return `[${value.map(valueToCode).join(', ')}]`
+    if (value && typeof value === 'object')
+      return objectToString(value as Record<string, unknown>)
+    if (typeof value === 'string')
+      return quote(value)
+    return String(value)
+  }
+
   function objectToString(data: Record<string, unknown>): string {
     if (!data)
       return '{}'
 
-    return `{ ${Object.entries(data).filter(([, value]) => value !== undefined).map(([key, value]) => {
-      if (key === 'options' && Array.isArray(value) && value.length > 0) {
-        const options = value.map(option => option && typeof option === 'object' ? objectToString(option) : JSON.stringify(option))
-        return `${key}: [${options.join(', ')}]`
-      }
-      if (typeof value === 'number' || typeof value === 'boolean') {
-        return `${key}: ${value}`
-      }
-      return `${key}: '${value}'`
-    }).join(', ')} }`
+    const entries = Object.entries(data)
+      .filter(([, value]) => value !== undefined)
+      .map(([key, value]) => `${/^[A-Z_$][\w$]*$/i.test(key) ? key : quote(key)}: ${valueToCode(value)}`)
+    return `{ ${entries.join(', ')} }`
   }
 
   function editorDataToCode(data: EditorData): string {
