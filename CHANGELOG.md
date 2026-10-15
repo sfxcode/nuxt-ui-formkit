@@ -5,6 +5,44 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.3.8
+
+[compare changes](https://github.com/sfxcode/nuxt-ui-formkit/compare/v1.3.7...v1.3.8)
+
+### 🚀 Enhancements
+
+- **useFormKitForm:** Add isDirty state ([6c8dce0](https://github.com/sfxcode/nuxt-ui-formkit/commit/6c8dce0))
+- **FUDataEdit:** Add autosave and dirtyBehavior props, export createAutosavePlugin ([a18279d](https://github.com/sfxcode/nuxt-ui-formkit/commit/a18279d))
+- **useFormKitOverlay:** Add opt-in confirmDiscard for unsaved edits ([1b11893](https://github.com/sfxcode/nuxt-ui-formkit/commit/1b11893))
+
+### 🩹 Fixes
+
+- **plugins:** Remove dead addNuxtLabelPlugin and limit asterisk plugin to input definitions ([8a4ea09](https://github.com/sfxcode/nuxt-ui-formkit/commit/8a4ea09))
+- **FUInputRating:** Narrow step type to the values UInputRating accepts ([c1f2b96](https://github.com/sfxcode/nuxt-ui-formkit/commit/c1f2b96))
+- **autosave:** Strip internal slots key, mark restored drafts dirty, don't re-save a submitted draft ([66d5e27](https://github.com/sfxcode/nuxt-ui-formkit/commit/66d5e27))
+- **FUColorPicker:** Reveal validation when a pointer interaction ends ([6606c6f](https://github.com/sfxcode/nuxt-ui-formkit/commit/6606c6f))
+
+### 💅 Refactors
+
+- **tests:** Add shared settle/settleAndWait helpers ([153cb26](https://github.com/sfxcode/nuxt-ui-formkit/commit/153cb26))
+
+### 📖 Documentation
+
+- Document isDirty, autosave, dirtyBehavior and confirmDiscard ([4215d5f](https://github.com/sfxcode/nuxt-ui-formkit/commit/4215d5f))
+- **playground:** Add dedicated autosave demo page ([225af8b](https://github.com/sfxcode/nuxt-ui-formkit/commit/225af8b))
+- Fix version requirements, @formkit/nuxt setup, color picker and select descriptions ([47a80a3](https://github.com/sfxcode/nuxt-ui-formkit/commit/47a80a3))
+- Add Known Limitations page ([fabf22c](https://github.com/sfxcode/nuxt-ui-formkit/commit/fabf22c))
+- Color picker blur behavior is now wired (pointer release) ([6e4a534](https://github.com/sfxcode/nuxt-ui-formkit/commit/6e4a534))
+
+### 🏡 Chore
+
+- Update Nuxt UI version to 4.12.0 in footer ([b78679b](https://github.com/sfxcode/nuxt-ui-formkit/commit/b78679b))
+- **playground:** Drop inert formkitNuxtUi config key ([edbff0d](https://github.com/sfxcode/nuxt-ui-formkit/commit/edbff0d))
+
+### ❤️ Contributors
+
+- Sfxcode <tom@sfxcode.com>
+
 ## v1.3.7
 
 [compare changes](https://github.com/sfxcode/nuxt-ui-formkit/compare/v1.3.6...v1.3.7)
