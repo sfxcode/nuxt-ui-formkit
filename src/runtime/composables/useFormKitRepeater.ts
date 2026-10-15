@@ -1,4 +1,5 @@
 import type { FormKitNode } from '@formkit/core'
+import { cloneAny } from '@formkit/utils'
 
 export function useFormKitRepeater() {
   function addRepeaterHandler(node: FormKitNode): void {
@@ -32,7 +33,9 @@ export function useFormKitRepeater() {
       if (node.context) {
         let dragStartIndex: number | null = null
         let dragOverIndex: number | null = null
-        const newItem = node.context.newItem || {}
+        // Deep-cloned per row, so rows never share a nested array/object with
+        // each other or with the `newItem` prop.
+        const makeNewItem = (): object => cloneAny(node.context?.newItem || {})
 
         node.context.listName = node.name
         node.context.renderButtons = !node.context.hideButtonGroup
@@ -66,7 +69,7 @@ export function useFormKitRepeater() {
           // are typed `unknown` on a bare `FormKitNode`, and TS doesn't know
           // they're the same array, so checking one doesn't narrow the other.
           if (parentNode && Array.isArray(parentNode.value)) {
-            const newArray: object[] = [{ ...newItem }, ...parentNode.value]
+            const newArray: object[] = [makeNewItem(), ...parentNode.value]
             parentNode.input(newArray, false)
             syncOuterValue(newArray)
           }
@@ -81,7 +84,7 @@ export function useFormKitRepeater() {
         node.context.addNode = (parentNode: FormKitNode, index: number) => (): void => {
           if (parentNode && Array.isArray(parentNode.value)) {
             const array: object[] = parentNode.value
-            array.splice(index + 1, 0, { ...newItem })
+            array.splice(index + 1, 0, makeNewItem())
             parentNode.input(array, false)
             syncOuterValue(array)
           }
@@ -90,7 +93,7 @@ export function useFormKitRepeater() {
           if (parentNode && Array.isArray(parentNode.value)) {
             const item: object = parentNode.value[index]
             const array: object[] = parentNode.value
-            array.splice(index + 1, 0, { ...item })
+            array.splice(index + 1, 0, cloneAny(item))
             parentNode.input(array, false)
             syncOuterValue(array)
           }

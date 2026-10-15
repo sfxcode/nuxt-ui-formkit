@@ -116,3 +116,25 @@ describe('nuxtUIRepeater minItems/maxItems validation', () => {
     expect(listNode.context?.state.valid).toBe(true)
   })
 })
+
+describe('nuxtUIRepeater regression: rows do not share nested references', () => {
+  async function clickButton(wrapper: Awaited<ReturnType<typeof mountRepeater>>, label: string) {
+    const button = wrapper.findAll('button').find(candidate => candidate.text().includes(label))
+    expect(button).toBeDefined()
+    await button!.trigger('click')
+    await settle()
+  }
+
+  it('gives every inserted row its own copy of a nested newItem value', async () => {
+    const newItem = { title: '', tags: [] as string[] }
+    const wrapper = await mountRepeater([], { newItem })
+
+    await clickButton(wrapper, 'Add Item')
+    await clickButton(wrapper, 'Add Item')
+
+    const rows = findListNode(wrapper).value as { tags: string[] }[]
+    expect(rows).toHaveLength(2)
+    expect(rows[0]!.tags).not.toBe(rows[1]!.tags)
+    expect(rows[0]!.tags).not.toBe(newItem.tags)
+  })
+})
