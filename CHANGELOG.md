@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.3.7
+
+[compare changes](https://github.com/sfxcode/nuxt-ui-formkit/compare/v1.3.6...v1.3.7)
+
+### 🏡 Chore
+
+- **ci:** Update GitHub Actions to latest pinned versions ([#1](https://github.com/sfxcode/nuxt-ui-formkit/pull/1))
+- **tests:** Refactor wait function usage in test files and add a dedicated wait utility ([a9f7480](https://github.com/sfxcode/nuxt-ui-formkit/commit/a9f7480))
+
+### ❤️ Contributors
+
+- Sfxcode ([@sfxcode](https://github.com/sfxcode))
+- Tom ([@sfxcode](https://github.com/sfxcode))
+
 ## v1.3.6
 
 [compare changes](https://github.com/sfxcode/nuxt-ui-formkit/compare/v1.3.5...v1.3.6)
