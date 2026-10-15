@@ -65,13 +65,6 @@ const colorPickerSchema = [
   },
   {
     $formkit: 'nuxtUIColorPicker',
-    name: 'color10',
-    label: 'Custom Input Class',
-    inputClass: 'border-2 border-dashed',
-    value: '#f43f5e',
-  },
-  {
-    $formkit: 'nuxtUIColorPicker',
     name: 'color11',
     label: 'Disabled',
     disabled: true,

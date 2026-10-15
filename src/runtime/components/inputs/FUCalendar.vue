@@ -16,7 +16,7 @@ export interface CalendarDateRange {
 }
 
 export interface FormKitCalendarProps {
-  type?: 'date' | 'month' | 'year'
+  calendarType?: 'date' | 'month' | 'year'
   color?: 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'
   variant?: 'solid' | 'outline' | 'soft' | 'subtle'
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
@@ -79,7 +79,7 @@ const maxValue = computed(() => toDateValue(props.context.maxValue, conversionOp
     :class="styleClass"
     :disabled="!!context?.disabled"
     :style="context?.attrs.style"
-    :type="context.type ?? 'date'"
+    :type="context.calendarType ?? 'date'"
     :color="color"
     :variant="context.variant"
     :size="context.size ?? 'md'"

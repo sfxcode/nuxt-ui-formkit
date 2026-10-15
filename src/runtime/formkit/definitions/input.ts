@@ -25,7 +25,7 @@ import FUTextarea from '../../../runtime/components/inputs/FUTextarea.vue'
 import FUTree from '../../../runtime/components/inputs/FUTree.vue'
 
 export const nuxtUICalendarDefinition: FormKitTypeDefinition = createInput(FUCalendar, {
-  props: ['type', 'range', 'multiple', 'color', 'variant', 'size', 'weekNumbers', 'monthControls', 'yearControls', 'viewControl', 'defaultValue', 'minValue', 'maxValue', 'isDateDisabled', 'isDateUnavailable', 'ui', 'valueType', 'timeZone'],
+  props: ['calendarType', 'range', 'multiple', 'color', 'variant', 'size', 'weekNumbers', 'monthControls', 'yearControls', 'viewControl', 'defaultValue', 'minValue', 'maxValue', 'isDateDisabled', 'isDateUnavailable', 'ui', 'valueType', 'timeZone'],
   family: 'NuxtUIInput',
 })
 
@@ -35,12 +35,12 @@ export const nuxtUICheckboxDefinition: FormKitTypeDefinition = createInput(FUChe
 })
 
 export const nuxtUICheckboxGroupDefinition: FormKitTypeDefinition = createInput(FUCheckboxGroup, {
-  props: ['options', 'legend', 'valueKey', 'labelKey', 'descriptionKey', 'size', 'variant', 'orientation', 'loop', 'name', 'color', 'indicator', 'icon', 'ui', 'items'],
+  props: ['options', 'legend', 'valueKey', 'labelKey', 'descriptionKey', 'size', 'variant', 'orientation', 'loop', 'name', 'color', 'indicator', 'icon', 'ui'],
   family: 'NuxtUIInput',
 })
 
 export const nuxtUIColorPickerDefinition: FormKitTypeDefinition = createInput(FUColorPicker, {
-  props: ['size', 'inputClass', 'format', 'throttle', 'ui'],
+  props: ['size', 'format', 'throttle', 'ui'],
   family: 'NuxtUIInput',
 })
 
@@ -50,7 +50,7 @@ export const nuxtUIEditorDefinition: FormKitTypeDefinition = createInput(FUEdito
 })
 
 export const nuxtUIFileUploadDefinition: FormKitTypeDefinition = createInput(FUFileUpload, {
-  props: ['multiple', 'accept', 'icon', 'label', 'description', 'color', 'variant', 'size', 'layout', 'position', 'dropzone', 'interactive', 'required', 'reset', 'fileIcon', 'fileImage', 'fileDelete', 'fileDeleteIcon', 'preview', 'name', 'ui'],
+  props: ['highlight', 'multiple', 'accept', 'icon', 'label', 'description', 'color', 'variant', 'size', 'layout', 'position', 'dropzone', 'interactive', 'required', 'reset', 'fileIcon', 'fileImage', 'fileDelete', 'fileDeleteIcon', 'preview', 'name', 'ui'],
   family: 'NuxtUIInput',
 })
 
@@ -95,7 +95,7 @@ export const nuxtUIListboxDefinition: FormKitTypeDefinition = createInput(FUList
 })
 
 export const nuxtUIPinInputDefinition: FormKitTypeDefinition = createInput(FUPinInput, {
-  props: ['color', 'variant', 'size', 'length', 'autofocus', 'autofocusDelay', 'highlight', 'fixed', 'defaultValue', 'mask', 'otp', 'separator', 'type', 'placeholder', 'name', 'ui'],
+  props: ['color', 'variant', 'size', 'length', 'autofocus', 'autofocusDelay', 'highlight', 'fixed', 'defaultValue', 'mask', 'otp', 'separator', 'pinType', 'placeholder', 'name', 'ui'],
   family: 'NuxtUIInput',
 })
 
@@ -130,6 +130,6 @@ export const nuxtUITextareaDefinition: FormKitTypeDefinition = createInput(FUTex
 })
 
 export const nuxtUITreeDefinition: FormKitTypeDefinition = createInput(FUTree, {
-  props: ['color', 'size', 'disabled', 'multiple', 'nested', 'virtualize', 'labelKey', 'trailingIcon', 'expandedIcon', 'collapsedIcon', 'expanded', 'defaultExpanded', 'selectionBehavior', 'propagateSelect', 'bubbleSelect', 'ui', 'items', 'options'],
+  props: ['color', 'size', 'disabled', 'multiple', 'nested', 'virtualize', 'labelKey', 'trailingIcon', 'expandedIcon', 'collapsedIcon', 'expanded', 'defaultExpanded', 'selectionBehavior', 'propagateSelect', 'bubbleSelect', 'ui', 'options'],
   family: 'NuxtUIInput',
 })

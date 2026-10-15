@@ -600,14 +600,14 @@ const schema = [
     name: 'pin',
     label: 'Enter PIN',
     length: 6,
-    type: 'number',
+    pinType: 'number',
     validation: 'required|length:6'
   }
 ]
 ```
 
 **Key Props:**
-- `type` - `'text'` (default) or `'number'`
+- `pinType` - `'text'` (default) or `'number'`
 - `separator` - Insert a separator between inputs (index or list of indexes)
 
 ### nuxtUIInputRating
@@ -708,7 +708,7 @@ const schema = [
 ```
 
 **Key Props:**
-- `type` - `'date'` (default), `'month'`, or `'year'` picker view
+- `calendarType` - `'date'` (default), `'month'`, or `'year'` picker view
 - `range` - Enable selecting a start/end date range
 - `multiple` - Enable selecting multiple individual dates
 - `color` - Theme color for the selected date(s)

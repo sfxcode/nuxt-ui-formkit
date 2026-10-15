@@ -46,7 +46,6 @@ const handleContainerBlur = createContainerBlurHandler(props.context)
     :style="context?.attrs.style"
     :color="color"
     :size="context.size ?? 'md'"
-    :variant="context.variant ?? 'outline'"
     :orientation="context.orientation ?? 'horizontal'"
     :tooltip="context.tooltip"
     :default-value="context.defaultValue"

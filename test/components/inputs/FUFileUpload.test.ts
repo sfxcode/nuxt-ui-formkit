@@ -9,6 +9,7 @@ describe('nuxtUIFileUploadDefinition', () => {
 
   it('whitelists the expected UFileUpload props', () => {
     expect(nuxtUIFileUploadDefinition.props).toEqual([
+      'highlight',
       'multiple',
       'accept',
       'icon',

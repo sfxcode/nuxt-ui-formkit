@@ -9,7 +9,7 @@ describe('nuxtUICalendarDefinition', () => {
 
   it('whitelists the expected UCalendar props', () => {
     expect(nuxtUICalendarDefinition.props).toEqual([
-      'type',
+      'calendarType',
       'range',
       'multiple',
       'color',

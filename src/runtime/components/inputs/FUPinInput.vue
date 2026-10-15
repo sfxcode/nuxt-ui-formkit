@@ -17,7 +17,7 @@ export interface FormKitPinInputProps {
   mask?: boolean
   otp?: boolean
   separator?: number | number[]
-  type?: 'text' | 'number'
+  pinType?: 'text' | 'number'
   placeholder?: string
   name?: string
   ui?: Record<string, unknown>
@@ -73,7 +73,7 @@ function handlePinBlur(event: Event) {
     :mask="context.mask"
     :otp="context.otp"
     :separator="context.separator"
-    :type="context.type ?? 'text'"
+    :type="context.pinType ?? 'text'"
     :placeholder="context.placeholder"
     :ui="ui"
     @change="handleChange"

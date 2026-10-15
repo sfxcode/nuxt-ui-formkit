@@ -94,6 +94,7 @@ const { handleInput, handleChange, handleBlur, isInvalid, styleClass, color, mod
     :color="color"
     :highlight="isInvalid || context.highlight"
     :size="context.size ?? 'md'"
+    :fixed="context.fixed"
     :variant="context.variant ?? 'outline'"
     :items="items"
     :placeholder="context.placeholder"

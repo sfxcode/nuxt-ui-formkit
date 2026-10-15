@@ -53,6 +53,7 @@ const handleContainerBlur = createContainerBlurHandler(props.context)
     :style="context?.attrs.style"
     :color="color"
     :size="context.size ?? 'md'"
+    :indicator="context.indicator"
     :variant="context.variant ?? 'list'"
     :orientation="context.orientation ?? 'vertical'"
     :items="items"

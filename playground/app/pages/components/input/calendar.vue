@@ -18,14 +18,14 @@ const calendarSchema = [
     $formkit: 'nuxtUICalendar',
     name: 'date2',
     label: 'Month Picker',
-    type: 'month',
+    calendarType: 'month',
     class: 'w-1/3',
   },
   {
     $formkit: 'nuxtUICalendar',
     name: 'date3',
     label: 'Year Picker',
-    type: 'year',
+    calendarType: 'year',
     class: 'w-1/3',
   },
   {
