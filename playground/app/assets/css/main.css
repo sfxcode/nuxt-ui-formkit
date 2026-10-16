@@ -44,3 +44,32 @@
 
 
 
+
+/*
+ * Field width. Nuxt UI inputs and selects size themselves to their content and do not
+ * stretch to their wrapper, which leaves narrow fields in wide forms and gaps in grids.
+ * Make each field fill its FormKit wrapper, and cap leaf fields at a readable width.
+ * In the components layer, so any width utility on a page (`w-48`, `w-full`, `flex-1`,
+ * `max-w-*`) still wins. Containers (repeater, wizard, editor) keep the full width.
+ */
+@layer components {
+  .formkit-inner > [data-slot='root'] {
+    width: 100%;
+  }
+
+  :where(.formkit-outer:not([data-type='nuxtUIRepeater'], [data-type='nuxtUIEditor'], [data-type='multi-step'], [data-type='step'], [data-type='group'], [data-type='list'])) {
+    max-width: 32rem;
+  }
+}
+
+/*
+ * The select family adds `w-fit min-w-48` to itself when no `class` is set. That would
+ * keep selects narrow next to full-width inputs, so fill the wrapper in that case only.
+ * In the utilities layer with a higher specificity than `.w-fit`; a select with its own
+ * `class` has no `w-fit` and is untouched.
+ */
+@layer utilities {
+  .formkit-inner > .w-fit.min-w-48 {
+    width: 100%;
+  }
+}
