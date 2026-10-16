@@ -1,12 +1,12 @@
 import { defaultConfig, FormKit, FormKitSchema, plugin, useFormKitContextById } from '@formkit/vue'
 import { mountSuspended } from '@nuxt/test-utils/runtime'
-import { afterEach, describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { h } from 'vue'
 import { z } from 'zod'
 import { attachStandardSchema } from '../../../src/runtime/composables/useFormKitStandardSchema'
 import { nuxtUIInputDefinition } from '../../../src/runtime/formkit/definitions/input'
 import { nuxtUIRepeaterDefinition } from '../../../src/runtime/formkit/definitions/repeater'
-import { settleAndWait } from '../../support/settle'
+import { settle } from '../../support/settle'
 
 // This is the highest-risk address-resolution case per the plan: a
 // `nuxtUIRepeater`'s outer `input`-type node and its inner `list`-type node
@@ -81,23 +81,26 @@ describe('attachStandardSchema against a nuxtUIRepeater', () => {
       items: [{ email: 'bad0' }, { email: 'ok1@example.com' }, { email: 'bad2' }],
     })
     activeWrapper = wrapper
-    await settleAndWait()
-
     const formContext = useFormKitContextById('repeater-schema-form')
     const formNode = formContext.value!.node
+    await formNode.settled
+    await settle()
+
     attachStandardSchema(formNode, schema)
-    await settleAndWait()
+    // The first schema run has finished once the form reports invalid.
+    await vi.waitFor(() => expect(formNode.context?.state.valid).toBe(false))
 
     await blurRowEmail(wrapper, 0)
     await blurRowEmail(wrapper, 1)
     await blurRowEmail(wrapper, 2)
-    await settleAndWait()
 
-    const items = wrapper.findAll('[id^="formkit-item-"]')
-    expect(items).toHaveLength(3)
-    expect(items[0]!.text()).toContain('Invalid email address')
-    expect(items[1]!.text()).not.toContain('Invalid email address')
-    expect(items[2]!.text()).toContain('Invalid email address')
+    await vi.waitFor(() => {
+      const items = wrapper.findAll('[id^="formkit-item-"]')
+      expect(items).toHaveLength(3)
+      expect(items[0]!.text()).toContain('Invalid email address')
+      expect(items[1]!.text()).not.toContain('Invalid email address')
+      expect(items[2]!.text()).toContain('Invalid email address')
+    })
 
     // Insert a new row - `nuxtUIRepeater`'s own insert button prepends
     // (see `insertNode` in useFormKitRepeater.ts), shifting every existing
@@ -106,23 +109,24 @@ describe('attachStandardSchema against a nuxtUIRepeater', () => {
     const insertButton = wrapper.findAll('button').find(button => button.text().includes('Add Item'))
     expect(insertButton).toBeDefined()
     await insertButton!.trigger('click')
-    await settleAndWait()
+    await vi.waitFor(() => expect(wrapper.findAll('[id^="formkit-item-"]')).toHaveLength(4))
 
     await blurRowEmail(wrapper, 0)
     await blurRowEmail(wrapper, 1)
     await blurRowEmail(wrapper, 2)
     await blurRowEmail(wrapper, 3)
-    await settleAndWait()
 
-    const itemsAfterInsert = wrapper.findAll('[id^="formkit-item-"]')
-    expect(itemsAfterInsert).toHaveLength(4)
-    // The new blank row lands at index 0 and is itself invalid (empty email).
-    expect(itemsAfterInsert[0]!.text()).toContain('Invalid email address')
-    // Former row 0 ('bad0') is now at index 1.
-    expect(itemsAfterInsert[1]!.text()).toContain('Invalid email address')
-    // Former row 1 (valid) is now at index 2 - still no error post-shift.
-    expect(itemsAfterInsert[2]!.text()).not.toContain('Invalid email address')
-    // Former row 2 ('bad2') is now at index 3.
-    expect(itemsAfterInsert[3]!.text()).toContain('Invalid email address')
+    await vi.waitFor(() => {
+      const itemsAfterInsert = wrapper.findAll('[id^="formkit-item-"]')
+      expect(itemsAfterInsert).toHaveLength(4)
+      // The new blank row lands at index 0 and is itself invalid (empty email).
+      expect(itemsAfterInsert[0]!.text()).toContain('Invalid email address')
+      // Former row 0 ('bad0') is now at index 1.
+      expect(itemsAfterInsert[1]!.text()).toContain('Invalid email address')
+      // Former row 1 (valid) is now at index 2 - still no error post-shift.
+      expect(itemsAfterInsert[2]!.text()).not.toContain('Invalid email address')
+      // Former row 2 ('bad2') is now at index 3.
+      expect(itemsAfterInsert[3]!.text()).toContain('Invalid email address')
+    })
   })
 })

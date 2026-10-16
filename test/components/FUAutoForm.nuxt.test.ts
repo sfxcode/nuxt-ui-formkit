@@ -2,7 +2,7 @@ import * as v from 'valibot'
 import { defaultConfig, plugin } from '@formkit/vue'
 import { mountSuspended } from '@nuxt/test-utils/runtime'
 import { flushPromises } from '@vue/test-utils'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { z } from 'zod'
 import FUAutoForm from '../../src/runtime/components/FUAutoForm.vue'
 import {
@@ -32,10 +32,10 @@ function mountAutoForm(props: Record<string, unknown>) {
   })
 }
 
-// FormKit debounces input commits (default delay 20ms) before the form's
-// v-model emits - flushPromises alone is not enough after typing.
+// Drains pending promises only. FormKit debounces input commits (default delay
+// 20ms) before the form's v-model emits, so anything that depends on a commit
+// is awaited with `vi.waitFor` on its outcome, not slept for.
 async function settle() {
-  await new Promise(resolve => setTimeout(resolve, 50))
   await flushPromises()
 }
 
@@ -86,20 +86,20 @@ describe('fUAutoForm', () => {
     })
     await settle()
 
-    const buttonGroup = wrapper.find('[id^="formkit-item-"] > div:last-child')
-    expect(buttonGroup.classes()).toEqual(expect.arrayContaining(['flex', 'gap-2', 'justify-end']))
+    await vi.waitFor(() => {
+      const buttonGroup = wrapper.find('[id^="formkit-item-"] > div:last-child')
+      expect(buttonGroup.classes()).toEqual(expect.arrayContaining(['flex', 'gap-2', 'justify-end']))
+    })
 
     const cloneButton = findButtonByIcon(wrapper, 'copy')
     expect(cloneButton).toBeDefined()
     await cloneButton!.trigger('click')
-    await settle()
-    expect(wrapper.findAll('[id^="formkit-item-"]')).toHaveLength(3)
+    await vi.waitFor(() => expect(wrapper.findAll('[id^="formkit-item-"]')).toHaveLength(3))
 
     const deleteButton = findButtonByIcon(wrapper, 'trash')
     expect(deleteButton).toBeDefined()
     await deleteButton!.trigger('click')
-    await settle()
-    expect(wrapper.findAll('[id^="formkit-item-"]')).toHaveLength(2)
+    await vi.waitFor(() => expect(wrapper.findAll('[id^="formkit-item-"]')).toHaveLength(2))
 
     wrapper.unmount()
   })
@@ -114,8 +114,8 @@ describe('fUAutoForm', () => {
     })
     await settle()
 
+    await vi.waitFor(() => expect(wrapper.text()).toContain('Nickname'))
     expect(wrapper.text()).toContain('Name')
-    expect(wrapper.text()).toContain('Nickname')
 
     // The samples array is inference input, not the form value - inputs
     // start empty and the v-model is never set to the raw array.
@@ -128,10 +128,8 @@ describe('fUAutoForm', () => {
     // from one sample -> not required.
     const [nameInput] = wrapper.findAll('input')
     await nameInput!.setValue('x')
-    await settle()
     await nameInput!.setValue('')
-    await settle()
-    expect(wrapper.text()).toContain('Name is required')
+    await vi.waitFor(() => expect(wrapper.text()).toContain('Name is required'))
     expect(wrapper.text()).not.toContain('Nickname is required')
     wrapper.unmount()
   })
@@ -158,9 +156,8 @@ describe('fUAutoForm', () => {
     await settle()
 
     await wrapper.find('input').setValue('not-an-email')
-    await settle()
 
-    expect(wrapper.text()).toContain('valid email')
+    await vi.waitFor(() => expect(wrapper.text()).toContain('valid email'))
     wrapper.unmount()
   })
 
@@ -172,9 +169,8 @@ describe('fUAutoForm', () => {
     await settle()
 
     await wrapper.find('input').setValue('not-an-email')
-    await settle()
 
-    expect(wrapper.text()).toContain('valid email')
+    await vi.waitFor(() => expect(wrapper.text()).toContain('valid email'))
     wrapper.unmount()
   })
 
@@ -189,9 +185,8 @@ describe('fUAutoForm', () => {
     await settle()
 
     await wrapper.find('input').setValue('Anna')
-    await settle()
 
-    expect(model.name).toBe('Anna')
+    await vi.waitFor(() => expect(model.name).toBe('Anna'))
     wrapper.unmount()
   })
 })
