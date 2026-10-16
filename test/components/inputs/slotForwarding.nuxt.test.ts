@@ -1,10 +1,10 @@
 import type { FormKitTypeDefinition } from '@formkit/core'
 import { defaultConfig, FormKit, plugin } from '@formkit/vue'
 import { mountSuspended } from '@nuxt/test-utils/runtime'
-import { afterEach, describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { h } from 'vue'
 import * as definitions from '../../../src/runtime/formkit/definitions/input'
-import { settleAndWait } from '../../support/settle'
+import { settle } from '../../support/settle'
 
 // No other test renders a slot an input forwards to its wrapped Nuxt UI
 // component, yet every wrapped input forwards `context.slots` through the same
@@ -56,7 +56,7 @@ async function mountWithSlot(testCase: Case) {
     },
   })
   activeWrapper = wrapper
-  await settleAndWait()
+  await settle()
   return wrapper
 }
 
@@ -64,10 +64,9 @@ describe('input slot forwarding', () => {
   it.each(CASES)('$type forwards its #$slot slot to the wrapped component, with the merged context', async (testCase) => {
     const wrapper = await mountWithSlot(testCase)
 
-    const rendered = wrapper.find(`[data-test-slot="${testCase.slot}"]`)
-    expect(rendered.exists()).toBe(true)
+    await vi.waitFor(() => expect(wrapper.find(`[data-test-slot="${testCase.slot}"]`).exists()).toBe(true))
     // `{ ...context, ...slotProps }` - the context's own `id` reaches the slot.
-    expect(rendered.attributes('data-scope-id')).toBe('slot-forwarding-test')
+    expect(wrapper.find(`[data-test-slot="${testCase.slot}"]`).attributes('data-scope-id')).toBe('slot-forwarding-test')
   })
 
   it('does not forward FormKit\'s own slots to the wrapped component', async () => {
@@ -80,9 +79,9 @@ describe('input slot forwarding', () => {
       },
     })
     activeWrapper = wrapper
-    await settleAndWait()
+    await settle()
 
     // Rendered exactly once, by FormKit's own help section - not a second time inside UInput.
-    expect(wrapper.findAll('[data-test-slot="help"]')).toHaveLength(1)
+    await vi.waitFor(() => expect(wrapper.findAll('[data-test-slot="help"]')).toHaveLength(1))
   })
 })
