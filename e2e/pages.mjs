@@ -1,4 +1,4 @@
-import { assert, labelsOf, messagesOf, poll, section } from './helpers.mjs'
+import { assert, dragAndDrop, fieldByLabel, labelsOf, messagesOf, nodeState, poll, section } from './helpers.mjs'
 
 /**
  * The page table. Each entry is loaded in a fresh page; the run fails if the
@@ -65,6 +65,254 @@ export default [
         assert.ok(messages.includes('Age must be no more than 120.'), `got ${JSON.stringify(messages)}`)
         assert.ok(!messages.includes('Age must be at least 18.'), 'the lower-bound message must clear')
       })
+    },
+  },
+  {
+    path: '/form/form-autosave',
+    async checks(page) {
+      // The plugin's storage key: `${prefix}-${key}-${form id}`, as the page documents it.
+      const key = 'nuxt-ui-formkit-profile-draft-autosave-demo'
+      const draft = () => page.evaluate(storageKey => localStorage.getItem(storageKey), key)
+      const field = label => page.getByLabel(label)
+      const isDirty = () => page.getByText('isDirty:').locator('strong').textContent()
+
+      assert.equal(await draft(), null, 'a fresh browser context starts without a draft')
+
+      // Typing saves a draft (debounced), holding what was typed.
+      await field('Name').fill('Ada Lovelace')
+      await field('Email').fill('ada@example.com')
+      await poll(draft, (value) => {
+        assert.ok(value, 'a draft is saved after typing')
+        assert.deepEqual(JSON.parse(value).data, { name: 'Ada Lovelace', email: 'ada@example.com', bio: '' })
+      })
+
+      // A reload restores the draft into the inputs, and the form counts as dirty again.
+      await page.reload({ waitUntil: 'networkidle' })
+      await page.waitForSelector('form')
+      await poll(() => field('Name').inputValue(), value => assert.equal(value, 'Ada Lovelace'))
+      assert.equal(await field('Email').inputValue(), 'ada@example.com')
+      await poll(isDirty, value => assert.equal(value, 'true'))
+
+      // Submitting inside the debounce window must not let the pending save write the
+      // just-submitted draft back (the race fixed in plan 18 phase 1).
+      await field('Name').fill('Ada King')
+      await page.locator('button[type="submit"]').click()
+      await poll(() => page.getByText('Last submitted').count(), count => assert.equal(count, 1))
+      // Absence over a window: the page debounces for 300ms, so wait well past it.
+      await page.waitForTimeout(900)
+      assert.equal(await draft(), null, 'submitting clears the draft and nothing writes it back')
+      assert.equal(await page.getByText('isSubmitted:').locator('strong').textContent(), 'true')
+    },
+  },
+  {
+    path: '/form/overlay-form',
+    ready: 'button',
+    async checks(page) {
+      const dialog = page.locator('[role="dialog"]')
+      const prompt = page.locator('[role="alertdialog"]')
+      const rowNames = () => page.locator('p.font-medium').allInnerTexts()
+      const edit = () => page.getByRole('button', { name: 'Edit', exact: true }).first()
+      const pressEscape = () => page.keyboard.press('Escape')
+
+      assert.deepEqual(await rowNames(), ['Ada Lovelace', 'Grace Hopper', 'Katherine Johnson'])
+
+      // Save resolves with the edited data and the row updates.
+      await edit().click()
+      await poll(() => dialog.textContent(), text => assert.ok(text?.includes('Edit Ada Lovelace')))
+      const name = dialog.locator('input').first()
+      assert.equal(await name.inputValue(), 'Ada Lovelace')
+      await name.fill('Ada King')
+      await dialog.locator('button[type="submit"]').click()
+      await poll(() => dialog.count(), count => assert.equal(count, 0))
+      assert.equal((await rowNames())[0], 'Ada King')
+
+      // confirmDiscard: Escape on a dirty form asks first; "Keep editing" leaves it open and untouched.
+      await edit().click()
+      await poll(() => dialog.locator('input').first().inputValue(), value => assert.equal(value, 'Ada King'))
+      await dialog.locator('input').first().fill('Zed')
+      // Escape before FormKit has registered the edit takes the clean path and closes the overlay.
+      await poll(() => nodeState(dialog.locator('form')), state => assert.equal(state.dirty, true))
+      await pressEscape()
+      await poll(() => prompt.count(), count => assert.equal(count, 1), { timeout: 8000 })
+      await page.locator('[data-testid="discard-keep"]').click()
+      await poll(() => prompt.count(), count => assert.equal(count, 0))
+      assert.equal(await dialog.locator('input').first().inputValue(), 'Zed', 'keeping the edit leaves the typed value')
+
+      // ...and confirming the discard closes it without changing the row.
+      await pressEscape()
+      await poll(() => prompt.count(), count => assert.equal(count, 1))
+      await page.locator('[data-testid="discard-confirm"]').click()
+      await poll(() => dialog.count(), count => assert.equal(count, 0))
+      assert.equal((await rowNames())[0], 'Ada King', 'a discarded edit does not touch the row')
+
+      // Auto-Edit infers the form from the row's own data.
+      await page.getByRole('button', { name: 'Auto-Edit' }).first().click()
+      await poll(() => dialog.textContent(), text => assert.ok(text?.includes('Edit Ada King (auto-inferred)')))
+      await poll(() => labelsOf(dialog), labels => assert.deepEqual(labels, ['Id', 'Name', 'Email', 'Role']))
+      await dialog.getByRole('button', { name: 'Cancel' }).click()
+      await poll(() => dialog.count(), count => assert.equal(count, 0))
+    },
+  },
+  {
+    path: '/form/multi-step',
+    async checks(page) {
+      const wizard = section(page, 'Account Registration Wizard')
+      const tabs = wizard.locator('[data-slot="trigger"]')
+      const panels = wizard.locator('[role="tabpanel"]')
+      const next = wizard.getByRole('button', { name: 'Next', exact: true })
+      const visiblePanels = () => panels.evaluateAll(all => all.map(panel => panel.checkVisibility({ visibilityProperty: true }) && !panel.closest('[hidden]')))
+
+      await poll(() => tabs.count(), count => assert.equal(count, 3))
+      assert.deepEqual((await tabs.allInnerTexts()).map(text => text.trim().split('\n')[0]), ['Account', 'Profile', 'Confirm'])
+      assert.deepEqual(await visiblePanels(), [true, false, false], 'the first step is shown')
+
+      // allowIncomplete: false - Next stays disabled until the step validates.
+      await poll(() => next.isDisabled(), disabled => assert.equal(disabled, true))
+      await wizard.getByLabel('Email').fill('ada@example.com')
+      await wizard.getByLabel('Password').fill('correct horse')
+      await poll(() => next.isDisabled(), disabled => assert.equal(disabled, false))
+      await next.click()
+      await poll(visiblePanels, visible => assert.deepEqual(visible, [false, true, false]))
+
+      // The last tab is not reachable until the profile step is valid either.
+      const confirmTab = tabs.nth(2)
+      await poll(() => confirmTab.isDisabled(), disabled => assert.equal(disabled, true))
+      await wizard.getByLabel('Display Name').fill('Ada')
+      await poll(() => confirmTab.isDisabled(), disabled => assert.equal(disabled, false))
+      await confirmTab.click()
+      await poll(visiblePanels, visible => assert.deepEqual(visible, [false, false, true]))
+
+      // Finishing the wizard submits the whole form.
+      await wizard.getByLabel('I accept the terms and conditions').click()
+      const submitted = page.waitForEvent('console', { predicate: message => message.text().includes('Registration Submitted'), timeout: 8000 })
+      await wizard.locator('button[type="submit"]').click()
+      await submitted
+    },
+  },
+  {
+    path: '/form/repeater-drag',
+    async checks(page) {
+      const board = section(page, 'Task Management Board')
+      const rows = board.locator('[id^="formkit-item-"]')
+      const titles = () => rows.evaluateAll(all => all.map(row => row.querySelector('input').value))
+
+      const initial = [
+        'Design homepage mockup',
+        'Implement user authentication',
+        'Write API documentation',
+        'Setup CI/CD pipeline',
+        'Code review session',
+      ]
+      await poll(titles, value => assert.deepEqual(value, initial))
+      assert.equal(await rows.first().getAttribute('draggable'), 'true', 'rows are draggable')
+
+      // A real drag (dragstart / dragover / drop / dragend on one DataTransfer) moves the row:
+      // dropping the first row on the third puts it in the third position.
+      const moved = [initial[1], initial[2], initial[0], initial[3], initial[4]]
+      await dragAndDrop(rows.nth(0), rows.nth(2))
+      await poll(titles, value => assert.deepEqual(value, moved))
+
+      // Dragging a row onto itself changes nothing.
+      await dragAndDrop(rows.nth(1), rows.nth(1))
+      await poll(titles, value => assert.deepEqual(value, moved))
+
+      // The reordered list is what a save submits.
+      const submitted = page.waitForEvent('console', { predicate: message => message.text().includes('Tasks Submitted'), timeout: 8000 })
+      await board.locator('button[type="submit"]').click()
+      await submitted
+    },
+  },
+  {
+    path: '/form/listbox-transfer',
+    ready: '[data-slot="item"]',
+    async checks(page) {
+      // "Project Team" is both the field's label and the right pane's header; the pane's is the last.
+      const team = page.locator('xpath=(//*[normalize-space(text())="Project Team"])[last()]/following::*[@data-slot="item"]')
+      const roster = page.locator('xpath=//*[normalize-space(text())="Company Roster"]/ancestor::div[.//*[@data-slot="item"]][1]').first().locator('[data-slot="item"]')
+      const names = items => items.evaluateAll(all => all.map(item => item.textContent.trim()))
+      const startsWith = (list, name) => list.some(text => text.startsWith(name))
+      const field = page.locator('[data-type="nuxtUIListbox"]').first()
+
+      await poll(() => names(team), list => assert.equal(list.length, 2))
+      const initialTeam = await names(team)
+      assert.ok(startsWith(initialTeam, 'Grace Hopper') && startsWith(initialTeam, 'Margaret Hamilton'), `got ${JSON.stringify(initialTeam)}`)
+      assert.equal((await names(roster)).length, 5)
+      assert.equal(await roster.first().evaluate(item => item.draggable), true, 'transferItemDraggable makes the rows draggable')
+
+      // Roster -> team: dragging a roster member onto the team list adds it there and removes it from the roster.
+      await dragAndDrop(roster.filter({ hasText: 'Ada Lovelace' }), team.first())
+      await poll(() => names(team), list => assert.ok(list.length === 3 && startsWith(list, 'Ada Lovelace'), `team: ${JSON.stringify(list)}`))
+      await poll(() => names(roster), list => assert.ok(list.length === 4 && !startsWith(list, 'Ada Lovelace'), `roster: ${JSON.stringify(list)}`))
+
+      // Team -> roster: and back out again.
+      await dragAndDrop(team.filter({ hasText: 'Ada Lovelace' }), roster.first())
+      await poll(() => names(team), list => assert.ok(list.length === 2 && !startsWith(list, 'Ada Lovelace'), `team: ${JSON.stringify(list)}`))
+      await poll(() => names(roster), list => assert.ok(list.length === 5 && startsWith(list, 'Ada Lovelace'), `roster: ${JSON.stringify(list)}`))
+
+      // Moving items between the two sibling lists is not the field losing focus.
+      assert.equal((await nodeState(field)).blurred, false, 'a transfer between the panes must not count as a blur')
+      assert.deepEqual(await messagesOf(field), [])
+
+      // Real focus moving between the two sibling panes (dispatched drag events never move focus):
+      // each Tab lands on another element of the same field, which is not a blur.
+      await roster.first().click()
+      for (let step = 1; step <= 3; step++) {
+        await page.keyboard.press('Tab')
+        assert.equal(await field.evaluate(element => element.contains(document.activeElement)), true, `Tab ${step} stays inside the field`)
+        assert.equal((await nodeState(field)).blurred, false, `focus moving within the field (Tab ${step}) must not count as a blur`)
+      }
+    },
+  },
+  {
+    path: '/components/input/editor',
+    ready: '[contenteditable="true"]',
+    async checks(page) {
+      const editor = label => fieldByLabel(page, label)
+      const content = label => editor(label).locator('[contenteditable="true"]')
+      const blurred = async label => (await nodeState(editor(label))).blurred
+
+      // Every floating menu (bubble toolbar, slash menu, mention menu, drag handle) renders
+      // inside the editor and clicking it is not the field losing focus (plan 18 phase 7).
+
+      // Bubble toolbar: select text, click a button in it.
+      await content('Basic Editor').click()
+      await page.keyboard.type('Select this text')
+      await content('Basic Editor').locator('p').first().click({ clickCount: 3 })
+      const bubble = editor('Basic Editor').locator('[data-slot="content"] [role="toolbar"] button').first()
+      await poll(() => bubble.count(), count => assert.equal(count, 1), { timeout: 8000 })
+      assert.equal(await blurred('Basic Editor'), false)
+      await bubble.click()
+      assert.equal(await blurred('Basic Editor'), false, 'clicking a bubble toolbar button')
+
+      // Slash menu: type '/', click an option.
+      await content('Slash Commands').click()
+      await page.keyboard.type('/')
+      const slashOption = editor('Slash Commands').locator('[role="listbox"] [role="option"]').first()
+      await poll(() => slashOption.count(), count => assert.equal(count, 1), { timeout: 8000 })
+      await slashOption.click()
+      assert.equal(await blurred('Slash Commands'), false, 'clicking a slash menu option')
+
+      // Mention menu: type '@', click a person.
+      await content('Mentions').click()
+      await page.keyboard.type('@')
+      const mention = editor('Mentions').locator('[role="listbox"] [role="option"]', { hasText: 'Alan Turing' })
+      await poll(() => mention.count(), count => assert.equal(count, 1), { timeout: 8000 })
+      await mention.click()
+      assert.equal(await blurred('Mentions'), false, 'clicking a mention option')
+
+      // Drag handle: hover the left edge of a block, click the handle.
+      await content('Drag Handle').click()
+      const box = await content('Drag Handle').locator('p').first().boundingBox()
+      await page.mouse.move(box.x + 30, box.y + 10)
+      const handle = editor('Drag Handle').locator('[data-drag-handle], [data-slot="handle"], [draggable="true"]').first()
+      await poll(() => handle.count(), count => assert.equal(count, 1), { timeout: 8000 })
+      const handleBox = await handle.boundingBox()
+      await page.mouse.click(handleBox.x + handleBox.width / 2, handleBox.y + handleBox.height / 2)
+      assert.equal(await blurred('Drag Handle'), false, 'clicking the drag handle')
+
+      // The detector can see a real blur: clicking elsewhere on the page does flip it.
+      await page.mouse.click(5, 5)
+      await poll(() => blurred('Drag Handle'), value => assert.equal(value, true))
     },
   },
 ]
