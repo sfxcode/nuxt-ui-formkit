@@ -209,7 +209,7 @@ Repeaters automatically use `@formkit/auto-animate` for smooth animations when i
 In your `formkit.config.ts`:
 
 ```typescript
-import { createAutoAnimatePlugin } from '@formkit/addons'
+import { createAutoAnimatePlugin } from '@sfxcode/nuxt-ui-formkit/formkit'
 
 export default {
   plugins: [
@@ -232,6 +232,10 @@ export default {
   ]
 }
 ```
+
+::: warning Use this module's `createAutoAnimatePlugin`
+`@formkit/addons` has a plugin with the same name and arguments, but it re-attaches auto-animate to the repeater list every time an item is added. After the first insert or clone, each change is then animated several times over, which looks fast and glitchy. The one exported here attaches each element once.
+:::
 
 ## Examples
 

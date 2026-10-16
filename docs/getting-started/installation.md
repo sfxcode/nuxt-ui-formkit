@@ -58,9 +58,8 @@ Create a `formkit.config.ts` file in your project root to configure FormKit. The
 
 ```typescript [formkit.config.ts]
 import type { DefaultConfigOptions } from '@formkit/vue'
-import { createAutoAnimatePlugin } from '@formkit/addons'
 import { en } from '@formkit/i18n'
-import { createNuxtUiFormkitConfig } from '@sfxcode/nuxt-ui-formkit/formkit'
+import { createAutoAnimatePlugin, createNuxtUiFormkitConfig } from '@sfxcode/nuxt-ui-formkit/formkit'
 
 // `multiStep: true` additionally registers `createMultiStepPlugin()` -
 // omit it if you're not using `nuxtUIMultiStep`/`nuxtUIStep`.
@@ -77,7 +76,7 @@ const nuxtUiFormkitConfig = createNuxtUiFormkitConfig({
       {
         global: ['outer', 'inner'],
         form: ['form'],
-        nuxtUIRepeater: ['items'],
+        nuxtUIRepeater: ['input'],
       }
     ),
   ],
