@@ -26,7 +26,7 @@ const props = defineProps({
   },
 })
 
-const { handleInput, handleChange, handleBlur, styleClass, modelValue, validSlotNames, commonProps } = useFormKitInput(props.context)
+const { handleBlur, styleClass, modelValue, validSlotNames, commonProps } = useFormKitInput(props.context)
 
 // `UInputRating` doesn't declare `blur` in its own emits - `@blur` below relies
 // on its `inheritAttrs: false` + manual `$attrs` spread onto the internal
@@ -51,8 +51,6 @@ const { handleInput, handleChange, handleBlur, styleClass, modelValue, validSlot
     :length="context.length ?? 5"
     :step="context.step"
     :default-value="context.defaultValue"
-    @change="handleChange"
-    @update:model-value="handleInput"
     @blur="handleBlur"
   >
     <template

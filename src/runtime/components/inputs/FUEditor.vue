@@ -126,7 +126,7 @@ const props = defineProps({
   },
 })
 
-const { handleInput, styleClass, modelValue, ui } = useFormKitInput(props.context)
+const { styleClass, modelValue, ui } = useFormKitInput(props.context)
 
 // `UEditor` sets `inheritAttrs: false` and redirects any extra attrs onto
 // Tiptap's own `EditorContent` element specifically (via its `attributes`
@@ -162,7 +162,6 @@ const handleContainerBlur = createContainerBlurHandler(props.context)
       :extensions="context.extensions"
       :autofocus="context.autofocus"
       :ui="ui"
-      @update:model-value="handleInput"
     >
       <template #default="{ editor, handlers }">
         <UEditorToolbar

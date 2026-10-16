@@ -26,7 +26,7 @@ const props = defineProps({
   },
 })
 
-const { handleInput, handleChange, styleClass, modelValue, commonProps } = useFormKitInput(props.context)
+const { styleClass, modelValue, commonProps } = useFormKitInput(props.context)
 
 // `USlider` declares no `blur`/`focus` emit at all (`defineEmits(["change"])`
 // only) and forwards attrs onto `SliderRoot`, a single container wrapping
@@ -51,8 +51,6 @@ const handleContainerBlur = createContainerBlurHandler(props.context)
     :max="context.max"
     :step="context.step"
     :min-steps-between-thumbs="context.minStepsBetweenThumbs"
-    @change="handleChange"
-    @update:model-value="handleInput"
     @focusout="handleContainerBlur"
   />
 </template>

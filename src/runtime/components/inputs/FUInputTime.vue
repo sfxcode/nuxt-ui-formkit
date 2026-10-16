@@ -48,7 +48,7 @@ const props = defineProps({
   },
 })
 
-const { handleInput, handleChange, isInvalid, styleClass, modelValue, validSlotNames, commonProps } = useFormKitInput(props.context)
+const { isInvalid, styleClass, modelValue, validSlotNames, commonProps } = useFormKitInput(props.context)
 
 // Same `DateField.Root`-based aggregation gap as `FUInputDate.vue` - see
 // its comment for why `@blur` alone never fires from real segment
@@ -87,8 +87,6 @@ const handleContainerBlur = createContainerBlurHandler(props.context)
     :hide-time-zone="context.hideTimeZone"
     :max-value="context.maxValue"
     :min-value="context.minValue"
-    @change="handleChange"
-    @update:model-value="handleInput"
     @focusout="handleContainerBlur"
   >
     <template

@@ -18,7 +18,7 @@ const props = defineProps({
   },
 })
 
-const { handleInput, handleChange, styleClass, modelValue, ui } = useFormKitInput(props.context)
+const { styleClass, modelValue, ui } = useFormKitInput(props.context)
 
 // `UColorPicker` is pointer-only: its selector/track listen for `pointerdown`
 // on their container and `pointermove`/`pointerup` on `window`, and nothing
@@ -56,8 +56,6 @@ onBeforeUnmount(() => window.removeEventListener('pointerup', handlePointerUp))
     :format="context.format || 'hex'"
     :throttle="context.throttle"
     :ui="ui"
-    @change="handleChange"
-    @update:model-value="handleInput"
     @pointerdown="handlePointerDown"
   />
 </template>

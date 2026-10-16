@@ -30,7 +30,7 @@ const props = defineProps({
   },
 })
 
-const { handleInput, styleClass, modelValue, items, validSlotNames, commonProps } = useFormKitInput(props.context)
+const { styleClass, modelValue, items, validSlotNames, commonProps } = useFormKitInput(props.context)
 
 // `UTree` declares no `blur` emit - its root renders one real native
 // `<button>` per visible item but wires no blur aggregation across them,
@@ -59,7 +59,6 @@ const handleContainerBlur = createContainerBlurHandler(props.context)
     :selection-behavior="context.selectionBehavior"
     :propagate-select="context.propagateSelect"
     :bubble-select="context.bubbleSelect"
-    @update:model-value="handleInput"
     @focusout="handleContainerBlur"
   >
     <template

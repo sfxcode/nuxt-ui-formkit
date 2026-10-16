@@ -41,7 +41,7 @@ const props = defineProps({
   },
 })
 
-const { handleInput, handleChange, handleBlur, isInvalid, styleClass, modelValue, validSlotNames, commonProps } = useFormKitInput(props.context)
+const { handleBlur, isInvalid, styleClass, modelValue, validSlotNames, commonProps } = useFormKitInput(props.context)
 </script>
 
 <template>
@@ -74,8 +74,6 @@ const { handleInput, handleChange, handleBlur, isInvalid, styleClass, modelValue
     :min-length="context.minLength"
     :pattern="context.pattern"
     :step="context.step"
-    @change="handleChange"
-    @update:model-value="handleInput"
     @blur="handleBlur"
   >
     <template

@@ -36,7 +36,7 @@ const props = defineProps({
   },
 })
 
-const { handleInput, handleChange, styleClass, modelValue, items, validSlotNames, commonProps } = useFormKitInput(props.context)
+const { styleClass, modelValue, items, validSlotNames, commonProps } = useFormKitInput(props.context)
 
 // `UCheckboxGroup`'s root is a non-focusable `<fieldset>` wrapping several
 // genuinely focusable checkbox items - native `blur` doesn't bubble, so
@@ -63,8 +63,6 @@ const handleContainerBlur = createContainerBlurHandler(props.context)
     :description-key="context.descriptionKey"
     :loop="context.loop ?? false"
     :name="context.node.name"
-    @change="handleChange"
-    @update:model-value="handleInput"
     @focusout="handleContainerBlur"
   >
     <template

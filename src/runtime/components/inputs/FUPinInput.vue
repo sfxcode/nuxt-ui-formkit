@@ -30,7 +30,7 @@ const props = defineProps({
   },
 })
 
-const { handleInput, handleChange, handleBlur, isInvalid, styleClass, modelValue, commonProps } = useFormKitInput(props.context)
+const { handleBlur, isInvalid, styleClass, modelValue, commonProps } = useFormKitInput(props.context)
 
 // `UPinInput`'s own `blur` emit only fires when `relatedTarget` is `null` or
 // the code is fully entered (`completed`) - confirmed empirically: tabbing
@@ -71,8 +71,6 @@ function handlePinBlur(event: Event) {
     :separator="context.separator"
     :type="context.pinType ?? 'text'"
     :placeholder="context.placeholder"
-    @change="handleChange"
-    @update:model-value="handleInput"
     @blur="handlePinBlur"
     @focusout="handleContainerBlur"
   />

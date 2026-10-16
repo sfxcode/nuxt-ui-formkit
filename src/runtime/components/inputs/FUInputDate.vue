@@ -62,7 +62,7 @@ const props = defineProps({
   },
 })
 
-const { handleInput, handleChange, isInvalid, styleClass, validSlotNames, commonProps } = useFormKitInput(props.context)
+const { isInvalid, styleClass, validSlotNames, commonProps } = useFormKitInput(props.context)
 
 // `UInputDate`'s own `@blur` never fires from real segment interaction (so none
 // is bound here - if it ever did, it would fire between segments) -
@@ -127,8 +127,6 @@ const minValue = computed(() => toDateValue(props.context.minValue, conversionOp
     :max-value="maxValue"
     :min-value="minValue"
     :is-date-unavailable="context.isDateUnavailable"
-    @change="handleChange"
-    @update:model-value="handleInput"
     @focusout="handleContainerBlur"
   >
     <template
