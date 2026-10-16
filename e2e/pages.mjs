@@ -1,3 +1,6 @@
+import { readdirSync, statSync } from 'node:fs'
+import { dirname, join, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { assert, dragAndDrop, fieldByLabel, labelsOf, messagesOf, nodeState, poll, section } from './helpers.mjs'
 
 // Known SSR gaps, as `[type, ..., why]`. Each is held to the rule that a gap which stops
@@ -21,7 +24,7 @@ const KNOWN_SSR_GAPS = [
  *   ready:  selector that must exist before the checks start (default 'form')
  *   checks: async (page) => void - assert on rendered DOM / observable state
  */
-export default [
+const explicitPages = [
   {
     path: '/form/auto-form',
     async checks(page) {
@@ -557,4 +560,36 @@ export default [
       assert.ok((await page.locator('[id^="_dollar_formkit_1"]').count()) > 0, 'the form hydrated with the same ids')
     },
   },
+]
+
+// Every playground route, found by walking the pages directory, so a page added later is covered
+// by the SSR run without anyone remembering to list it. A page with an entry above keeps its own;
+// the rest are only loaded: the runner fails on a hydration warning, a console error, a Vue warning
+// or an error in the server log, which is the whole check.
+function routesInPagesDirectory() {
+  const pagesDirectory = resolve(dirname(fileURLToPath(import.meta.url)), '../playground/app/pages')
+  const routes = []
+  const walk = (directory, prefix) => {
+    for (const name of readdirSync(directory)) {
+      const full = join(directory, name)
+      if (statSync(full).isDirectory()) {
+        walk(full, `${prefix}/${name}`)
+      }
+      else if (name.endsWith('.vue')) {
+        const stem = name.replace(/\.vue$/, '')
+        routes.push(stem === 'index' ? (prefix || '/') : `${prefix}/${stem}`)
+      }
+    }
+  }
+  walk(pagesDirectory, '')
+  return routes.sort()
+}
+
+const covered = new Set(explicitPages.map(entry => entry.path.split('?')[0]))
+
+export default [
+  ...explicitPages,
+  ...routesInPagesDirectory()
+    .filter(path => !covered.has(path))
+    .map(path => ({ path, ssr: 'only', ready: 'body', async checks() {} })),
 ]
