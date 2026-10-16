@@ -452,6 +452,67 @@ A `nuxtUIRepeater` can be nested inside another repeater's item schema — each 
 
 The same pattern works in schema-based repeaters — nest a second `nuxtUIRepeater` schema node inside the outer repeater's `children` array.
 
+## Styling Best Practices
+
+These come from the playground pages (`/form/repeater-sample`, `/form/repeater-nested` and `/form/repeater-drag`), which all use them.
+
+### How an item is laid out
+
+Each item is one element (`list-item-class`) that holds, in order: the drag handle (if shown), your field children, then the button group. Whatever `display` you give the item decides where those three end up, so `list-item-class` is where most of the layout happens.
+
+| You want | `list-item-class` | `button-group-class` |
+|---|---|---|
+| Fields and buttons on one row | `flex items-start gap-2` | `mt-6 flex gap-1` |
+| A card, buttons underneath | `flex flex-col gap-4 p-4 rounded-lg border border-default bg-elevated/30` | `flex gap-1 justify-end pt-3 border-t border-default` |
+
+### Line the buttons up with the inputs
+
+Labels sit above the inputs, so `items-center` centres the buttons on the label **and** the input, which leaves them too high. Use `items-start` and give the button group a top margin that skips the label (`mt-6` for the default label height). Do the same for a drag handle with `drag-handle-class` (`mt-8` puts it at the middle of an input).
+
+### Give fields a width, and make them fill it
+
+Nuxt UI inputs and selects size themselves to their content and do not stretch to their wrapper. A select also defaults to `w-fit min-w-48`, so inside a narrow wrapper it overflows and overlaps its neighbour. Size the wrapper with `outerClass` and make the field fill it with `class`:
+
+```ts
+children: [
+  { $formkit: 'nuxtUIInput', name: 'title', label: 'Task', outerClass: 'flex-1 min-w-0', class: 'w-full' },
+  { $formkit: 'nuxtUISelect', name: 'status', label: 'Status', items: ['todo', 'done'], outerClass: 'w-40', class: 'w-full' },
+]
+```
+
+`flex-1 min-w-0` lets one field take the leftover space without pushing the buttons out of the row.
+
+### Use theme tokens, not fixed colours
+
+Classes such as `bg-gray-50 dark:bg-gray-800` look off against the Nuxt UI theme, especially in dark mode. Prefer the semantic tokens: `border-default`, `hover:border-accented`, `bg-elevated/30`, `text-muted`, `text-default`.
+
+### Nested repeaters
+
+- Make each outer item a card (table above) with its buttons at the bottom, so its buttons are not confused with the inner repeater's.
+- Indent the inner repeater with its own `outerClass`, for example `pl-4 border-l-2 border-primary/40`, rather than `ml-*` on the list.
+- Give the inner level the row layout and a smaller footprint (`button-size="md"`, `max-items`) so it reads as the subordinate list.
+- Don't also add margin to the fields inside a `flex flex-col gap-*` card; the gap already spaces them.
+
+### Drop-target feedback
+
+While dragging, the hovered item gets the class `formkit-repeater-drop-target`. Style it with theme variables so it works in both colour modes:
+
+```css
+:deep(.formkit-repeater-drop-target) {
+  border-color: var(--ui-primary);
+  background-color: color-mix(in oklab, var(--ui-primary) 12%, transparent);
+  transform: scale(1.02);
+  transition: all 0.2s ease;
+}
+```
+
+Don't add a `.dark` variant inside `:deep()` in a scoped style. `.dark` is on `<html>`, so `:deep(.dark .x)` never matches and the light-mode colours stay in dark mode.
+
+### Animations
+
+- Use this module's `createAutoAnimatePlugin` (see [Auto-Animate](#auto-animate)), and target the repeater's `input` section.
+- Auto-animate skips elements outside the viewport, so don't be surprised by a list that is scrolled out of view not animating.
+
 ## Features
 
 - **Add Items** - Insert new items at the beginning or after specific items
@@ -473,7 +534,7 @@ The same pattern works in schema-based repeaters — nest a second `nuxtUIRepeat
 - Consider UX - buttons are automatically disabled when constraints are reached
 - Use drag-and-drop for better UX when managing sortable lists
 - Hide move buttons (`:hide-move-buttons="true"`) when using drag-and-drop only
-- Use `list-item-class` for consistent spacing and layout
+- Use `list-item-class` for consistent spacing and layout (see [Styling Best Practices](#styling-best-practices))
 - Provide clear labels for add/remove buttons
 
 ## Next Steps
