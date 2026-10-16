@@ -442,4 +442,33 @@ export default [
       await poll(() => repeaterElements.count(), count => assert.ok(count > 0, 'the repeater rendered'))
     },
   })),
+  {
+    // The editor on a server-rendered page. `UEditor` (Tiptap) is built on mount, so the server
+    // renders the field's chrome (label, help) but nothing of the editor; it appears after
+    // hydration, content included, with no mismatch (the runner fails on a hydration warning).
+    path: '/ssr-editor',
+    ssr: 'only',
+    // `body`, not `form`: if the editor broke server rendering the page would be a 500 with no
+    // form, and the checks below are what say so.
+    ready: 'body',
+    async checks(page) {
+      const origin = new URL(page.url()).origin
+      const response = await page.request.get(`${origin}/ssr-editor`)
+      const html = await response.text()
+
+      assert.equal(response.status(), 200, 'the editor does not break server rendering')
+      assert.ok(html.includes('>Body<') && html.includes('>Rich<'), 'the field labels are server-rendered')
+      assert.ok(html.includes('Editor help text'), 'the help text is server-rendered')
+      // A documented limit: nothing of the editor itself is in the server HTML, so the field is
+      // shorter there and the content below shifts down when the editor mounts (about 73px each
+      // in the default theme; reserve the height with a field `outerClass` min-height). If this
+      // starts failing the editor is server-rendered: update this entry and the SSR docs.
+      assert.ok(!html.includes('contenteditable') && !html.includes('Hello'), 'the editor is rendered on the client only')
+
+      // After hydration both editors exist, with their toolbars and their content.
+      await poll(() => page.locator('[contenteditable="true"]').count(), count => assert.equal(count, 2), { timeout: 15_000 })
+      assert.ok(await page.locator('[role="toolbar"]').count() >= 2, 'the toolbars mounted')
+      assert.ok((await page.locator('body').textContent()).includes('Hello server world'), 'the content is shown after hydration')
+    },
+  },
 ]
