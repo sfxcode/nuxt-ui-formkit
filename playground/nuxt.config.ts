@@ -5,7 +5,9 @@ export default defineNuxtConfig({
     '../src/module',
   ],
 
-  ssr: false,
+  // Off by default; `PLAYGROUND_SSR=true` turns server rendering on (used to measure
+  // SSR/hydration behaviour, see brain/plans/19-ssr-support).
+  ssr: process.env.PLAYGROUND_SSR === 'true',
 
   devtools: { enabled: true },
 
