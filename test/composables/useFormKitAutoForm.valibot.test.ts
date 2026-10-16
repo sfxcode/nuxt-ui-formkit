@@ -197,7 +197,13 @@ describe('inferFormSchemaFromValibot wrappers and defaults (pinned behavior)', (
     expect(nodes[1]?.validation).toBe('required|min:3|max:9')
   })
 
-  it('emits rules in pipe order, with length last', () => {
+  // Used to emit both `email|url`; the IR holds a single format, so the last wins.
+  it('keeps only the last format when a pipe has both email and url', () => {
+    const [node] = infer(v.object({ s: v.pipe(v.string(), v.email(), v.url()) }))
+    expect(node?.validation).toBe('required|url')
+  })
+
+  it('emits format before length regardless of pipe order', () => {
     const [node] = infer(v.object({ s: v.pipe(v.string(), v.minLength(2), v.email()) }))
     expect(node?.validation).toBe('required|email|length:2')
   })

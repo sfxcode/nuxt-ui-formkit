@@ -19,6 +19,9 @@ const EXCEPTIONS: [string, string][] = [
 
 const excepted = new Map(EXCEPTIONS)
 
+// The real binding, not just the text - a comment mentioning `...commonProps` must not pass.
+const SPREAD = /v-bind="\{[^"}]*\.\.\.commonProps[^"}]*\}"/
+
 const wrappedInputs = readdirSync(inputsDir)
   .filter(file => file.endsWith('.vue'))
   .map(file => ({ name: file.replace(/\.vue$/, ''), source: readFileSync(resolve(inputsDir, file), 'utf-8') }))
@@ -32,12 +35,12 @@ describe('wrapped inputs spread commonProps', () => {
   for (const { name, source } of wrappedInputs) {
     if (excepted.has(name)) {
       it(`${name} stays on the exception list (${excepted.get(name)})`, () => {
-        expect(source).not.toContain('...commonProps')
+        expect(source).not.toMatch(SPREAD)
       })
     }
     else {
       it(`${name} spreads commonProps`, () => {
-        expect(source).toContain('...commonProps')
+        expect(source).toMatch(SPREAD)
       })
     }
   }
