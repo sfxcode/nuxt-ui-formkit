@@ -1,4 +1,5 @@
 import type { FormKitSchemaDefinition } from '@formkit/core'
+import { cloneAny } from '@formkit/utils'
 import { useOverlay } from '@nuxt/ui/composables'
 import FUAutoFormOverlay from '../components/FUAutoFormOverlay.vue'
 import FUDataEditOverlay from '../components/FUDataEditOverlay.vue'
@@ -54,6 +55,11 @@ export function useFormKitOverlay() {
     registeredAutoOverlays.set(overlay, registeredAutoOverlay)
   }
 
+  // `FormKitSchema` mutates whatever object it is given as `:data` in place (see
+  // brain/notes/formkit-schema-mutates-data-prop), so `edit()` and `auto()` hand the
+  // form a copy (`cloneAny(options.data)`): the caller's object is only ever
+  // replaced by the resolved result, and a Cancel or a confirmed Discard leaves it
+  // exactly as it was.
   function edit(options: FormKitOverlayEditOptions): Promise<unknown> {
     // A fresh FormKit registry id per call - required since
     // `useFormKitForm`/`submitForm`/`reset` all key off it, and reusing one
@@ -64,7 +70,7 @@ export function useFormKitOverlay() {
 
     return registeredOverlay!.open({
       id,
-      data: options.data,
+      data: cloneAny(options.data),
       schema: options.schema,
       title: options.title,
       as: options.as ?? 'modal',
@@ -77,7 +83,7 @@ export function useFormKitOverlay() {
 
     return registeredAutoOverlay!.open({
       id,
-      data: options.data,
+      data: cloneAny(options.data),
       valibotSchema: options.valibotSchema,
       zodSchema: options.zodSchema,
       overrides: options.overrides,

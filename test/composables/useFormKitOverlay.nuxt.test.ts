@@ -1,3 +1,4 @@
+import { getNode } from '@formkit/core'
 import { defaultConfig, plugin } from '@formkit/vue'
 import { mountSuspended } from '@nuxt/test-utils/runtime'
 import { DOMWrapper } from '@vue/test-utils'
@@ -74,6 +75,11 @@ function body() {
 // "it opened" is observed on the DOM rather than slept for.
 const opened = (title: string) => vi.waitFor(() => expect(body().text()).toContain(title))
 const firstInputValue = () => (body().find('input').element as HTMLInputElement | undefined)?.value
+
+// The overlay's own form is the one `<form>` in the body and its element id is the
+// FormKit node id; dirtiness has no DOM marker, so it is read off the node.
+const overlayForm = () => document.body.querySelector('form')
+const formDirty = () => getNode(overlayForm()!.id)?.context?.state.dirty
 
 const schema = [
   { $formkit: 'nuxtUIInput', name: 'name', label: 'Name' },
@@ -234,6 +240,67 @@ describe('useFormKitOverlay', () => {
     // The first call's promise is not orphaned, but it receives the second
     // call's submitted data - not anything derived from its own `{ name: 'Ada' }`.
     expect(await racedResult(firstResult)).toEqual({ resolved: true, value: { name: 'Bob' } })
+  })
+})
+
+describe('useFormKitOverlay - the caller\'s data object', () => {
+  // `FormKitSchema` mutates whatever object it is given as `:data` in place, so
+  // handing the caller's own object to the form meant a Cancel/Discard still left
+  // it edited (the playground's row showed the discarded value).
+  it('edit() leaves the caller\'s object untouched when cancelled', async () => {
+    const wrapper = await mountHost()
+    activeWrapper = wrapper
+    await settle()
+
+    const data = { name: 'Ada' }
+    const resultPromise = exposedOverlay(wrapper).edit({ data, schema, title: 'Edit Person' })
+    await opened('Edit Person')
+    await vi.waitFor(() => expect(firstInputValue()).toBe('Ada'))
+
+    await body().find('input').setValue('Zed')
+    await vi.waitFor(() => expect(formDirty()).toBe(true))
+    await body().find('button[type="button"]').trigger('click')
+
+    expect(await racedResult(resultPromise)).toEqual({ resolved: true, value: null })
+    expect(data).toEqual({ name: 'Ada' })
+  })
+
+  it('edit() resolves with the edited copy and leaves the caller\'s object untouched on Save', async () => {
+    const wrapper = await mountHost()
+    activeWrapper = wrapper
+    await settle()
+
+    const data = { name: 'Ada' }
+    const resultPromise = exposedOverlay(wrapper).edit({ data, schema, title: 'Edit Person' })
+    await opened('Edit Person')
+    await vi.waitFor(() => expect(firstInputValue()).toBe('Ada'))
+
+    await body().find('input').setValue('Zed')
+    await vi.waitFor(() => expect(formDirty()).toBe(true))
+    await body().find('button[type="submit"]').trigger('click')
+
+    const result = await resultPromise
+    expect(result).toEqual({ name: 'Zed' })
+    expect(result).not.toBe(data)
+    expect(data).toEqual({ name: 'Ada' })
+  })
+
+  it('auto() leaves the caller\'s object untouched when cancelled', async () => {
+    const wrapper = await mountHost()
+    activeWrapper = wrapper
+    await settle()
+
+    const data = { name: 'Ada' }
+    const resultPromise = exposedOverlay(wrapper).auto({ data, title: 'Edit Person' })
+    await opened('Edit Person')
+    await vi.waitFor(() => expect(firstInputValue()).toBe('Ada'))
+
+    await body().find('input').setValue('Zed')
+    await vi.waitFor(() => expect(formDirty()).toBe(true))
+    await body().find('button[type="button"]').trigger('click')
+
+    expect(await racedResult(resultPromise)).toEqual({ resolved: true, value: null })
+    expect(data).toEqual({ name: 'Ada' })
   })
 })
 
