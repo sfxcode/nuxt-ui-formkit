@@ -27,7 +27,7 @@ const props = defineProps({
   },
 })
 
-const { handleInput, handleChange, handleBlur, styleClass, modelValue, color, validSlotNames, ui } = useFormKitInput(props.context)
+const { handleInput, handleChange, handleBlur, styleClass, modelValue, validSlotNames, commonProps } = useFormKitInput(props.context)
 
 // `UCheckbox` doesn't declare `blur` in its own emits - `@blur` below relies
 // on its `inheritAttrs: false` + manual `$attrs` spread onto the internal
@@ -41,12 +41,8 @@ const { handleInput, handleChange, handleBlur, styleClass, modelValue, color, va
     :id="context.id"
     v-model="modelValue"
     :name="context.node.name"
-    v-bind="{ ...context?.attrs }"
+    v-bind="{ ...context?.attrs, ...commonProps }"
     :class="styleClass"
-    :disabled="!!context?.disabled"
-    :style="context?.attrs.style"
-    :color="color"
-    :size="context.size ?? 'md'"
     :variant="context.variant"
     :label="context.label"
     :description="context.description"
@@ -56,7 +52,6 @@ const { handleInput, handleChange, handleBlur, styleClass, modelValue, color, va
     :true-value="context.trueValue"
     :false-value="context.falseValue"
     :autofocus="context.autofocus"
-    :ui="ui"
     @change="handleChange"
     @update:model-value="handleInput"
     @blur="handleBlur"

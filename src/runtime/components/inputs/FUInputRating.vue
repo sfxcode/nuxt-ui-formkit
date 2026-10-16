@@ -26,7 +26,7 @@ const props = defineProps({
   },
 })
 
-const { handleInput, handleChange, handleBlur, styleClass, color, modelValue, validSlotNames, ui } = useFormKitInput(props.context)
+const { handleInput, handleChange, handleBlur, styleClass, modelValue, validSlotNames, commonProps } = useFormKitInput(props.context)
 
 // `UInputRating` doesn't declare `blur` in its own emits - `@blur` below relies
 // on its `inheritAttrs: false` + manual `$attrs` spread onto the internal
@@ -40,12 +40,8 @@ const { handleInput, handleChange, handleBlur, styleClass, color, modelValue, va
     :id="context.id"
     v-model="modelValue"
     :name="context.node.name"
-    v-bind="{ ...context?.attrs }"
+    v-bind="{ ...context?.attrs, ...commonProps }"
     :class="styleClass"
-    :disabled="!!context?.disabled"
-    :style="context?.attrs.style"
-    :color="color"
-    :size="context.size ?? 'md'"
     :orientation="context.orientation ?? 'horizontal'"
     :icon="context.icon"
     :empty-icon="context.emptyIcon"
@@ -55,7 +51,6 @@ const { handleInput, handleChange, handleBlur, styleClass, color, modelValue, va
     :length="context.length ?? 5"
     :step="context.step"
     :default-value="context.defaultValue"
-    :ui="ui"
     @change="handleChange"
     @update:model-value="handleInput"
     @blur="handleBlur"

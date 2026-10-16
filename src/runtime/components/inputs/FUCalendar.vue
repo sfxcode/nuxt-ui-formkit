@@ -49,7 +49,7 @@ const props = defineProps({
   },
 })
 
-const { handleInput, styleClass, color, validSlotNames, ui } = useFormKitInput(props.context)
+const { handleInput, styleClass, validSlotNames, commonProps } = useFormKitInput(props.context)
 
 // `UCalendar` declares no `blur`/`focus` emit at all - `@focusout` (which
 // bubbles) plus a relatedTarget-outside-container check is what detects
@@ -75,14 +75,10 @@ const maxValue = computed(() => toDateValue(props.context.maxValue, conversionOp
   <UCalendar
     :id="context.id"
     v-model="modelValue"
-    v-bind="{ ...context?.attrs }"
+    v-bind="{ ...context?.attrs, ...commonProps }"
     :class="styleClass"
-    :disabled="!!context?.disabled"
-    :style="context?.attrs.style"
     :type="context.calendarType ?? 'date'"
-    :color="color"
     :variant="context.variant"
-    :size="context.size ?? 'md'"
     :range="context.range"
     :multiple="context.multiple"
     :week-numbers="context.weekNumbers"
@@ -94,7 +90,6 @@ const maxValue = computed(() => toDateValue(props.context.maxValue, conversionOp
     :max-value="maxValue"
     :is-date-disabled="context.isDateDisabled"
     :is-date-unavailable="context.isDateUnavailable"
-    :ui="ui"
     @update:model-value="handleInput"
     @focusout="handleContainerBlur"
   >

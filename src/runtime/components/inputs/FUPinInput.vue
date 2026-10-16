@@ -30,7 +30,7 @@ const props = defineProps({
   },
 })
 
-const { handleInput, handleChange, handleBlur, isInvalid, styleClass, color, modelValue, ui } = useFormKitInput(props.context)
+const { handleInput, handleChange, handleBlur, isInvalid, styleClass, modelValue, commonProps } = useFormKitInput(props.context)
 
 // `UPinInput`'s own `blur` emit only fires when `relatedTarget` is `null` or
 // the code is fully entered (`completed`) - confirmed empirically: tabbing
@@ -56,15 +56,11 @@ function handlePinBlur(event: Event) {
     :id="context.id"
     v-model="modelValue"
     :name="context.node.name"
-    v-bind="{ ...context?.attrs }"
+    v-bind="{ ...context?.attrs, ...commonProps }"
     :default-value="context.defaultValue"
     :class="styleClass"
-    :disabled="!!context?.disabled"
     :readonly="context?.attrs.readonly ?? false"
-    :style="context?.attrs.style"
-    :color="color"
     :highlight="isInvalid || context.highlight"
-    :size="context.size ?? 'md'"
     :variant="context.variant ?? 'outline'"
     :length="context.length ?? 5"
     :autofocus="context.autofocus"
@@ -75,7 +71,6 @@ function handlePinBlur(event: Event) {
     :separator="context.separator"
     :type="context.pinType ?? 'text'"
     :placeholder="context.placeholder"
-    :ui="ui"
     @change="handleChange"
     @update:model-value="handleInput"
     @blur="handlePinBlur"

@@ -36,7 +36,7 @@ const props = defineProps({
   },
 })
 
-const { handleInput, handleChange, styleClass, color, modelValue, items, validSlotNames, ui } = useFormKitInput(props.context)
+const { handleInput, handleChange, styleClass, modelValue, items, validSlotNames, commonProps } = useFormKitInput(props.context)
 
 // `UCheckboxGroup`'s root is a non-focusable `<fieldset>` wrapping several
 // genuinely focusable checkbox items - native `blur` doesn't bubble, so
@@ -50,12 +50,8 @@ const handleContainerBlur = createContainerBlurHandler(props.context)
   <UCheckboxGroup
     :id="context.id"
     v-model="modelValue"
-    v-bind="{ ...context?.attrs }"
+    v-bind="{ ...context?.attrs, ...commonProps }"
     :class="styleClass"
-    :disabled="!!context?.disabled"
-    :style="context?.attrs.style"
-    :color="color"
-    :size="context.size ?? 'md'"
     :variant="context.variant ?? 'list'"
     :orientation="context.orientation ?? 'vertical'"
     :indicator="context.indicator ?? 'start'"
@@ -67,7 +63,6 @@ const handleContainerBlur = createContainerBlurHandler(props.context)
     :description-key="context.descriptionKey"
     :loop="context.loop ?? false"
     :name="context.node.name"
-    :ui="ui"
     @change="handleChange"
     @update:model-value="handleInput"
     @focusout="handleContainerBlur"
