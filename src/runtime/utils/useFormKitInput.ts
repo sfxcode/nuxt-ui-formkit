@@ -41,7 +41,7 @@ export function useFormKitInput(context: FormKitFrameworkContext) {
     style: context?.attrs?.style,
     disabled: !!context?.disabled,
     color: color.value,
-    size: (context?.size as string | undefined) ?? 'md',
+    size: (context?.size ?? 'md') as 'xs' | 'sm' | 'md' | 'lg' | 'xl',
     ui: ui.value,
   }))
 

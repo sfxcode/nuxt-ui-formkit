@@ -62,7 +62,7 @@ const props = defineProps({
   },
 })
 
-const { handleInput, handleChange, isInvalid, styleClass, color, validSlotNames, ui } = useFormKitInput(props.context)
+const { handleInput, handleChange, isInvalid, styleClass, validSlotNames, commonProps } = useFormKitInput(props.context)
 
 // `UInputDate`'s own `@blur` never fires from real segment interaction (so none
 // is bound here - if it ever did, it would fire between segments) -
@@ -99,15 +99,11 @@ const minValue = computed(() => toDateValue(props.context.minValue, conversionOp
   <UInputDate
     :id="context.id"
     v-model="modelValue"
-    v-bind="{ ...context?.attrs }"
+    v-bind="{ ...context?.attrs, ...commonProps }"
     :default-value="defaultValue"
     :class="styleClass"
-    :disabled="!!context?.disabled"
     :readonly="context?.attrs.readonly ?? false"
-    :style="context?.attrs.style"
-    :color="color"
     :highlight="isInvalid || context.highlight"
-    :size="context.size ?? 'md'"
     :variant="context.variant ?? 'outline'"
     :placeholder="placeholder"
     :default-placeholder="defaultPlaceholder"
@@ -131,7 +127,6 @@ const minValue = computed(() => toDateValue(props.context.minValue, conversionOp
     :max-value="maxValue"
     :min-value="minValue"
     :is-date-unavailable="context.isDateUnavailable"
-    :ui="ui"
     @change="handleChange"
     @update:model-value="handleInput"
     @focusout="handleContainerBlur"

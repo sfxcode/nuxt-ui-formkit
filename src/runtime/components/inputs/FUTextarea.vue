@@ -41,21 +41,17 @@ const props = defineProps({
   },
 })
 
-const { handleInput, handleChange, handleBlur, styleClass, color, isInvalid, modelValue, validSlotNames, ui } = useFormKitInput(props.context)
+const { handleInput, handleChange, handleBlur, styleClass, isInvalid, modelValue, validSlotNames, commonProps } = useFormKitInput(props.context)
 </script>
 
 <template>
   <UTextarea
     :id="context.id"
     v-model="modelValue"
-    v-bind="{ ...context?.attrs }"
+    v-bind="{ ...context?.attrs, ...commonProps }"
     :class="styleClass"
-    :disabled="!!context?.disabled"
     :readonly="context?.attrs.readonly ?? false"
-    :style="context?.attrs.style"
-    :color="color"
     :highlight="isInvalid || context.highlight"
-    :size="context.size ?? 'md'"
     :variant="context.variant ?? 'outline'"
     :placeholder="context.placeholder"
     :autofocus="context.autofocus"
@@ -78,7 +74,6 @@ const { handleInput, handleChange, handleBlur, styleClass, color, isInvalid, mod
     :maxlength="context.maxlength"
     :minlength="context.minlength"
     :wrap="context.wrap"
-    :ui="ui"
     @change="handleChange"
     @update:model-value="handleInput"
     @blur="handleBlur"
