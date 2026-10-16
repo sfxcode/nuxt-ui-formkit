@@ -5,6 +5,33 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.3.10
+
+[compare changes](https://github.com/sfxcode/nuxt-ui-formkit/compare/v1.3.9...v1.3.10)
+
+### 🩹 Fixes
+
+- **repeater:** Attach auto-animate once per element ([d8dd338](https://github.com/sfxcode/nuxt-ui-formkit/commit/d8dd338))
+
+### 📖 Documentation
+
+- Use the module's createAutoAnimatePlugin and fix the repeater target ([2c0fb92](https://github.com/sfxcode/nuxt-ui-formkit/commit/2c0fb92))
+- **repeater:** Add a Styling Best Practices section ([01cc670](https://github.com/sfxcode/nuxt-ui-formkit/commit/01cc670))
+- **inputs:** Note the slider thumb overflow and the CSS fix ([3563a5a](https://github.com/sfxcode/nuxt-ui-formkit/commit/3563a5a))
+- Add a Styling page ([86bdd16](https://github.com/sfxcode/nuxt-ui-formkit/commit/86bdd16))
+
+### 🎨 Styles
+
+- **playground:** Match the nested repeater to the sample ([3158884](https://github.com/sfxcode/nuxt-ui-formkit/commit/3158884))
+- **playground:** Restyle the drag-and-drop repeater ([5ca9ff9](https://github.com/sfxcode/nuxt-ui-formkit/commit/5ca9ff9))
+- **playground:** Add a landing hero and fix the header and nav ([961ac93](https://github.com/sfxcode/nuxt-ui-formkit/commit/961ac93))
+- **playground:** Make form fields fill their column ([4da0fc3](https://github.com/sfxcode/nuxt-ui-formkit/commit/4da0fc3))
+- **playground:** Keep the slider thumb off its label ([74b8956](https://github.com/sfxcode/nuxt-ui-formkit/commit/74b8956))
+
+### ❤️ Contributors
+
+- Sfxcode ([@sfxcode](https://github.com/sfxcode))
+
 ## v1.3.9
 
 [compare changes](https://github.com/sfxcode/nuxt-ui-formkit/compare/v1.3.8...v1.3.9)
