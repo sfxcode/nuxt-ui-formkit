@@ -1,3 +1,4 @@
+import { getNode } from '@formkit/core'
 import { defaultConfig, FormKit, plugin, useFormKitContextById } from '@formkit/vue'
 import { mountSuspended } from '@nuxt/test-utils/runtime'
 import { afterEach, describe, expect, it, vi } from 'vitest'
@@ -6,7 +7,7 @@ import { defineComponent, h } from 'vue'
 import { z } from 'zod'
 import { nuxtUIInputDefinition } from '../../src/runtime/formkit/definitions/input'
 import { useFormKitForm } from '../../src/runtime/composables/useFormKitForm'
-import { settleAndWait } from '../support/settle'
+import { settle } from '../support/settle'
 
 // `useFormKitForm` is meant to be called from arbitrary consumer code (e.g. a
 // submit button outside the form), not from inside a `createInput`-rendered
@@ -72,10 +73,19 @@ function useExposedForm(wrapper: Awaited<ReturnType<typeof mountHost>>) {
   return (wrapper.vm.$.exposed as unknown as { form: ReturnType<typeof useFormKitForm> }).form
 }
 
+// FormKit's own "every child has registered and settled" promise: the
+// deterministic replacement for sleeping after a mount. The dirty-tracking
+// snapshot of the initial value is taken at this point, so edits must not start
+// before it.
+async function formReady(id = 'test-form') {
+  await getNode(id)!.settled
+  await settle()
+}
+
 describe('useFormKitForm', () => {
   it('reports isDirty once a field differs from its initial value', async () => {
     const wrapper = await mountHost()
-    await settleAndWait()
+    await formReady()
 
     const form = useExposedForm(wrapper)
     expect(form.isDirty.value).toBe(false)
@@ -87,7 +97,7 @@ describe('useFormKitForm', () => {
 
   it('with dirtyBehavior="compare", isDirty clears when the value is edited back', async () => {
     const wrapper = await mountHost({ dirtyBehavior: 'compare', initial: { email: 'start@example.com' } })
-    await settleAndWait()
+    await formReady()
 
     const form = useExposedForm(wrapper)
     await wrapper.find('input').setValue('ada@example.com')
@@ -99,7 +109,7 @@ describe('useFormKitForm', () => {
 
   it('clears isDirty after reset()', async () => {
     const wrapper = await mountHost()
-    await settleAndWait()
+    await formReady()
 
     const form = useExposedForm(wrapper)
     await wrapper.find('input').setValue('ada@example.com')
@@ -111,36 +121,33 @@ describe('useFormKitForm', () => {
 
   it('reflects isValid/hasErrors as the form is filled in', async () => {
     const wrapper = await mountHost()
-    await settleAndWait()
+    await formReady()
 
     const form = useExposedForm(wrapper)
-    expect(form.isValid.value).toBe(false)
+    await vi.waitFor(() => expect(form.isValid.value).toBe(false))
 
     await wrapper.find('input').setValue('ada@example.com')
-    await settleAndWait()
 
     await vi.waitFor(() => expect(form.isValid.value).toBe(true))
   })
 
   it('marks the form submitted via submit()', async () => {
     const wrapper = await mountHost()
-    await settleAndWait()
+    await formReady()
 
     const form = useExposedForm(wrapper)
     expect(form.isSubmitted.value).toBe(false)
 
     form.submit()
-    await settleAndWait()
 
-    expect(form.isSubmitted.value).toBe(true)
+    await vi.waitFor(() => expect(form.isSubmitted.value).toBe(true))
   })
 
   describe('submit(handler)', () => {
     async function mountValidForm() {
       const wrapper = await mountHost()
-      await settleAndWait()
+      await formReady()
       await wrapper.find('input').setValue('ada@example.com')
-      await settleAndWait()
       const form = useExposedForm(wrapper)
       await vi.waitFor(() => expect(form.isValid.value).toBe(true))
       return form
@@ -166,8 +173,9 @@ describe('useFormKitForm', () => {
 
     it('does not run the handler when validation fails', async () => {
       const wrapper = await mountHost()
-      await settleAndWait()
+      await formReady()
       const form = useExposedForm(wrapper)
+      await vi.waitFor(() => expect(form.isValid.value).toBe(false))
       const handler = vi.fn()
 
       await form.submit(handler)
@@ -220,7 +228,7 @@ describe('useFormKitForm', () => {
 
     it('rejects with a clear error when no form with that id is mounted', async () => {
       const wrapper = await mountHost()
-      await settleAndWait()
+      await formReady()
       const form = useExposedForm(wrapper)
       wrapper.unmount()
       activeWrapper = undefined
@@ -231,35 +239,32 @@ describe('useFormKitForm', () => {
 
   it('setErrors/clearErrors add and remove visible error messages', async () => {
     const wrapper = await mountHost()
-    await settleAndWait()
+    await formReady()
 
     const form = useExposedForm(wrapper)
     form.setErrors('Something went wrong')
-    await settleAndWait()
 
-    expect(wrapper.text()).toContain('Something went wrong')
+    await vi.waitFor(() => expect(wrapper.text()).toContain('Something went wrong'))
     expect(form.hasErrors.value).toBe(true)
 
     form.clearErrors()
-    await settleAndWait()
 
-    expect(wrapper.text()).not.toContain('Something went wrong')
+    await vi.waitFor(() => expect(wrapper.text()).not.toContain('Something went wrong'))
     expect(form.hasErrors.value).toBe(false)
   })
 
   it('reset() clears the form back to its default value', async () => {
     const wrapper = await mountHost()
-    await settleAndWait()
+    await formReady()
 
+    const inputValue = () => (wrapper.find('input').element as HTMLInputElement).value
     await wrapper.find('input').setValue('ada@example.com')
-    await settleAndWait()
-    expect((wrapper.find('input').element as HTMLInputElement).value).toBe('ada@example.com')
+    await vi.waitFor(() => expect(inputValue()).toBe('ada@example.com'))
 
     const form = useExposedForm(wrapper)
     form.reset()
-    await settleAndWait()
 
-    expect((wrapper.find('input').element as HTMLInputElement).value).toBe('')
+    await vi.waitFor(() => expect(inputValue()).toBe(''))
   })
 })
 
@@ -309,25 +314,23 @@ describe('useFormKitForm with a standardSchema', () => {
 
     const wrapper = await mountHostWithSchema(schema)
     activeWrapper = wrapper
-    await settleAndWait()
 
     const { form, blur } = useExposedFormWithSchema(wrapper)
 
     // `isValid` is driven by FormKit's blocking-message ledger, which counts
     // our `blocking: true` schema messages regardless of visibility - so it
-    // reflects the failure immediately, same as a native rule failure would.
-    expect(form.isValid.value).toBe(false)
+    // reflects the failure as soon as the first schema run finishes, same as a
+    // native rule failure would.
+    await vi.waitFor(() => expect(form.isValid.value).toBe(false))
     expect(wrapper.text()).not.toContain('Invalid email address')
 
     blur('email')
-    await settleAndWait()
 
-    expect(wrapper.text()).toContain('Invalid email address')
+    await vi.waitFor(() => expect(wrapper.text()).toContain('Invalid email address'))
 
     await wrapper.find('input').setValue('ada@example.com')
-    await settleAndWait()
 
-    expect(form.isValid.value).toBe(true)
+    await vi.waitFor(() => expect(form.isValid.value).toBe(true))
     expect(wrapper.text()).not.toContain('Invalid email address')
   })
 })

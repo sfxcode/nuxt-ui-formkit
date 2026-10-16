@@ -22,6 +22,8 @@ afterEach(() => {
   activeWrapper = undefined
 })
 
+const formValid = () => getNode('test-form')?.context?.state.valid
+
 function mountHost(schema: StandardSchemaV1, onSubmit?: () => void) {
   const HostComponent = defineComponent({
     setup() {
@@ -59,7 +61,8 @@ describe('attachStandardSchema', () => {
 
     const wrapper = await mountHost(schema)
     activeWrapper = wrapper
-    await settleAndWait()
+    // The first validation run has finished once the form reports invalid.
+    await vi.waitFor(() => expect(formValid()).toBe(false))
 
     // Both fields are invalid, but neither has been blurred/dirtied yet -
     // `type: 'validation'` messages stay hidden until then, same as native
@@ -69,24 +72,21 @@ describe('attachStandardSchema', () => {
 
     const inputs = wrapper.findAll('input')
     await inputs[0]!.trigger('blur')
-    await settleAndWait()
 
-    expect(wrapper.text()).toContain(EMAIL_ERROR)
+    await vi.waitFor(() => expect(wrapper.text()).toContain(EMAIL_ERROR))
     expect(wrapper.text()).not.toContain(USERNAME_ERROR)
 
     // Fix the email field; username is still invalid.
     await inputs[0]!.setValue('ada@example.com')
-    await settleAndWait()
 
-    expect(wrapper.text()).not.toContain(EMAIL_ERROR)
+    await vi.waitFor(() => expect(wrapper.text()).not.toContain(EMAIL_ERROR))
 
     // Blurring username now proves its error survived the previous run's
     // clear - the diff only cleared the resolved `email` address, not
     // every address, so username's still-failing error is still there.
     await inputs[1]!.trigger('blur')
-    await settleAndWait()
 
-    expect(wrapper.text()).toContain(USERNAME_ERROR)
+    await vi.waitFor(() => expect(wrapper.text()).toContain(USERNAME_ERROR))
     expect(wrapper.text()).not.toContain(EMAIL_ERROR)
   })
 
@@ -100,10 +100,9 @@ describe('attachStandardSchema', () => {
     const schema = customSchema(() => ({ issues: [{ message: 'Ghost is required', path: ['ghost'] }] }))
     const wrapper = await mountHost(schema)
     activeWrapper = wrapper
-    await settleAndWait()
 
     const form = getNode('test-form')!
-    expect(form.context?.state.valid).toBe(false)
+    await vi.waitFor(() => expect(form.context?.state.valid).toBe(false))
     const messages = Object.values(form.store).filter(message => message.type === 'validation').map(message => String(message.value))
     expect(messages.join(' ')).toContain('Ghost is required')
   })
@@ -116,12 +115,15 @@ describe('attachStandardSchema', () => {
     })
     const wrapper = await mountHost(schema, onSubmit)
     activeWrapper = wrapper
-    await settleAndWait()
+    await vi.waitFor(() => expect(formValid()).toBe(false))
 
     // Submit while the (slow) first validation may still be settling, and again
     // right after a change that kicks off a fresh run.
     await wrapper.findAll('input')[0]!.setValue('ada@example.com')
     await wrapper.find('form').trigger('submit')
+    // Absence over a window: nothing positive to wait on, so give the 150ms
+    // schema and the submit gating well past their duration before asserting
+    // the submit handler was *not* reached.
     await new Promise(resolve => setTimeout(resolve, 400))
 
     expect(onSubmit).not.toHaveBeenCalled()
@@ -141,12 +143,15 @@ describe('attachStandardSchema', () => {
     // detached by hand so only that attachment is under test.
     const wrapper = await mountHost(customSchema(() => ({ issues: [] })))
     activeWrapper = wrapper
-    await settleAndWait()
+    await vi.waitFor(() => expect(getNode('test-form')?.context).toBeDefined())
+    await vi.waitFor(() => expect(getNode('test-form')!.store.validating).toBeUndefined())
 
     const form = getNode('test-form')!
     const detach = attachStandardSchema(form, schema)
     detach()
     release()
+    // Absence: the released validation must be ignored, and there is no positive
+    // signal for "ignored" - let its promise chain run out before asserting.
     await settleAndWait()
 
     const lateMessages = Object.values(form.store).filter(message => String(message.value).includes('Late issue'))
@@ -164,10 +169,9 @@ describe('attachStandardSchema', () => {
 
     const wrapper = await mountHost(schema)
     activeWrapper = wrapper
-    await settleAndWait()
 
     const form = getNode('test-form')!
-    expect(form.context?.state.valid).toBe(false)
+    await vi.waitFor(() => expect(form.context?.state.valid).toBe(false))
     expect(Object.values(form.store).map(message => String(message.value)).join(' ')).toContain('schema blew up')
     expect(unhandled).not.toHaveBeenCalled()
     process.off('unhandledRejection', unhandled)
@@ -207,11 +211,12 @@ describe('attachStandardSchema alongside the node\'s own async validation rule',
     const node = rootWithRule(20)
     const detach = attachStandardSchema(node, schemaTakingMs(250))
 
+    // Deliberate timing window (the behaviour under test): at 120ms the
+    // longer of the two is still running.
     await wait(120)
     expect(node.store.validating).toBeDefined()
 
-    await wait(300)
-    expect(node.store.validating).toBeUndefined()
+    await vi.waitFor(() => expect(node.store.validating).toBeUndefined())
     detach()
   })
 
@@ -219,11 +224,12 @@ describe('attachStandardSchema alongside the node\'s own async validation rule',
     const node = rootWithRule(250)
     const detach = attachStandardSchema(node, schemaTakingMs(20))
 
+    // Deliberate timing window (the behaviour under test): at 120ms the
+    // longer of the two is still running.
     await wait(120)
     expect(node.store.validating).toBeDefined()
 
-    await wait(300)
-    expect(node.store.validating).toBeUndefined()
+    await vi.waitFor(() => expect(node.store.validating).toBeUndefined())
     detach()
   })
 })
