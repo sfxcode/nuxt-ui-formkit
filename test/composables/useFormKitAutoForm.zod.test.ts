@@ -145,3 +145,23 @@ describe('inferFormSchemaFromZod overrides', () => {
     expect(nodes[2]?.$formkit).toBe('nuxtUITextarea')
   })
 })
+
+describe('inferFormSchemaFromZod number bounds', () => {
+  const validationOf = (schema: z.ZodType) => infer(z.object({ n: schema }))[0]?.validation
+
+  it('emits no bounds for an unconstrained number', () => {
+    expect(validationOf(z.number())).toBe('required')
+  })
+
+  it('emits no bounds for an unconstrained int (zod reports safe-integer limits)', () => {
+    expect(validationOf(z.number().int())).toBe('required')
+  })
+
+  it('keeps an explicit min on an int and drops the implicit max', () => {
+    expect(validationOf(z.number().int().min(5))).toBe('required|min:5')
+  })
+
+  it('keeps an explicit min on a plain number', () => {
+    expect(validationOf(z.number().min(5))).toBe('required|min:5')
+  })
+})

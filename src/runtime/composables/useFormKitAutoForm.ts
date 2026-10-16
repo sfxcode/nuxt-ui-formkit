@@ -453,6 +453,12 @@ function unwrapZod(entry: ZodLikeSchema): { schema: ZodLikeSchema, required: boo
   return { schema, required }
 }
 
+function isNumericBound(value: unknown): value is number {
+  return Number.isFinite(value)
+    && value !== Number.MIN_SAFE_INTEGER
+    && value !== Number.MAX_SAFE_INTEGER
+}
+
 function deriveZodValidation(schema: ZodLikeSchema, required: boolean): string | undefined {
   const rules: string[] = []
   // `required` on a switch would force the boolean to true, which is not
@@ -466,11 +472,13 @@ function deriveZodValidation(schema: ZodLikeSchema, required: boolean): string |
   // Zod's `minValue`/`maxValue` getters default to `-Infinity`/`Infinity`
   // (not `null`, unlike `minLength`/`maxLength`) when no `.min()`/`.max()`
   // was ever chained - `Number.isFinite` excludes those unconstrained
-  // defaults, `typeof === 'number'` would not.
-  if (Number.isFinite(schema.minValue)) {
+  // defaults, `typeof === 'number'` would not. `.int()` instead reports the
+  // finite safe-integer limits, which also mean "no bound" (an explicit
+  // `.min(Number.MIN_SAFE_INTEGER)` is indistinguishable and dropped too).
+  if (isNumericBound(schema.minValue)) {
     rules.push(`min:${schema.minValue}`)
   }
-  if (Number.isFinite(schema.maxValue)) {
+  if (isNumericBound(schema.maxValue)) {
     rules.push(`max:${schema.maxValue}`)
   }
   if (typeof schema.maxLength === 'number') {
