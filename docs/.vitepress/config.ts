@@ -91,6 +91,7 @@ export default defineConfig({
           { text: 'Quick Start', link: '/getting-started/quick-start' },
           { text: 'Schema-Based Forms', link: '/getting-started/schema-forms' },
           { text: 'Server-Side Rendering', link: '/getting-started/ssr' },
+          { text: 'Styling', link: '/getting-started/styling' },
           { text: 'Known Limitations', link: '/getting-started/known-limitations' },
         ],
       },
