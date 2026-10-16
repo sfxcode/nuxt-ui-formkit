@@ -92,6 +92,7 @@ export default defineConfig({
           { text: 'Schema-Based Forms', link: '/getting-started/schema-forms' },
           { text: 'Server-Side Rendering', link: '/getting-started/ssr' },
           { text: 'Styling', link: '/getting-started/styling' },
+          { text: 'Generating Forms with AI', link: '/getting-started/ai-forms' },
           { text: 'Known Limitations', link: '/getting-started/known-limitations' },
         ],
       },
