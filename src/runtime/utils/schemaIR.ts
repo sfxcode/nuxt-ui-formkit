@@ -3,6 +3,10 @@
 // this; the shared inference code consumes only this. Internal - not
 // re-exported, and kept out of `composables/` (an auto-import dir).
 
+// Adapters stop descending here and treat anything deeper as unsupported - a
+// backstop for cyclic schemas whose identity doesn't repeat on the way down.
+export const MAX_SCHEMA_DEPTH = 32
+
 export type SchemaIRKind = 'string' | 'number' | 'boolean' | 'date' | 'array' | 'object' | 'unsupported'
 
 export interface SchemaIRRules {

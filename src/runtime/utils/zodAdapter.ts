@@ -1,5 +1,6 @@
 import type { ZodLikeSchema } from '../composables/useFormKitAutoForm'
 import type { SchemaIR, SchemaIRKind, SchemaIRRules } from './schemaIR'
+import { MAX_SCHEMA_DEPTH } from './schemaIR'
 
 // Reads a Zod 4.x schema through its public instance getters (no zod import)
 // into the library-neutral `SchemaIR`. Every zod-specific access path lives here.
@@ -51,6 +52,13 @@ function rulesFromArrayChecks(schema: ZodLikeSchema, rules: SchemaIRRules): void
 }
 
 export function zodToIR(entry: ZodLikeSchema): SchemaIR {
+  return convert(entry, new Set(), 0)
+}
+
+// `seen` holds the schemas on the *current path* (added before descending,
+// removed after), so a cycle becomes an unsupported leaf while a schema merely
+// reused by sibling fields still converts in full.
+function convert(entry: ZodLikeSchema, seen: Set<object>, depth: number): SchemaIR {
   // `.default()` can sit anywhere in an `.optional()`/`.nullable()` chain
   // depending on call order, so walk the whole chain for it.
   let schema = entry
@@ -66,19 +74,28 @@ export function zodToIR(entry: ZodLikeSchema): SchemaIR {
     required = false
     schema = schema.unwrap()
   }
+  if (seen.has(schema) || depth >= MAX_SCHEMA_DEPTH) {
+    return { kind: 'unsupported', required, rules: {} }
+  }
   const kind: SchemaIRKind = KINDS.has(schema.type as SchemaIRKind) ? schema.type as SchemaIRKind : 'unsupported'
   const ir: SchemaIR = { kind, required, rules: rulesFromGetters(schema) }
   if (defaultValue !== undefined) {
     ir.default = defaultValue
   }
-  if (kind === 'object' && schema.shape) {
-    ir.shape = Object.fromEntries(Object.entries(schema.shape).map(([key, value]) => [key, zodToIR(value)]))
-  }
   if (kind === 'array') {
     rulesFromArrayChecks(schema, ir.rules)
-    if (schema.element) {
-      ir.element = zodToIR(schema.element)
+  }
+  seen.add(schema)
+  try {
+    if (kind === 'object' && schema.shape) {
+      ir.shape = Object.fromEntries(Object.entries(schema.shape).map(([key, value]) => [key, convert(value, seen, depth + 1)]))
     }
+    if (kind === 'array' && schema.element) {
+      ir.element = convert(schema.element, seen, depth + 1)
+    }
+  }
+  finally {
+    seen.delete(schema)
   }
   return ir
 }

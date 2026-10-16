@@ -239,6 +239,17 @@ describe('inferFormSchemaFromZod wrappers and defaults (pinned behavior)', () =>
     expect(node).toMatchObject({ $formkit: 'nuxtUIRepeater', validation: 'required|length:1,5' })
   })
 
+  it('infers a getter-recursive schema without overflowing, dropping only the cyclic field', () => {
+    const Node: z.ZodType = z.object({
+      name: z.string(),
+      get child() {
+        return Node.optional()
+      },
+    })
+
+    expect(infer(Node).map(node => node.name)).toEqual(['name'])
+  })
+
   it('returns an empty schema for roots that are not an object with a shape', () => {
     expect(infer(z.object({ a: z.string() }).optional())).toEqual([])
     expect(infer({ type: 'object' })).toEqual([])

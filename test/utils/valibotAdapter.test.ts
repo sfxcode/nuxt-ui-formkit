@@ -81,3 +81,43 @@ describe('valibotToIR rules', () => {
     expect(toIR(v.pipe(v.number(), v.minValue(1), v.minValue(3), v.maxValue(9), v.maxValue(5))).rules).toEqual({ min: 3, max: 5 })
   })
 })
+
+describe('cyclic and shared schemas', () => {
+  it('turns a cyclic schema object into an unsupported leaf', () => {
+    const cyclic: Record<string, unknown> = { kind: 'schema', type: 'object', entries: {} }
+    ;(cyclic.entries as Record<string, unknown>).self = cyclic
+    ;(cyclic.entries as Record<string, unknown>).name = v.string()
+    const ir = toIR(cyclic)
+
+    expect(Object.keys(ir.shape!)).toEqual(['self', 'name'])
+    expect(ir.shape!.self!.kind).toBe('unsupported')
+    expect(ir.shape!.name!.kind).toBe('string')
+  })
+
+  it('maps a recursive lazy schema to unsupported', () => {
+    const Node: v.GenericSchema = v.object({ name: v.string(), child: v.optional(v.lazy(() => Node)) })
+    expect(toIR(Node).shape!.child!.kind).toBe('unsupported')
+  })
+
+  it('still converts a schema reused by sibling fields in full', () => {
+    const Address = v.object({ city: v.string() })
+    const ir = toIR(v.object({ home: Address, work: Address, previous: v.array(Address) }))
+
+    expect(ir.shape!.work!.shape!.city!.kind).toBe('string')
+    expect(ir.shape!.previous!.element!.shape!.city!.kind).toBe('string')
+  })
+
+  it('caps depth instead of recursing without bound', () => {
+    let schema: v.GenericSchema = v.string()
+    for (let i = 0; i < 60; i++) schema = v.object({ child: schema })
+    let ir = toIR(schema)
+    let depth = 0
+    while (ir.shape?.child) {
+      ir = ir.shape.child
+      depth++
+    }
+
+    expect(depth).toBeLessThan(60)
+    expect(ir.kind).toBe('unsupported')
+  })
+})

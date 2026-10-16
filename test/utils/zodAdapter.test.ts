@@ -118,3 +118,55 @@ describe('valibot and zod adapters agree', () => {
     expect(zodToIR(zodSchema as ZodLikeSchema)).toEqual(valibotToIR(valibotSchema as ValibotLikeSchema))
   })
 })
+
+describe('cyclic and shared schemas', () => {
+  const nodeNames = (ir: ReturnType<typeof toIR>) => Object.keys(ir.shape ?? {})
+
+  it('turns a getter-recursive schema into an unsupported leaf instead of overflowing the stack', () => {
+    const Node: z.ZodType = z.object({
+      name: z.string(),
+      get child() {
+        return Node.optional()
+      },
+    })
+    const ir = toIR(Node)
+
+    expect(nodeNames(ir)).toEqual(['name', 'child'])
+    expect(ir.shape!.child!.kind).toBe('unsupported')
+    expect(ir.shape!.child!.required).toBe(false)
+  })
+
+  it('handles mutual recursion', () => {
+    const A: z.ZodType = z.object({
+      b: z.lazy(() => B).optional(),
+      get self() {
+        return A.optional()
+      },
+    })
+    const B: z.ZodType = z.object({ a: A.optional() })
+    expect(() => toIR(A)).not.toThrow()
+  })
+
+  it('still converts a schema reused by sibling fields in full', () => {
+    const Address = z.object({ city: z.string() })
+    const ir = toIR(z.object({ home: Address, work: Address, previous: z.array(Address) }))
+
+    expect(ir.shape!.home!.kind).toBe('object')
+    expect(ir.shape!.work!.shape!.city!.kind).toBe('string')
+    expect(ir.shape!.previous!.element!.shape!.city!.kind).toBe('string')
+  })
+
+  it('caps depth instead of recursing without bound', () => {
+    let schema: z.ZodType = z.string()
+    for (let i = 0; i < 60; i++) schema = z.object({ child: schema })
+    let ir = toIR(schema)
+    let depth = 0
+    while (ir.shape?.child) {
+      ir = ir.shape.child
+      depth++
+    }
+
+    expect(depth).toBeLessThan(60)
+    expect(ir.kind).toBe('unsupported')
+  })
+})
