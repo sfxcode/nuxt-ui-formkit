@@ -1,7 +1,7 @@
 import type { FormKitSchemaNode } from '@formkit/core'
 import { isDateValue } from '../utils/dateValueConversion'
 import type { SchemaIR } from '../utils/schemaIR'
-import { nodeFromIR, REPEATER_BUTTON_DEFAULTS } from '../utils/schemaInference'
+import { buildGroupNode, buildRepeaterNode, nodeFromIR } from '../utils/schemaInference'
 import { valibotToIR } from '../utils/valibotAdapter'
 import { zodToIR } from '../utils/zodAdapter'
 
@@ -97,19 +97,12 @@ function inferNode(name: string, value: unknown, overrides: AutoFormOverrides | 
   if (Array.isArray(value)) {
     const [first] = value
     if (isPlainObject(first)) {
-      return {
-        $formkit: 'nuxtUIRepeater',
-        name,
-        label,
-        newItem: blankItem(first),
-        children: inferNodes(first, overrides, path),
-        ...REPEATER_BUTTON_DEFAULTS,
-      }
+      return buildRepeaterNode({ name, label }, blankItem(first), inferNodes(first, overrides, path))
     }
     return { $formkit: 'nuxtUIInputTags', name, label }
   }
   if (isPlainObject(value)) {
-    return { $formkit: 'group', name, children: inferNodes(value, overrides, path) }
+    return buildGroupNode(name, inferNodes(value, overrides, path))
   }
   return undefined
 }
@@ -235,18 +228,12 @@ function inferSampleNode(name: string, values: unknown[], overrides: AutoFormOve
       // a key that only appears in another sample's rows would otherwise
       // be missed.
       const rows = presentValues.filter(Array.isArray).flat().filter(isPlainObject)
-      return {
-        $formkit: 'nuxtUIRepeater',
-        ...base,
-        newItem: blankItem(rows[0] ?? first),
-        children: inferSampleNodes(rows, overrides, path),
-        ...REPEATER_BUTTON_DEFAULTS,
-      }
+      return buildRepeaterNode(base, blankItem(rows[0] ?? first), inferSampleNodes(rows, overrides, path))
     }
     return { $formkit: 'nuxtUIInputTags', ...base }
   }
   if (isPlainObject(representative)) {
-    return { $formkit: 'group', name, children: inferSampleNodes(presentValues.filter(isPlainObject), overrides, path) }
+    return buildGroupNode(name, inferSampleNodes(presentValues.filter(isPlainObject), overrides, path))
   }
   return undefined
 }
