@@ -136,3 +136,80 @@ describe('inferFormSchemaFromValibot overrides', () => {
     expect(nodes[2]?.$formkit).toBe('nuxtUITextarea')
   })
 })
+
+describe('inferFormSchemaFromValibot wrappers and defaults (pinned behavior)', () => {
+  const newItemOf = (fields: Record<string, v.GenericSchema>) =>
+    (infer(v.object({ rows: v.array(v.object(fields)) }))[0]?.newItem) as Record<string, unknown>
+
+  it('treats exact_optional as optional', () => {
+    const [node] = infer(v.object({ a: v.exactOptional(v.string()) }))
+    expect(node).toMatchObject({ $formkit: 'nuxtUIInput', name: 'a' })
+    expect(node?.validation).toBeUndefined()
+  })
+
+  it('unwraps nested wrappers as optional', () => {
+    const [node] = infer(v.object({ a: v.optional(v.nullable(v.number())) }))
+    expect(node).toMatchObject({ $formkit: 'nuxtUIInputNumber', name: 'a' })
+    expect(node?.validation).toBeUndefined()
+  })
+
+  it('reads a default from nullable and nullish wrappers', () => {
+    expect(newItemOf({ a: v.nullable(v.string(), 'x'), b: v.nullish(v.number(), 7) })).toEqual({ a: 'x', b: 7 })
+  })
+
+  it('only reads a default from the outermost wrapper', () => {
+    expect(newItemOf({ a: v.nullable(v.optional(v.string(), 'inner')) })).toEqual({ a: '' })
+    expect(newItemOf({ a: v.optional(v.nullable(v.string()), 'outer') })).toEqual({ a: 'outer' })
+  })
+
+  it('blanks a date to null and unsupported types to null', () => {
+    expect(newItemOf({ d: v.date(), p: v.picklist(['a', 'b']) })).toEqual({ d: null, p: null })
+  })
+
+  it('blanks nested objects and arrays inside newItem', () => {
+    expect(newItemOf({
+      address: v.object({ city: v.string(), zip: v.number() }),
+      tags: v.array(v.string()),
+      sub: v.array(v.object({ x: v.string() })),
+    })).toEqual({ address: { city: '', zip: 0 }, tags: [], sub: [] })
+  })
+
+  it('builds a repeater for an array of optional or nullable objects', () => {
+    const nodes = infer(v.object({
+      a: v.array(v.optional(v.object({ x: v.string() }))),
+      b: v.array(v.nullable(v.object({ y: v.number() }))),
+    }))
+    expect(nodes.map(node => node.$formkit)).toEqual(['nuxtUIRepeater', 'nuxtUIRepeater'])
+    expect(nodes[1]?.newItem).toEqual({ y: 0 })
+  })
+
+  it('ignores non-validation pipe entries', () => {
+    const [node] = infer(v.object({ name: v.pipe(v.string(), v.trim(), v.minLength(2)) }))
+    expect(node?.validation).toBe('required|length:2')
+  })
+
+  it('keeps the last of repeated min/max length, and emits every min/max value', () => {
+    const nodes = infer(v.object({
+      s: v.pipe(v.string(), v.minLength(2), v.minLength(5), v.maxLength(9), v.maxLength(8)),
+      n: v.pipe(v.number(), v.minValue(1), v.minValue(3), v.maxValue(9)),
+    }))
+    expect(nodes[0]?.validation).toBe('required|length:5,8')
+    expect(nodes[1]?.validation).toBe('required|min:1|min:3|max:9')
+  })
+
+  it('emits rules in pipe order, with length last', () => {
+    const [node] = infer(v.object({ s: v.pipe(v.string(), v.minLength(2), v.email()) }))
+    expect(node?.validation).toBe('required|email|length:2')
+  })
+
+  it('derives length rules from a pipe on an array', () => {
+    const [node] = infer(v.object({ tags: v.pipe(v.array(v.string()), v.minLength(1), v.maxLength(3)) }))
+    expect(node).toMatchObject({ $formkit: 'nuxtUIInputTags', validation: 'required|length:1,3' })
+  })
+
+  it('returns an empty schema for roots that are not a schema-kind object with entries', () => {
+    expect(infer({ type: 'object', entries: { a: v.string() } })).toEqual([])
+    expect(infer({ kind: 'schema', type: 'object' })).toEqual([])
+    expect(infer(v.optional(v.object({ a: v.string() })))).toEqual([])
+  })
+})

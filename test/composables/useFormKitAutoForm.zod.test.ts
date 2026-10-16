@@ -165,3 +165,67 @@ describe('inferFormSchemaFromZod number bounds', () => {
     expect(validationOf(z.number().min(5))).toBe('required|min:5')
   })
 })
+
+describe('inferFormSchemaFromZod wrappers and defaults (pinned behavior)', () => {
+  const newItemOf = (fields: Record<string, z.ZodType>) =>
+    (infer(z.object({ rows: z.array(z.object(fields)) }))[0]?.newItem) as Record<string, unknown>
+
+  it('marks a field with a default as not required', () => {
+    const [node] = infer(z.object({ a: z.string().default('x') }))
+    expect(node?.validation).toBeUndefined()
+  })
+
+  it('unwraps nested wrappers as optional', () => {
+    const [node] = infer(z.object({ a: z.number().nullable().optional() }))
+    expect(node).toMatchObject({ $formkit: 'nuxtUIInputNumber', name: 'a' })
+    expect(node?.validation).toBeUndefined()
+  })
+
+  it('reads a default through nullable, as the innermost or outermost layer', () => {
+    expect(newItemOf({
+      a: z.string().nullable().default('x'),
+      b: z.string().default('y').nullable(),
+    })).toEqual({ a: 'x', b: 'y' })
+  })
+
+  it('blanks a date to null and unsupported types to null', () => {
+    expect(newItemOf({ d: z.date(), e: z.enum(['a', 'b']) })).toEqual({ d: null, e: null })
+  })
+
+  it('blanks nested objects and arrays inside newItem', () => {
+    expect(newItemOf({
+      address: z.object({ city: z.string(), zip: z.number() }),
+      tags: z.array(z.string()),
+      sub: z.array(z.object({ x: z.string() })),
+    })).toEqual({ address: { city: '', zip: 0 }, tags: [], sub: [] })
+  })
+
+  it('builds a repeater for an array of optional or nullable objects', () => {
+    const nodes = infer(z.object({
+      a: z.array(z.object({ x: z.string() }).optional()),
+      b: z.array(z.object({ y: z.number() }).nullable()),
+    }))
+    expect(nodes.map(node => node.$formkit)).toEqual(['nuxtUIRepeater', 'nuxtUIRepeater'])
+    expect(nodes[1]?.newItem).toEqual({ y: 0 })
+  })
+
+  it('keeps the last of repeated min/max constraints (zod reports the tightest)', () => {
+    const nodes = infer(z.object({
+      s: z.string().min(2).min(5).max(9).max(8),
+      n: z.number().min(1).min(3).max(9),
+    }))
+    expect(nodes[0]?.validation).toBe('required|length:5,8')
+    expect(nodes[1]?.validation).toBe('required|min:3|max:9')
+  })
+
+  // Differs from valibot, whose array pipe does emit `length:` (see the valibot test).
+  it('emits no length rule for min/max on an array', () => {
+    const [node] = infer(z.object({ tags: z.array(z.string()).min(1).max(3) }))
+    expect(node).toMatchObject({ $formkit: 'nuxtUIInputTags', validation: 'required' })
+  })
+
+  it('returns an empty schema for roots that are not an object with a shape', () => {
+    expect(infer(z.object({ a: z.string() }).optional())).toEqual([])
+    expect(infer({ type: 'object' })).toEqual([])
+  })
+})
