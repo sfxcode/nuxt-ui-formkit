@@ -1,3 +1,4 @@
+import { getCurrentInstance } from 'vue'
 import { useFormKitSchema } from './useFormKitSchema'
 import { useFormKitEditor } from './useFormKitEditor.ts'
 
@@ -27,15 +28,31 @@ import { useFormKitEditor } from './useFormKitEditor.ts'
 // radio visibly shows "Base" selected. A counter suffix makes every call's
 // ids unique for the lifetime of the app, so there's never a live node from
 // an earlier mount left to race against.
-let instanceCounter = 0
+//
+// The counter is kept per Vue app, not per module. A module-level `let` outlives the app: a
+// server renders every request in a fresh app inside one long-lived process, so the counter kept
+// growing across requests - a page's ids (and so its HTML) depended on how many requests came
+// before it, and never matched the browser, which counts from 1 (a hydration mismatch). Keyed by
+// the app, it restarts for every request and is released with it, while one browser app still
+// gets unique ids across its whole lifetime.
+const instanceCounters = new WeakMap<object, number>()
+// Calls outside any component have no app to key on; they share one counter, as before.
+const outsideAnyApp = {}
+
+function nextInstanceNumber(): number {
+  const key = getCurrentInstance()?.appContext.app ?? outsideAnyApp
+  const next = (instanceCounters.get(key) ?? 0) + 1
+  instanceCounters.set(key, next)
+  return next
+}
 
 export function useFormKitEditorSchema(isChangeTypePossible: boolean = true) {
   const { addElement } = useFormKitSchema()
   const { inputNames, outputNames, inputNamesWithOptions, inputNamesWithLegend } = useFormKitEditor()
 
-  instanceCounter += 1
-  const dollarFormkitId = `_dollar_formkit_${instanceCounter}`
-  const sectionId = `section_${instanceCounter}`
+  const instanceNumber = nextInstanceNumber()
+  const dollarFormkitId = `_dollar_formkit_${instanceNumber}`
+  const sectionId = `section_${instanceNumber}`
 
   function ifGet(id: string, value: string) {
     return `$get(${id}).value === '${value}'`
