@@ -122,32 +122,6 @@ describe('useFormKitInput', () => {
     expect(blurHandler).toHaveBeenCalled()
   })
 
-  it('handles change event safely', () => {
-    const inputHandler = vi.fn()
-    const context = {
-      node: {
-        input: inputHandler,
-      },
-      _value: 'new-value',
-    }
-    const { handleChange } = useFormKitInput(context as unknown as FormKitFrameworkContext)
-    handleChange('new-value')
-    expect(inputHandler).toHaveBeenCalledWith('new-value')
-  })
-
-  it('handles input event safely', () => {
-    const inputHandler = vi.fn()
-    const context = {
-      node: {
-        input: inputHandler,
-      },
-      _value: 'input-value',
-    }
-    const { handleInput } = useFormKitInput(context as unknown as FormKitFrameworkContext)
-    handleInput('input-value')
-    expect(inputHandler).toHaveBeenCalledWith('input-value')
-  })
-
   it('handles select event safely', () => {
     const inputHandler = vi.fn()
     const context = {
@@ -461,8 +435,8 @@ describe('useFormKitInput - edge cases', () => {
 
   it('handles missing node.input gracefully', () => {
     const context = {}
-    const { handleChange } = useFormKitInput(context as unknown as FormKitFrameworkContext)
-    expect(() => handleChange('value')).not.toThrow()
+    const { handleSelect } = useFormKitInput(context as unknown as FormKitFrameworkContext)
+    expect(() => handleSelect('value')).not.toThrow()
   })
 
   it('handles partial state object', () => {
@@ -536,32 +510,6 @@ describe('useFormKitInput - edge cases', () => {
     }
     const { modelValue } = useFormKitInput(context as unknown as FormKitFrameworkContext)
     expect(modelValue.value).toBe('test')
-  })
-
-  it('handles handleInput with undefined parameter', () => {
-    const inputHandler = vi.fn()
-    const context = {
-      node: {
-        input: inputHandler,
-      },
-      _value: 'current-value',
-    }
-    const { handleInput } = useFormKitInput(context as unknown as FormKitFrameworkContext)
-    handleInput(undefined)
-    expect(inputHandler).toHaveBeenCalledWith('current-value')
-  })
-
-  it('handles handleChange with undefined parameter', () => {
-    const inputHandler = vi.fn()
-    const context = {
-      node: {
-        input: inputHandler,
-      },
-      _value: 'current-value',
-    }
-    const { handleChange } = useFormKitInput(context as unknown as FormKitFrameworkContext)
-    handleChange(undefined)
-    expect(inputHandler).toHaveBeenCalledWith('current-value')
   })
 
   it('handles color with undefined state', () => {

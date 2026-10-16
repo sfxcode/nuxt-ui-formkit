@@ -56,14 +56,6 @@ export function useFormKitInput(context: FormKitFrameworkContext) {
     context?.handlers?.blur?.(event)
   }
 
-  function handleChange(_: unknown) {
-    context?.node?.input?.(context?._value)
-  }
-
-  function handleInput(_: unknown) {
-    context?.node?.input?.(context?._value)
-  }
-
   function handleSelect(e: unknown) {
     context?.node?.input?.(e)
   }
@@ -83,5 +75,5 @@ export function useFormKitInput(context: FormKitFrameworkContext) {
     return []
   })
 
-  return { isInvalid, validSlotNames, styleClass, color, commonProps, handleBlur, handleChange, handleInput, handleSelect, modelValue, items, ui }
+  return { isInvalid, validSlotNames, styleClass, color, commonProps, handleBlur, handleSelect, modelValue, items, ui }
 }
