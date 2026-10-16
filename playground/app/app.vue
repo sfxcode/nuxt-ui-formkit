@@ -5,7 +5,6 @@ const items = ref<NavigationMenuItem[]>([
   {
     label: 'Input Components',
     icon: 'i-lucide-box',
-    active: true,
     children: [
       {
         label: 'Calendar',
@@ -145,7 +144,6 @@ const items = ref<NavigationMenuItem[]>([
   {
     label: 'Output Components',
     icon: 'i-lucide-box',
-    active: false,
     children: [
       {
         label: 'OutputBadge',
@@ -212,7 +210,6 @@ const items = ref<NavigationMenuItem[]>([
   {
     label: 'Form Components',
     icon: 'i-lucide-box',
-    active: false,
     children: [
       {
         label: 'Without Schema',
@@ -297,19 +294,16 @@ const items = ref<NavigationMenuItem[]>([
   {
     label: 'Form Builder',
     icon: 'i-lucide-layout-template',
-    active: false,
     to: '/form-builder',
   },
   {
     label: 'Live Samples',
     icon: 'i-lucide-sparkles',
-    active: false,
     to: '/samples',
   },
   {
     label: 'Playground',
     icon: 'i-lucide-flask-conical',
-    active: false,
     to: '/playground',
   },
 ])
@@ -320,7 +314,7 @@ const items = ref<NavigationMenuItem[]>([
     <UHeader>
       <template #left>
         <NuxtLink to="/">
-          <h1 class="text-xl">FormKit Nuxt UI</h1>
+          <span class="text-xl font-semibold whitespace-nowrap">FormKit Nuxt UI</span>
         </NuxtLink>
       </template>
 
@@ -352,7 +346,7 @@ const items = ref<NavigationMenuItem[]>([
     <UFooter>
       <template #left>
         <p class="text-sm text-muted">
-          Built with Nuxt UI 4.12.0 • © {{ new Date().getFullYear() }}
+          Built with Nuxt UI • © {{ new Date().getFullYear() }}
         </p>
       </template>
 

@@ -12,8 +12,7 @@ const items: SelectItem[] = [
 
 const schema = reactive(
   [
-    addElement('h2', ['Register ', '$email'], { class: 'text-2xl' }),
-    addElement('h3', 'Header Text H3', { class: 'text-xl' }),
+    addElement('h3', ['Register ', '$email'], { class: 'text-lg font-medium' }),
     {
       $formkit: 'nuxtUIInput',
       name: 'email',
@@ -234,39 +233,52 @@ const outputData = ref({
 
 <template>
   <div>
-    <UContainer>
-      <div class="flex flex-col lg:flex-row gap-8">
+    <UPageHero
+      title="Nuxt UI forms, driven by FormKit"
+      description="Describe a form as a schema and get validated, accessible Nuxt UI inputs: a full set of input and output components, repeaters, multi-step wizards, autosave and overlay forms."
+      :links="[
+        { label: 'Browse live samples', to: '/samples', icon: 'i-lucide-sparkles', size: 'xl' },
+        { label: 'Open the form builder', to: '/form-builder', icon: 'i-lucide-layout-template', size: 'xl', color: 'neutral', variant: 'subtle' },
+        { label: 'GitHub', to: 'https://github.com/sfxcode/nuxt-ui-formkit', target: '_blank', icon: 'i-simple-icons-github', size: 'xl', color: 'neutral', variant: 'ghost' },
+      ]"
+      :ui="{ container: 'py-12 sm:py-16 lg:py-20' }"
+    />
+
+    <UContainer class="pb-12">
+      <div class="grid gap-6 lg:grid-cols-3">
         <!-- Form Edit Section -->
-        <section class="lg:w-1/3">
-          <h1 class="text-2xl font-bold mb-4">
-            Form Edit Example
-          </h1>
-          <p class="text-muted-foreground mb-6">
-            Displaying various input component types with FUDataEdit
-          </p>
+        <UCard class="lg:col-span-1">
+          <template #header>
+            <h2 class="text-lg font-semibold">
+              Edit with FUDataEdit
+            </h2>
+            <p class="text-sm text-muted">
+              Inputs rendered from a schema, with validation.
+            </p>
+          </template>
           <FUDataEdit
             :data="data"
             :schema="schema"
             @data-saved="console.log('Data saved:', $event)"
           />
-        </section>
-
-        <div class="hidden lg:block w-px bg-gray-200 dark:bg-gray-800" />
+        </UCard>
 
         <!-- Output Display Section -->
-        <section class="lg:w-2/3 lg:flex-1">
-          <h1 class="text-2xl font-bold mb-4">
-            Data View Example
-          </h1>
-          <p class="text-muted-foreground mb-6">
-            Displaying various output component types with FUDataView
-          </p>
+        <UCard class="lg:col-span-2">
+          <template #header>
+            <h2 class="text-lg font-semibold">
+              Show with FUDataView
+            </h2>
+            <p class="text-sm text-muted">
+              The same data as read-only output components.
+            </p>
+          </template>
           <FUDataView
             :data="outputData"
             :schema="outputSchema"
-            form-class="grid grid-cols-3 gap-2"
+            form-class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3"
           />
-        </section>
+        </UCard>
       </div>
     </UContainer>
   </div>

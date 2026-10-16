@@ -79,7 +79,7 @@ const schema = [
         Multi-Step Form
       </h1>
       <p class="text-lg text-muted-foreground mb-2">
-        `nuxtUIMultiStep`/`nuxtUIStep` wrap `@formkit/addons`' `createMultiStepPlugin` with a Nuxt UI `UTabs` tab strip.
+        <code>nuxtUIMultiStep</code>/<code>nuxtUIStep</code> wrap <code>@formkit/addons</code>' <code>createMultiStepPlugin</code> with a Nuxt UI <code>UTabs</code> tab strip.
       </p>
       <p class="text-muted-foreground">
         <code>allowIncomplete: false</code> blocks advancing to the next step until the current step's fields validate.
