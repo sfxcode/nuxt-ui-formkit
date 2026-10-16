@@ -35,7 +35,7 @@ Return ONE valid JSON array and nothing else: no prose, no comments, no trailing
 1. Only use field types and props the docs list. Never invent a type or a prop; an unknown prop may be silently ignored.
 2. Every field has a unique camelCase `name` and a human `label`. Add `help` or `placeholder` where it helps the user.
 3. Validation is a pipe string of FormKit rules: `"required|email"`, `"required|length:8,64"`, `"required|confirm"`. For a checkbox or switch that must be on, use `accepted`, not `required`.
-4. Conditional fields: `"if": "$get(plan).value === 'pro'"`. `$get()` finds a field by its **`id`**, not its `name`, so the field it reads needs an `id` (use the same string as its `name`). `&&`, `||`, `===` and `!==` work. There is no unary `!`: write `=== false` or `!== true`.
+4. Conditional fields: `"if": "$get(plan).value === 'pro'"`. `$get()` finds a field by its **`id`**, not its `name`, so the field it reads needs an `id` (use the same string as its `name`). `&&`, `||`, `===` and `!==` work. There is no unary `!`: write `!== true`, not `=== false`, because an untouched checkbox or switch is `undefined`, not `false`, unless you give it `"value": false`.
 5. Inside a repeater row, read a sibling field with `$node.value.<field>` instead of `$get()`.
 6. Choice fields: `nuxtUIRadioGroup` for one of a few options, `nuxtUICheckboxGroup` for several of a few, `nuxtUISelect` for one of many, `nuxtUISelectMenu` with `"multiple": true` for several of many. Options are strings or `{ "label": "...", "value": "..." }`; prefer the object form with a stable camelCase `value`.
 7. Dates: `nuxtUIInputDate` with `"valueType": "iso"` so the value is a plain string.

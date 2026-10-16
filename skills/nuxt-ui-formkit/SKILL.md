@@ -21,7 +21,7 @@ Read the docs instead of guessing: https://sfxcode.github.io/nuxt-ui-formkit/llm
 
 A field is `{ $formkit: 'nuxtUIInput', name, label, validation, ...props }`; headings and layout are `{ $el: 'h2', attrs: { class }, children: [...] }`. Props go on the schema node; unknown props may be silently ignored, so check the docs for the type.
 
-- **Conditional fields** use `if: "$get(plan).value === 'pro'"`. `$get()` finds a field by its **`id`**, not its `name`, so the field it reads needs an `id`. Without one the field never shows, with no error. `&&`, `||`, `===`, `!==` work; there is no unary `!`.
+- **Conditional fields** use `if: "$get(plan).value === 'pro'"`. `$get()` finds a field by its **`id`**, not its `name`, so the field it reads needs an `id`. Without one the field never shows, with no error. `&&`, `||`, `===`, `!==` work; there is no unary `!`. An untouched checkbox or switch is `undefined`, not `false`: to react to "off" write `!== true`, or set `value: false`.
 - **Inside a repeater row** read a sibling with `$node.value.<field>`.
 - **`required` passes for `false`.** Use `accepted` on `nuxtUICheckbox` and `nuxtUISwitch`.
 - **Dates:** `nuxtUIInputDate` and `nuxtUICalendar` emit `CalendarDate` objects (not JSON). Set `valueType: 'iso'` or `'date'`.
