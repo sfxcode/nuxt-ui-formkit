@@ -83,6 +83,7 @@
     "test": "vitest run",
     "test:watch": "vitest watch",
     "test:e2e": "node e2e/run.mjs",
+    "test:e2e:ssr": "E2E_SSR=true node e2e/run.mjs",
     "test:types": "vue-tsc --noEmit && cd playground && vue-tsc --noEmit",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",

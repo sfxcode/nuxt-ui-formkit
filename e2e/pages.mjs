@@ -1,5 +1,19 @@
 import { assert, dragAndDrop, fieldByLabel, labelsOf, messagesOf, nodeState, poll, section } from './helpers.mjs'
 
+// Known SSR gaps, as `[type, ..., why]`. Each is held to the rule that a gap which stops
+// being one fails the run, so it is removed on purpose; later steps of plan 19 empty both lists.
+
+// Types that hydrate with a mismatch (checked in dev, where Vue reports attribute mismatches).
+const KNOWN_HYDRATION_GAPS = [
+  ['nuxtUIRepeater', 'row and list ids contain a random uuid, so the server and client ids differ (plan 19 phase 4)'],
+]
+
+// Things the server HTML does not contain, as `[type, what, why]`.
+const KNOWN_SSR_GAPS = [
+  ['nuxtUIMultiStep', 'label', 'the tab strip is empty on the server: tab items are built in the node\'s `created` hook by a client-side watchEffect, so the step labels only appear after hydration (the step panels themselves are server-rendered)'],
+  ['nuxtUIStep', 'label', 'same: a step\'s label is only shown as a tab, and the tab strip is empty on the server'],
+]
+
 /**
  * The page table. Each entry is loaded in a fresh page; the run fails if the
  * page throws, logs a console error or a Vue warning, or any check throws.
@@ -313,6 +327,66 @@ export default [
       // The detector can see a real blur: clicking elsewhere on the page does flip it.
       await page.mouse.click(5, 5)
       await poll(() => blurred('Drag Handle'), value => assert.equal(value, true))
+    },
+  },
+  {
+    // Server rendering (`npm run test:e2e:ssr`): every registered type renders on the real
+    // server, and the page then hydrates without a warning (the runner fails on one).
+    // Types in KNOWN_HYDRATION_GAPS are left out of the loaded page and checked separately.
+    path: `/ssr-all-types?skip=${KNOWN_HYDRATION_GAPS.map(([type]) => type).join(',')}`,
+    ssr: 'only',
+    // `body`, not `form`: a type that breaks server rendering makes the whole page a 500, and
+    // the per-type checks below are what name it.
+    ready: 'body',
+    async checks(page) {
+      const origin = new URL(page.url()).origin
+      const serverResponse = async (query) => {
+        const response = await page.request.get(`${origin}/ssr-all-types${query}`)
+        return { status: response.status(), html: await response.text() }
+      }
+
+      // The registered types, as listed by the page itself (`?list=1` renders none of them,
+      // so the list survives a type that breaks server rendering).
+      const listing = (await serverResponse('?list=1')).html.match(/data-registered-types[^>]*>([^<]+)</)
+      const types = (listing?.[1] ?? '').trim().split(',').filter(Boolean)
+      assert.ok(types.length >= 30, `the page lists the registered types (got ${types.length})`)
+
+      // FormKit renders these two with a type forced by the multi-step plugin, not the registry key.
+      const renderedType = { nuxtUIMultiStep: 'multi-step', nuxtUIStep: 'step' }
+      const knownGap = (type, what) => KNOWN_SSR_GAPS.find(([knownType, knownWhat]) => knownType === type && knownWhat === what)
+
+      // One request per type, so a type that breaks server rendering is named, not hidden behind one 500.
+      const problems = []
+      for (const type of types) {
+        const { status, html } = await serverResponse(`?type=${type}`)
+        if (status !== 200) {
+          problems.push(`${type}: the server answered ${status}`)
+          continue
+        }
+        const expectedType = renderedType[type] ?? type
+        if (!html.includes(`data-type="${expectedType}"`))
+          problems.push(`${type}: no data-type="${expectedType}" in the server HTML`)
+        // Outputs show their value, not a field label; every input type is given one.
+        if (!type.startsWith('nuxtUIOutput')) {
+          const hasLabel = html.includes(`${type} label`)
+          if (knownGap(type, 'label') && hasLabel)
+            problems.push(`${type}: its label is now server-rendered - remove it from KNOWN_SSR_GAPS`)
+          else if (!knownGap(type, 'label') && !hasLabel)
+            problems.push(`${type}: its label is missing from the server HTML`)
+        }
+      }
+      assert.deepEqual(problems, [], 'every registered type renders on the server')
+
+      // A known hydration gap must still be a gap: once a type hydrates cleanly it has to leave the list.
+      for (const [type] of KNOWN_HYDRATION_GAPS) {
+        const probe = await page.context().browser().newPage()
+        const messages = []
+        probe.on('console', message => messages.push(message.text()))
+        await probe.goto(`${origin}/ssr-all-types?type=${type}`, { waitUntil: 'networkidle' })
+        await probe.waitForTimeout(1000)
+        await probe.close()
+        assert.ok(messages.some(text => /hydration/i.test(text)), `${type} now hydrates cleanly - remove it from KNOWN_HYDRATION_GAPS`)
+      }
     },
   },
 ]

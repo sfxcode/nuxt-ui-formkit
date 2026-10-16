@@ -10,6 +10,11 @@ import { startPlayground } from './server.mjs'
 //   E2E_URL=http://localhost:3000   run against an already-running server
 //   E2E_PAGE=auto-form              only pages whose path contains this
 //   E2E_CHROME=/path/to/chrome      browser executable
+//   E2E_SSR=true                    start the playground with server rendering on
+//                                   (`npm run test:e2e:ssr`) and run the pages marked `ssr`
+//
+// A page entry's `ssr` field: `'only'` runs in SSR mode only; `true` runs in both modes;
+// unset runs in the normal (client-only) mode only.
 
 // Dev-server noise that is not the playground's: Nuxt DevTools' own RPC handshake
 // never completes in a headless browser.
@@ -47,9 +52,13 @@ async function runPage(browser, baseUrl, entry) {
 
 async function main() {
   const only = process.env.E2E_PAGE
-  const selected = pages.filter(entry => !only || entry.path.includes(only))
+  const ssrMode = process.env.E2E_SSR === 'true'
+  if (ssrMode)
+    process.env.PLAYGROUND_SSR = 'true'
+  const inMode = entry => (ssrMode ? Boolean(entry.ssr) : entry.ssr !== 'only')
+  const selected = pages.filter(entry => inMode(entry) && (!only || entry.path.includes(only)))
   if (!selected.length)
-    throw new Error(`No page in e2e/pages.mjs matches E2E_PAGE=${only}.`)
+    throw new Error(`No page in e2e/pages.mjs matches${only ? ` E2E_PAGE=${only}` : ''} in ${ssrMode ? 'SSR' : 'client-only'} mode.`)
 
   const server = process.env.E2E_URL ? { url: process.env.E2E_URL, stop: async () => {} } : await startPlayground()
   const stopOnSignal = () => server.stop().finally(() => process.exit(130))
