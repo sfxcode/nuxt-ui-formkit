@@ -121,6 +121,19 @@ describe('FUCalendar\'s starting month', () => {
     await vi.waitFor(() => expect(heading(wrapper)).toContain('July 2019'))
   })
 
+  // The placeholder is only supplied while there is nothing to centre on. If that were re-decided
+  // whenever the value changed, clearing a selection would hand Nuxt UI a new placeholder (today)
+  // and the view would jump away from the month the user was looking at.
+  it('stays on the month the user was looking at when the selection is cleared', async () => {
+    const wrapper = await mountCalendar({ multiple: true }, [new CalendarDate(2019, 7, 4)])
+    await vi.waitFor(() => expect(heading(wrapper)).toContain('July 2019'))
+
+    wrapper.findComponent({ name: 'UCalendar' }).vm.$emit('update:modelValue', [])
+    await new Promise(resolve => setTimeout(resolve, 200))
+
+    expect(heading(wrapper)).toContain('July 2019')
+  })
+
   it('is centred on today, in the browser\'s zone, when there is nothing else to centre on', async () => {
     const wrapper = await mountCalendar({})
 

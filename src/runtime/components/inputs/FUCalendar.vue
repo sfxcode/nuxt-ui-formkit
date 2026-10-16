@@ -86,15 +86,17 @@ const hasValue = computed(() => {
     return Boolean(value.start || value.end)
   return true
 })
+// Decided once, here, and not re-decided when the value changes: a placeholder that appeared
+// whenever the value was cleared would be a new prop for Nuxt UI, which recentres on it - the view
+// would jump away from the month the user was looking at.
+const centreOnToday = !hasValue.value && !defaultValue.value
 const placeholder = computed(() => {
   // `placeholder` is not a declared prop of this field, so a consumer's own arrives in the attrs
   // (spread onto UCalendar before this binding) and must not be overridden.
   const explicit = props.context.attrs?.placeholder as DateValue | undefined
   if (explicit !== undefined)
     return explicit
-  if (hasValue.value || defaultValue.value)
-    return undefined
-  return today(timeZone.value)
+  return centreOnToday ? today(timeZone.value) : undefined
 })
 const minValue = computed(() => toDateValue(props.context.minValue, conversionOptions.value))
 const maxValue = computed(() => toDateValue(props.context.maxValue, conversionOptions.value))
