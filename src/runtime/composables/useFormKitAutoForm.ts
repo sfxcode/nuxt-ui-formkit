@@ -1,23 +1,12 @@
 import type { FormKitSchemaNode } from '@formkit/core'
 import { isDateValue } from '../utils/dateValueConversion'
+import { REPEATER_BUTTON_DEFAULTS } from '../utils/schemaInference'
 
 // `false` removes an inferred field; `true` keeps it as inferred (a no-op,
 // so computed visibility maps can toggle without rebuilding the object).
 export type AutoFormOverrides = Record<string, Record<string, unknown> | boolean>
 
 type AutoFormSchemaNode = Record<string, unknown>
-
-// `nuxtUIRepeater`'s clone/delete buttons are opt-in (hidden unless a
-// consumer explicitly passes these props), and its per-row button group has
-// no default layout - a schema-free repeater still needs to be directly
-// usable without hand-authoring these three props onto every inferred
-// array-of-objects field, so they're the inferred default. `overrides` can
-// still turn any of this off per field.
-const REPEATER_BUTTON_DEFAULTS = {
-  displayCloneButton: true,
-  displayDeleteButton: true,
-  buttonGroupClass: 'flex gap-2 justify-end',
-}
 
 // Anchored to full YYYY-MM-DD (optionally a full ISO-8601 datetime) so plain
 // numeric strings like '123' or partial dates never become date inputs.
