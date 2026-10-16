@@ -90,6 +90,7 @@ export default defineConfig({
           { text: 'Installation', link: '/getting-started/installation' },
           { text: 'Quick Start', link: '/getting-started/quick-start' },
           { text: 'Schema-Based Forms', link: '/getting-started/schema-forms' },
+          { text: 'Server-Side Rendering', link: '/getting-started/ssr' },
           { text: 'Known Limitations', link: '/getting-started/known-limitations' },
         ],
       },

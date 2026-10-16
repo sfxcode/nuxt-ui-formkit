@@ -104,7 +104,7 @@ Nuxt UI FormKit bridges the gap between FormKit's powerful form handling capabil
 
 - **Schema-First Approach**: Define forms as JSON objects for better maintainability and reusability
 - **Complete Component Library**: 17 input components + 6 output components + management utilities
-- **Production Ready**: Battle-tested with TypeScript, SSR support, and accessibility built-in
+- **Production Ready**: Battle-tested with TypeScript, [checked server-side rendering](/getting-started/ssr), and accessibility built-in
 - **Developer Experience**: Auto-imports, IntelliSense, and comprehensive documentation
 
 ## Ready to Start?

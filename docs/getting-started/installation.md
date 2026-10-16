@@ -172,3 +172,6 @@ Explore all available input and output components
 View real-world form examples and use cases  
 [See Examples →](/examples/)
 
+### 🖥️ Server-Side Rendering
+What is rendered on the server, what appears after hydration, and the one thing to avoid in a page's dates  
+[Read about SSR →](/getting-started/ssr)

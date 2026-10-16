@@ -13,7 +13,7 @@ Most of these fail **silently** - no error, no warning, just a missing label or 
 - **Multi-step needs its plugin.** `nuxtUIMultiStep`/`nuxtUIStep` do nothing unless you call `createNuxtUiFormkitConfig({ multiStep: true })` (or register `createMultiStepPlugin()` yourself). In development a `nuxtUIMultiStep` without the plugin logs a console warning saying so. See [Multi-Step](/components/multi-step).
 - **Don't override `plugins` after spreading the helper.** `defaultConfig({ ...createNuxtUiFormkitConfig(), plugins: [x] })` replaces the whole array and silently drops the asterisk plugin (required fields lose their `*`). Pass yours as `createNuxtUiFormkitConfig({ plugins: [x] })`, which appends them.
 - **Schemas can only use globally registered Nuxt UI components.** The module registers `UButton`, `UIcon`, `UTabs`, `UUser` and `UTooltip`. Any other `$cmp: 'UXxx'` in a schema renders as an unstyled custom element.
-- **SSR is untested.** The playground runs with `ssr: false`; nothing here has been verified for server rendering or hydration.
+- **Server rendering has a few things that only appear after hydration.** The editor is built in the browser (the content below it moves down by about 73px when it mounts), a multi-step's tab strip appears after hydration, and a date field without an explicit `timeZone` shows the server's day until the page mounts. None of this is a hydration mismatch. See [Server-Side Rendering](/getting-started/ssr).
 
 ## Validation timing
 
