@@ -1,5 +1,5 @@
 import type { FormKitNode } from '@formkit/core'
-import { cloneAny } from '@formkit/utils'
+import { clonePlain } from '../utils/clonePlain'
 
 export function useFormKitRepeater() {
   function addRepeaterHandler(node: FormKitNode): void {
@@ -34,8 +34,9 @@ export function useFormKitRepeater() {
         let dragStartIndex: number | null = null
         let dragOverIndex: number | null = null
         // Deep-cloned per row, so rows never share a nested array/object with
-        // each other or with the `newItem` prop.
-        const makeNewItem = (): object => cloneAny(node.context?.newItem || {})
+        // each other or with the `newItem` prop. `clonePlain`, not `cloneAny`: that
+        // would rebuild a `CalendarDate` value as a plain object without its methods.
+        const makeNewItem = (): object => clonePlain(node.context?.newItem || {})
 
         node.context.listName = node.name
         node.context.renderButtons = !node.context.hideButtonGroup
@@ -93,7 +94,7 @@ export function useFormKitRepeater() {
           if (parentNode && Array.isArray(parentNode.value)) {
             const item: object = parentNode.value[index]
             const array: object[] = parentNode.value
-            array.splice(index + 1, 0, cloneAny(item))
+            array.splice(index + 1, 0, clonePlain(item))
             parentNode.input(array, false)
             syncOuterValue(array)
           }
