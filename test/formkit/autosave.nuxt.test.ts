@@ -30,14 +30,17 @@ function createForm(value: Record<string, unknown> = {}) {
   })
 }
 
-const wait = (ms = 60) => new Promise(resolve => setTimeout(resolve, ms))
+// An unhandled rejection surfaces some ticks after the async handler that
+// caused it, and there is no positive signal for "nothing rejected" - so these
+// tests give the handlers a short, fixed window and then assert on the absence.
+const rejectionWindow = (ms = 60) => new Promise(resolve => setTimeout(resolve, ms))
 
 describe('createAutosavePlugin failure handling', () => {
   it('drops a corrupt stored draft instead of rejecting on every mount', async () => {
     localStorage.setItem(STORAGE_KEY, '{not json')
 
     createForm({ email: '' })
-    await wait()
+    await rejectionWindow()
 
     expect(rejections).toEqual([])
     expect(localStorage.getItem(STORAGE_KEY)).toBeNull()
@@ -47,7 +50,7 @@ describe('createAutosavePlugin failure handling', () => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify('just a string'))
 
     createForm({ email: '' })
-    await wait()
+    await rejectionWindow()
 
     expect(rejections).toEqual([])
     expect(localStorage.getItem(STORAGE_KEY)).toBeNull()
@@ -60,14 +63,13 @@ describe('createAutosavePlugin failure handling', () => {
     const node = createForm({ email: '' })
 
     node.input({ email: 'ada@example.com' })
-    await wait()
+    await rejectionWindow()
     expect(rejections).toEqual([])
 
     setItem.mockRestore()
     node.input({ email: 'grace@example.com' })
-    await wait()
 
-    expect(JSON.parse(localStorage.getItem(STORAGE_KEY)!).data).toEqual({ email: 'grace@example.com' })
+    await vi.waitFor(() => expect(JSON.parse(localStorage.getItem(STORAGE_KEY)!).data).toEqual({ email: 'grace@example.com' }))
   })
 
   it('does not throw when the form is destroyed while a draft is being restored', async () => {
@@ -75,7 +77,7 @@ describe('createAutosavePlugin failure handling', () => {
 
     const node = createForm({ email: '' })
     node.destroy()
-    await wait()
+    await rejectionWindow()
 
     expect(rejections).toEqual([])
   })

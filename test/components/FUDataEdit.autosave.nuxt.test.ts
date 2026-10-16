@@ -86,6 +86,8 @@ describe('FUDataEdit autosave prop', () => {
 
   it('leaves a form with nothing to restore clean', async () => {
     await mountDataEdit({ autosave: 'draft' })
+    // Absence over a window: "stays clean" has no positive signal, so give a
+    // would-be restore (one debounce) time to happen before asserting it did not.
     await new Promise(resolve => setTimeout(resolve, 150))
 
     expect(getNode('test-autosave')!.context!.state.dirty).toBeFalsy()
@@ -106,6 +108,8 @@ describe('FUDataEdit autosave prop', () => {
     await wrapper.find('input').setValue('ada@example.com')
     // Submit inside the debounce window, so the save for this edit is still pending.
     await wrapper.find('form').trigger('submit')
+    // Absence over a window: let the still-pending 150ms save fire (and be
+    // refused) before asserting nothing was written back.
     await new Promise(resolve => setTimeout(resolve, 400))
 
     expect(localStorage.getItem(storageKey('draft'))).toBeNull()
@@ -152,6 +156,7 @@ describe('FUDataEdit autosave prop', () => {
   it('saves nothing without the autosave prop', async () => {
     const wrapper = await mountDataEdit()
     await wrapper.find('input').setValue('ada@example.com')
+    // Absence over a window: give a (wrongly) enabled save well past its debounce.
     await new Promise(resolve => setTimeout(resolve, 400))
 
     expect(Object.keys(localStorage).filter(k => k.startsWith('nuxt-ui-formkit'))).toEqual([])
