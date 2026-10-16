@@ -4,7 +4,9 @@ A form here is a plain JSON array (a [FormKit schema](/getting-started/schema-fo
 
 ## How to use it
 
-1. Paste the [prompt](#the-prompt) into your AI assistant and attach the framework docs it names (the pages are Markdown files in the repository's `docs/` folder, or copy them from this site).
+1. Paste the [prompt](#the-prompt) into your AI assistant and give it the framework docs it names. This site publishes them in a form an assistant can read:
+   - [`llms.txt`](https://sfxcode.github.io/nuxt-ui-formkit/llms.txt): an index with a link to a plain Markdown copy of every page. Point an assistant that can browse at it, or pick the pages the prompt names (Input Components, Schema-Based Forms, Known Limitations, plus Repeater or Multi-Step).
+   - [`llms-full.txt`](https://sfxcode.github.io/nuxt-ui-formkit/llms-full.txt): every page in one file, about 170 KB at the time of writing. Use it only if your assistant has a large context window.
 2. Describe the form in plain words, for example *"a hotel booking form: guest details, a room type, check-in and check-out dates, an extra-guests field only for family rooms and suites, a breakfast switch and a special requests box"*.
 3. Take the JSON it returns, [render it](#check-the-result) and look at it.
 4. Ask for changes in words: *"put the dates side by side"*, *"add a step for payment"*, *"make the phone number optional"*.
