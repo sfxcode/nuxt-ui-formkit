@@ -60,7 +60,16 @@ export function useFormKitOverlay() {
   // form a copy (`clonePlain(options.data)`): the caller's object is only ever
   // replaced by the resolved result, and a Cancel or a confirmed Discard leaves it
   // exactly as it was. `clonePlain`, not `cloneAny`, so a `CalendarDate` stays one.
+  // An overlay needs a user to answer it. On the server nobody can, so the promise would stay
+  // pending for ever and an `await` in an async `setup` would hang the whole request.
+  function assertClient(method: 'edit' | 'auto'): void {
+    if (import.meta.server)
+      throw new Error(`[nuxt-ui-formkit] useFormKitOverlay().${method}() cannot run on the server: an overlay needs a user to answer it, so its promise would never settle and awaiting it would hang the request. Call it from an event handler or onMounted.`)
+  }
+
   function edit(options: FormKitOverlayEditOptions): Promise<unknown> {
+    assertClient('edit')
+
     // A fresh FormKit registry id per call - required since
     // `useFormKitForm`/`submitForm`/`reset` all key off it, and reusing one
     // across calls (or the component's own default) would collide the way
@@ -79,6 +88,8 @@ export function useFormKitOverlay() {
   }
 
   function auto(options: FormKitOverlayAutoOptions): Promise<unknown> {
+    assertClient('auto')
+
     const id = `formkit-autoform-overlay-${++formIdCounter}`
 
     return registeredAutoOverlay!.open({
