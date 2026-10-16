@@ -41,7 +41,7 @@ const wizardSchema = [
   },
 ]
 
-function mountWizard() {
+function mountWizard(plugins: unknown[] = [createMultiStepPlugin()]) {
   return mountSuspended(FormKit, {
     props: { type: 'form' },
     slots: {
@@ -54,7 +54,7 @@ function mountWizard() {
           nuxtUIStep: nuxtUIStepDefinition,
           nuxtUIInput: nuxtUIInputDefinition,
         },
-        plugins: [createMultiStepPlugin()],
+        plugins: plugins as never,
       })]],
     },
   })
@@ -237,5 +237,28 @@ describe('nuxtUIMultiStep / nuxtUIStep', () => {
     const [firstPanel, secondPanel] = tabPanels(wrapper)
     expect(firstPanel!.isVisible()).toBe(false)
     expect(secondPanel!.isVisible()).toBe(true)
+  })
+})
+
+describe('nuxtUIMultiStep without its plugin', () => {
+  it('warns once in dev that nothing will drive the steps', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    await mountWizard([])
+    await settle()
+
+    const messages = warn.mock.calls.map(call => String(call[0])).filter(message => message.includes('multiStep'))
+    warn.mockRestore()
+    expect(messages).toHaveLength(1)
+    expect(messages[0]).toContain('createNuxtUiFormkitConfig({ multiStep: true })')
+  })
+
+  it('stays quiet when the plugin is registered', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    await mountWizard()
+    await settle()
+
+    const messages = warn.mock.calls.map(call => String(call[0])).filter(message => message.includes('multiStep'))
+    warn.mockRestore()
+    expect(messages).toEqual([])
   })
 })

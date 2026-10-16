@@ -86,6 +86,16 @@ export function useFormKitMultiStep() {
       if (!node.context)
         return
 
+      // `createMultiStepPlugin` is what registers `fns.getSteps` (and `goTo`,
+      // `next`, ...); without it this node renders but nothing drives the
+      // steps, and nothing else says so. `import.meta.test` as well as `.dev`:
+      // under Nuxt's Vitest environment `.dev` is false and `NODE_ENV` is
+      // "production", so `.dev` alone made the warning untestable. Both are
+      // false in a real production build.
+      if ((import.meta.dev || import.meta.test) && typeof node.context.fns?.getSteps !== 'function') {
+        console.warn(`[nuxt-ui-formkit] "${node.name}" is a nuxtUIMultiStep but the multi-step plugin is not registered, so its steps will not work. Use createNuxtUiFormkitConfig({ multiStep: true }) or register createMultiStepPlugin() yourself.`)
+      }
+
       // Each step's own `context` object *is* genuinely Vue-reactive (that's
       // how the addon's own schema reactively shows `$isValid`/`$errorCount`
       // etc.), so once `buildTabItems` reads a step's `stepName`/
