@@ -1,6 +1,7 @@
+import { getNode } from '@formkit/core'
 import { defaultConfig, plugin } from '@formkit/vue'
 import { mountSuspended } from '@nuxt/test-utils/runtime'
-import { afterEach, describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { z } from 'zod'
 import FUDataEdit from '../../src/runtime/components/FUDataEdit.vue'
 import { nuxtUIInputDefinition } from '../../src/runtime/formkit/definitions/input'
@@ -44,33 +45,34 @@ describe('FUDataEdit standardSchema prop', () => {
       standardSchema: schema,
     })
     activeWrapper = wrapper
-    await settleAndWait()
+    // The first schema run has finished once the form reports invalid.
+    await vi.waitFor(() => expect(getNode('test-data-edit')?.context?.state.valid).toBe(false))
 
     expect(wrapper.text()).not.toContain('Invalid email address')
 
     await wrapper.find('input').trigger('blur')
-    await settleAndWait()
 
-    expect(wrapper.text()).toContain('Invalid email address')
+    await vi.waitFor(() => expect(wrapper.text()).toContain('Invalid email address'))
 
     // FormKit's own `type="form"` submit handling already gates on the
     // blocking-message ledger - it never calls the bound `@submit` handler
     // while any blocking message (native rule or, per this bridge,
     // schema-derived) is present, so `dataSaved` should not fire yet.
     await wrapper.find('form').trigger('submit')
+    // Absence over a window: nothing positive to wait on for "was not emitted",
+    // so let the submit's validation gating run out before asserting.
     await settleAndWait()
 
     expect(wrapper.emitted('dataSaved')).toBeUndefined()
 
     await wrapper.find('input').setValue('ada@example.com')
-    await settleAndWait()
 
-    expect(wrapper.text()).not.toContain('Invalid email address')
+    await vi.waitFor(() => expect(wrapper.text()).not.toContain('Invalid email address'))
+    await vi.waitFor(() => expect(getNode('test-data-edit')?.context?.state.valid).toBe(true))
 
     await wrapper.find('form').trigger('submit')
-    await settleAndWait()
 
-    expect(wrapper.emitted('dataSaved')).toBeTruthy()
+    await vi.waitFor(() => expect(wrapper.emitted('dataSaved')).toBeTruthy())
   })
 
   it('omitting standardSchema leaves existing save behavior unchanged', async () => {
@@ -78,11 +80,10 @@ describe('FUDataEdit standardSchema prop', () => {
       data: { email: 'anything' },
     })
     activeWrapper = wrapper
-    await settleAndWait()
+    await getNode('test-data-edit')!.settled
 
     await wrapper.find('form').trigger('submit')
-    await settleAndWait()
 
-    expect(wrapper.emitted('dataSaved')).toBeTruthy()
+    await vi.waitFor(() => expect(wrapper.emitted('dataSaved')).toBeTruthy())
   })
 })

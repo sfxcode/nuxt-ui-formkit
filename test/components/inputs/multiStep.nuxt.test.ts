@@ -122,8 +122,12 @@ describe('nuxtUIMultiStep / nuxtUIStep', () => {
 
     const nextButton = wrapper.findAll('button').find(button => button.text() === 'Next')
     expect(nextButton).toBeDefined()
+    // Validation has finished once the empty required field has disabled Next.
+    await vi.waitFor(() => expect(nextButton!.attributes('disabled')).toBeDefined())
 
     await nextButton!.trigger('click')
+    // Absence over a window: nothing positive to wait on for "did not navigate",
+    // so let the step-change gating (which awaits real validation timers) run out.
     await settleAndWait()
 
     const [firstPanel, secondPanel] = tabPanels(wrapper)
@@ -139,15 +143,16 @@ describe('nuxtUIMultiStep / nuxtUIStep', () => {
     // `name` attribute, so locate it positionally (only one input exists in
     // step one).
     await wrapper.findAll('input')[0]!.setValue('Ada')
-    await settleAndWait()
 
-    const nextButton = wrapper.findAll('button').find(button => button.text() === 'Next')
-    await nextButton!.trigger('click')
-    await settleAndWait()
+    const nextButton = () => wrapper.findAll('button').find(button => button.text() === 'Next')
+    await vi.waitFor(() => expect(nextButton()!.attributes('disabled')).toBeUndefined())
+    await nextButton()!.trigger('click')
 
-    const [firstPanel, secondPanel] = tabPanels(wrapper)
-    expect(firstPanel!.isVisible()).toBe(false)
-    expect(secondPanel!.isVisible()).toBe(true)
+    await vi.waitFor(() => {
+      const [firstPanel, secondPanel] = tabPanels(wrapper)
+      expect(firstPanel!.isVisible()).toBe(false)
+      expect(secondPanel!.isVisible()).toBe(true)
+    })
   })
 
   it('updates the tab header error badge live, without navigating away', async () => {
@@ -165,34 +170,35 @@ describe('nuxtUIMultiStep / nuxtUIStep', () => {
     // invalid (see the "disables" tests below) and a disabled button
     // doesn't dispatch `click` at all.
     getNode('wizard-node')!.next()
-    await settleAndWait()
 
-    const firstTabAfterBlockedNext = tabButtons(wrapper)[0]!
-    const errorBadge = tabBadge(firstTabAfterBlockedNext)
-    expect(errorBadge.exists()).toBe(true)
-    expect(errorBadge.text()).toBe('1')
+    await vi.waitFor(() => {
+      const errorBadge = tabBadge(tabButtons(wrapper)[0]!)
+      expect(errorBadge.exists()).toBe(true)
+      expect(errorBadge.text()).toBe('1')
+    })
 
     await wrapper.findAll('input')[0]!.setValue('Ada')
-    await settleAndWait()
 
-    const firstTabAfterFix = tabButtons(wrapper)[0]!
-    const successBadge = tabBadge(firstTabAfterFix)
-    expect(successBadge.exists()).toBe(true)
-    expect(successBadge.text()).not.toBe('1')
+    await vi.waitFor(() => {
+      const successBadge = tabBadge(tabButtons(wrapper)[0]!)
+      expect(successBadge.exists()).toBe(true)
+      expect(successBadge.text()).not.toBe('1')
+    })
   })
 
   it('disables the "Next" button while the current step is invalid, and re-enables it once fixed', async () => {
     const wrapper = await mountWizard()
-    await settleAndWait()
+    await settle()
 
-    const nextButton = wrapper.findAll('button').find(button => button.text() === 'Next')
-    expect(nextButton).toBeDefined()
-    expect(nextButton!.attributes('disabled')).toBeDefined()
+    // Validation settles asynchronously, so even the initial disabled state is polled.
+    await vi.waitFor(() => {
+      const nextButton = wrapper.findAll('button').find(button => button.text() === 'Next')
+      expect(nextButton).toBeDefined()
+      expect(nextButton!.attributes('disabled')).toBeDefined()
+    })
 
     await wrapper.findAll('input')[0]!.setValue('Ada')
-    await settleAndWait()
 
-    // Validation settles asynchronously; poll instead of trusting a fixed sleep.
     await vi.waitFor(() => {
       const nextButtonAfterFix = wrapper.findAll('button').find(button => button.text() === 'Next')
       expect(nextButtonAfterFix!.attributes('disabled')).toBeUndefined()
@@ -201,13 +207,14 @@ describe('nuxtUIMultiStep / nuxtUIStep', () => {
 
   it('disables an unvisited tab while the current step is invalid, and re-enables it once fixed', async () => {
     const wrapper = await mountWizard()
-    await settleAndWait()
+    await settle()
 
-    const secondTab = tabButtons(wrapper).find(tab => tab.text() === 'Step Two')
-    expect(secondTab!.attributes('disabled')).toBeDefined()
+    await vi.waitFor(() => {
+      const secondTab = tabButtons(wrapper).find(tab => tab.text() === 'Step Two')
+      expect(secondTab!.attributes('disabled')).toBeDefined()
+    })
 
     await wrapper.findAll('input')[0]!.setValue('Ada')
-    await settleAndWait()
 
     await vi.waitFor(() => {
       const secondTabAfterFix = tabButtons(wrapper).find(tab => tab.text() === 'Step Two')
@@ -223,20 +230,20 @@ describe('nuxtUIMultiStep / nuxtUIStep', () => {
     // `name` attribute, so locate it positionally (only one input exists in
     // step one).
     await wrapper.findAll('input')[0]!.setValue('Ada')
-    await settleAndWait()
 
-    const secondTab = tabButtons(wrapper).find(tab => tab.text() === 'Step Two')
-    expect(secondTab).toBeDefined()
+    const secondTab = () => tabButtons(wrapper).find(tab => tab.text() === 'Step Two')
+    await vi.waitFor(() => expect(secondTab()!.attributes('disabled')).toBeUndefined())
 
     // Reka UI's `TabsTrigger` activates on `pointerdown`, not `click` - a
     // plain `click` trigger leaves it inactive in jsdom.
-    await secondTab!.trigger('pointerdown')
-    await secondTab!.trigger('mousedown')
-    await settleAndWait()
+    await secondTab()!.trigger('pointerdown')
+    await secondTab()!.trigger('mousedown')
 
-    const [firstPanel, secondPanel] = tabPanels(wrapper)
-    expect(firstPanel!.isVisible()).toBe(false)
-    expect(secondPanel!.isVisible()).toBe(true)
+    await vi.waitFor(() => {
+      const [firstPanel, secondPanel] = tabPanels(wrapper)
+      expect(firstPanel!.isVisible()).toBe(false)
+      expect(secondPanel!.isVisible()).toBe(true)
+    })
   })
 })
 
