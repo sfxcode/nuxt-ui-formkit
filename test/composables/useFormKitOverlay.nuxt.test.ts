@@ -1,5 +1,6 @@
 import { getNode } from '@formkit/core'
 import { defaultConfig, plugin } from '@formkit/vue'
+import { CalendarDate } from '@internationalized/date'
 import { mountSuspended } from '@nuxt/test-utils/runtime'
 import { DOMWrapper } from '@vue/test-utils'
 import UApp from '@nuxt/ui/components/App.vue'
@@ -7,7 +8,7 @@ import * as v from 'valibot'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { defineComponent, h } from 'vue'
 import { useFormKitOverlay } from '../../src/runtime/composables/useFormKitOverlay'
-import { nuxtUIInputDefinition } from '../../src/runtime/formkit/definitions/input'
+import { nuxtUIInputDateDefinition, nuxtUIInputDefinition } from '../../src/runtime/formkit/definitions/input'
 import { wait } from '../support/wait'
 import { settle } from '../support/settle'
 
@@ -52,7 +53,7 @@ function mountHost() {
   return mountSuspended(Wrapper, {
     attachTo: document.body,
     global: {
-      plugins: [[plugin, defaultConfig({ inputs: { nuxtUIInput: nuxtUIInputDefinition } })]],
+      plugins: [[plugin, defaultConfig({ inputs: { nuxtUIInput: nuxtUIInputDefinition, nuxtUIInputDate: nuxtUIInputDateDefinition } })]],
     },
   })
 }
@@ -301,6 +302,29 @@ describe('useFormKitOverlay - the caller\'s data object', () => {
 
     expect(await racedResult(resultPromise)).toEqual({ resolved: true, value: null })
     expect(data).toEqual({ name: 'Ada' })
+  })
+})
+
+describe('useFormKitOverlay - non-plain values in the data', () => {
+  // Copying the caller's data must not flatten class instances: a `CalendarDate`
+  // cloned into a plain object loses its methods, so the date field silently showed
+  // empty `mm/dd/yyyy` segments (no error anywhere).
+  it('edit() keeps a CalendarDate a real CalendarDate, so the date field shows it', async () => {
+    const wrapper = await mountHost()
+    activeWrapper = wrapper
+    await settle()
+
+    const when = new CalendarDate(2020, 12, 12)
+    exposedOverlay(wrapper).edit({
+      data: { when },
+      schema: [{ $formkit: 'nuxtUIInputDate', name: 'when', label: 'When' }],
+      title: 'Date edit',
+    })
+    await opened('Date edit')
+
+    await vi.waitFor(() => expect(body().findAll('[role="spinbutton"]').map(segment => segment.text())).toEqual(['12', '12', '2020']))
+    const value = getNode(overlayForm()!.id)?.value as { when: unknown }
+    expect(value.when).toBeInstanceOf(CalendarDate)
   })
 })
 
