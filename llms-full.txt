@@ -1,0 +1,5947 @@
+# Nuxt UI FormKit
+
+> FormKit integration for Nuxt UI - Seamlessly connect FormKit form handling with Nuxt UI components
+
+---
+
+<!-- https://sfxcode.github.io/nuxt-ui-formkit/getting-started/installation.md -->
+
+# Installation
+
+Get started with Nuxt UI FormKit by installing the module in your Nuxt application.
+
+## Prerequisites
+
+Before you begin, make sure you have the following installed:
+
+- **Node.js** - a version supported by Nuxt 4
+- **Nuxt** 4.x
+- **pnpm**, **npm**, or **yarn** package manager
+
+## Install Package
+
+Install the `@sfxcode/nuxt-ui-formkit` module using your preferred package manager:
+
+::: code-group
+
+```bash [pnpm]
+pnpm add @sfxcode/nuxt-ui-formkit
+```
+
+```bash [npm]
+npm install @sfxcode/nuxt-ui-formkit
+```
+
+```bash [yarn]
+yarn add @sfxcode/nuxt-ui-formkit
+```
+
+:::
+
+## Module Configuration
+
+Add the module to your `nuxt.config.ts`:
+
+```typescript [nuxt.config.ts]
+export default defineNuxtConfig({
+  modules: [
+    '@nuxt/ui',
+    '@formkit/nuxt',
+    '@sfxcode/nuxt-ui-formkit'
+  ]
+})
+```
+
+::: info
+**Note:** Make sure to add `@nuxt/ui` before `@sfxcode/nuxt-ui-formkit` in the modules array.
+:::
+
+::: warning `@formkit/nuxt` is required in `modules`
+This module does not register `@formkit/nuxt` for you. It ships as a dependency, but it must be listed in `modules` so Nuxt picks up your `formkit.config.ts` (below). Without it the `nuxtUI*` input types are never registered.
+:::
+
+## FormKit Configuration
+
+Create a `formkit.config.ts` file in your project root to configure FormKit. The recommended way is `createNuxtUiFormkitConfig()`, which registers every `nuxtUIXxx` input/output plus this module's own plugins for you - spread its result into your own config alongside whatever else you need (locales, `iconLoader`, other plugins):
+
+```typescript [formkit.config.ts]
+import type { DefaultConfigOptions } from '@formkit/vue'
+import { en } from '@formkit/i18n'
+import { createAutoAnimatePlugin, createNuxtUiFormkitConfig } from '@sfxcode/nuxt-ui-formkit/formkit'
+
+// `multiStep: true` additionally registers `createMultiStepPlugin()` -
+// omit it if you're not using `nuxtUIMultiStep`/`nuxtUIStep`.
+// Pass your own plugins through the `plugins` option: they are appended after
+// this module's, so the asterisk plugin is kept.
+const nuxtUiFormkitConfig = createNuxtUiFormkitConfig({
+  multiStep: true,
+  plugins: [
+    createAutoAnimatePlugin(
+      {
+        duration: 250,
+        easing: 'ease-in-out',
+      },
+      {
+        global: ['outer', 'inner'],
+        form: ['form'],
+        nuxtUIRepeater: ['input'],
+      }
+    ),
+  ],
+})
+
+const config: DefaultConfigOptions = {
+  locales: { en },
+  locale: 'en',
+  inputs: nuxtUiFormkitConfig.inputs,
+  plugins: nuxtUiFormkitConfig.plugins,
+}
+
+export default config
+```
+
+::: details Escape hatch: fully manual wiring
+If you need finer-grained control (e.g. registering only a subset of inputs), you can still wire everything up yourself instead of using the helper:
+
+```typescript [formkit.config.ts]
+import type { DefaultConfigOptions } from '@formkit/vue'
+import { en } from '@formkit/i18n'
+import { nuxtUIInputs, nuxtUIOutputs } from '@sfxcode/nuxt-ui-formkit/definitions'
+import { addNuxtAsteriskPlugin } from '@sfxcode/nuxt-ui-formkit/plugins'
+
+const config: DefaultConfigOptions = {
+  locales: { en },
+  locale: 'en',
+  inputs: { ...nuxtUIInputs, ...nuxtUIOutputs },
+  plugins: [addNuxtAsteriskPlugin],
+}
+
+export default config
+```
+:::
+
+## Verify Installation
+
+Create a test page to verify the installation:
+
+```vue [app.vue]
+<script setup lang="ts">
+  const handleSubmit = (data: any) => {
+    console.log('Form submitted:', data)
+  }
+</script>
+
+<template>
+  <div class="p-8">
+    <FormKit
+      type="form"
+      @submit="handleSubmit"
+    >
+      <FormKit
+        type="nuxtUIInput"
+        name="email"
+        label="Email Address"
+        placeholder="your.email@example.com"
+        validation="required|email"
+      />
+      <template #submit>
+        <UButton
+          type="submit"
+          class="mt-4"
+        >
+          Submit
+        </UButton>
+      </template>
+    </FormKit>
+  </div>
+</template>
+```
+
+Start your development server:
+
+```bash
+pnpm dev
+```
+
+Navigate to your application and you should see a fully functional form with Nuxt UI styling! ✨
+
+## Next Steps
+
+### 🚀 Quick Start
+Learn the basics and create your first form  
+[Go to Quick Start →](/getting-started/quick-start)
+
+### 🧩 Components
+Explore all available input and output components  
+[Browse Components →](/components/inputs)
+
+### 💡 Examples
+View real-world form examples and use cases  
+[See Examples →](/examples/)
+
+### 🖥️ Server-Side Rendering
+What is rendered on the server, what appears after hydration, and the one thing to avoid in a page's dates  
+[Read about SSR →](/getting-started/ssr)
+
+---
+
+<!-- https://sfxcode.github.io/nuxt-ui-formkit/getting-started/quick-start.md -->
+
+# Quick Start
+
+Learn the basics of Nuxt UI FormKit using schema-based forms and create your first form in minutes.
+
+## Your First Schema-Based Form
+
+Nuxt UI FormKit is designed around **schema-based forms** - a powerful pattern where you define your form structure as a JSON object. This approach provides better maintainability, reusability, and type safety.
+
+Create a new page in your Nuxt application:
+
+```vue [pages/contact.vue]
+<template>
+  <UContainer>
+    <div class="max-w-xl mx-auto my-8">
+      <h1 class="text-3xl font-bold mb-6">Contact Us</h1>
+      
+      <FUDataEdit
+        :data="formData"
+        :schema="contactSchema"
+        @data-saved="handleSubmit"
+      />
+    </div>
+  </UContainer>
+</template>
+
+<script setup lang="ts">
+// Define your data structure
+const formData = ref({
+  name: '',
+  email: '',
+  message: '',
+  subscribe: false
+})
+
+// Define your form schema
+const contactSchema = [
+  {
+    $formkit: 'nuxtUIInput',
+    name: 'name',
+    label: 'Your Name',
+    placeholder: 'John Doe',
+    validation: 'required'
+  },
+  {
+    $formkit: 'nuxtUIInput',
+    name: 'email',
+    inputType: 'email',
+    label: 'Email Address',
+    placeholder: 'john@example.com',
+    validation: 'required|email'
+  },
+  {
+    $formkit: 'nuxtUITextarea',
+    name: 'message',
+    label: 'Message',
+    placeholder: 'Tell us how we can help...',
+    validation: 'required|length:10',
+    rows: 4
+  },
+  {
+    $formkit: 'nuxtUICheckbox',
+    name: 'subscribe',
+    label: 'Subscribe to our newsletter'
+  }
+]
+
+const handleSubmit = async (data: any) => {
+  console.log('Form data:', data)
+  // Send to API
+  // await $fetch('/api/contact', { method: 'POST', body: data })
+}
+</script>
+```
+
+## Understanding Schema-Based Forms
+
+### Why Schemas?
+
+Schemas are **first-class citizens** in Nuxt UI FormKit:
+
+- ✅ **Maintainable** - Form structure separated from template code
+- ✅ **Reusable** - Share schemas across components and projects
+- ✅ **Type-safe** - Full TypeScript support and IntelliSense
+- ✅ **Dynamic** - Generate forms from API responses or config files
+- ✅ **Composable** - Build complex forms from smaller schemas
+- ✅ **Testable** - Easy to test form logic without rendering
+
+### The Schema Pattern
+
+Every schema is an array of field definitions:
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUIInput',  // Component type
+    name: 'fieldName',        // Field name in data object
+    label: 'Field Label',     // Display label
+    validation: 'required',   // Validation rules
+    // ... other component props
+  }
+]
+```
+
+### FUDataEdit Component
+
+The `FUDataEdit` component is your main tool for schema-based forms:
+
+```vue
+<FUDataEdit
+  :data="formData"           <!-- Reactive data object -->
+  :schema="schema"           <!-- Form schema definition -->
+  :debug-data="false"        <!-- Optional: show debug panel -->
+  @data-saved="handleSubmit" <!-- Form submission handler -->
+/>
+```
+
+**Key Features:**
+- Automatic two-way binding with `data`
+- Built-in form wrapper and submit handling
+- Validation support out of the box
+- Optional debug panel for development
+
+## Building Your Schema
+
+### Basic Field Types
+
+```typescript
+const userSchema = [
+  // Text input
+  {
+    $formkit: 'nuxtUIInput',
+    name: 'username',
+    label: 'Username',
+    validation: 'required|length:3'
+  },
+  
+  // Email input
+  {
+    $formkit: 'nuxtUIInput',
+    name: 'email',
+    inputType: 'email',
+    label: 'Email',
+    validation: 'required|email'
+  },
+  
+  // Number input
+  {
+    $formkit: 'nuxtUIInputNumber',
+    name: 'age',
+    label: 'Age',
+    min: 0,
+    max: 120
+  },
+  
+  // Select dropdown
+  {
+    $formkit: 'nuxtUISelect',
+    name: 'country',
+    label: 'Country',
+    options: ['USA', 'UK', 'Canada', 'Australia']
+  },
+  
+  // Switch toggle
+  {
+    $formkit: 'nuxtUISwitch',
+    name: 'newsletter',
+    label: 'Subscribe to newsletter'
+  }
+]
+```
+
+### Organizing with Sections
+
+Use HTML elements to structure your form:
+
+```typescript
+const schema = [
+  // Section heading
+  {
+    $el: 'h3',
+    children: 'Personal Information',
+    attrs: { class: 'text-xl font-bold mb-4' }
+  },
+  {
+    $formkit: 'nuxtUIInput',
+    name: 'firstName',
+    label: 'First Name'
+  },
+  {
+    $formkit: 'nuxtUIInput',
+    name: 'lastName',
+    label: 'Last Name'
+  },
+  
+  // Another section
+  {
+    $el: 'h3',
+    children: 'Contact Details',
+    attrs: { class: 'text-xl font-bold mt-6 mb-4' }
+  },
+  {
+    $formkit: 'nuxtUIInput',
+    name: 'email',
+    inputType: 'email',
+    label: 'Email'
+  }
+]
+```
+
+## Complete Example
+
+Here's a comprehensive user registration form:
+
+```vue
+<template>
+  <UContainer>
+    <div class="max-w-2xl mx-auto my-8">
+      <h1 class="text-3xl font-bold mb-6">Create Account</h1>
+      
+      <FUDataEdit
+        :data="userData"
+        :schema="registrationSchema"
+        @data-saved="register"
+      />
+    </div>
+  </UContainer>
+</template>
+
+<script setup lang="ts">
+const userData = ref({
+  firstName: '',
+  lastName: '',
+  email: '',
+  password: '',
+  confirmPassword: '',
+  age: 18,
+  country: '',
+  terms: false,
+  newsletter: true
+})
+
+const registrationSchema = [
+  // Personal Information
+  {
+    $el: 'div',
+    attrs: { class: 'mb-6' },
+    children: [
+      {
+        $el: 'h2',
+        children: 'Personal Information',
+        attrs: { class: 'text-2xl font-semibold mb-4' }
+      }
+    ]
+  },
+  {
+    $el: 'div',
+    attrs: { class: 'grid grid-cols-2 gap-4' },
+    children: [
+      {
+        $formkit: 'nuxtUIInput',
+        name: 'firstName',
+        label: 'First Name',
+        validation: 'required|length:2'
+      },
+      {
+        $formkit: 'nuxtUIInput',
+        name: 'lastName',
+        label: 'Last Name',
+        validation: 'required|length:2'
+      }
+    ]
+  },
+  
+  // Account Details
+  {
+    $el: 'h2',
+    children: 'Account Details',
+    attrs: { class: 'text-2xl font-semibold mt-8 mb-4' }
+  },
+  {
+    $formkit: 'nuxtUIInput',
+    name: 'email',
+    inputType: 'email',
+    label: 'Email Address',
+    validation: 'required|email'
+  },
+  {
+    $formkit: 'nuxtUIInput',
+    name: 'password',
+    inputType: 'password',
+    label: 'Password',
+    validation: 'required|length:8'
+  },
+  {
+    $formkit: 'nuxtUIInput',
+    name: 'confirmPassword',
+    inputType: 'password',
+    label: 'Confirm Password',
+    validation: 'required|confirm:password'
+  },
+  
+  // Additional Info
+  {
+    $el: 'h2',
+    children: 'Additional Information',
+    attrs: { class: 'text-2xl font-semibold mt-8 mb-4' }
+  },
+  {
+    $formkit: 'nuxtUIInputNumber',
+    name: 'age',
+    label: 'Age',
+    min: 13,
+    max: 120,
+    validation: 'required|min:13'
+  },
+  {
+    $formkit: 'nuxtUISelect',
+    name: 'country',
+    label: 'Country',
+    options: ['USA', 'UK', 'Canada', 'Australia', 'Germany', 'France'],
+    validation: 'required'
+  },
+  
+  // Preferences
+  {
+    $el: 'h2',
+    children: 'Preferences',
+    attrs: { class: 'text-2xl font-semibold mt-8 mb-4' }
+  },
+  {
+    $formkit: 'nuxtUICheckbox',
+    name: 'terms',
+    label: 'I agree to the terms and conditions',
+    validation: 'accepted'
+  },
+  {
+    $formkit: 'nuxtUISwitch',
+    name: 'newsletter',
+    label: 'Send me product updates and newsletters'
+  }
+]
+
+const register = async (data: any) => {
+  console.log('Registration data:', data)
+  // API call
+  await $fetch('/api/register', {
+    method: 'POST',
+    body: data
+  })
+}
+</script>
+```
+
+## Validation
+
+FormKit's validation integrates seamlessly with schemas:
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUIInput',
+    name: 'email',
+    label: 'Email',
+    validation: 'required|email',
+    validationMessages: {
+      required: 'Email is required',
+      email: 'Please enter a valid email'
+    }
+  }
+]
+```
+
+**Common Rules:**
+- `required` - Must have value
+- `email` - Valid email format
+- `length:min,max` - String length
+- `min:n` / `max:n` - Numeric range
+- `matches:/pattern/` - Regex match
+- `confirm:field` - Match another field
+
+See [FormKit validation docs](https://formkit.com/essentials/validation) for complete list.
+
+## Template-Based Forms (Alternative)
+
+While schemas are recommended, you can also use template-based forms:
+
+```vue
+<FormKit type="form" @submit="handleSubmit">
+  <FormKit
+    type="nuxtUIInput"
+    name="email"
+    label="Email"
+    validation="required|email"
+  />
+</FormKit>
+```
+
+::: tip Best Practice
+Use schemas for most forms. Reserve template-based approach for simple cases or when you need fine-grained control over layout.
+:::
+
+## Next Steps
+
+### 📄 Schema Forms Deep Dive
+Advanced schema patterns and techniques  
+[Learn More →](/getting-started/schema-forms)
+
+### 🧩 Component Reference
+All available components with schema examples  
+[Browse Components →](/components/inputs)
+
+### 🔄 Repeaters
+Dynamic repeatable sections in schemas  
+[View Repeaters →](/components/repeater)
+
+---
+
+<!-- https://sfxcode.github.io/nuxt-ui-formkit/getting-started/schema-forms.md -->
+
+# Schema-Based Forms
+
+Learn how to build forms using JSON schemas for more maintainable and dynamic form generation.
+
+## Why Use Schemas?
+
+Schema-based forms offer several advantages:
+
+- **Maintainability** - Separate form structure from component templates
+- **Reusability** - Share schemas across components or projects
+- **Dynamic** - Generate forms from API responses or configuration files
+- **Type Safety** - Full TypeScript support for schema definitions
+- **Consistency** - Enforce consistent form patterns across your application
+
+## Basic Schema
+
+A schema is an array of field definitions:
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUIInput',
+    name: 'username',
+    label: 'Username',
+    validation: 'required|length:3'
+  },
+  {
+    $formkit: 'nuxtUIInput',
+    name: 'email',
+    inputType: 'email',
+    label: 'Email Address',
+    validation: 'required|email'
+  }
+]
+```
+
+## Using FUDataEdit
+
+The `FUDataEdit` component renders a schema-based form:
+
+```vue
+<template>
+  <FUDataEdit
+    :data="formData"
+    :schema="userSchema"
+    @data-saved="handleSubmit"
+  />
+</template>
+
+<script setup lang="ts">
+const formData = ref({
+  username: '',
+  email: '',
+  bio: ''
+})
+
+const userSchema = [
+  {
+    $formkit: 'nuxtUIInput',
+    name: 'username',
+    label: 'Username',
+    validation: 'required'
+  },
+  {
+    $formkit: 'nuxtUIInput',
+    name: 'email',
+    inputType: 'email',
+    label: 'Email',
+    validation: 'required|email'
+  },
+  {
+    $formkit: 'nuxtUITextarea',
+    name: 'bio',
+    label: 'Bio',
+    rows: 4
+  }
+]
+
+const handleSubmit = (data: any) => {
+  console.log('Submitted:', data)
+}
+</script>
+```
+
+## FUDataView for Display
+
+Use `FUDataView` to display data in read-only mode:
+
+```vue
+<template>
+  <FUDataView
+    :data="userData"
+    :schema="displaySchema"
+  />
+</template>
+
+<script setup lang="ts">
+const userData = ref({
+  name: 'John Doe',
+  email: 'john@example.com',
+  price: 1234.56,
+  isActive: true
+})
+
+const displaySchema = [
+  {
+    $formkit: 'nuxtUIOutputText',
+    name: 'name',
+    label: 'Full Name'
+  },
+  {
+    $formkit: 'nuxtUIOutputLink',
+    name: 'email',
+    label: 'Email Address'
+  },
+  {
+    $formkit: 'nuxtUIOutputNumber',
+    name: 'price',
+    label: 'Price',
+    formatOptions: {
+      style: 'currency',
+      currency: 'USD'
+    }
+  },
+  {
+    $formkit: 'nuxtUIOutputBoolean',
+    name: 'isActive',
+    label: 'Status'
+  }
+]
+</script>
+```
+
+## Advanced Schema Features
+
+### Conditional Fields
+
+Show fields based on other field values:
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUISelect',
+    id: 'userType', // `$get()` looks a field up by its `id`
+    name: 'userType',
+    label: 'User Type',
+    options: ['individual', 'business']
+  },
+  {
+    $formkit: 'nuxtUIInput',
+    name: 'companyName',
+    label: 'Company Name',
+    if: '$get(userType).value === "business"' // Only show for business users
+  }
+]
+```
+
+::: warning The referenced field needs an `id`
+`$get(userType)` resolves by `id`, not by `name`. Without the `id` the condition never matches and the field is silently never shown. Inside a repeater row, read a sibling with `$node.value.<field>` instead (see [Known Limitations](/getting-started/known-limitations#repeaters-and-schemas)).
+:::
+
+### Grouped Fields
+
+Group related fields together:
+
+```typescript
+const schema = [
+  {
+    $el: 'h3',
+    children: 'Personal Information'
+  },
+  {
+    $formkit: 'nuxtUIInput',
+    name: 'firstName',
+    label: 'First Name'
+  },
+  {
+    $formkit: 'nuxtUIInput',
+    name: 'lastName',
+    label: 'Last Name'
+  },
+  {
+    $el: 'h3',
+    children: 'Contact Details',
+    attrs: {
+      class: 'mt-6'
+    }
+  },
+  {
+    $formkit: 'nuxtUIInput',
+    name: 'email',
+    label: 'Email'
+  }
+]
+```
+
+### Dynamic Options
+
+Load options dynamically:
+
+```vue
+<script setup lang="ts">
+const countries = ref<string[]>([])
+
+onMounted(async () => {
+  countries.value = await $fetch('/api/countries')
+})
+
+const schema = computed(() => [
+  {
+    $formkit: 'nuxtUISelect',
+    name: 'country',
+    label: 'Country',
+    options: countries.value
+  }
+])
+</script>
+```
+
+## Schema with Repeaters
+
+Create dynamic lists with the repeater:
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUIRepeater',
+    name: 'contacts',
+    label: 'Contacts',
+    newItem: { name: '', email: '' },
+    children: [
+      {
+        $formkit: 'nuxtUIInput',
+        name: 'name',
+        label: 'Name'
+      },
+      {
+        $formkit: 'nuxtUIInput',
+        name: 'email',
+        inputType: 'email',
+        label: 'Email'
+      }
+    ]
+  }
+]
+```
+
+## TypeScript Support
+
+Define typed schemas for better IntelliSense:
+
+```typescript
+import type { FormKitSchemaNode } from '@formkit/core'
+
+interface UserForm {
+  name: string
+  email: string
+  age: number
+}
+
+const formData = ref<UserForm>({
+  name: '',
+  email: '',
+  age: 0
+})
+
+const schema: FormKitSchemaNode[] = [
+  {
+    $formkit: 'nuxtUIInput',
+    name: 'name',
+    label: 'Name',
+    validation: 'required'
+  },
+  // ... more fields
+]
+```
+
+## Best Practices
+
+- ✅ Keep schemas in separate files for reusability
+- ✅ Use TypeScript interfaces for form data
+- ✅ Leverage computed properties for dynamic schemas
+- ✅ Group related fields with sections
+- ✅ Use conditional rendering for complex forms
+- ✅ Add clear labels and help text
+
+## Next Steps
+
+### 🔄 Repeaters
+Learn about dynamic repeatable sections  
+[View Repeaters →](/components/repeater)
+
+### 💡 Examples
+See real-world schema-based forms  
+[Browse Examples →](/examples/)
+
+### 📚 API Reference
+Complete API documentation  
+[API Docs →](/api/utilities)
+
+---
+
+<!-- https://sfxcode.github.io/nuxt-ui-formkit/getting-started/ssr.md -->
+
+# Server-Side Rendering
+
+The module works on a server-rendered page: every input and output type renders on the server and hydrates without a warning. This is checked, not assumed - the playground is loaded with server rendering on, in `nuxi dev` and in a production build, with the server and the browser deliberately in time zones 26 hours apart, and it fails on any hydration warning, console error, Vue warning or error in the server log (`npm run test:e2e:ssr` in the repository).
+
+Server rendering is off in the playground by default; set `PLAYGROUND_SSR=true` to turn it on.
+
+## What the server renders
+
+| | On the server | After hydration |
+|---|---|---|
+| Field chrome (label, help text, messages) | rendered | unchanged |
+| Every input and output type | rendered | unchanged |
+| `nuxtUIEditor` | label and help text only | the editor, its toolbar and its content |
+| `nuxtUIMultiStep` / `nuxtUIStep` | the step panels and their fields; **not the tab strip** | the tab strip |
+| `FUDataEdit` `autosave` | the form, without a draft | a stored draft is restored into the inputs |
+| Date and calendar fields | the day in the **server's** time zone | the day in the **browser's** time zone |
+
+None of these cause a hydration mismatch. The rows that differ before and after hydration are described below.
+
+## The editor
+
+`UEditor` is built in the browser, so the server leaves the editor's place empty and it appears after hydration. The content below an editor therefore moves down when it mounts (about 73px in the default theme). If that matters on your page, reserve the space with a minimum height on the field:
+
+```ts
+{ $formkit: 'nuxtUIEditor', name: 'body', label: 'Body', outerClass: 'min-h-[113px]' }
+```
+
+## Multi-step forms
+
+The step panels and the fields in them are server-rendered, so the form is readable without JavaScript, but the tab strip is built in the browser. It appears right after hydration.
+
+## Date and calendar fields
+
+A JavaScript `Date` or an ISO string with a time zone is an instant, not a calendar day: which day it shows depends on the zone it is shown in, and the server cannot know the browser's. So the server renders the day in its own zone, the browser hydrates with the same zone, and the field switches to the browser's own zone right after mount. A visitor in another zone sees the day change once, immediately after the page loads - there is no hydration mismatch, and the form value is not changed by it.
+
+To show the same day everywhere, give the field an explicit zone, which is never switched:
+
+```ts
+{ $formkit: 'nuxtUIInputDate', name: 'start', label: 'Start', valueType: 'date', timeZone: 'UTC' }
+```
+
+A calendar with no value is centred on today in the same zone, so it follows the same rule. A calendar or date field holding a plain day (`'2026-07-05'` or a `CalendarDate`) has no zone and is never affected.
+
+::: warning Build dates from ISO strings or `Date.UTC`, not from local parts
+In a page that is server-rendered, the page's script runs twice - on the server and in the browser. `new Date(2026, 6, 5)` is *local* midnight, so it is a different instant in each place, and the field will hydrate with a different day. Use `new Date(Date.UTC(2026, 6, 5, 12))`, an ISO string, or a `CalendarDate`.
+:::
+
+## Overlays
+
+`useFormKitOverlay().edit()` and `.auto()` need a user to answer them, so they cannot run on the server: the promise would never settle and an `await` in an async `setup` would hang the request. They throw an error that says so. Call them from an event handler or `onMounted`; creating the composable itself is safe anywhere.
+
+## Autosave
+
+`autosave` needs no special handling. On the server the plugin does nothing; in the browser it restores a stored draft after hydration, so the first render matches the server's and the draft appears as an ordinary update.
+
+## Checking your own app
+
+Vue only compares attributes during hydration in a **development** build; a production build silently keeps whatever the server rendered. So check for hydration warnings with `nuxi dev`, where `Hydration attribute mismatch` and `Hydration text mismatch` are reported. If you add a page to the playground it is covered automatically.
+
+---
+
+<!-- https://sfxcode.github.io/nuxt-ui-formkit/getting-started/styling.md -->
+
+# Styling
+
+The module renders Nuxt UI components inside FormKit's field chrome, so a field is styled in two places: the chrome around it, and the Nuxt UI component inside it. This page collects what works well, taken from the playground (`npm run dev`), which applies all of it.
+
+## How a field is built
+
+```
+.formkit-outer            ← outerClass
+  .formkit-wrapper
+    label.formkit-label
+    .formkit-inner        ← the Nuxt UI component sits here
+    .formkit-help
+    .formkit-messages
+```
+
+Two schema props decide where a class lands:
+
+| Prop | Applies to |
+|---|---|
+| `outerClass` | the wrapper around the whole field (label, component, help, messages) |
+| `class` | the Nuxt UI component itself |
+
+Each `.formkit-outer` also carries `data-type` with the FormKit type name (`nuxtUIInput`, `nuxtUISlider`, ...). Use it to target one type in CSS. Two types keep the plain addons names: the wizard is `multi-step` and its panels are `step`.
+
+## Field width
+
+Nuxt UI inputs and selects size themselves to their content and do not stretch to their wrapper. In a wide form that leaves narrow fields, and in a grid it leaves gaps next to the column edge.
+
+For one field, size the wrapper and make the field fill it:
+
+```ts
+{ $formkit: 'nuxtUIInput', name: 'title', label: 'Title', outerClass: 'w-64', class: 'w-full' }
+```
+
+`nuxtUISelect` and `nuxtUISelectMenu` add `w-fit min-w-48` to themselves only when you set no `class`, so setting `class: 'w-full'` also replaces that default.
+
+### One rule for the whole app
+
+To make every field fill its column, with a readable maximum, add this to your global CSS:
+
+```css
+@layer components {
+  /* Every field fills its FormKit wrapper. */
+  .formkit-inner > [data-slot='root'] {
+    width: 100%;
+  }
+
+  /* Leaf fields stay readable in a wide form. Containers keep the full width. */
+  :where(.formkit-outer:not(
+    [data-type='nuxtUIRepeater'], [data-type='nuxtUIEditor'],
+    [data-type='multi-step'], [data-type='step'], [data-type='group'], [data-type='list']
+  )) {
+    max-width: 32rem;
+  }
+}
+
+/* Selects without their own `class` fill too (see above). */
+@layer utilities {
+  .formkit-inner > .w-fit.min-w-48 {
+    width: 100%;
+  }
+}
+```
+
+Why it is written this way:
+
+- **The `components` layer** sits below Tailwind's utilities, so a page that sets `w-48`, `w-full`, `flex-1` or `max-w-*` still wins over the default.
+- **`:where()`** gives the cap zero specificity, so any `max-w-*` overrides it.
+- **The container exemption** matters: without it the 32rem cap also narrows a repeater's rows or the wizard's tab strip.
+- **The `utilities` rule** is the one place that has to beat a utility (`w-fit`). It only matches elements that have both `w-fit` and `min-w-48`, which is exactly the select family's own default, so a field with an explicit width is untouched.
+
+::: tip Why this is not built in
+Whether a field should fill its column or stay compact depends on your layout, so the module does not decide it for you. The same applies to the calendar, which fills its container by default - see [`nuxtUICalendar`](/components/inputs#nuxtuicalendar).
+:::
+
+## Colours: use theme tokens
+
+Fixed palette classes such as `bg-gray-50 dark:bg-gray-800` look off against the Nuxt UI theme, especially in dark mode. Prefer the semantic tokens, which follow the theme and the colour mode:
+
+| Instead of | Use |
+|---|---|
+| `border-gray-200 dark:border-gray-700` | `border-default` |
+| `hover:border-gray-300` | `hover:border-accented` |
+| `bg-gray-50 dark:bg-gray-800` | `bg-elevated/30` |
+| `text-gray-400` | `text-muted` |
+
+## Dark mode in scoped styles
+
+In a Vue scoped style, `:deep(.dark .my-class)` never matches: `.dark` is on `<html>`, outside the component, so the rule needs a `.dark` ancestor that does not exist inside it. Do not write a separate `.dark` variant. Use a CSS variable that already changes with the mode:
+
+```css
+:deep(.formkit-repeater-drop-target) {
+  border-color: var(--ui-primary);
+  background-color: color-mix(in oklab, var(--ui-primary) 12%, transparent);
+}
+```
+
+## Controls that overflow their box
+
+Some Nuxt UI controls draw outside the box they occupy. The slider thumb is 16px tall on an 8px track, so it touches the label above and the help text below. Give the field room in CSS:
+
+```css
+.formkit-outer[data-type='nuxtUISlider'] .formkit-inner {
+  padding-block: 0.5rem;
+}
+```
+
+## Things beside a field
+
+A label sits above its component, so anything placed next to a field in a row (a button, a drag handle, a remove icon) is aligned to the whole field, label included. Use `items-start` on the row and give the extra element a top margin that skips the label (`mt-6`), rather than `items-center`, which sits it too high.
+
+## Repeaters
+
+Item layout, button groups, nested repeaters, the drop-target highlight and animation have their own advice: see [Repeater - Styling Best Practices](/components/repeater#styling-best-practices).
+
+---
+
+<!-- https://sfxcode.github.io/nuxt-ui-formkit/getting-started/ai-forms.md -->
+
+# Generating Forms with AI
+
+A form here is a plain JSON array (a [FormKit schema](/getting-started/schema-forms)), so a language model can write it from a description and `FUDataEdit` renders it as is. This page has a prompt that does that reliably, how to check the result, and the mistakes models make without the prompt's rules.
+
+## How to use it
+
+1. Paste the [prompt](#the-prompt) into your AI assistant and give it the framework docs it names. This site publishes them in a form an assistant can read:
+   - [`llms.txt`](https://sfxcode.github.io/nuxt-ui-formkit/llms.txt): an index with a link to a plain Markdown copy of every page. Point an assistant that can browse at it, or pick the pages the prompt names (Input Components, Schema-Based Forms, Known Limitations, plus Repeater or Multi-Step).
+   - [`llms-full.txt`](https://sfxcode.github.io/nuxt-ui-formkit/llms-full.txt): every page in one file, about 170 KB at the time of writing. Use it only if your assistant has a large context window.
+2. Describe the form in plain words, for example *"a hotel booking form: guest details, a room type, check-in and check-out dates, an extra-guests field only for family rooms and suites, a breakfast switch and a special requests box"*.
+3. Take the JSON it returns, [render it](#check-the-result) and look at it.
+4. Ask for changes in words: *"put the dates side by side"*, *"add a step for payment"*, *"make the phone number optional"*.
+
+## The prompt
+
+```text
+You generate form definitions for the `@sfxcode/nuxt-ui-formkit` framework: FormKit schemas rendered with Nuxt UI components.
+
+## Reference
+
+Read these framework docs first and use only what they document: Input Components (every field type and its props), Schema-Based Forms (schema basics and conditional fields), Known Limitations (silent failures to avoid), plus Repeater for lists and Multi-Step for wizards.
+
+## Output
+
+Return ONE valid JSON array and nothing else: no prose, no comments, no trailing commas, no functions (so no `new Date()`). It is the `schema` of `<FUDataEdit :schema="..." />`, which adds the Save button itself.
+
+## Node kinds
+
+- A field: `{ "$formkit": "<type>", "name": "<dataKey>", "label": "...", ...props }`
+- Plain HTML, for headings and layout: `{ "$el": "h2", "attrs": { "class": "text-xl font-semibold" }, "children": ["Title"] }`
+- A node is shown conditionally with `"if": "<expression>"`.
+
+## Rules
+
+1. Only use field types and props the docs list. Never invent a type or a prop; an unknown prop may be silently ignored.
+2. Every field has a unique camelCase `name` and a human `label`. Add `help` or `placeholder` where it helps the user.
+3. Validation is a pipe string of FormKit rules: `"required|email"`, `"required|length:8,64"`, `"required|confirm"`. For a checkbox or switch that must be on, use `accepted`, not `required`.
+4. Conditional fields: `"if": "$get(plan).value === 'pro'"`. `$get()` finds a field by its **`id`**, not its `name`, so the field it reads needs an `id` (use the same string as its `name`). `&&`, `||`, `===` and `!==` work. There is no unary `!`: write `!== true`, not `=== false`, because an untouched checkbox or switch is `undefined`, not `false`, unless you give it `"value": false`.
+5. Inside a repeater row, read a sibling field with `$node.value.<field>` instead of `$get()`.
+6. Choice fields: `nuxtUIRadioGroup` for one of a few options, `nuxtUICheckboxGroup` for several of a few, `nuxtUISelect` for one of many, `nuxtUISelectMenu` with `"multiple": true` for several of many. Options are strings or `{ "label": "...", "value": "..." }`; prefer the object form with a stable camelCase `value`.
+7. Dates: `nuxtUIInputDate` with `"valueType": "iso"` so the value is a plain string.
+8. Sliders and rating inputs always have a value: give a sensible default with `"value"`.
+9. Layout: a `$el` heading per section, and short fields side by side in a grid wrapper: `{ "$el": "div", "attrs": { "class": "grid grid-cols-1 sm:grid-cols-2 gap-4" }, "children": [ ...fields ] }`.
+10. Repeaters (`nuxtUIRepeater`) are bare by default. Always set these, otherwise the insert button disappears after the first row, the row buttons stack, and only the move buttons show:
+    `"newItem": { ...every child name with an empty value }`, `"alwaysDisplayInsertButton": true`, `"displayDeleteButton": true`, `"displayCloneButton": true`, `"listClass": "grid gap-3"`, `"listItemClass": "flex items-start gap-2"`, `"buttonGroupClass": "mt-6 flex gap-1"`, `"insertButtonLabel": "Add <thing>"`, plus `minItems`/`maxItems` where they fit. Size the fields in a row with `"outerClass": "w-48"` (and `"class": "w-full"` on the field itself).
+11. Wizards: one `nuxtUIMultiStep` (`"allowIncomplete": false`) whose `children` are `nuxtUIStep` nodes, each with a `name`, a `label` and its fields as `children`.
+12. If the request is vague, make sensible choices rather than asking: group the fields into 2 to 4 sections, mark the essential ones `required`.
+```
+
+## Check the result
+
+Never ship generated JSON unseen. Render it:
+
+```vue
+<script setup lang="ts">
+const schema = [/* paste the generated array here */]
+</script>
+
+<template>
+  <FUDataEdit :data="{}" :schema="schema" debug-data @data-saved="console.log($event)" />
+</template>
+```
+
+The playground's **Playground** page (`/playground`) has a JSON editor that re-renders the form when you paste a schema into it, which is a quick first look. It keeps the components it already rendered at each position, so when a pasted schema changes a field's type, the old component can linger (for example a text box where a checkbox should be). Judge conditional fields and field types in the snippet above, on a fresh page load, not in the editor. Then run through this list:
+
+- **Every conditional field**: change the field it depends on and check that it appears and disappears. A condition that never matches shows no error; the field is just never there.
+- **Repeaters**: add, copy, remove and reorder a few rows, and check the insert button is still there afterwards.
+- **Validation**: submit the empty form and read the messages.
+- **The data**: open *Debug Data* and check the keys and value types (dates as strings, switches as booleans).
+- **A wizard**: press Next on an empty step; it should stay put.
+
+## Mistakes the prompt prevents
+
+These came from rendering generated forms or from [Known Limitations](/getting-started/known-limitations), and each has a rule in the prompt.
+
+| Without the rule | What happens |
+|---|---|
+| `$get(userType)` on a field that has only a `name` | The condition never matches and the field is never shown, with no error. `$get()` resolves by `id` (rule 4). |
+| A repeater without the display flags | The insert button vanishes after the first row, the row buttons stack vertically, and delete and copy are missing (rule 10). |
+| `if: '!$value'` | Silently ignored; the expression language has no unary `!` (rule 4). |
+| `$get()` inside a repeater row | Does not find the sibling field; use `$node.value.<field>` (rule 5). |
+| `required` on a checkbox or switch | Passes when it is `false`; use `accepted` (rule 3). |
+| A date field without `valueType` | The value is a `CalendarDate` object, which is not JSON (rule 7). |
+| A made-up prop | May be ignored without a warning (rule 1). |
+
+## What was tested
+
+Five forms were generated by models that were given only the prompt and the docs folder, then rendered and exercised in the playground. The first four used an early draft of the prompt; the hotel form used the final one above.
+
+| Request | Result |
+|---|---|
+| Support request, with a phone field shown for urgent priority | Rendered; the conditional appeared when *Urgent* was chosen |
+| Conference registration, with in-person-only fields | Rendered; the conditional fields appeared for *In person* |
+| Job application with a work-history repeater | Rendered, but with the first prompt the repeater had no insert button after the first row and stacked buttons. Rule 10 fixes that. |
+| Customer feedback survey (a deliberately vague request) | Rendered, with sensible sections |
+| Hotel booking, with a condition using `||` (second prompt version) | Rendered; the field appeared for *Family* and *Suite* and not for the other rooms |
+
+The wizard and the repeater with a per-row condition were written by hand from the prompt's rules and the docs rather than generated by a model, and they rendered and behaved as described: a row's *End date* hid when that row's *Currently here* switch was on, and Next did nothing on an empty step.
+
+This tests the prompt, not any particular model: results vary, which is why the checks above matter.
+
+## An example
+
+For the hotel request above, the generated schema was (unedited):
+
+```json
+[
+  {
+    "$el": "h2",
+    "attrs": {
+      "class": "text-xl font-semibold"
+    },
+    "children": [
+      "Guest Details"
+    ]
+  },
+  {
+    "$formkit": "nuxtUIInput",
+    "id": "guestName",
+    "name": "guestName",
+    "label": "Guest name",
+    "placeholder": "Full name",
+    "validation": "required"
+  },
+  {
+    "$el": "div",
+    "attrs": {
+      "class": "grid grid-cols-1 sm:grid-cols-2 gap-4"
+    },
+    "children": [
+      {
+        "$formkit": "nuxtUIInput",
+        "id": "email",
+        "name": "email",
+        "label": "Email",
+        "inputType": "email",
+        "placeholder": "you@example.com",
+        "leadingIcon": "i-lucide-mail",
+        "validation": "required|email"
+      },
+      {
+        "$formkit": "nuxtUIInput",
+        "id": "phone",
+        "name": "phone",
+        "label": "Phone",
+        "inputType": "tel",
+        "placeholder": "+1 555 123 4567",
+        "leadingIcon": "i-lucide-phone",
+        "validation": "required"
+      }
+    ]
+  },
+  {
+    "$el": "h2",
+    "attrs": {
+      "class": "text-xl font-semibold mt-6"
+    },
+    "children": [
+      "Stay"
+    ]
+  },
+  {
+    "$formkit": "nuxtUIRadioGroup",
+    "id": "roomType",
+    "name": "roomType",
+    "label": "Room type",
+    "options": [
+      {
+        "label": "Single",
+        "value": "single"
+      },
+      {
+        "label": "Double",
+        "value": "double"
+      },
+      {
+        "label": "Family",
+        "value": "family"
+      },
+      {
+        "label": "Suite",
+        "value": "suite"
+      }
+    ],
+    "validation": "required"
+  },
+  {
+    "$el": "div",
+    "attrs": {
+      "class": "grid grid-cols-1 sm:grid-cols-2 gap-4"
+    },
+    "children": [
+      {
+        "$formkit": "nuxtUIInputDate",
+        "id": "checkIn",
+        "name": "checkIn",
+        "label": "Check-in",
+        "valueType": "iso",
+        "validation": "required"
+      },
+      {
+        "$formkit": "nuxtUIInputDate",
+        "id": "checkOut",
+        "name": "checkOut",
+        "label": "Check-out",
+        "valueType": "iso",
+        "validation": "required"
+      }
+    ]
+  },
+  {
+    "$formkit": "nuxtUIInputNumber",
+    "id": "additionalGuests",
+    "name": "additionalGuests",
+    "label": "Additional guests",
+    "min": 0,
+    "max": 6,
+    "step": 1,
+    "value": 0,
+    "if": "$get(roomType).value === 'family' || $get(roomType).value === 'suite'"
+  },
+  {
+    "$el": "h2",
+    "attrs": {
+      "class": "text-xl font-semibold mt-6"
+    },
+    "children": [
+      "Extras"
+    ]
+  },
+  {
+    "$formkit": "nuxtUISwitch",
+    "id": "breakfast",
+    "name": "breakfast",
+    "label": "Include breakfast",
+    "help": "Served daily from 7:00 to 10:30"
+  },
+  {
+    "$formkit": "nuxtUITextarea",
+    "id": "specialRequests",
+    "name": "specialRequests",
+    "label": "Special requests",
+    "rows": 4,
+    "autoresize": true,
+    "placeholder": "Anything we should know?"
+  }
+]
+```
+
+## A skill for your coding assistant
+
+The prompt above is for generating one form. If an assistant is working in your project more broadly (setting the module up, writing and fixing forms), give it the skill that ships with the package. It is a short list of the rules that are easy to get wrong and fail silently: registering the inputs, `$get()` needing an `id`, the bare repeater defaults, field widths, and a pointer to [`llms.txt`](https://sfxcode.github.io/nuxt-ui-formkit/llms.txt) for everything else.
+
+Because it is installed with the package, it always matches the version you have. For Claude Code, copy it into your project's skills folder:
+
+```bash
+mkdir -p .claude/skills
+cp -r node_modules/@sfxcode/nuxt-ui-formkit/skills/nuxt-ui-formkit .claude/skills/
+```
+
+Re-run the copy after you upgrade the module. For another assistant, the skill is plain Markdown (`skills/nuxt-ui-formkit/SKILL.md`): paste it into that tool's project instructions.
+
+## Tips
+
+- **Name the fields you care about.** A vague request ("a feedback survey") gets sensible defaults; a precise one gets what you asked for.
+- **Say which fields are conditional**, and what they depend on, in the request.
+- **Keep the docs attached in follow-up messages**, or the assistant may fall back on guesses.
+- **Treat the output as a draft.** The prompt makes the schema valid, not right for your product: check the labels, the validation and the data keys.
+
+## Known gaps
+
+- Date inputs keep their compact width inside a grid, next to full-width text fields. See [Styling](/getting-started/styling).
+- Whether a field hidden by `if` keeps a value in the data is not documented; check *Debug Data* if it matters to you.
+- There is no cross-field rule such as "check-out after check-in" in a JSON schema.
+
+---
+
+<!-- https://sfxcode.github.io/nuxt-ui-formkit/getting-started/known-limitations.md -->
+
+
+# Known Limitations
+
+Most of these fail **silently** - no error, no warning, just a missing label or a validation message that never appears - so they're worth reading once.
+
+## Setup
+
+- **Inputs are not auto-registered.** The module only adds a plugin, the composables, and `FUDataView`/`FUDataEdit`/`FUDataDebug`/`FUAutoForm`. The `nuxtUI*` input and output types exist only once your `formkit.config.ts` registers them via [`createNuxtUiFormkitConfig()`](/getting-started/installation#formkit-configuration), and that file is only picked up if `@formkit/nuxt` is in your `modules`.
+- **Multi-step needs its plugin.** `nuxtUIMultiStep`/`nuxtUIStep` do nothing unless you call `createNuxtUiFormkitConfig({ multiStep: true })` (or register `createMultiStepPlugin()` yourself). In development a `nuxtUIMultiStep` without the plugin logs a console warning saying so. See [Multi-Step](/components/multi-step).
+- **Don't override `plugins` after spreading the helper.** `defaultConfig({ ...createNuxtUiFormkitConfig(), plugins: [x] })` replaces the whole array and silently drops the asterisk plugin (required fields lose their `*`). Pass yours as `createNuxtUiFormkitConfig({ plugins: [x] })`, which appends them.
+- **Schemas can only use globally registered Nuxt UI components.** The module registers `UButton`, `UIcon`, `UTabs`, `UUser` and `UTooltip`. Any other `$cmp: 'UXxx'` in a schema renders as an unstyled custom element.
+- **Server rendering has a few things that only appear after hydration.** The editor is built in the browser (the content below it moves down by about 73px when it mounts), a multi-step's tab strip appears after hydration, and a date field without an explicit `timeZone` shows the server's day until the page mounts. None of this is a hydration mismatch. See [Server-Side Rendering](/getting-started/ssr).
+
+## Validation timing
+
+FormKit reveals validation messages on `blur` by default, and Nuxt UI components don't all emit one.
+
+- **`nuxtUIColorPicker` is pointer-only.** Nothing inside `UColorPicker` is focusable, so "blur" means releasing the pointer after picking a color; keyboard users can't operate it at all.
+- **`nuxtUISelect` reveals on dropdown close only.** Tabbing through without opening it shows nothing. Use `'live'`, or `nuxtUISelectMenu`, which has no such gap. See [Selection Components](/components/inputs#nuxtuiselect).
+- **`required` passes for a boolean `false`.** On `nuxtUICheckbox`/`nuxtUISwitch`, use the `accepted` rule instead.
+
+## Forms and composables
+
+- **`useFormKitForm(id)` is keyed on the form's `id`, not its `name`**, and the form must be mounted in the DOM. `submit()` can't report when FormKit's own submission finishes; `isLoading` only wraps the `handler` you pass.
+- **`hasErrors` is not `!isValid`.** `hasErrors` counts only error *messages* (e.g. from `setErrors`); a form with failed validation rules reports `hasErrors: false`. Use `isValid` for rule failures.
+- **`isDirty` is sticky by default** - it stays `true` after a field is edited back to its original value. Set `dirty-behavior="compare"` (`FUDataEdit` has a `dirtyBehavior` prop) to track the live difference.
+- **Overlays aren't concurrent.** `useFormKitOverlay().edit()`/`auto()` share one overlay instance; a second call before the first resolves takes it over. See [One Overlay Instance at a Time](/components/overlay).
+- **Autosave attaches at form creation only.** It needs a stable form `name`, covers the root form (not nested groups), and can't be added later from `useFormKitForm`. See [`createAutosavePlugin`](/api/utilities#createautosaveplugin).
+
+## Repeaters and schemas
+
+- **`node.at('items.0.email')` can't reach into `nuxtUIRepeater`.** The repeater's outer and inner nodes share a name, so FormKit's address lookup fails silently. The Standard Schema bridge works around this; your own code addressing repeater rows has to as well.
+- **Inside repeater rows, read sibling values with `$node.value.<field>`.** `$get(name)` resolves by `id`, not by `name`.
+- **The schema expression language has no unary `!`.** `if: '!$value'` is silently ignored; compare explicitly instead.
+
+## Inputs
+
+- **Date inputs emit `@internationalized/date` objects by default** (`CalendarDate` etc.), which aren't JSON-serializable. Set `valueType: 'date'` or `'iso'` for plain values - see [`nuxtUIInputDate`](/components/inputs#nuxtuiinputdate).
+- **`color` is overridden while a field is invalid** - the wrapped component is switched to its `error` color.
+- **FormKit's own label/help/messages chrome always surrounds the Nuxt UI component**, so you won't get Nuxt UI's `UFormField` layout.
+- **`@formkit/addons` plugins that assume native FormKit types silently no-op.** `createMaxLengthCountdownPlugin` and `createFloatingLabelsPlugin` don't work with `nuxtUI*` types.
+
+## FUAutoForm
+
+- **Fields it can't map are dropped, not errored.** `null`, `undefined`, functions and other non-plain values never become inputs; with Zod, only string, number, boolean, date, array and object schemas map - enums, unions and literals are skipped.
+- **Schema introspection is by duck-typing**, tested against Valibot 1.x and Zod 4. Zod 3 isn't supported, and other Standard Schema libraries (e.g. ArkType) get no inference - they work for [validation](/components/standard-schema), not for building the form.
+
+## Localization
+
+Built-in labels are English-only unless noted: "Save"/"Cancel"/"Reset" on `FUDataEdit` and the overlays, "Keep editing"/"Discard" in the `confirmDiscard` prompt, "Yes"/"No" on `FUOutputBoolean`, and "Add Item" on the repeater. Multi-step's Previous/Next resolve through FormKit's `$ui.prev`/`$ui.next` i18n keys. Most of these can be overridden through props.
+
+## Not implemented
+
+`UStepper` as a multi-step display mode (tabs only), `FUOutputAvatar`, and `FUOutputProgressGroup`.
+
+---
+
+<!-- https://sfxcode.github.io/nuxt-ui-formkit/components/inputs.md -->
+
+# Input Components
+
+Comprehensive list of all FormKit-wrapped Nuxt UI input components with schema-based examples.
+
+## Overview
+
+Nuxt UI FormKit provides fully-featured input components. All examples below show **schema-based usage** - the recommended approach for building forms.
+
+::: info Schema-First
+All components are designed to work seamlessly in schemas. Template usage is also supported but schemas are the recommended pattern.
+:::
+
+## Text Inputs
+
+### nuxtUIInput
+
+Text input component supporting various input types (text, email, password, url, tel, number, search).
+
+📖 Nuxt UI reference: [Input](https://ui.nuxt.com/components/input)
+
+**Schema Example:**
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUIInput',
+    name: 'email',
+    label: 'Email Address',
+    inputType: 'email',
+    placeholder: 'your.email@example.com',
+    leadingIcon: 'i-lucide-mail',
+    validation: 'required|email'
+  }
+]
+```
+
+**Full Example:**
+
+```vue
+<template>
+  <FUDataEdit :data="data" :schema="schema" />
+</template>
+
+<script setup lang="ts">
+const data = ref({ email: '' })
+
+const schema = [
+  {
+    $formkit: 'nuxtUIInput',
+    name: 'email',
+    label: 'Email Address',
+    inputType: 'email',
+    placeholder: 'your.email@example.com',
+    leadingIcon: 'i-lucide-mail',
+    trailingIcon: 'i-lucide-check',
+    size: 'lg',
+    validation: 'required|email'
+  }
+]
+</script>
+```
+
+**Key Props:**
+- `inputType` - HTML input type (text, email, password, url, tel, search)
+- `placeholder` - Placeholder text
+- `leadingIcon` - Icon before input
+- `trailingIcon` - Icon after input
+- `size` - Input size (xs, sm, md, lg, xl)
+
+### nuxtUITextarea
+
+Multi-line text input with auto-resize functionality.
+
+📖 Nuxt UI reference: [Textarea](https://ui.nuxt.com/components/textarea)
+
+**Schema Example:**
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUITextarea',
+    name: 'message',
+    label: 'Message',
+    rows: 4,
+    autoresize: true,
+    placeholder: 'Enter your message...',
+    validation: 'required|length:10'
+  }
+]
+```
+
+### nuxtUIInputNumber
+
+Number input with increment/decrement buttons and formatting options.
+
+📖 Nuxt UI reference: [InputNumber](https://ui.nuxt.com/components/input-number)
+
+**Schema Example:**
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUIInputNumber',
+    name: 'price',
+    label: 'Price',
+    min: 0,
+    step: 0.01,
+    formatOptions: {
+      style: 'currency',
+      currency: 'USD'
+    },
+    validation: 'required|min:0'
+  }
+]
+```
+
+**Key Props:**
+- `locale` - BCP 47 locale used for number formatting (e.g. `'de-DE'`)
+- `readonly` - Render as read-only
+
+## Selection Components
+
+### nuxtUISelect
+
+Dropdown select. It has no search - use [`nuxtUISelectMenu`](#nuxtuiselectmenu) for a searchable select.
+
+📖 Nuxt UI reference: [Select](https://ui.nuxt.com/components/select)
+
+**Schema Example:**
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUISelect',
+    name: 'country',
+    label: 'Country',
+    options: ['USA', 'UK', 'Canada', 'Australia'],
+    placeholder: 'Select a country',
+    validation: 'required'
+  }
+]
+```
+
+**With Objects:**
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUISelect',
+    name: 'role',
+    label: 'User Role',
+    options: [
+      { label: 'Administrator', value: 'admin' },
+      { label: 'Editor', value: 'editor' },
+      { label: 'Viewer', value: 'viewer' }
+    ]
+  }
+]
+```
+
+**Key Props:**
+- `content` - Positioning/behavior config for the dropdown content
+
+**Blur/validation behavior:** `validationVisibility: 'blur'` (FormKit's default) reveals validation messages once the dropdown has been opened and closed at least once — Nuxt UI's `USelect` only emits a `blur` event synthetically on that open→close transition, since its trigger has no native blur listener of its own. Tabbing through the trigger without ever opening the dropdown does not trigger this reveal. Set `validationVisibility: 'live'` on the field if messages need to appear without an open/close cycle.
+
+### nuxtUISelectMenu
+
+Advanced select with grouping and multiple selection support.
+
+📖 Nuxt UI reference: [SelectMenu](https://ui.nuxt.com/components/select-menu)
+
+**Schema Example:**
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUISelectMenu',
+    name: 'technologies',
+    label: 'Technologies',
+    multiple: true,
+    options: [
+      {
+        label: 'Frontend',
+        children: [
+          { label: 'Vue', value: 'vue' },
+          { label: 'React', value: 'react' },
+          { label: 'Svelte', value: 'svelte' }
+        ]
+      },
+      {
+        label: 'Backend',
+        children: [
+          { label: 'Node.js', value: 'node' },
+          { label: 'Python', value: 'python' },
+          { label: 'Go', value: 'go' }
+        ]
+      }
+    ]
+  }
+]
+```
+
+**Key Props:**
+- `size` - Component size
+- `content` - Positioning/behavior config for the dropdown content
+- `by` - Key or comparator used to match the selected value
+
+**Blur/validation behavior:** `validationVisibility: 'blur'` (FormKit's default) reveals validation messages both when the dropdown is opened and closed, and when the trigger is simply focused and blurred without ever opening it — a real DOM blur listener is wired on the underlying trigger either way.
+
+### nuxtUIListbox
+
+Listbox for single/multiple selection with filtering, plus a two-pane "transfer" mode for moving items between an available and a selected list.
+
+📖 Nuxt UI reference: [Listbox](https://ui.nuxt.com/components/listbox)
+
+**Schema Example:**
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUIListbox',
+    name: 'skills',
+    label: 'Skills',
+    multiple: true,
+    options: ['TypeScript', 'Vue', 'Nuxt', 'FormKit', 'TailwindCSS']
+  }
+]
+```
+
+**Key Props:**
+- `options` - Array of strings or `{ label, value, description, icon, avatar, chip, disabled }` objects (or nested arrays of these for grouped/labeled sections)
+- `multiple` - Allow selecting more than one item
+- `filter` - Show a search input to filter items (`true`, or an object of `UInput` props)
+- `by` / `valueKey` - Key or comparator used to match the selected value against `options`
+- `color` - Component color
+
+**With Transfer Mode:**
+
+Set `displayMode: 'transfer'` to render a two-pane UI instead: an "available" list on the left and a "selected" list on the right, with `v-model` bound to the array of items on the right.
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUIListbox',
+    name: 'teamMembers',
+    label: 'Project Team',
+    displayMode: 'transfer',
+    options: employees,
+    filter: true,
+    transferLeftHeaderText: 'Available',
+    transferRightHeaderText: 'Selected',
+    transferAll: true,
+    transferSortIcons: true,
+    transferItemDraggable: true
+  }
+]
+```
+
+Items can be moved between the two panes either with the arrow buttons or by dragging — in **either direction** — and reordered within the "selected" pane by dragging or with the optional up/down icons. A precise insertion-line indicator (not a whole-row highlight) shows exactly where a dragged item will land.
+
+**Transfer Mode Props:**
+- `displayMode` - `'single'` (default) or `'transfer'`
+- `transferLeftHeaderText` / `transferRightHeaderText` - Optional header labels above each pane
+- `transferHeaderClass` - CSS classes applied to both header labels (defaults to `'text-sm font-medium text-highlighted'`)
+- `transferAll` - Show "transfer all" / "remove all" buttons (the double-chevron buttons) in addition to the single-item transfer buttons
+- `transferSortIcons` - Show up/down chevron buttons on each item in the "selected" pane for reordering without dragging (off by default)
+- `transferItemDraggable` - Make the whole row draggable, not just its grip handle (off by default — the grip handle is always draggable)
+
+::: tip
+All the single-mode props above (`options`, `multiple`, `filter`, `by`/`valueKey`, `orientation`, `virtualize`, etc.) are also forwarded to both panes in transfer mode, except `color`, which currently only applies to single-select mode.
+:::
+
+### nuxtUIInputMenu
+
+Dropdown menu with searchable options.
+
+📖 Nuxt UI reference: [InputMenu](https://ui.nuxt.com/components/input-menu)
+
+**Schema Example:**
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUIInputMenu',
+    name: 'framework',
+    label: 'Framework',
+    options: ['Nuxt', 'Next.js', 'SvelteKit', 'Remix', 'Astro'],
+    placeholder: 'Search frameworks...'
+  }
+]
+```
+
+**Key Props:**
+- `mode` - `'combobox'` (default) or `'autocomplete'`
+- `content` - Positioning/behavior config for the dropdown content
+- `by` - Key or comparator used to match the selected value
+- `open` - Controlled open state of the menu
+
+### nuxtUITree
+
+Hierarchical selection input for nested data — categories, org charts, file trees, permission trees.
+
+📖 Nuxt UI reference: [Tree](https://ui.nuxt.com/components/tree)
+
+**Schema Example:**
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUITree',
+    name: 'category',
+    label: 'Category',
+    options: [
+      {
+        label: 'Electronics',
+        icon: 'i-lucide-cpu',
+        defaultExpanded: true,
+        children: [
+          { label: 'Laptops' },
+          { label: 'Phones' },
+        ],
+      },
+      {
+        label: 'Clothing',
+        icon: 'i-lucide-shirt',
+        children: [
+          { label: 'Men' },
+          { label: 'Women' },
+        ],
+      },
+    ],
+  },
+]
+```
+
+::: info
+The field's value is the **selected item only** — whatever shape you gave that item in `options` (e.g. `{ label: 'Laptops' }` above). Expanding/collapsing nodes is separate, uncontrolled UI state that never becomes part of the field's value, the same way `FUSelectMenu`'s `open`/`defaultOpen` are plain display props rather than part of `modelValue`. Selecting a node and toggling its expanded state are also independent interactions — clicking a row does both at once, but keyboard `ArrowLeft`/`ArrowRight` toggles expand without changing the selection.
+:::
+
+**Key Props:**
+- `options` - Array of `{ label, icon, children, defaultExpanded, disabled, ... }` objects; `children` nests recursively to any depth
+- `multiple` - Allow selecting more than one item (the value becomes an array)
+- `labelKey` - Key used to read each item's label (defaults to `'label'`)
+- `nested` - Render children inside their parent (`true`, default) vs. a flattened single-level list
+- `virtualize` - Enable virtualization for large trees (`true`, or `{ overscan, estimateSize }`)
+- `expandedIcon` / `collapsedIcon` / `trailingIcon` - Icons shown next to expandable parent nodes
+- `selectionBehavior` - `'toggle'` or `'replace'` selection behavior
+
+## Boolean Inputs
+
+### nuxtUICheckbox
+
+Single checkbox with label and description.
+
+📖 Nuxt UI reference: [Checkbox](https://ui.nuxt.com/components/checkbox)
+
+**Schema Example:**
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUICheckbox',
+    name: 'terms',
+    label: 'I agree to the terms and conditions',
+    description: 'You must accept to continue',
+    validation: 'accepted'
+  }
+]
+```
+
+**Key Props:**
+- `trueValue` / `falseValue` - Custom values emitted for the checked / unchecked states
+
+### nuxtUICheckboxGroup
+
+Multiple checkbox selection.
+
+📖 Nuxt UI reference: [CheckboxGroup](https://ui.nuxt.com/components/checkbox-group)
+
+**Schema Example:**
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUICheckboxGroup',
+    name: 'interests',
+    label: 'Interests',
+    options: [
+      { label: 'Technology', value: 'tech', description: 'Software and hardware' },
+      { label: 'Design', value: 'design', description: 'UI/UX and graphics' },
+      { label: 'Business', value: 'business', description: 'Strategy and growth' }
+    ]
+  }
+]
+```
+
+**Key Props:**
+- `name` - Shared form control name for the group
+
+### nuxtUIRadioGroup
+
+Radio button group for single selection.
+
+📖 Nuxt UI reference: [RadioGroup](https://ui.nuxt.com/components/radio-group)
+
+**Schema Example:**
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUIRadioGroup',
+    name: 'plan',
+    label: 'Select Plan',
+    options: [
+      { 
+        label: 'Free', 
+        value: 'free', 
+        description: 'Basic features for getting started' 
+      },
+      { 
+        label: 'Pro', 
+        value: 'pro', 
+        description: 'Advanced features for professionals' 
+      },
+      { 
+        label: 'Enterprise', 
+        value: 'enterprise', 
+        description: 'Full features with dedicated support' 
+      }
+    ],
+    validation: 'required'
+  }
+]
+```
+
+### nuxtUISwitch
+
+Toggle switch for boolean values.
+
+📖 Nuxt UI reference: [Switch](https://ui.nuxt.com/components/switch)
+
+**Schema Example:**
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUISwitch',
+    name: 'newsletter',
+    label: 'Subscribe to newsletter',
+    help: 'Get product updates and announcements'
+  }
+]
+```
+
+**Key Props:**
+- `trueValue` / `falseValue` - Custom values emitted for the on / off states
+
+## Specialized Inputs
+
+### nuxtUIInputDate
+
+Date and time picker with range support.
+
+📖 Nuxt UI reference: [InputDate](https://ui.nuxt.com/components/input-date)
+
+**Schema Example:**
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUIInputDate',
+    name: 'eventDate',
+    label: 'Event Date',
+    enableTimePicker: false,
+    placeholder: 'Select date',
+    validation: 'required'
+  }
+]
+```
+
+**With Time:**
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUIInputDate',
+    name: 'appointment',
+    label: 'Appointment',
+    enableTimePicker: true,
+    placeholder: 'Select date and time'
+  }
+]
+```
+
+**Working with JS `Date` or ISO strings:**
+
+By default the form value is a native `@internationalized/date` `CalendarDate` / `CalendarDateTime` / `ZonedDateTime` — the type `UInputDate` itself uses. If your form data instead holds a JS `Date` or an ISO 8601 string, set `valueType` to convert at the boundary in both directions. `defaultValue`, `placeholder`, `defaultPlaceholder`, `minValue` and `maxValue` accept the same types and are converted the same way.
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUIInputDate',
+    name: 'eventDate',
+    label: 'Event Date',
+    valueType: 'date', // 'calendar' (default) | 'date' | 'iso'
+    defaultValue: new Date(2026, 6, 5)
+  },
+  {
+    $formkit: 'nuxtUIInputDate',
+    name: 'isoDate',
+    label: 'ISO Date',
+    valueType: 'iso',
+    defaultValue: '2026-07-05'
+  }
+]
+```
+
+**Key Props:**
+- `valueType` - `'calendar'` (default), `'date'`, or `'iso'` — the shape of the value read from and written to the form
+- `timeZone` - Timezone used when converting to/from `'date'`/`'iso'`; defaults to the local timezone
+
+### nuxtUIInputTime
+
+Time picker with 12/24-hour format.
+
+📖 Nuxt UI reference: [InputTime](https://ui.nuxt.com/components/input-time)
+
+**Schema Example:**
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUIInputTime',
+    name: 'meetingTime',
+    label: 'Meeting Time',
+    placeholder: 'Select time'
+  }
+]
+```
+
+### nuxtUIColorPicker
+
+Color selection with multiple format support (`hex`, `rgb`, `hsl`, `cmyk`, `lab`).
+
+📖 Nuxt UI reference: [ColorPicker](https://ui.nuxt.com/components/color-picker)
+
+**Schema Example:**
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUIColorPicker',
+    name: 'themeColor',
+    label: 'Theme Color',
+    format: 'hex'
+  }
+]
+```
+
+::: info Blur/validation behavior
+`UColorPicker` is pointer-only - nothing inside it is focusable - so there is no real blur. Instead, the end of a pointer interaction on the picker (releasing the mouse after picking a color) counts as the field being touched, and FormKit's default `validationVisibility: 'blur'` reveals validation messages at that moment. Keyboard users can't operate the picker at all (a Nuxt UI limitation).
+:::
+
+### nuxtUIInputTags
+
+Tag input component with a custom delimiter.
+
+📖 Nuxt UI reference: [InputTags](https://ui.nuxt.com/components/input-tags)
+
+**Schema Example:**
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUIInputTags',
+    name: 'tags',
+    label: 'Tags',
+    placeholder: 'Add tags...',
+    delimiter: ',',
+    help: 'Press comma to add a tag'
+  }
+]
+```
+
+**Key Props:**
+- `delimiter` - Character or `RegExp` used to split tags (e.g. `','`)
+
+### nuxtUIPinInput
+
+PIN/OTP entry component.
+
+📖 Nuxt UI reference: [PinInput](https://ui.nuxt.com/components/pin-input)
+
+**Schema Example:**
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUIPinInput',
+    name: 'pin',
+    label: 'Enter PIN',
+    length: 6,
+    pinType: 'number',
+    validation: 'required|length:6'
+  }
+]
+```
+
+**Key Props:**
+- `pinType` - `'text'` (default) or `'number'`
+- `separator` - Insert a separator between inputs (index or list of indexes)
+
+### nuxtUIInputRating
+
+Star-based rating input for numeric values.
+
+📖 Nuxt UI reference: [InputRating](https://ui.nuxt.com/components/input-rating)
+
+**Schema Example:**
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUIInputRating',
+    name: 'satisfaction',
+    label: 'Satisfaction',
+    length: 5,
+    validation: 'required'
+  }
+]
+```
+
+**Key Props:**
+- `length` - Number of rating items to render (default `5`)
+- `step` - Granularity of each rating item (`1`, `0.5`, `0.25`, or `0.1`)
+- `icon` / `emptyIcon` - Custom icons for filled/empty states
+- `clearable` - Clicking the current value resets it to `0`
+- `hoverable` - Preview the value under the pointer on hover
+- `readonly` - Non-interactive display mode
+
+### nuxtUISlider
+
+Range slider for numeric values.
+
+📖 Nuxt UI reference: [Slider](https://ui.nuxt.com/components/slider)
+
+**Schema Example:**
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUISlider',
+    name: 'volume',
+    label: 'Volume',
+    min: 0,
+    max: 100,
+    step: 1
+  }
+]
+```
+
+::: tip
+The slider's thumb is taller than its track and overflows it, so it touches the label above and the help text below. Give the track vertical room with CSS: `.formkit-outer[data-type='nuxtUISlider'] .formkit-inner { padding-block: 0.5rem; }`.
+:::
+
+### nuxtUICalendar
+
+Bare date-grid picker with day, month, and year views, supporting range and multiple selection.
+
+📖 Nuxt UI reference: [Calendar](https://ui.nuxt.com/components/calendar)
+
+**Schema Example:**
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUICalendar',
+    name: 'appointmentDate',
+    label: 'Appointment Date',
+    validation: 'required'
+  }
+]
+```
+
+**With Range:**
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUICalendar',
+    name: 'vacationRange',
+    label: 'Vacation Dates',
+    range: true
+  }
+]
+```
+
+**Working with JS `Date` or ISO strings:**
+
+By default the form value is a native `@internationalized/date` `DateValue` (or `{ start, end }` / an array of those for range/multiple mode) — the type `UCalendar` itself uses. Set `valueType` to convert to/from a JS `Date` or an ISO 8601 string at the boundary, in both directions. Works the same for single, range, and multiple selection.
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUICalendar',
+    name: 'appointmentDate',
+    label: 'Appointment Date',
+    valueType: 'date', // 'calendar' (default) | 'date' | 'iso'
+    defaultValue: new Date(2026, 6, 5)
+  }
+]
+```
+
+**Key Props:**
+- `calendarType` - `'date'` (default), `'month'`, or `'year'` picker view
+- `range` - Enable selecting a start/end date range
+- `multiple` - Enable selecting multiple individual dates
+- `color` - Theme color for the selected date(s)
+- `size` - `'xs' | 'sm' | 'md' | 'lg' | 'xl'` - controls cell/font size, not the overall footprint
+- `valueType` - `'calendar'` (default), `'date'`, or `'iso'` — the shape of the value read from and written to the form
+- `timeZone` - Timezone used when converting to/from `'date'`/`'iso'`; defaults to the local timezone
+
+::: tip
+The calendar grid fills its container by default (matching Nuxt UI's own `UCalendar`). Add a width class via `class` on the schema entry (e.g. `class: 'w-1/2'`) to control how much space it takes up.
+:::
+
+### nuxtUIFileUpload
+
+Drag/drop and click-to-browse file input with previews.
+
+📖 Nuxt UI reference: [FileUpload](https://ui.nuxt.com/components/file-upload)
+
+**Schema Example:**
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUIFileUpload',
+    name: 'attachment',
+    label: 'Attachment',
+    accept: 'image/*',
+    validation: 'required'
+  }
+]
+```
+
+**With Multiple Files:**
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUIFileUpload',
+    name: 'documents',
+    label: 'Documents',
+    multiple: true,
+    layout: 'grid'
+  }
+]
+```
+
+**Key Props:**
+- `multiple` - Allow selecting more than one file
+- `accept` - Comma-separated MIME types or extensions (e.g. `'image/png,.pdf'`)
+- `layout` - `'list'` (default) or `'grid'` — only applies when `variant` is `'area'`
+- `position` - `'outside'` (default) or `'inside'` — file list position relative to the dropzone
+- `variant` - `'area'` (default) or `'button'` — `'button'` only works when `multiple` is `false`
+
+### nuxtUIEditor
+
+Tiptap-based rich text editor with a built-in formatting toolbar.
+
+📖 Nuxt UI reference: [Editor](https://ui.nuxt.com/components/editor)
+
+**Schema Example:**
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUIEditor',
+    name: 'body',
+    label: 'Post Body',
+    contentType: 'html',
+    validation: 'required'
+  }
+]
+```
+
+**With Markdown:**
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUIEditor',
+    name: 'notes',
+    label: 'Notes',
+    contentType: 'markdown'
+  }
+]
+```
+
+**With Custom Toolbar Items:**
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUIEditor',
+    name: 'summary',
+    label: 'Summary',
+    toolbarItems: [
+      [{ kind: 'undo', icon: 'i-lucide-undo' }, { kind: 'redo', icon: 'i-lucide-redo' }],
+      [{ kind: 'mark', mark: 'bold', icon: 'i-lucide-bold' }, { kind: 'mark', mark: 'italic', icon: 'i-lucide-italic' }]
+    ]
+  }
+]
+```
+
+**Key Props:**
+- `contentType` - `'html'`, `'markdown'`, or `'json'` — auto-inferred from the value when unset
+- `placeholder` - Placeholder text shown in empty paragraphs, or an object with a `mode: 'firstLine' | 'everyLine'`
+- `markdown` - Options for markdown parsing/serialization
+- `image` - Enable/configure the image extension (`false` to disable)
+- `mention` - Enable/configure the mention extension (`false` to disable)
+- `extensions` - Array of additional Tiptap extensions (e.g. `Underline`, `Emoji`) to register alongside the defaults
+- `toolbar` - Set to `false` to hide the built-in formatting toolbar entirely
+- `toolbarItems` - Override the default toolbar item groups (undo/redo, headings, marks, lists/blocks) — see [Nuxt UI's `EditorToolbarItem`](https://ui.nuxt.com/components/editor#toolbar) for the full `kind` list
+- `editorHandlers` - Custom handler overrides for toolbar item behavior (renamed from Nuxt UI's `handlers` prop to avoid colliding with FormKit's own `context.handlers`)
+
+::: warning
+Unlike every other input, `nuxtUIEditor` has no `color`, `variant`, `size`, or `disabled` prop — it's a Tiptap options wrapper, not a themed Nuxt UI form control. FormKit's disabled state is mapped to Tiptap's `editable` option instead (the editor becomes read-only rather than visually "disabled").
+:::
+
+## Complete Form Example
+
+Here's a comprehensive example using multiple input types:
+
+```vue
+<template>
+  <FUDataEdit
+    :data="profileData"
+    :schema="profileSchema"
+    @data-saved="saveProfile"
+  />
+</template>
+
+<script setup lang="ts">
+const profileData = ref({
+  name: '',
+  email: '',
+  phone: '',
+  bio: '',
+  age: 25,
+  country: '',
+  role: '',
+  skills: [],
+  plan: 'free',
+  notifications: true,
+  newsletter: false
+})
+
+const profileSchema = [
+  {
+    $el: 'h3',
+    children: 'Personal Information',
+    attrs: { class: 'text-xl font-bold mb-4' }
+  },
+  {
+    $formkit: 'nuxtUIInput',
+    name: 'name',
+    label: 'Full Name',
+    validation: 'required'
+  },
+  {
+    $formkit: 'nuxtUIInput',
+    name: 'email',
+    inputType: 'email',
+    label: 'Email',
+    validation: 'required|email'
+  },
+  {
+    $formkit: 'nuxtUIInput',
+    name: 'phone',
+    inputType: 'tel',
+    label: 'Phone'
+  },
+  {
+    $formkit: 'nuxtUITextarea',
+    name: 'bio',
+    label: 'Bio',
+    rows: 3
+  },
+  {
+    $el: 'h3',
+    children: 'Additional Details',
+    attrs: { class: 'text-xl font-bold mt-6 mb-4' }
+  },
+  {
+    $formkit: 'nuxtUIInputNumber',
+    name: 'age',
+    label: 'Age',
+    min: 13,
+    max: 120
+  },
+  {
+    $formkit: 'nuxtUISelect',
+    name: 'country',
+    label: 'Country',
+    options: ['USA', 'UK', 'Canada', 'Australia']
+  },
+  {
+    $formkit: 'nuxtUISelectMenu',
+    name: 'skills',
+    label: 'Skills',
+    multiple: true,
+    options: ['Vue', 'Nuxt', 'TypeScript', 'FormKit']
+  },
+  {
+    $formkit: 'nuxtUIRadioGroup',
+    name: 'plan',
+    label: 'Plan',
+    options: [
+      { label: 'Free', value: 'free' },
+      { label: 'Pro', value: 'pro' }
+    ]
+  },
+  {
+    $el: 'h3',
+    children: 'Preferences',
+    attrs: { class: 'text-xl font-bold mt-6 mb-4' }
+  },
+  {
+    $formkit: 'nuxtUISwitch',
+    name: 'notifications',
+    label: 'Enable notifications'
+  },
+  {
+    $formkit: 'nuxtUICheckbox',
+    name: 'newsletter',
+    label: 'Subscribe to newsletter'
+  }
+]
+
+const saveProfile = async (data: any) => {
+  await $fetch('/api/profile', { method: 'PUT', body: data })
+}
+</script>
+```
+
+## Template Usage (Alternative)
+
+While schemas are recommended, template-based usage is also supported:
+
+```vue
+<FormKit
+  type="nuxtUIInput"
+  name="email"
+  label="Email"
+  input-type="email"
+  validation="required|email"
+/>
+```
+
+::: info Recommendation
+Use schemas for better maintainability and type safety. Use templates only for simple forms or when you need fine-grained layout control.
+:::
+
+## Common Props
+
+Every input supports FormKit's own fields:
+
+- `name` (required) - Field name for form data
+- `label` - Field label text
+- `help` - Help text below field
+- `validation` - Validation rules
+- `disabled` - Disable the input
+
+Props like `placeholder` and `size` are forwarded to the wrapped Nuxt UI component, so they only apply where that component has them (a checkbox or switch has no placeholder). Check each component's section above.
+
+## Next Steps
+
+### 👁️ Output Components
+Display-only components with schemas  
+[View Output Components →](/components/outputs)
+
+### 🔄 Repeater
+Dynamic repeatable sections in schemas  
+[Learn About Repeaters →](/components/repeater)
+
+### 💡 Examples
+Real-world schema-based forms  
+[Browse Examples →](/examples/)
+
+---
+
+<!-- https://sfxcode.github.io/nuxt-ui-formkit/components/outputs.md -->
+
+# Output Components
+
+
+## Overview
+
+Output components render data in read-only mode with beautiful formatting. Perfect for dashboards, profile pages, and data visualization - all fully integrated with schemas.
+
+::: info
+**Schema-First:** Output components work seamlessly with `FUDataView` for creating display-only forms from schemas.
+:::
+
+## Text Outputs
+
+### nuxtUIOutputText
+
+Display text with style customization and icons.
+
+**Schema Example:**
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUIOutputText',
+    name: 'userName',
+    label: 'Username',
+    leadingIcon: 'i-lucide-user',
+    color: 'primary',
+    size: 'lg'
+  }
+]
+```
+
+**Complete Example:**
+
+```vue
+<template>
+  <FUDataView :data="userData" :schema="displaySchema" />
+</template>
+
+<script setup lang="ts">
+const userData = ref({
+  userName: 'johndoe',
+  fullName: 'John Doe'
+})
+
+const displaySchema = [
+  {
+    $formkit: 'nuxtUIOutputText',
+    name: 'userName',
+    label: 'Username',
+    leadingIcon: 'i-lucide-user'
+  },
+  {
+    $formkit: 'nuxtUIOutputText',
+    name: 'fullName',
+    label: 'Full Name',
+    leadingIcon: 'i-lucide-id-card',
+    size: 'lg'
+  }
+]
+</script>
+```
+
+**Key Props:**
+- `leadingIcon` - Icon before text
+- `trailingIcon` - Icon after text
+- `color` - Text color
+- `size` - Text size
+- `outputType` - How the value is rendered (see below)
+
+**`outputType` values:**
+
+| Value | Description |
+| --- | --- |
+| `text` (default) | Render the raw value as plain text |
+| `email` | Render as a `mailto:` link |
+| `url` | Render as an external link (opens in a new tab) |
+| `tel` | Render as a `tel:` link |
+| `color` | Render the value as a hex color swatch |
+| `duration` | Format the value as a human-readable duration (e.g. `1h 30m`) |
+| `i18n` | Translate the value using it as the i18n message key |
+
+**i18n Example:**
+
+The `i18n` type uses the field value as the translation key via `vue-i18n`'s `useI18n()`. With a value of `status.active` and a matching message, it renders the translated text; when no i18n instance is active it falls back to the raw value.
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUIOutputText',
+    name: 'status',
+    label: 'Status',
+    outputType: 'i18n' // value "status.active" → "Active"
+  }
+]
+```
+
+> Requires `vue-i18n` (or `@nuxtjs/i18n`) to be installed and configured in your app. It is an optional peer dependency — without it, the value is shown unchanged.
+
+### nuxtUIOutputLink
+
+Display URLs with automatic link generation.
+
+**Schema Example:**
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUIOutputLink',
+    name: 'website',
+    label: 'Website',
+    leadingIcon: 'i-lucide-link',
+    target: '_blank'
+  },
+  {
+    $formkit: 'nuxtUIOutputLink',
+    name: 'email',
+    label: 'Email',
+    leadingIcon: 'i-lucide-mail',
+    target: '_blank'
+  }
+]
+```
+
+**Key Props:**
+- `target` - Link target (_blank, _self)
+- `external` - Mark as external link
+- `leadingIcon` - Icon before link
+
+## Formatted Outputs
+
+### nuxtUIOutputNumber
+
+Display numbers with advanced formatting (currency, percentage, decimal).
+
+**Schema Example:**
+
+```typescript
+const schema = [
+  // Currency
+  {
+    $formkit: 'nuxtUIOutputNumber',
+    name: 'price',
+    label: 'Price',
+    formatOptions: {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 2
+    }
+  },
+  
+  // Percentage
+  {
+    $formkit: 'nuxtUIOutputNumber',
+    name: 'growth',
+    label: 'Growth Rate',
+    formatOptions: {
+      style: 'percent',
+      minimumFractionDigits: 1
+    }
+  },
+  
+  // Decimal
+  {
+    $formkit: 'nuxtUIOutputNumber',
+    name: 'rating',
+    label: 'Rating',
+    formatOptions: {
+      minimumFractionDigits: 1,
+      maximumFractionDigits: 2
+    }
+  }
+]
+```
+
+**Complete Dashboard Example:**
+
+```vue
+<template>
+  <FUDataView :data="metrics" :schema="metricsSchema" />
+</template>
+
+<script setup lang="ts">
+const metrics = ref({
+  revenue: 125430.50,
+  profit: 42150.25,
+  growth: 0.234,
+  conversionRate: 0.0453,
+  customers: 1250
+})
+
+const metricsSchema = [
+  {
+    $el: 'h3',
+    children: 'Financial Metrics',
+    attrs: { class: 'text-xl font-bold mb-4' }
+  },
+  {
+    $formkit: 'nuxtUIOutputNumber',
+    name: 'revenue',
+    label: 'Total Revenue',
+    formatOptions: {
+      style: 'currency',
+      currency: 'USD'
+    }
+  },
+  {
+    $formkit: 'nuxtUIOutputNumber',
+    name: 'profit',
+    label: 'Net Profit',
+    formatOptions: {
+      style: 'currency',
+      currency: 'USD'
+    }
+  },
+  {
+    $el: 'h3',
+    children: 'Performance Metrics',
+    attrs: { class: 'text-xl font-bold mt-6 mb-4' }
+  },
+  {
+    $formkit: 'nuxtUIOutputNumber',
+    name: 'growth',
+    label: 'Growth Rate',
+    formatOptions: {
+      style: 'percent',
+      minimumFractionDigits: 1
+    }
+  },
+  {
+    $formkit: 'nuxtUIOutputNumber',
+    name: 'conversionRate',
+    label: 'Conversion Rate',
+    formatOptions: {
+      style: 'percent',
+      minimumFractionDigits: 2
+    }
+  },
+  {
+    $formkit: 'nuxtUIOutputNumber',
+    name: 'customers',
+    label: 'Total Customers',
+    formatOptions: {
+      useGrouping: true
+    }
+  }
+]
+</script>
+```
+
+### nuxtUIOutputProgress
+
+Display a numeric value as a progress bar.
+
+**Schema Example:**
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUIOutputProgress',
+    name: 'storageUsed',
+    label: 'Storage Used',
+    max: 100,
+    status: true,
+    color: 'primary'
+  },
+  {
+    $formkit: 'nuxtUIOutputProgress',
+    name: 'quotaUsed',
+    label: 'Quota',
+    max: 500,
+    status: true,
+    color: 'warning'
+  }
+]
+```
+
+**Notes:**
+- The field's value is the current progress amount, not a percentage - it's read against `max` (defaults to `100`).
+- `status: true` overlays the computed percentage as text; omit it for a bare bar.
+- `orientation: 'vertical'` renders a vertical bar instead of the default horizontal one.
+
+### nuxtUIOutputRating
+
+Display a numeric rating as a read-only row of stars.
+
+**Schema Example:**
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUIOutputRating',
+    name: 'reviewScore',
+    label: 'Review Score',
+    length: 5,
+    color: 'warning'
+  },
+  {
+    $formkit: 'nuxtUIOutputRating',
+    name: 'satisfaction',
+    label: 'Satisfaction',
+    length: 10,
+    size: 'sm',
+    orientation: 'horizontal'
+  }
+]
+```
+
+**Notes:**
+- The field's value is the current rating; `length` (default `5`) sets the number of stars, not `max`.
+- This component is always read-only - it wraps the same star widget as `nuxtUIInputRating`, but forces Nuxt UI's `readonly` mode so clicking a star never changes the value.
+- `icon`/`emptyIcon` customize the filled/empty star glyphs; `color`/`size` follow the same values as every other Output component.
+
+### nuxtUIOutputDate
+
+Display dates and times with customizable formatting.
+
+**Schema Example:**
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUIOutputDate',
+    name: 'createdAt',
+    label: 'Created',
+    format: 'PPP' // October 14, 2023
+  },
+  {
+    $formkit: 'nuxtUIOutputDate',
+    name: 'updatedAt',
+    label: 'Last Updated',
+    format: 'Pp', // Oct 14, 2023, 3:30 PM
+  },
+  {
+    $formkit: 'nuxtUIOutputDate',
+    name: 'lastLogin',
+    label: 'Last Login',
+    relative: true // "2 hours ago"
+  }
+]
+```
+
+**Format Options:**
+- `PP` - Oct 14, 2023
+- `PPP` - October 14, 2023
+- `PPPP` - Saturday, October 14, 2023
+- `Pp` - Oct 14, 2023, 3:30 PM
+- `relative: true` - Relative time (e.g., "2 hours ago")
+
+### nuxtUIOutputBoolean
+
+Display boolean values with custom text and icons.
+
+**Schema Example:**
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUIOutputBoolean',
+    name: 'isActive',
+    label: 'Status',
+    trueValue: 'Active',
+    falseValue: 'Inactive',
+    trueIcon: 'i-lucide-check-circle',
+    falseIcon: 'i-lucide-x-circle',
+    trueColor: 'green',
+    falseColor: 'red'
+  },
+  {
+    $formkit: 'nuxtUIOutputBoolean',
+    name: 'isPremium',
+    label: 'Account Type',
+    trueValue: 'Premium',
+    falseValue: 'Free',
+    trueIcon: 'i-lucide-star',
+    falseIcon: 'i-lucide-user'
+  }
+]
+```
+
+## Collection Outputs
+
+### nuxtUIOutputList
+
+Display arrays/lists with various styles.
+
+**Schema Example:**
+
+```typescript
+const schema = [
+  // Badge style
+  {
+    $formkit: 'nuxtUIOutputList',
+    name: 'skills',
+    label: 'Skills',
+    listType: 'badge',
+    color: 'primary'
+  },
+  
+  // Bullet list
+  {
+    $formkit: 'nuxtUIOutputList',
+    name: 'features',
+    label: 'Features',
+    listType: 'ul'
+  },
+  
+  // Numbered list
+  {
+    $formkit: 'nuxtUIOutputList',
+    name: 'steps',
+    label: 'Steps',
+    listType: 'ol'
+  },
+  
+  // Comma-separated
+  {
+    $formkit: 'nuxtUIOutputList',
+    name: 'categories',
+    label: 'Categories',
+    listType: 'inline',
+    separator: ' • '
+  }
+]
+```
+
+**Complete Example:**
+
+```vue
+<template>
+  <FUDataView :data="projectData" :schema="projectSchema" />
+</template>
+
+<script setup lang="ts">
+const projectData = ref({
+  technologies: ['Vue', 'Nuxt', 'TypeScript', 'FormKit', 'TailwindCSS'],
+  features: ['Authentication', 'Real-time updates', 'Dark mode', 'Mobile responsive'],
+  milestones: ['Design phase', 'Development', 'Testing', 'Deployment'],
+  tags: ['Open Source', 'SaaS', 'Enterprise']
+})
+
+const projectSchema = [
+  {
+    $formkit: 'nuxtUIOutputList',
+    name: 'technologies',
+    label: 'Technologies',
+    listType: 'badge',
+    color: 'blue'
+  },
+  {
+    $formkit: 'nuxtUIOutputList',
+    name: 'features',
+    label: 'Key Features',
+    listType: 'ul'
+  },
+  {
+    $formkit: 'nuxtUIOutputList',
+    name: 'milestones',
+    label: 'Project Milestones',
+    listType: 'ol'
+  },
+  {
+    $formkit: 'nuxtUIOutputList',
+    name: 'tags',
+    label: 'Tags',
+    listType: 'inline',
+    separator: ' • '
+  }
+]
+</script>
+```
+
+## Status Outputs
+
+### nuxtUIOutputBadge
+
+Display a single value as a status badge.
+
+::: tip
+Not to be confused with `nuxtUIOutputList`'s `listType: 'badge'` mode just above - that renders an **array** as multiple badges (e.g. a list of tags). `nuxtUIOutputBadge` is for a **single** status value (e.g. `"Active"`, `"Pending"`).
+:::
+
+**Schema Example:**
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUIOutputBadge',
+    name: 'status',
+    label: 'Status',
+    color: 'success',
+    variant: 'subtle'
+  },
+  {
+    $formkit: 'nuxtUIOutputBadge',
+    name: 'priority',
+    label: 'Priority',
+    color: 'error',
+    variant: 'solid',
+    badgeIcon: 'i-heroicons-exclamation-triangle'
+  }
+]
+```
+
+**Notes:**
+- `badgeIcon` renders an icon *inside* the badge pill - distinct from the common `leadingIcon`/`trailingIcon`, which render an external icon beside it.
+- `variant` accepts this library's usual `outline | soft | subtle | ghost | none`, but the underlying `UBadge` only supports `outline | soft | subtle | solid` - `ghost` and `none` both map to `soft`.
+
+## Profile Outputs
+
+### nuxtUIOutputUser
+
+Display a name, description, and avatar together as a profile-style entry.
+
+::: warning
+Unlike every other Output component, this field's **value is an object**, not a scalar: `{ name?, description?, avatar? }`. `avatar` mirrors Nuxt UI's own `Avatar` props (`src`, `alt`, `icon`, `text`).
+:::
+
+**Schema Example:**
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUIOutputUser',
+    name: 'author',
+    label: 'Author',
+    orientation: 'horizontal'
+  },
+  {
+    $formkit: 'nuxtUIOutputUser',
+    name: 'assignee',
+    label: 'Assigned To',
+    chip: true
+  }
+]
+
+const data = {
+  author: {
+    name: 'Jane Doe',
+    description: 'Senior Engineer',
+    avatar: { src: 'https://example.com/jane.png' }
+  },
+  assignee: {
+    name: 'John Smith',
+    description: 'Online now',
+    avatar: { text: 'JS' }
+  }
+}
+```
+
+**Notes:**
+- `avatar.src` shows an image; omit it and `avatar.text`/`avatar.icon` render initials or an icon instead.
+- `chip: true` overlays a status indicator (e.g. online/offline) on the avatar, using Nuxt UI's default chip styling; pass a `Chip` props object instead of `true` to customize it.
+- `orientation: 'vertical'` stacks the avatar above the name/description instead of side-by-side.
+
+## Complete User Profile Example
+
+Here's a comprehensive example combining all output types:
+
+```vue
+<template>
+  <UContainer>
+    <div class="max-w-4xl mx-auto my-8">
+      <h1 class="text-3xl font-bold mb-8">User Profile</h1>
+      
+      <FUDataView
+        :data="userProfile"
+        :schema="profileSchema"
+      />
+    </div>
+  </UContainer>
+</template>
+
+<script setup lang="ts">
+const userProfile = ref({
+  // Personal Info
+  fullName: 'John Doe',
+  username: 'johndoe',
+  email: 'john@example.com',
+  website: 'https://johndoe.com',
+  
+  // Metrics
+  salary: 125000,
+  performance: 0.95,
+  tasksCompleted: 342,
+  
+  // Dates
+  joinDate: new Date('2023-01-15'),
+  lastLogin: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
+  
+  // Status
+  isActive: true,
+  isPremium: true,
+  
+  // Collections
+  skills: ['Vue', 'Nuxt', 'TypeScript', 'Node.js', 'PostgreSQL'],
+  languages: ['English', 'Spanish', 'French'],
+  achievements: ['Employee of the Month', 'Innovation Award', 'Team Lead']
+})
+
+const profileSchema = [
+  // Personal Information
+  {
+    $el: 'h2',
+    children: 'Personal Information',
+    attrs: { class: 'text-2xl font-semibold mb-4' }
+  },
+  {
+    $formkit: 'nuxtUIOutputText',
+    name: 'fullName',
+    label: 'Full Name',
+    leadingIcon: 'i-lucide-user',
+    size: 'lg'
+  },
+  {
+    $formkit: 'nuxtUIOutputText',
+    name: 'username',
+    label: 'Username',
+    leadingIcon: 'i-lucide-at-sign'
+  },
+  {
+    $formkit: 'nuxtUIOutputLink',
+    name: 'email',
+    label: 'Email',
+    leadingIcon: 'i-lucide-mail',
+    target: '_blank'
+  },
+  {
+    $formkit: 'nuxtUIOutputLink',
+    name: 'website',
+    label: 'Website',
+    leadingIcon: 'i-lucide-globe',
+    target: '_blank'
+  },
+  
+  // Performance Metrics
+  {
+    $el: 'h2',
+    children: 'Performance Metrics',
+    attrs: { class: 'text-2xl font-semibold mt-8 mb-4' }
+  },
+  {
+    $formkit: 'nuxtUIOutputNumber',
+    name: 'salary',
+    label: 'Annual Salary',
+    formatOptions: {
+      style: 'currency',
+      currency: 'USD'
+    }
+  },
+  {
+    $formkit: 'nuxtUIOutputNumber',
+    name: 'performance',
+    label: 'Performance Rating',
+    formatOptions: {
+      style: 'percent',
+      minimumFractionDigits: 0
+    }
+  },
+  {
+    $formkit: 'nuxtUIOutputNumber',
+    name: 'tasksCompleted',
+    label: 'Tasks Completed',
+    formatOptions: {
+      useGrouping: true
+    }
+  },
+  
+  // Timeline
+  {
+    $el: 'h2',
+    children: 'Timeline',
+    attrs: { class: 'text-2xl font-semibold mt-8 mb-4' }
+  },
+  {
+    $formkit: 'nuxtUIOutputDate',
+    name: 'joinDate',
+    label: 'Join Date',
+    format: 'PPP'
+  },
+  {
+    $formkit: 'nuxtUIOutputDate',
+    name: 'lastLogin',
+    label: 'Last Login',
+    relative: true
+  },
+  
+  // Status
+  {
+    $el: 'h2',
+    children: 'Status',
+    attrs: { class: 'text-2xl font-semibold mt-8 mb-4' }
+  },
+  {
+    $formkit: 'nuxtUIOutputBoolean',
+    name: 'isActive',
+    label: 'Account Status',
+    trueValue: 'Active',
+    falseValue: 'Inactive',
+    trueIcon: 'i-lucide-check-circle',
+    falseIcon: 'i-lucide-x-circle',
+    trueColor: 'green',
+    falseColor: 'red'
+  },
+  {
+    $formkit: 'nuxtUIOutputBoolean',
+    name: 'isPremium',
+    label: 'Membership',
+    trueValue: 'Premium',
+    falseValue: 'Standard',
+    trueIcon: 'i-lucide-star',
+    falseIcon: 'i-lucide-user'
+  },
+  
+  // Skills & Achievements
+  {
+    $el: 'h2',
+    children: 'Skills & Achievements',
+    attrs: { class: 'text-2xl font-semibold mt-8 mb-4' }
+  },
+  {
+    $formkit: 'nuxtUIOutputList',
+    name: 'skills',
+    label: 'Technical Skills',
+    listType: 'badge',
+    color: 'primary'
+  },
+  {
+    $formkit: 'nuxtUIOutputList',
+    name: 'languages',
+    label: 'Languages',
+    listType: 'inline',
+    separator: ' • '
+  },
+  {
+    $formkit: 'nuxtUIOutputList',
+    name: 'achievements',
+    label: 'Achievements',
+    listType: 'ul'
+  }
+]
+</script>
+```
+
+## Common Props
+
+All output components support:
+
+- `name` (required) - Field name in data object
+- `label` - Display label
+- `help` - Help text below value
+- `color` - Component color
+- `size` - Component size
+
+### Icon Tooltips
+
+Every `icon`/`leadingIcon`/`trailingIcon` pair described above also accepts a matching `*Tooltip` prop - `iconTooltip`, `leadingIconTooltip`, `trailingIconTooltip` (plus `trueIconTooltip`/`falseIconTooltip` on `nuxtUIOutputBoolean`, matching its `trueIcon`/`falseIcon`). Each accepts any Nuxt UI [`Tooltip`](https://ui.nuxt.com/components/tooltip) prop except `class` (e.g. `text`, `content`, `arrow`, `delayDuration`) as a plain object. No tooltip is rendered unless one is supplied.
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUIOutputText',
+    name: 'userName',
+    label: 'Username',
+    leadingIcon: 'i-lucide-user',
+    leadingIconTooltip: { text: 'Unique account identifier' }
+  }
+]
+```
+
+### Icon Accessibility
+
+An icon with a click handler (`onIconClicked`, `onLeadingIconClicked`, `onTrailingIconClicked`) renders as a real `<button type="button">`, so it is keyboard-focusable, activates with Enter/Space and is announced by screen readers. Its accessible name is the icon's tooltip `text` if one is set, otherwise the icon's own name (`i-lucide-eye-off` becomes "eye off") - so give a clickable icon a tooltip `text` for a meaningful label. A non-clickable icon is decorative and hidden from assistive tech, unless it has a tooltip `text`, in which case it is exposed as an image with that text as its label.
+
+## Use Cases
+
+- ✅
+- **User Profiles** - Display user information cleanly
+- **Dashboards** - Show metrics with proper formatting
+- **Detail Views** - Present record details in read-only mode
+- **Reports** - Format and display report data
+- **Admin Panels** - View data before editing
+:::
+
+## Next Steps
+
+---
+
+<!-- https://sfxcode.github.io/nuxt-ui-formkit/components/repeater.md -->
+
+# Repeater
+
+
+## Overview
+
+The `nuxtUIRepeater` component is a special input component that allows you to create dynamic form sections where users can add, remove, clone, and reorder items. Perfect for managing lists like contacts, addresses, skills, or any repeatable data. Supports both button-based reordering and intuitive drag-and-drop functionality.
+
+It is also imported and registered globally, so you can use it anywhere in your Nuxt app without additional imports.
+
+## Basic Usage
+
+```vue
+<template>
+  <FormKit type="form" @submit="handleSubmit">
+    <FormKit
+      type="nuxtUIRepeater"
+      name="contacts"
+      label="Contacts"
+      :new-item="{ name: '', email: '' }"
+    >
+      <FormKit
+        type="nuxtUIInput"
+        name="name"
+        label="Name"
+        validation="required"
+      />
+      
+      <FormKit
+        type="nuxtUIInput"
+        name="email"
+        input-type="email"
+        label="Email"
+        validation="required|email"
+      />
+    </FormKit>
+  </FormKit>
+</template>
+
+<script setup lang="ts">
+const handleSubmit = (data: any) => {
+  console.log('Contacts:', data.contacts)
+}
+</script>
+```
+
+## Schema-Based Repeater
+
+Use repeaters in schema definitions:
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUIRepeater',
+    name: 'experiences',
+    label: 'Work Experience',
+    newItem: {
+      company: '',
+      position: '',
+      years: 0
+    },
+    children: [
+      {
+        $formkit: 'nuxtUIInput',
+        name: 'company',
+        label: 'Company',
+        validation: 'required'
+      },
+      {
+        $formkit: 'nuxtUIInput',
+        name: 'position',
+        label: 'Position',
+        validation: 'required'
+      },
+      {
+        $formkit: 'nuxtUIInputNumber',
+        name: 'years',
+        label: 'Years',
+        min: 0
+      }
+    ]
+  }
+]
+```
+
+## Props
+
+### newItem
+
+Default object for new items. Required.
+
+```vue
+<FormKit
+  type="nuxtUIRepeater"
+  :new-item="{ name: '', email: '', phone: '' }"
+/>
+```
+
+### Button Configuration
+
+Control which buttons are displayed:
+
+```vue
+<FormKit
+  type="nuxtUIRepeater"
+  name="items"
+  :hide-button-group="false"
+  :hide-move-buttons="false"
+  :display-clone-button="true"
+  :display-add-button="true"
+  :display-delete-button="true"
+/>
+```
+
+### Min/Max Items Constraints
+
+Control the minimum and maximum number of items allowed:
+
+```vue
+<FormKit
+  type="nuxtUIRepeater"
+  name="contacts"
+  :new-item="{ name: '', phone: '' }"
+  :min-items="1"
+  :max-items="5"
+>
+  <!-- form fields -->
+</FormKit>
+```
+
+**Props:**
+
+- **minItems** - Minimum number of items required (default: 0). When reached, the delete button is automatically disabled.
+- **maxItems** - Maximum number of items allowed (default: unlimited). When reached, add/insert/clone buttons are automatically disabled.
+
+### Insert Button
+
+Customize the "Add Item" button:
+
+```vue
+<FormKit
+  type="nuxtUIRepeater"
+  name="skills"
+  insert-button-label="Add Skill"
+  insert-button-size="lg"
+  insert-button-class="mb-4"
+  :always-display-insert-button="true"
+/>
+```
+
+### Button Styling
+
+```vue
+<FormKit
+  type="nuxtUIRepeater"
+  name="items"
+  button-size="sm"
+  button-group-class="flex gap-2"
+  button-group-item-class="flex-shrink-0"
+/>
+```
+
+### List Styling
+
+```vue
+<FormKit
+  type="nuxtUIRepeater"
+  name="items"
+  list-class="space-y-4"
+  list-item-class="p-4 border rounded-lg"
+/>
+```
+
+### Drag and Drop Reordering
+
+Enable drag-and-drop reordering with a drag handle:
+
+```vue
+<FormKit
+  type="nuxtUIRepeater"
+  name="tasks"
+  :new-item="{ title: '', priority: 'medium' }"
+  :display-drag-handle="true"
+  drag-handle-class="cursor-grab active:cursor-grabbing"
+  drag-handle-icon-class="i-lucide-grip-vertical"
+>
+  <!-- form fields -->
+</FormKit>
+```
+
+**Props:**
+
+- **displayDragHandle** - Enable drag-and-drop reordering (default: false)
+- **dragHandleClass** - CSS class for the drag handle container (default: 'formkit-repeater-drag-handle')
+- **dragHandleIconClass** - Icon class for the drag handle (default: 'i-lucide-grip-vertical')
+
+When drag-and-drop is enabled:
+- Items can be reordered by dragging the handle icon
+- A visual indicator shows the drop target during dragging
+- Move up/down buttons can be hidden with `:hide-move-buttons="true"` if only drag-and-drop is desired
+
+## Auto-Animate
+
+Repeaters automatically use `@formkit/auto-animate` for smooth animations when items are added, removed, or reordered.
+
+### Configure Animation
+
+In your `formkit.config.ts`:
+
+```typescript
+import { createAutoAnimatePlugin } from '@sfxcode/nuxt-ui-formkit/formkit'
+
+export default {
+  plugins: [
+    createAutoAnimatePlugin(
+      {
+        /* optional AutoAnimate config */
+        // default:
+        duration: 250,
+        easing: 'ease-in-out',
+      },
+      {
+        /* optional animation targets object */
+        // default:
+        global: ['outer', 'inner'],
+        form: ['form'],
+        // for nuxtUIRepeater:
+        nuxtUIRepeater: ['input'],
+      },
+    ),
+  ]
+}
+```
+
+::: warning Use this module's `createAutoAnimatePlugin`
+`@formkit/addons` has a plugin with the same name and arguments, but it re-attaches auto-animate to the repeater list every time an item is added. After the first insert or clone, each change is then animated several times over, which looks fast and glitchy. The one exported here attaches each element once.
+:::
+
+## Examples
+
+### Contact List
+
+```vue
+<FormKit
+  type="nuxtUIRepeater"
+  name="contacts"
+  label="Emergency Contacts"
+  :new-item="{ name: '', phone: '', relationship: '' }"
+  insert-button-label="Add Contact"
+>
+  <FormKit
+    type="nuxtUIInput"
+    name="name"
+    label="Name"
+    validation="required"
+  />
+  
+  <FormKit
+    type="nuxtUIInput"
+    name="phone"
+    input-type="tel"
+    label="Phone"
+    validation="required"
+  />
+  
+  <FormKit
+    type="nuxtUISelect"
+    name="relationship"
+    label="Relationship"
+    :options="['Family', 'Friend', 'Colleague', 'Other']"
+  />
+</FormKit>
+```
+
+### Product Variants
+
+```vue
+<FormKit
+  type="nuxtUIRepeater"
+  name="variants"
+  label="Product Variants"
+  :new-item="{ size: '', color: '', price: 0, stock: 0 }"
+  list-item-class="grid grid-cols-4 gap-4"
+>
+  <FormKit
+    type="nuxtUISelect"
+    name="size"
+    label="Size"
+    :options="['XS', 'S', 'M', 'L', 'XL']"
+  />
+  
+  <FormKit
+    type="nuxtUIColorPicker"
+    name="color"
+    label="Color"
+  />
+  
+  <FormKit
+    type="nuxtUIInputNumber"
+    name="price"
+    label="Price"
+    :min="0"
+    :step="0.01"
+  />
+  
+  <FormKit
+    type="nuxtUIInputNumber"
+    name="stock"
+    label="Stock"
+    :min="0"
+  />
+</FormKit>
+```
+
+### Skills with Tags
+
+```vue
+<FormKit
+  type="nuxtUIRepeater"
+  name="skillCategories"
+  label="Skill Categories"
+  :new-item="{ category: '', skills: [] }"
+>
+  <FormKit
+    type="nuxtUIInput"
+    name="category"
+    label="Category"
+    validation="required"
+  />
+  
+  <FormKit
+    type="nuxtUIInputTags"
+    name="skills"
+    label="Skills"
+    placeholder="Add skills..."
+  />
+</FormKit>
+```
+
+### Drag-and-Drop Task List
+
+```vue
+<FormKit
+  type="nuxtUIRepeater"
+  name="tasks"
+  label="Task List"
+  :new-item="{ title: '', priority: 'medium', status: 'todo' }"
+  :display-drag-handle="true"
+  :hide-move-buttons="true"
+  list-item-class="flex items-center gap-4 p-4 border rounded-lg hover:bg-gray-50"
+>
+  <FormKit
+    type="nuxtUIInput"
+    name="title"
+    label="Task"
+    validation="required"
+  />
+  
+  <FormKit
+    type="nuxtUISelect"
+    name="priority"
+    label="Priority"
+    :options="['low', 'medium', 'high']"
+  />
+  
+  <FormKit
+    type="nuxtUISelect"
+    name="status"
+    label="Status"
+    :options="['todo', 'in-progress', 'done']"
+  />
+</FormKit>
+```
+
+This example enables drag-and-drop reordering and hides the traditional up/down buttons, providing a modern UX for task management.
+
+### Team Members with Constraints
+
+```vue
+<FormKit
+  type="nuxtUIRepeater"
+  name="teamMembers"
+  label="Team Members"
+  :new-item="{ name: '', role: '', email: '' }"
+  :min-items="2"
+  :max-items="10"
+  insert-button-label="Add Team Member"
+>
+  <FormKit
+    type="nuxtUIInput"
+    name="name"
+    label="Name"
+    validation="required"
+  />
+  
+  <FormKit
+    type="nuxtUISelect"
+    name="role"
+    label="Role"
+    :options="['Developer', 'Designer', 'Manager', 'QA']"
+    validation="required"
+  />
+  
+  <FormKit
+    type="nuxtUIInput"
+    name="email"
+    input-type="email"
+    label="Email"
+    validation="required|email"
+  />
+</FormKit>
+```
+
+This example requires at least 2 team members and allows a maximum of 10. The delete button will be disabled when only 2 items remain, and add/clone buttons will be disabled when 10 items are reached.
+
+### Nested Repeaters
+
+A `nuxtUIRepeater` can be nested inside another repeater's item schema — each nesting level manages its own items, buttons, and `newItem` independently, so inserting/removing/cloning at one level never affects sibling items at another level:
+
+```vue
+<FormKit
+  type="nuxtUIRepeater"
+  name="employers"
+  label="Work History"
+  :new-item="{ company: '', references: [] }"
+  insert-button-label="Add Employer"
+>
+  <FormKit
+    type="nuxtUIInput"
+    name="company"
+    label="Company"
+    validation="required"
+  />
+
+  <FormKit
+    type="nuxtUIRepeater"
+    name="references"
+    label="References"
+    :new-item="{ name: '' }"
+    insert-button-label="Add Reference"
+  >
+    <FormKit
+      type="nuxtUIInput"
+      name="name"
+      label="Reference Name"
+      validation="required"
+    />
+  </FormKit>
+</FormKit>
+```
+
+The same pattern works in schema-based repeaters — nest a second `nuxtUIRepeater` schema node inside the outer repeater's `children` array.
+
+## Styling Best Practices
+
+These come from the playground pages (`/form/repeater-sample`, `/form/repeater-nested` and `/form/repeater-drag`), which all use them.
+
+### How an item is laid out
+
+Each item is one element (`list-item-class`) that holds, in order: the drag handle (if shown), your field children, then the button group. Whatever `display` you give the item decides where those three end up, so `list-item-class` is where most of the layout happens.
+
+| You want | `list-item-class` | `button-group-class` |
+|---|---|---|
+| Fields and buttons on one row | `flex items-start gap-2` | `mt-6 flex gap-1` |
+| A card, buttons underneath | `flex flex-col gap-4 p-4 rounded-lg border border-default bg-elevated/30` | `flex gap-1 justify-end pt-3 border-t border-default` |
+
+### Line the buttons up with the inputs
+
+Labels sit above the inputs, so `items-center` centres the buttons on the label **and** the input, which leaves them too high. Use `items-start` and give the button group a top margin that skips the label (`mt-6` for the default label height). Do the same for a drag handle with `drag-handle-class` (`mt-8` puts it at the middle of an input).
+
+### Give fields a width, and make them fill it
+
+Nuxt UI inputs and selects size themselves to their content and do not stretch to their wrapper. A select also defaults to `w-fit min-w-48`, so inside a narrow wrapper it overflows and overlaps its neighbour. Size the wrapper with `outerClass` and make the field fill it with `class`:
+
+```ts
+children: [
+  { $formkit: 'nuxtUIInput', name: 'title', label: 'Task', outerClass: 'flex-1 min-w-0', class: 'w-full' },
+  { $formkit: 'nuxtUISelect', name: 'status', label: 'Status', items: ['todo', 'done'], outerClass: 'w-40', class: 'w-full' },
+]
+```
+
+`flex-1 min-w-0` lets one field take the leftover space without pushing the buttons out of the row.
+
+### Use theme tokens, not fixed colours
+
+Classes such as `bg-gray-50 dark:bg-gray-800` look off against the Nuxt UI theme, especially in dark mode. Prefer the semantic tokens: `border-default`, `hover:border-accented`, `bg-elevated/30`, `text-muted`, `text-default`.
+
+### Nested repeaters
+
+- Make each outer item a card (table above) with its buttons at the bottom, so its buttons are not confused with the inner repeater's.
+- Indent the inner repeater with its own `outerClass`, for example `pl-4 border-l-2 border-primary/40`, rather than `ml-*` on the list.
+- Give the inner level the row layout and a smaller footprint (`button-size="md"`, `max-items`) so it reads as the subordinate list.
+- Don't also add margin to the fields inside a `flex flex-col gap-*` card; the gap already spaces them.
+
+### Drop-target feedback
+
+While dragging, the hovered item gets the class `formkit-repeater-drop-target`. Style it with theme variables so it works in both colour modes:
+
+```css
+:deep(.formkit-repeater-drop-target) {
+  border-color: var(--ui-primary);
+  background-color: color-mix(in oklab, var(--ui-primary) 12%, transparent);
+  transform: scale(1.02);
+  transition: all 0.2s ease;
+}
+```
+
+Don't add a `.dark` variant inside `:deep()` in a scoped style. `.dark` is on `<html>`, so `:deep(.dark .x)` never matches and the light-mode colours stay in dark mode.
+
+### Animations
+
+- Use this module's `createAutoAnimatePlugin` (see [Auto-Animate](#auto-animate)), and target the repeater's `input` section.
+- Auto-animate skips elements outside the viewport, so don't be surprised by a list that is scrolled out of view not animating.
+
+## Features
+
+- **Add Items** - Insert new items at the beginning or after specific items
+- **Remove Items** - Delete items with confirmation
+- **Clone Items** - Duplicate existing items
+- **Reorder** - Move items up and down with buttons
+- **Drag and Drop** - Intuitive drag-and-drop reordering with visual feedback
+- **Min/Max Constraints** - Limit the minimum and maximum number of items
+- **Smooth Animations** - Automatic animations for all operations
+- **Custom Styling** - Full control over button and list appearance
+- **Validation** - Built-in validation for repeated fields
+
+## Best Practices
+
+- Always provide a `newItem` prop with all required fields
+- Use validation on repeated fields for data integrity
+- Use `min-items` to enforce minimum requirements (e.g., at least one contact)
+- Use `max-items` to prevent excessive data entry and improve UX
+- Consider UX - buttons are automatically disabled when constraints are reached
+- Use drag-and-drop for better UX when managing sortable lists
+- Hide move buttons (`:hide-move-buttons="true"`) when using drag-and-drop only
+- Use `list-item-class` for consistent spacing and layout (see [Styling Best Practices](#styling-best-practices))
+- Provide clear labels for add/remove buttons
+
+## Next Steps
+
+---
+
+<!-- https://sfxcode.github.io/nuxt-ui-formkit/components/multi-step.md -->
+
+# Multi-Step
+
+
+## Overview
+
+`nuxtUIMultiStep` and `nuxtUIStep` wrap `@formkit/addons`' `createMultiStepPlugin` to build wizard-style forms. `nuxtUIMultiStep` renders a Nuxt UI `UTabs` tab strip and owns navigation; each `nuxtUIStep` child renders one step's fields plus Nuxt UI-styled previous/next buttons.
+
+Unlike most other input components, both require the `createMultiStepPlugin()` plugin itself to be registered in your `plugins` array - the input definitions alone aren't enough, since the plugin is what adds each step's navigation methods (`next`, `previous`, `goTo`) and validation-gating logic.
+
+## Setup
+
+```typescript
+// formkit.config.ts
+import type { DefaultConfigOptions } from '@formkit/vue'
+import { nuxtUIInputs } from '@sfxcode/nuxt-ui-formkit/definitions'
+import { createMultiStepPlugin } from '@sfxcode/nuxt-ui-formkit/plugins'
+
+const config: DefaultConfigOptions = {
+  inputs: { ...nuxtUIInputs },
+  plugins: [
+    createMultiStepPlugin(),
+  ],
+}
+
+export default config
+```
+
+## Basic Usage
+
+```vue
+<template>
+  <FormKit type="form" @submit="handleSubmit">
+    <FormKit type="nuxtUIMultiStep" name="wizard" :allow-incomplete="false">
+      <FormKit type="nuxtUIStep" name="account" label="Account">
+        <FormKit
+          type="nuxtUIInput"
+          name="email"
+          input-type="email"
+          label="Email"
+          validation="required|email"
+        />
+      </FormKit>
+
+      <FormKit type="nuxtUIStep" name="profile" label="Profile">
+        <FormKit
+          type="nuxtUIInput"
+          name="displayName"
+          label="Display Name"
+          validation="required"
+        />
+      </FormKit>
+    </FormKit>
+  </FormKit>
+</template>
+
+<script setup lang="ts">
+const handleSubmit = (data: any) => {
+  console.log('Wizard data:', data.wizard)
+}
+</script>
+```
+
+## Schema-Based Multi-Step
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUIMultiStep',
+    name: 'wizard',
+    allowIncomplete: false,
+    children: [
+      {
+        $formkit: 'nuxtUIStep',
+        name: 'account',
+        label: 'Account',
+        children: [
+          { $formkit: 'nuxtUIInput', name: 'email', label: 'Email', validation: 'required|email' },
+        ],
+      },
+      {
+        $formkit: 'nuxtUIStep',
+        name: 'profile',
+        label: 'Profile',
+        children: [
+          { $formkit: 'nuxtUIInput', name: 'displayName', label: 'Display Name', validation: 'required' },
+        ],
+      },
+    ],
+  },
+]
+```
+
+## Props
+
+### nuxtUIMultiStep
+
+- **allowIncomplete** - When `false`, advancing past a step whose fields fail validation is blocked. Defaults to `true` (the addon's own default), so set this explicitly to get validation gating.
+- **tabStyle** - `'tab'` (the only style this wrapper styles with `UTabs`; `'progress'` is a supported addon value but renders unstyled).
+- **hideProgressLabels** - Forwarded to the addon; has no visible effect on the `UTabs` tab strip this wrapper renders.
+- **validStepIcon** - Icon name shown as a tab badge once a visited step becomes valid (default: `i-lucide-check`).
+- **beforeStepChange** - Async guard called before navigating; return `false` to cancel the transition. See `@formkit/addons`' docs for the callback signature.
+- **ui** - Forwarded to the underlying `UTabs` component for style overrides.
+
+### nuxtUIStep
+
+- **previousLabel** / **nextLabel** - Override the previous/next button text (defaults: "Previous"/"Next").
+- **previousAttrs** / **nextAttrs** - Extra props/attrs forwarded to the previous/next `UButton`.
+- **beforeStepChange** - Per-step override of the multi-step's own guard.
+- **validStepIcon** - Per-step override of the tab badge icon.
+- **ui** - Forwarded to the previous/next `UButton`s for style overrides.
+- **stepActionsClass** - Class for the div wrapping the previous/next buttons (default: `'flex gap-2 pt-2'`; always merged with the `formkit-step-actions` base class).
+
+## Navigating Programmatically
+
+The addon plugin extends the multi-step's `FormKitNode` with `next()`, `previous()`, and `goTo(step)` methods:
+
+```typescript
+import { getNode } from '@formkit/core'
+
+const wizard = getNode('wizard')
+wizard?.goTo('profile') // by step name
+wizard?.goTo(1) // by index
+wizard?.next()
+wizard?.previous()
+```
+
+## Validation Gating
+
+With `allow-incomplete="false"`, clicking "Next" (or a tab, or calling `goTo`/`next` programmatically) on a step with invalid fields triggers that step's validation messages and blocks the transition until the fields validate. Leave `allowIncomplete` unset (or `true`) to let users move freely between steps regardless of validation state.
+
+With `allow-incomplete="false"`, the current step's own "Next" button and any not-yet-visited tab are also proactively `disabled` while the current step is invalid, rather than left clickable-but-inert — both re-enable automatically once the current step's fields validate. Already-visited tabs (including the active one) always stay enabled, since moving backward is never gated.
+
+## Next Steps
+
+---
+
+<!-- https://sfxcode.github.io/nuxt-ui-formkit/components/data-view.md -->
+
+# FUDataView
+
+
+## Overview
+
+The `FUDataView` component is a wrapper that displays form data in read-only mode. It uses FormKit schemas to render output components, perfect for displaying user profiles, order details, or any data that shouldn't be edited.
+
+::: info
+**Read-Only Display:** FUDataView is designed for displaying data, not editing it. Use [FUDataEdit](/components/data-edit) for editable forms.
+:::
+
+## Basic Usage
+
+```vue
+<template>
+  <FUDataView v-model="userData" :schema="schema" />
+</template>
+
+<script setup lang="ts">
+const userData = ref({
+  name: 'John Doe',
+  email: 'john@example.com',
+  status: 'Active'
+})
+
+const schema = [
+  {
+    $formkit: 'nuxtUIOutputText',
+    name: 'name',
+    label: 'Full Name'
+  },
+  {
+    $formkit: 'nuxtUIOutputText',
+    name: 'email',
+    label: 'Email Address',
+    leadingIcon: 'i-lucide-mail'
+  },
+  {
+    $formkit: 'nuxtUIOutputText',
+    name: 'status',
+    label: 'Status',
+    color: 'success'
+  }
+]
+</script>
+```
+
+## Props
+
+### data
+- **Type:** `Object`
+- **Default:** `null`
+- **Description:** The data object to display. This will be used as the initial value for the `v-model`.
+
+```vue
+<FUDataView :data="{ name: 'John', email: 'john@example.com' }" />
+```
+
+### schema
+- **Type:** `FormKitSchemaDefinition`
+- **Default:** `null`
+- **Description:** The FormKit schema definition that describes how to render the data. Use output components like `nuxtUIOutputText`, `nuxtUIOutputDate`, etc.
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUIOutputText',
+    name: 'name',
+    label: 'Name'
+  },
+  {
+    $formkit: 'nuxtUIOutputDate',
+    name: 'createdAt',
+    label: 'Created',
+    dateStyle: 'medium'
+  }
+]
+```
+
+### formClass
+- **Type:** `String`
+- **Default:** `''`
+- **Description:** CSS class(es) to apply to the form element.
+
+```vue
+<FUDataView form-class="space-y-4 p-6 bg-gray-50 rounded-lg" />
+```
+
+### debugData
+- **Type:** `Boolean`
+- **Default:** `false`
+- **Description:** When `true`, displays a debug panel showing the current form data in JSON format. Useful for development and troubleshooting.
+
+```vue
+<FUDataView :data="userData" :schema="schema" debug-data />
+```
+
+### debugSchema
+- **Type:** `Boolean`
+- **Default:** `false`
+- **Description:** When `true`, displays a debug panel showing the schema definition in JSON format. Helpful for understanding the schema structure during development.
+
+```vue
+<FUDataView :data="userData" :schema="schema" debug-schema />
+```
+
+## Model Value
+
+The component uses `v-model` to bind to the data being displayed:
+
+```vue
+<FUDataView v-model="userData" :schema="schema" />
+```
+
+The model value is of type `Record<string, unknown>` and represents the data object being displayed.
+
+## Complete Example
+
+```vue
+<template>
+  <div class="max-w-2xl mx-auto p-6">
+    <h1 class="text-2xl font-bold mb-6">User Profile</h1>
+    
+    <FUDataView 
+      v-model="userData" 
+      :schema="profileSchema"
+      form-class="space-y-4 bg-white p-6 rounded-lg shadow"
+    />
+    
+    <div class="mt-6 flex gap-4">
+      <UButton @click="editMode = true">Edit Profile</UButton>
+      <UButton color="secondary" @click="toggleDebug">Toggle Debug</UButton>
+    </div>
+    
+    <FUDataView 
+      v-if="showDebug"
+      v-model="userData" 
+      :schema="profileSchema"
+      debug-data
+      debug-schema
+    />
+  </div>
+</template>
+
+<script setup lang="ts">
+const userData = ref({
+  name: 'Alice Johnson',
+  email: 'alice@example.com',
+  phone: '+1 (555) 123-4567',
+  role: 'Administrator',
+  status: 'Active',
+  joinDate: '2024-01-15',
+  bio: 'Passionate software developer with 10 years of experience in web development.',
+  isVerified: true
+})
+
+const showDebug = ref(false)
+const editMode = ref(false)
+
+const profileSchema = [
+  {
+    $formkit: 'nuxtUIOutputText',
+    name: 'name',
+    label: 'Full Name',
+    size: 'lg',
+    leadingIcon: 'i-lucide-user'
+  },
+  {
+    $formkit: 'nuxtUIOutputText',
+    name: 'email',
+    label: 'Email Address',
+    leadingIcon: 'i-lucide-mail',
+    color: 'blue'
+  },
+  {
+    $formkit: 'nuxtUIOutputText',
+    name: 'phone',
+    label: 'Phone Number',
+    leadingIcon: 'i-lucide-phone'
+  },
+  {
+    $formkit: 'nuxtUIOutputText',
+    name: 'role',
+    label: 'Role',
+    leadingIcon: 'i-lucide-shield',
+    color: 'purple'
+  },
+  {
+    $formkit: 'nuxtUIOutputBoolean',
+    name: 'isVerified',
+    label: 'Verified',
+    trueValue: 'Verified',
+    falseValue: 'Not Verified',
+    trueIcon: 'i-lucide-check-circle',
+    falseIcon: 'i-lucide-x-circle',
+    color: 'success'
+  },
+  {
+    $formkit: 'nuxtUIOutputDate',
+    name: 'joinDate',
+    label: 'Join Date',
+    dateStyle: 'long',
+    leadingIcon: 'i-lucide-calendar'
+  },
+  {
+    $formkit: 'nuxtUIOutputText',
+    name: 'bio',
+    label: 'Biography'
+  }
+]
+
+const toggleDebug = () => {
+  showDebug.value = !showDebug.value
+}
+</script>
+```
+
+## Using with Output Components
+
+FUDataView is designed to work seamlessly with output components:
+
+```typescript
+const schema = [
+  // Text output
+  {
+    $formkit: 'nuxtUIOutputText',
+    name: 'title',
+    label: 'Title'
+  },
+  
+  // Boolean output
+  {
+    $formkit: 'nuxtUIOutputBoolean',
+    name: 'published',
+    label: 'Published',
+    trueValue: 'Yes',
+    falseValue: 'No'
+  },
+  
+  // Date output
+  {
+    $formkit: 'nuxtUIOutputDate',
+    name: 'createdAt',
+    label: 'Created',
+    dateStyle: 'full'
+  },
+  
+  // Number output
+  {
+    $formkit: 'nuxtUIOutputNumber',
+    name: 'price',
+    label: 'Price',
+    formatOptions: {
+      style: 'currency',
+      currency: 'USD'
+    }
+  },
+  
+  // Link output
+  {
+    $formkit: 'nuxtUIOutputLink',
+    name: 'website',
+    label: 'Website',
+    target: '_blank'
+  },
+  
+  // List output
+  {
+    $formkit: 'nuxtUIOutputList',
+    name: 'tags',
+    label: 'Tags',
+    listType: 'comma'
+  }
+]
+```
+
+## Slots
+
+### Default Slot
+
+You can add additional content after the schema:
+
+```vue
+<FUDataView v-model="data" :schema="schema">
+  <div class="mt-4 p-4 bg-blue-50 rounded">
+    <p class="text-sm text-blue-800">Additional information or notes</p>
+  </div>
+</FUDataView>
+```
+
+## Use Cases
+
+### User Profile Display
+
+```vue
+<FUDataView 
+  v-model="userProfile" 
+  :schema="profileSchema"
+  form-class="max-w-2xl mx-auto"
+/>
+```
+
+### Order Details
+
+```vue
+<FUDataView 
+  v-model="orderData" 
+  :schema="orderSchema"
+  form-class="space-y-6"
+/>
+```
+
+### Settings Preview
+
+```vue
+<FUDataView 
+  v-model="settings" 
+  :schema="settingsSchema"
+  form-class="bg-gray-50 p-4 rounded"
+/>
+```
+
+## Tips
+
+::: info
+**Development Tips:**
+- Use `debug-data` during development to inspect the data structure
+- Use `debug-schema` to verify your schema configuration
+- Combine with FUDataEdit for a complete view/edit workflow
+:::
+
+## Related Components
+
+- [FUDataEdit](/components/data-edit) - Editable form version
+- [Output Components](/components/outputs) - All available output components
+- [Schema Forms](/getting-started/schema-forms) - Learn about schema-based forms
+
+---
+
+<!-- https://sfxcode.github.io/nuxt-ui-formkit/components/data-edit.md -->
+
+# FUDataEdit
+
+
+## Overview
+
+The `FUDataEdit` component is a powerful form wrapper that provides schema-based form editing with built-in submit and reset functionality. It's perfect for creating edit forms, settings panels, or any scenario where users need to modify data.
+
+::: info
+**Full-Featured Forms:** FUDataEdit handles form submission, validation, reset functionality, and provides customizable action buttons out of the box.
+:::
+
+## Basic Usage
+
+```vue
+<template>
+  <FUDataEdit 
+    v-model="userData" 
+    :schema="schema"
+    @data-saved="handleSave"
+  />
+</template>
+
+<script setup lang="ts">
+const userData = ref({
+  name: 'John Doe',
+  email: 'john@example.com',
+  role: 'user'
+})
+
+const schema = [
+  {
+    $formkit: 'nuxtUIInput',
+    name: 'name',
+    label: 'Full Name',
+    validation: 'required'
+  },
+  {
+    $formkit: 'nuxtUIInput',
+    name: 'email',
+    label: 'Email',
+    inputType: 'email',
+    validation: 'required|email'
+  },
+  {
+    $formkit: 'nuxtUISelect',
+    name: 'role',
+    label: 'Role',
+    options: ['user', 'admin', 'moderator']
+  }
+]
+
+const handleSave = (data) => {
+  console.log('Saving data:', data)
+  // Make API call to save data
+}
+</script>
+```
+
+## Props
+
+### id
+- **Type:** `String`
+- **Default:** `'formkit_form'`
+- **Description:** Unique identifier for the FormKit form. Required for the reset functionality to work properly.
+
+```vue
+<FUDataEdit id="user-profile-form" />
+```
+
+### data
+- **Type:** `Object`
+- **Default:** `null`
+- **Description:** The initial data object for the form. This will be used as the starting value for the `v-model`.
+
+```vue
+<FUDataEdit :data="{ name: 'John', email: 'john@example.com' }" />
+```
+
+### schema
+- **Type:** `FormKitSchemaDefinition`
+- **Default:** `null`
+- **Description:** The FormKit schema definition that describes the form structure. Use input components like `nuxtUIInput`, `nuxtUISelect`, etc.
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUIInput',
+    name: 'username',
+    label: 'Username',
+    validation: 'required|length:3,20'
+  },
+  {
+    $formkit: 'nuxtUITextarea',
+    name: 'bio',
+    label: 'Biography',
+    rows: 4
+  }
+]
+```
+
+### standardSchema
+- **Type:** `Object` (a [Standard Schema](https://standardschema.dev)-compliant instance, e.g. from Zod or Valibot)
+- **Default:** `null`
+- **Description:** Validates the form's live value against this schema, in addition to any `validation` strings on individual fields. Errors land on the exact field they describe - respecting each field's own `validationVisibility` timing - and block submission while present. See [Standard Schema Validation](/components/standard-schema) for details.
+
+```vue
+<FUDataEdit :standard-schema="registrationSchema" />
+```
+
+### autosave
+- **Type:** `String | { key: string, debounce?: number, maxAge?: number, clearOnSubmit?: boolean }`
+- **Default:** `null` (off)
+- **Description:** Saves the form's value to `localStorage` as the user types and restores it the next time the form mounts. A string is the draft's key; pass an object to tune `debounce` (ms), `maxAge` (ms, default 1 hour) and `clearOnSubmit` (default `true`). The form's `id` is used as its `name`, so keep `id` stable. Works the same on `FUAutoForm`. See [`createAutosavePlugin`](/api/utilities#createautosaveplugin).
+
+```vue
+<FUDataEdit id="profile" autosave="profile-draft" :data="profile" :schema="schema" />
+```
+
+### dirtyBehavior
+- **Type:** `'touched' | 'compare'`
+- **Default:** `'touched'`
+- **Description:** How FormKit computes the form's dirty state (`useFormKitForm(id).isDirty`). `touched` stays dirty once any field was edited; `compare` clears it again when the value is edited back to the original.
+
+```vue
+<FUDataEdit dirty-behavior="compare" />
+```
+
+### formClass
+- **Type:** `String`
+- **Default:** `''`
+- **Description:** CSS class(es) to apply to the form element.
+
+```vue
+<FUDataEdit form-class="space-y-6 p-8 bg-white rounded-xl shadow-lg" />
+```
+
+### actionsClass
+- **Type:** `String`
+- **Default:** `''`
+- **Description:** CSS class(es) to apply to the form actions container (where submit/reset buttons are displayed).
+
+```vue
+<FUDataEdit actions-class="flex gap-4 justify-end pt-6 border-t" />
+```
+
+### submitSeverity
+- **Type:** `String`
+- **Default:** `''`
+- **Description:** Severity/color variant for the submit button. Common values: `primary`, `success`, `info`, etc.
+
+```vue
+<FUDataEdit submit-severity="success" />
+```
+
+### submitClass
+- **Type:** `String`
+- **Default:** `''`
+- **Description:** CSS class(es) to apply to the submit button.
+
+```vue
+<FUDataEdit submit-class="min-w-32" />
+```
+
+### submitLabel
+- **Type:** `String`
+- **Default:** `'Save'`
+- **Description:** Label text for the submit button.
+
+```vue
+<FUDataEdit submit-label="Update Profile" />
+```
+
+### submitIcon
+- **Type:** `String`
+- **Default:** `''`
+- **Description:** Icon to display in the submit button. Uses Nuxt UI icon format.
+
+```vue
+<FUDataEdit submit-icon="i-lucide-save" />
+```
+
+### showReset
+- **Type:** `Boolean`
+- **Default:** `false`
+- **Description:** Whether to display a reset button next to the submit button.
+
+```vue
+<FUDataEdit show-reset />
+```
+
+### resetSeverity
+- **Type:** `String`
+- **Default:** `'danger'`
+- **Description:** Severity/color variant for the reset button.
+
+```vue
+<FUDataEdit show-reset reset-severity="secondary" />
+```
+
+### resetLabel
+- **Type:** `String`
+- **Default:** `'Reset'`
+- **Description:** Label text for the reset button.
+
+```vue
+<FUDataEdit show-reset reset-label="Clear Form" />
+```
+
+### resetClass
+- **Type:** `String`
+- **Default:** `''`
+- **Description:** CSS class(es) to apply to the reset button.
+
+```vue
+<FUDataEdit show-reset reset-class="min-w-24" />
+```
+
+### resetIcon
+- **Type:** `String`
+- **Default:** `''`
+- **Description:** Icon to display in the reset button.
+
+```vue
+<FUDataEdit show-reset reset-icon="i-lucide-rotate-ccw" />
+```
+
+### debugData
+- **Type:** `Boolean`
+- **Default:** `false`
+- **Description:** When `true`, displays a debug panel showing the current form data in JSON format.
+
+```vue
+<FUDataEdit debug-data />
+```
+
+### debugSchema
+- **Type:** `Boolean`
+- **Default:** `false`
+- **Description:** When `true`, displays a debug panel showing the schema definition in JSON format.
+
+```vue
+<FUDataEdit debug-schema />
+```
+
+## Events
+
+### @dataSaved
+- **Payload:** `object` - The form data
+- **Description:** Emitted when the form is submitted and passes validation.
+
+```vue
+<FUDataEdit @data-saved="handleSave" />
+
+<script setup lang="ts">
+const handleSave = (formData: object) => {
+  console.log('Form submitted:', formData)
+  // API call to save data
+}
+</script>
+```
+
+### @onReset
+- **Payload:** None
+- **Description:** Emitted when the reset button is clicked.
+
+```vue
+<FUDataEdit show-reset @on-reset="handleReset" />
+
+<script setup lang="ts">
+const handleReset = () => {
+  console.log('Form reset')
+  // Additional cleanup or notifications
+}
+</script>
+```
+
+## Model Value
+
+The component uses `v-model` to bind to the form data:
+
+```vue
+<FUDataEdit v-model="formData" :schema="schema" />
+```
+
+The model value is of type `object` and represents the current state of the form data.
+
+## Complete Example
+
+```vue
+<template>
+  <div class="max-w-3xl mx-auto p-6">
+    <h1 class="text-3xl font-bold mb-8">Edit Profile</h1>
+    
+    <FUDataEdit
+      id="profile-edit-form"
+      v-model="userProfile"
+      :schema="profileSchema"
+      form-class="space-y-6 bg-white p-8 rounded-xl shadow-lg"
+      actions-class="flex gap-4 justify-end pt-6 mt-6 border-t"
+      submit-label="Save Changes"
+      submit-icon="i-lucide-save"
+      submit-severity="primary"
+      submit-class="min-w-32"
+      show-reset
+      reset-label="Reset Form"
+      reset-icon="i-lucide-rotate-ccw"
+      reset-severity="secondary"
+      @data-saved="handleSave"
+      @on-reset="handleReset"
+    />
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+
+const userProfile = ref({
+  firstName: 'Alice',
+  lastName: 'Johnson',
+  email: 'alice@example.com',
+  phone: '+1 (555) 123-4567',
+  role: 'admin',
+  department: 'engineering',
+  bio: 'Senior software engineer with expertise in Vue.js and TypeScript.',
+  notifications: true,
+  newsletter: false
+})
+
+const profileSchema = [
+  {
+    $formkit: 'nuxtUIInput',
+    name: 'firstName',
+    label: 'First Name',
+    placeholder: 'Enter first name',
+    leadingIcon: 'i-lucide-user',
+    validation: 'required|length:2,50'
+  },
+  {
+    $formkit: 'nuxtUIInput',
+    name: 'lastName',
+    label: 'Last Name',
+    placeholder: 'Enter last name',
+    validation: 'required|length:2,50'
+  },
+  {
+    $formkit: 'nuxtUIInput',
+    name: 'email',
+    label: 'Email Address',
+    inputType: 'email',
+    placeholder: 'your.email@example.com',
+    leadingIcon: 'i-lucide-mail',
+    validation: 'required|email'
+  },
+  {
+    $formkit: 'nuxtUIInput',
+    name: 'phone',
+    label: 'Phone Number',
+    inputType: 'tel',
+    placeholder: '+1 (555) 123-4567',
+    leadingIcon: 'i-lucide-phone'
+  },
+  {
+    $formkit: 'nuxtUISelect',
+    name: 'role',
+    label: 'Role',
+    options: [
+      { label: 'User', value: 'user' },
+      { label: 'Administrator', value: 'admin' },
+      { label: 'Moderator', value: 'moderator' }
+    ],
+    validation: 'required'
+  },
+  {
+    $formkit: 'nuxtUISelect',
+    name: 'department',
+    label: 'Department',
+    options: [
+      { label: 'Engineering', value: 'engineering' },
+      { label: 'Design', value: 'design' },
+      { label: 'Marketing', value: 'marketing' },
+      { label: 'Sales', value: 'sales' }
+    ]
+  },
+  {
+    $formkit: 'nuxtUITextarea',
+    name: 'bio',
+    label: 'Biography',
+    placeholder: 'Tell us about yourself...',
+    rows: 4,
+    validation: 'length:0,500'
+  },
+  {
+    $formkit: 'nuxtUISwitch',
+    name: 'notifications',
+    label: 'Email Notifications',
+    description: 'Receive email notifications about updates'
+  },
+  {
+    $formkit: 'nuxtUISwitch',
+    name: 'newsletter',
+    label: 'Newsletter Subscription',
+    description: 'Subscribe to our monthly newsletter'
+  }
+]
+
+const handleSave = async (data: object) => {
+  console.log('Saving profile:', data)
+  
+  try {
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 1000))
+    
+    // Show success notification
+    alert('Profile updated successfully!')
+  } catch (error) {
+    console.error('Error saving profile:', error)
+    alert('Failed to save profile')
+  }
+}
+
+const handleReset = () => {
+  console.log('Form has been reset')
+  // Optional: Show notification that form was reset
+}
+</script>
+```
+
+## Slots
+
+### Default Slot
+
+Add additional form fields or content within the form:
+
+```vue
+<FUDataEdit v-model="data" :schema="schema">
+  <div class="p-4 bg-blue-50 rounded border border-blue-200">
+    <p class="text-sm text-blue-800">
+      <strong>Note:</strong> Changes are saved automatically.
+    </p>
+  </div>
+</FUDataEdit>
+```
+
+### Messages Slot
+
+Customize the form messages display:
+
+```vue
+<FUDataEdit v-model="data" :schema="schema">
+  <template #messages>
+    <div class="custom-messages">
+      <FormKitMessages />
+    </div>
+  </template>
+</FUDataEdit>
+```
+
+### Submit Slot
+
+Completely customize the action buttons:
+
+```vue
+<FUDataEdit v-model="data" :schema="schema">
+  <template #submit>
+    <div class="flex gap-4 justify-between">
+      <UButton color="secondary" @click="goBack">
+        Cancel
+      </UButton>
+      
+      <div class="flex gap-2">
+        <UButton type="submit" color="primary">
+          Save Changes
+        </UButton>
+        <UButton type="button" color="success" @click="saveAndContinue">
+          Save & Continue
+        </UButton>
+      </div>
+    </div>
+  </template>
+</FUDataEdit>
+```
+
+## Use Cases
+
+### User Profile Editor
+
+```vue
+<FUDataEdit
+  id="profile-form"
+  v-model="profile"
+  :schema="profileSchema"
+  submit-label="Update Profile"
+  submit-icon="i-lucide-user-check"
+  show-reset
+  @data-saved="updateProfile"
+/>
+```
+
+### Settings Panel
+
+```vue
+<FUDataEdit
+  id="settings-form"
+  v-model="settings"
+  :schema="settingsSchema"
+  submit-label="Save Settings"
+  submit-icon="i-lucide-settings"
+  form-class="max-w-2xl"
+  @data-saved="saveSettings"
+/>
+```
+
+### Multi-Step Form
+
+```vue
+<FUDataEdit
+  :id="`step-${currentStep}`"
+  v-model="formData"
+  :schema="currentStepSchema"
+  :submit-label="isLastStep ? 'Submit' : 'Next'"
+  :submit-icon="isLastStep ? 'i-lucide-check' : 'i-lucide-arrow-right'"
+  @data-saved="handleStepComplete"
+/>
+```
+
+### Admin Form with Debug
+
+```vue
+<FUDataEdit
+  id="admin-form"
+  v-model="adminData"
+  :schema="adminSchema"
+  submit-label="Save"
+  show-reset
+  debug-data
+  debug-schema
+  @data-saved="saveAdminData"
+/>
+```
+
+## Validation
+
+FUDataEdit fully supports FormKit validation:
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUIInput',
+    name: 'username',
+    label: 'Username',
+    validation: 'required|length:3,20|alphanumeric'
+  },
+  {
+    $formkit: 'nuxtUIInput',
+    name: 'password',
+    inputType: 'password',
+    label: 'Password',
+    validation: 'required|length:8,50'
+  },
+  {
+    $formkit: 'nuxtUIInput',
+    name: 'confirmPassword',
+    inputType: 'password',
+    label: 'Confirm Password',
+    validation: 'required|confirm:password',
+    validationLabel: 'Password confirmation'
+  }
+]
+```
+
+## Tips
+
+::: info
+**Best Practices:**
+- Always provide a unique `id` prop for proper form identification
+- Use validation on required fields to ensure data integrity
+- Combine with `debug-data` during development to inspect form state
+- Use the `@data-saved` event for API calls and success notifications
+- Leverage the `show-reset` prop for forms where users might want to start over
+:::
+
+::: info
+**Important:**
+The form will only emit the `@data-saved` event when all validation passes. Make sure to define proper validation rules for your fields.
+:::
+
+## Related Components
+
+- [FUDataView](/components/data-view) - Read-only display version
+- [Input Components](/components/inputs) - All available input components
+- [Schema Forms](/getting-started/schema-forms) - Learn about schema-based forms
+- [Repeater Component](/components/repeater) - Dynamic repeatable sections
+
+---
+
+<!-- https://sfxcode.github.io/nuxt-ui-formkit/components/auto-form.md -->
+
+# FUAutoForm
+
+
+## Overview
+
+`FUAutoForm` infers a `FUDataEdit` schema instead of requiring you to write one. Pass a plain data object and every field gets a matching input based on its value type; or pass a Valibot or Zod schema and inputs, labels, and validation rules are derived from the schema's own structure. The inferred schema is handed to `FUDataEdit` unchanged, so everything you know about `FUDataEdit` (props, events, slots) applies as-is.
+
+```vue
+<template>
+  <FUAutoForm
+    :data="user"
+    @data-saved="handleSave"
+  />
+</template>
+
+<script setup lang="ts">
+const user = ref({
+  firstName: 'Ada',
+  age: 36,
+  newsletter: true,
+  tags: ['vue', 'nuxt'],
+  address: { city: 'London' },
+  contacts: [{ email: 'ada@example.com' }],
+})
+
+function handleSave(data: any) {
+  console.log('Saved:', data)
+}
+</script>
+```
+
+## Inference Rules
+
+| Value shape | Inferred input |
+| --- | --- |
+| `string` | `nuxtUIInput` |
+| string containing a line break | `nuxtUITextarea` |
+| ISO date string (`2024-01-15` or full ISO-8601 datetime) | `nuxtUIInputDate` with `valueType: 'iso'` (round-trips as string) |
+| `Date` instance | `nuxtUIInputDate` with `valueType: 'date'` |
+| `@internationalized/date` `CalendarDate`/`CalendarDateTime`/`ZonedDateTime` instance | `nuxtUIInputDate` with `valueType: 'calendar'` (round-trips as the native `DateValue`) |
+| `number` | `nuxtUIInputNumber` |
+| `boolean` | `nuxtUISwitch` |
+| array of primitives (or empty array) | `nuxtUIInputTags` |
+| array of objects | `nuxtUIRepeater` (item fields inferred from the first element; `newItem` derived by blanking it) |
+| nested plain object | FormKit `group` with inferred children |
+| `null` / `undefined` / functions / other object types | skipped (use an override to add the field explicitly) |
+
+Labels are humanized from key names: `firstName` becomes `First Name`, `email_address` becomes `Email Address`.
+
+An inferred `nuxtUIRepeater` ships usable out of the box: `displayCloneButton`/`displayDeleteButton` are enabled (both are opt-in on `nuxtUIRepeater` itself, hidden unless explicitly turned on) and `buttonGroupClass` is set to `'flex gap-2 justify-end'` so the per-row action buttons lay out horizontally, right-aligned. Override any of the three per field to change this:
+
+```ts
+overrides: {
+  contacts: { displayCloneButton: false, buttonGroupClass: 'flex gap-1' },
+}
+```
+
+## Overrides
+
+The `overrides` prop adjusts, replaces, adds, or removes inferred fields. Keys are dot-paths into your data; values are either a partial schema node or `false`.
+
+```vue
+<FUAutoForm
+  :data="user"
+  :overrides="{
+    'firstName': { validation: 'required' },
+    'bio': { $formkit: 'nuxtUITextarea' },
+    'internalId': false,
+    'contacts.email': { validation: 'required|email' },
+    'nickname': { placeholder: 'Optional nickname' },
+  }"
+/>
+```
+
+- **Merge semantics are a per-node shallow merge**: `{ ...inferredNode, ...overrideNode }`. Override keys win wholesale — keep the inferred `$formkit`/`label` and add `validation`, or supply `$formkit` to swap the input type entirely. Supplying `children` replaces the inferred children completely (no deep merge).
+- **`false` removes** an inferred field.
+- **Dot-paths reach nested fields**: `address.city` targets a group child; `contacts.email` targets a repeater's item template (no index segment — overrides apply to every row).
+- **Unknown paths append new fields** at that level, defaulting to `$formkit: 'nuxtUIInput'` with a humanized label. This also un-skips fields whose value was `null`.
+
+## Valibot Schemas
+
+If you already describe your data with [Valibot](https://valibot.dev), pass the schema instead — the inputs, `required`/`email`/`url`/`length`/`min`/`max` validation rules, and nesting come from the schema's own structure. Valibot is introspected structurally; this module does not depend on it.
+
+```vue
+<template>
+  <FUAutoForm
+    :data="user"
+    :valibot-schema="schema"
+  />
+</template>
+
+<script setup lang="ts">
+import * as v from 'valibot'
+
+const schema = v.object({
+  name: v.pipe(v.string(), v.minLength(2)),
+  email: v.pipe(v.string(), v.email()),
+  age: v.optional(v.pipe(v.number(), v.minValue(18))),
+  newsletter: v.boolean(),
+  contacts: v.array(v.object({ email: v.pipe(v.string(), v.email()) })),
+})
+
+const user = ref({ name: '', email: '', age: 18, newsletter: false, contacts: [] })
+</script>
+```
+
+- Non-optional entries get `required` (except booleans — a plain `v.boolean()` must stay switchable to `false`).
+- `v.optional`/`v.nullable`/`v.nullish` entries are not required; an optional's default value seeds new repeater rows.
+- Unsupported constructs (`picklist`, `union`, `record`, ...) are skipped — add them via `overrides`.
+- When `valibot-schema` is set it drives the schema; `data` remains the value source.
+
+## Zod Schemas
+
+If you already describe your data with [Zod](https://zod.dev), pass the schema instead — same rules apply as Valibot above (required/email/url/length/min/max, nesting, skipped constructs). Zod is introspected via its own public schema getters (`.type`, `.shape`, `.unwrap()`, `.minLength`, `.format`, ...); the one exception is array `.min()`/`.max()`/`.nonempty()`, which zod only records in its `checks` and which are read from there. This module does not depend on zod.
+
+```vue
+<template>
+  <FUAutoForm
+    :data="user"
+    :zod-schema="schema"
+  />
+</template>
+
+<script setup lang="ts">
+import { z } from 'zod'
+
+const schema = z.object({
+  name: z.string().min(2),
+  email: z.string().email(),
+  age: z.number().min(18).optional(),
+  newsletter: z.boolean(),
+  contacts: z.array(z.object({ email: z.string().email() })),
+})
+
+const user = ref({ name: '', email: '', age: 18, newsletter: false, contacts: [] })
+</script>
+```
+
+- Non-optional entries get `required` (except booleans, same reasoning as Valibot).
+- `.optional()`/`.nullable()`/`.nullish()` entries are not required; a `.default(...)` seeds new repeater rows regardless of where it sits in an `.optional()`/`.default()` chain.
+- Both `.string().email()` chains and the v4 top-level `z.email()` shorthand are recognized.
+- Unsupported constructs (`enum`, `union`, `record`, ...) are skipped — add them via `overrides`.
+- When `zod-schema` is set it drives the schema; `data` remains the value source. If both `valibot-schema` and `zod-schema` are passed, Valibot wins.
+
+## Re-Inference Contract
+
+The schema is re-inferred only when the `data`, `overrides`, `valibot-schema`, or `zod-schema` prop **references** change — never while typing. Mutating the bound object does not rebuild the form (rebuilding would re-render the schema and drop input focus); replace the object to re-infer.
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `data` | `Object` | `null` | Data object to infer from; also seeds the form value (v-model supported) |
+| `overrides` | `AutoFormOverrides` | `undefined` | Dot-path keyed map of partial schema nodes or `false` |
+| `valibotSchema` | `Object` | `undefined` | Valibot object schema to derive inputs/validation from |
+| `zodSchema` | `Object` | `undefined` | Zod object schema to derive inputs/validation from |
+
+All other props, events (`@data-saved`, `@on-reset`), and slots are passed through to [`FUDataEdit`](/components/data-edit) unchanged — `submit-label`, `show-reset`, `debug-data`, `debug-schema`, and so on.
+
+## Programmatic Use
+
+The inference utilities are auto-imported and usable standalone — for example to tweak the inferred schema before handing it to `FUDataEdit` yourself:
+
+```ts
+const { inferFormSchema, inferFormSchemaFromValibot, inferFormSchemaFromZod } = useFormKitAutoForm()
+
+const schema = inferFormSchema(user, { email: { validation: 'required|email' } })
+```
+
+---
+
+<!-- https://sfxcode.github.io/nuxt-ui-formkit/components/standard-schema.md -->
+
+# Standard Schema Validation
+
+
+## Overview
+
+[Standard Schema](https://standardschema.dev) is the shared `~standard.validate()` interface that Zod, Valibot, and ArkType all implement. If you already have a schema for your data - or want to reuse the same validation library across a Nitro API route, a plain `UForm`, and this module's FormKit-powered inputs - you can pass that schema straight in instead of re-expressing every rule as a FormKit `validation` string.
+
+Errors land on the exact FormKit node they describe - including fields nested inside a [Repeater](/components/repeater) row - and respect each field's own `validationVisibility` timing (`blur` by default), the same way FormKit's own rule-derived errors do. A failing schema also blocks form submission automatically, exactly like a native rule failure would.
+
+::: info
+**Any Standard Schema works.** This module depends only on `@standard-schema/spec`'s types, not on Zod/Valibot/ArkType themselves - bring whichever library you already use.
+:::
+
+## Basic Usage
+
+### With `FUDataEdit`
+
+Pass a schema via the `standard-schema` prop, alongside the existing `schema`/`data` props:
+
+```vue
+<template>
+  <FUDataEdit
+    :data="registration"
+    :schema="formSchema"
+    :standard-schema="registrationSchema"
+    @data-saved="handleSave"
+  />
+</template>
+
+<script setup lang="ts">
+import * as v from 'valibot'
+
+const registration = ref({ email: '', age: 0 })
+
+const registrationSchema = v.object({
+  email: v.pipe(v.string(), v.email()),
+  age: v.pipe(v.number(), v.minValue(18)),
+})
+
+const formSchema = [
+  { $formkit: 'nuxtUIInput', name: 'email', label: 'Email' },
+  { $formkit: 'nuxtUIInputNumber', name: 'age', label: 'Age' },
+]
+
+function handleSave(data: object) {
+  console.log('Saved', data)
+}
+</script>
+```
+
+### With `useFormKitForm`
+
+If you're wiring a `<FormKit type="form">` by hand instead of using `FUDataEdit`, pass the schema as the composable's second argument. `useFormKitForm` is auto-imported, like the module's other composables:
+
+```vue
+<template>
+  <FormKit id="registration-form" type="form">
+    <FormKit type="nuxtUIInput" name="email" label="Email" />
+    <FormKit type="nuxtUIInputNumber" name="age" label="Age" />
+  </FormKit>
+</template>
+
+<script setup lang="ts">
+import * as v from 'valibot'
+
+const registrationSchema = v.object({
+  email: v.pipe(v.string(), v.email()),
+  age: v.pipe(v.number(), v.minValue(18)),
+})
+
+const { isValid } = useFormKitForm('registration-form', { standardSchema: registrationSchema })
+</script>
+```
+
+## Validation Visibility
+
+Schema-derived errors are applied as FormKit `type: 'validation'` messages, not `type: 'error'` - the same message type native rule failures use. That means:
+
+- An error only becomes **visible** once the field's own `validationVisibility` condition is met (`blur` by default - or `dirty`, `live`, or `submit` if you've set that prop on the field). It does not appear the instant a keystroke makes the value invalid.
+- `isValid` (from `useFormKitForm`, or a field's own FormKit state) reflects a schema failure immediately, regardless of visibility - it blocks submission the same way a rule failure does, it just doesn't necessarily show the message yet.
+- Submitting the form reveals every outstanding error at once (FormKit's own `submitted` state), same as it always has.
+
+## Repeater Support
+
+A schema issue at an array-index path (e.g. Zod/Valibot reporting a problem at `items[2].email`) is normalized to FormKit's `"items.2.email"` node address and resolved correctly against a [`nuxtUIRepeater`](/components/repeater)'s actual row nodes - including after rows are inserted, removed, or reordered, which shifts every subsequent row's index.
+
+```typescript
+import * as v from 'valibot'
+
+const schema = v.object({
+  items: v.array(v.object({
+    email: v.pipe(v.string(), v.email()),
+  })),
+})
+```
+
+## Cross-Field Validation
+
+Cross-field checks like password confirmation don't need a Standard Schema at all - FormKit's own built-in rules from `@formkit/rules` (`confirm`, `require_one`, `date_after_node`, `date_before_node`, ...) already work unmodified against every `nuxtUI*` input, since they operate purely at the validation-rule level (`node.at(address)`) with no dependency on this module's custom `nuxtUI*` type/family names:
+
+```vue
+<template>
+  <FUDataEdit :data="registration" :schema="formSchema" />
+</template>
+
+<script setup lang="ts">
+const registration = ref({ password: '', confirmPassword: '' })
+
+const formSchema = [
+  { $formkit: 'nuxtUIInput', name: 'password', label: 'Password', inputType: 'password', validation: 'required|length:8' },
+  { $formkit: 'nuxtUIInput', name: 'confirmPassword', label: 'Confirm Password', inputType: 'password', validation: 'required|confirm:password' },
+]
+</script>
+```
+
+`confirmPassword`'s `confirm:password` rule reads the sibling `password` node's value via `node.at('password')` and fails until both match. Note this is different from some `@formkit/addons` plugins, which silently no-op against `nuxtUI*` inputs because they gate on FormKit's native type/family strings - plain validation rules like `confirm` have no such dependency and just work identically across every `nuxtUI*` input.
+
+## Related
+
+- [FUDataEdit](/components/data-edit) - the `standard-schema` prop
+- [Repeater](/components/repeater) - dynamic, repeatable form sections
+- [Standard Schema specification](https://standardschema.dev)
+
+---
+
+<!-- https://sfxcode.github.io/nuxt-ui-formkit/components/overlay.md -->
+
+# useFormKitOverlay
+
+
+## Overview
+
+`useFormKitOverlay()` composes `FUDataEdit`/`FUAutoForm`, `useFormKitForm`, and Nuxt UI's `useOverlay` into one call for the most common CRUD pattern: click Edit, fill in a dialog, save or cancel.
+
+```typescript
+const result = await overlay.edit({ data, schema, title })
+```
+
+`result` is the saved data on Save, or `null` on Cancel, <kbd>Esc</kbd>, or a backdrop click - there's no separate open/close state, mount timing, or FormKit submit plumbing to hand-assemble yourself.
+
+## Basic Usage
+
+```vue
+<script setup lang="ts">
+const overlay = useFormKitOverlay()
+
+const schema = [
+  { $formkit: 'nuxtUIInput', name: 'name', label: 'Name', validation: 'required' },
+  { $formkit: 'nuxtUIInput', name: 'email', label: 'Email', inputType: 'email', validation: 'required|email' },
+]
+
+const rows = ref([
+  { id: 1, name: 'Ada Lovelace', email: 'ada@example.com' },
+])
+
+async function editRow(index: number) {
+  const result = await overlay.edit({
+    data: rows.value[index],
+    schema,
+    title: `Edit ${rows.value[index]?.name}`,
+  })
+
+  if (result)
+    rows.value[index] = result
+}
+</script>
+```
+
+## Modal vs Slideover
+
+`as: 'modal' | 'slideover'` (default `'modal'`) chooses which Nuxt UI component wraps the form - one composable, not two:
+
+```typescript
+await overlay.edit({ data, schema, title, as: 'slideover' })
+```
+
+## Cancel and Dismissal Semantics
+
+Every way a user can close the overlay besides Save resolves the promise to `null`, never leaving it pending: the built-in Cancel button, <kbd>Esc</kbd>, and clicking outside the modal/slideover (backdrop click) all resolve the same way.
+
+### Confirming before discarding edits
+
+Pass `confirmDiscard: true` to `edit()`/`auto()` and a dirty form no longer closes silently: Cancel, <kbd>Esc</kbd>, a backdrop click and the header close button all show an inline "Discard unsaved changes?" prompt instead. **Discard** resolves the promise to `null`; **Keep editing** returns to the form. A form that is unchanged - or edited back to its original value - closes immediately, and Save is unaffected. It's off by default, so existing callers behave exactly as before.
+
+```typescript
+await overlay.edit({ data, schema, title, confirmDiscard: true })
+```
+
+## Auto-Inferred Schemas
+
+`auto()` opens the same modal/slideover, but infers the form from your data (or a [Valibot/Zod schema](/components/auto-form)) via `FUAutoForm` instead of requiring a hand-written FormKit schema:
+
+```typescript
+const result = await overlay.auto({ data: rows.value[index], title: `Edit ${rows.value[index]?.name}` })
+```
+
+```vue
+<script setup lang="ts">
+import * as v from 'valibot'
+
+const overlay = useFormKitOverlay()
+
+const registrationSchema = v.object({
+  name: v.pipe(v.string(), v.minLength(2)),
+  email: v.pipe(v.string(), v.email()),
+})
+
+async function editRegistration(data: object) {
+  return overlay.auto({ data, valibotSchema: registrationSchema, title: 'Registration' })
+}
+</script>
+```
+
+`auto()` accepts the same `overrides`/`valibotSchema`/`zodSchema` options [`FUAutoForm`](/components/auto-form) does, plus this composable's own `title`/`as`.
+
+## Options
+
+### edit(options)
+
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `data` | `unknown` | *(required)* | Data to pre-fill the form with |
+| `schema` | `FormKitSchemaDefinition` | *(required)* | Hand-written FormKit schema |
+| `title` | `string` | `undefined` | Modal/slideover header title |
+| `as` | `'modal' \| 'slideover'` | `'modal'` | Which Nuxt UI overlay component to render |
+| `confirmDiscard` | `boolean` | `false` | Ask before discarding unsaved edits on Cancel/Esc/backdrop/close |
+
+### auto(options)
+
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `data` | `unknown` | `undefined` | Data to infer the schema from and pre-fill the form with |
+| `valibotSchema` | `ValibotLikeSchema` | `undefined` | Infer inputs/validation from a Valibot object schema instead |
+| `zodSchema` | `ZodLikeSchema` | `undefined` | Infer inputs/validation from a Zod object schema instead |
+| `overrides` | `AutoFormOverrides` | `undefined` | Dot-path keyed map of partial schema nodes or `false` - see [`FUAutoForm`](/components/auto-form) |
+| `title` | `string` | `undefined` | Modal/slideover header title |
+| `as` | `'modal' \| 'slideover'` | `'modal'` | Which Nuxt UI overlay component to render |
+| `confirmDiscard` | `boolean` | `false` | Ask before discarding unsaved edits on Cancel/Esc/backdrop/close |
+
+Both methods return `Promise<unknown>`, resolving to the saved data or `null`.
+
+## One Overlay Instance at a Time
+
+`edit()` and `auto()` each reuse a single registered overlay instance across calls, rather than stacking a new one per invocation. Calling either again before the previous call's promise has resolved doesn't open a second, independent overlay - it replaces the first one's data/title in place, and when that overlay closes **both promises resolve with the same result** - the first call receives the second call's submitted data (or `null` on dismissal), not anything derived from its own `data`. Always `await` an `edit()`/`auto()` call (or otherwise ensure it has resolved) before starting another from the same composable instance.
+
+## Next Steps
+
+---
+
+<!-- https://sfxcode.github.io/nuxt-ui-formkit/components/input-editor.md -->
+
+# useFormKitEditor
+
+
+## Overview
+
+`useFormKitEditorSchema()` builds the FormKit schema for a *property editor* - a form whose fields are "Field Type", "Field Label", "Validation Rules", "Options", and so on, for editing a single **other** FormKit schema node. `useFormKitEditor()` converts between that editor's own form data and the real `{ $formkit: 'nuxtUIInput', ... }` node it represents.
+
+Together they power two things in the [playground](https://nuxt-ui-formkit.netlify.app/): the **Input Editor** sample (`/form/input-editor`) and the field-properties panel of the **Form Builder** (`/form-builder`), which reuses the same composables alongside a raw JSON editor for the same field.
+
+```typescript
+const { schemaToEditorData, editorDataToSchema } = useFormKitEditor()
+const { editorSchema } = useFormKitEditorSchema()
+```
+
+## Basic Usage
+
+```vue
+<script setup lang="ts">
+const { schemaToEditorData, editorDataToSchema } = useFormKitEditor()
+const { editorSchema } = useFormKitEditorSchema()
+
+const propertySchema = editorSchema()
+
+const initialField = {
+  $formkit: 'nuxtUIInput',
+  name: 'field',
+  label: 'Example Field',
+  placeholder: 'Type something…',
+  validation: 'required',
+}
+
+const formData = ref(schemaToEditorData(initialField))
+const generatedField = computed(() => editorDataToSchema(formData.value))
+</script>
+
+<template>
+  <!-- The property editor itself -->
+  <FUDataEdit v-model="formData" :schema="propertySchema" />
+
+  <!-- A live preview of the field it's building -->
+  <FUDataEdit :schema="[generatedField]" />
+</template>
+```
+
+`schemaToEditorData()`/`editorDataToSchema()` round-trip through a `_dollar_formkit` key rather than `$formkit` directly - FormKit's own schema syntax reserves `$`-prefixed keys, so the editor form can't use `$formkit` as one of its own field names. Everything else (`label`, `validation`, `options`, ...) passes through as-is.
+
+::: warning Give the preview a fresh key on type changes
+If you render a live preview like the second `FUDataEdit` above, key its wrapper on the selected type (`:key="formData._dollar_formkit"`). Some Nuxt UI inputs (`nuxtUISelectMenu` in particular) keep internal state tied to the previous `$formkit` type, and swapping types without remounting can leave stale state behind.
+:::
+
+## Editor Sections
+
+`editorSchema()` groups the property editor's fields behind a "Properties" tab switcher (Base / Display / Style / Validation / Options / Attributes), so the form stays manageable regardless of how many properties a field type supports:
+
+| Section | Fields |
+| --- | --- |
+| Base | Label (or Legend, for `nuxtUIRadioGroup`/`nuxtUICheckboxGroup`), Help Text, Default Value, Field ID, Schema Key, Preserve |
+| Display | CSS Class, Render Condition (`if:`), Disabled, Read Only |
+| Style | Outer Class, Wrapper Class, Inner Class |
+| Validation | Validation Rules, Validation Visibility, Validation Label |
+| Options | A drag-and-drop reorderable list of Label/Value pairs - only shown for types that actually take an `options`/`items` list (`nuxtUISelect`, `nuxtUIRadioGroup`, `nuxtUICheckboxGroup`, `nuxtUIListbox`, `nuxtUISelectMenu`, `nuxtUIInputMenu`, `nuxtUITree`) |
+| Attributes | A drag-and-drop reorderable list of arbitrary key/value pairs - the escape hatch for any property not covered above (e.g. `rows`, `min`, `max`, `icon`) |
+
+Attributes entries are parsed as JSON when possible, so typing `5` or `true` produces a number/boolean instead of the literal string - useful for numeric or boolean properties that don't have their own dedicated field.
+
+## Locking the Field Type
+
+Pass `false` to `useFormKitEditorSchema()` to disable the "Field Type" selector - useful when you're editing a field whose type is already fixed by something else (a palette template, in the Form Builder's case) and only want to edit its properties:
+
+```typescript
+const { editorSchema } = useFormKitEditorSchema(false)
+```
+
+The selector is disabled rather than removed - removing it entirely would also break every internal `$get()` comparison the schema uses to decide, for example, whether to show "Options" fields for the current type.
+
+## Choosing Between Inputs and Outputs
+
+The Field Type selector lists every registered `nuxtUI*` input (`inputNames`) and output (`outputNames`) component, so the same editor can build either a form field or a read-only display node:
+
+```typescript
+const { inputNames, outputNames } = useFormKitEditor()
+const { editorSchema, typeOptions } = useFormKitEditorSchema()
+
+// Inputs only
+const inputOnlySchema = editorSchema(typeOptions(inputNames))
+```
+
+## Copying the Result
+
+`editorDataToJson()` and `editorDataToCode()` both take the editor's current form data and return the generated field as a string - JSON for pasting into a schema file, or a JS-object-literal-like string for pasting into code:
+
+```typescript
+const { editorDataToJson, editorDataToCode } = useFormKitEditor()
+
+await navigator.clipboard.writeText(editorDataToJson(formData.value))
+await navigator.clipboard.writeText(editorDataToCode(formData.value))
+```
+
+## API Reference
+
+### useFormKitEditor()
+
+| Return value | Type | Description |
+| --- | --- | --- |
+| `inputNames` | `string[]` | Every registered `nuxtUI*` input type name, sorted |
+| `outputNames` | `string[]` | Every registered `nuxtUI*` output type name, sorted |
+| `inputNamesWithOptions` | `string[]` | Input types whose component takes an `options`/`items` list |
+| `inputNamesWithLegend` | `string[]` | Input types that use `legend` instead of `label` |
+| `schemaToEditorData(schema)` | `(node) => EditorData` | Converts a `{ $formkit, ... }` node into the editor form's data shape |
+| `editorDataToSchema(data)` | `(data) => Record<string, unknown>` | Converts the editor form's data back into a real schema node |
+| `editorDataToJson(data)` | `(data) => string` | `editorDataToSchema(data)`, `JSON.stringify`-ed |
+| `editorDataToCode(data)` | `(data) => string` | The same, formatted as a JS object literal |
+
+### useFormKitEditorSchema(isChangeTypePossible?)
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| `isChangeTypePossible` | `boolean` | `true` | `false` disables (but keeps mounted) the Field Type selector |
+
+| Return value | Type | Description |
+| --- | --- | --- |
+| `editorSchema(typeOptions?)` | `(options?) => FormKitSchemaNode[]` | Builds the property editor's schema; defaults to every input + output type |
+| `fieldTypeOptions` | `{ label: string, value: string }[]` | The default `{ label, value }` list `editorSchema()` uses |
+| `typeOptions(names, kind?)` | `(names, kind?) => { label, value }[]` | Maps type names into `{ label, value }` options, optionally suffixing the label with `kind` (e.g. `'output'`) |
+
+Every call to `useFormKitEditorSchema()` generates its own unique internal ids for the fields it addresses via `$get()`, so it's safe to call more than once on the same page (or navigate to a page that calls it repeatedly) without one instance's fields interfering with another's.
+
+## Next Steps
+
+---
+
+<!-- https://sfxcode.github.io/nuxt-ui-formkit/api/utilities.md -->
+
+# Utilities
+
+
+## Composables
+
+### useFormKitInput
+
+Helper composable for binding FormKit context to Nuxt UI input props.
+
+```typescript
+import { useFormKitInput } from '@sfxcode/nuxt-ui-formkit'
+
+const props = useFormKitInput(context, {
+  color: 'primary',
+  size: 'md'
+})
+```
+
+**Parameters:**
+- `context` - FormKit node context
+- `defaults` - Default props for the component
+
+**Returns:** Reactive props object with FormKit bindings
+
+### useFormKitOutput
+
+Helper composable for output components.
+
+```typescript
+import { useFormKitOutput } from '@sfxcode/nuxt-ui-formkit'
+
+const props = useFormKitOutput(context, {
+  color: 'neutral'
+})
+```
+
+### useFormKitForm
+
+Helper composable for driving a `<FormKit type="form">` from outside code - submit, reset, errors, and (optionally) [Standard Schema](/components/standard-schema) validation.
+
+```typescript
+import { useFormKitForm } from '@sfxcode/nuxt-ui-formkit'
+
+const { submit, reset, isValid, isSubmitted, isDirty, hasErrors, isLoading, error } = useFormKitForm('my-form', {
+  standardSchema: registrationSchema, // optional - see /components/standard-schema
+})
+```
+
+**Parameters:**
+- `id` - the FormKit form node's registry id (its `id` prop)
+- `options.standardSchema` *(optional)* - a Standard Schema instance to validate the form against
+
+**Returns:** `submit`, `reset`, `setErrors`, `clearErrors`, `isValid`, `isSubmitted`, `isDirty`, `hasErrors`, `isLoading`, `error`
+
+`submit(handler?)` triggers the form's own submission. A `handler` is your own async work (an API call, say): it runs once, and only if the form passed validation, with `isLoading` set while it runs. If it throws or rejects, `isLoading` is reset, the failure is stored in `error`, and the returned promise rejects - `await` it (or `.catch`) to handle it. `error` clears when the next handler starts. `submit()` with a handler rejects if no form with that `id` is mounted. Calling `submit` again before the first has been validated supersedes it, so only the latest call's handler runs.
+
+`isDirty` is `true` once the form's value differs from its initial value, and `reset()` clears it. By default FormKit's dirty state is *sticky*: it stays `true` after a field is edited back to its original value. Set `dirty-behavior="compare"` on the form (`FUDataEdit` has a `dirtyBehavior` prop) to make it track the live difference instead.
+
+### createAutosavePlugin
+
+Persists a form's value to `localStorage` and restores it on the next mount - draft recovery for long forms. `FUDataEdit` and `FUAutoForm` expose it as the [`autosave` prop](/components/data-edit#autosave); use the plugin directly for a hand-written `<FormKit type="form">`:
+
+```vue
+<FormKit
+  type="form"
+  name="profile"
+  :plugins="[createAutosavePlugin({ key: 'profile-draft' })]"
+>
+```
+
+```typescript
+import { createAutosavePlugin } from '@sfxcode/nuxt-ui-formkit/plugins'
+```
+
+**Options:** `key` (required), `debounce` (ms, default 200), `maxAge` (ms, default 1 hour), `clearOnSubmit` (default `true`).
+
+- Give the form a stable `name` - the stored entry is keyed on it, and FormKit's auto-generated names (`form_1`) are not stable across mounts.
+- It attaches to the form root only; nested groups and repeater rows are saved as part of the form's value.
+- The plugin has to be on the form from the start - it loads the saved draft when the form node is created, so it cannot be bolted on later from `useFormKitForm`.
+- A restored draft is reported as dirty (`isDirty` is `true` right after a restore), since it differs from the form's initial value.
+- Internal keys FormKit adds to the bound data (such as `slots`) are not saved.
+
+### useFormKitOverlay
+
+Opens [`FUDataEdit`](/components/data-edit) or [`FUAutoForm`](/components/auto-form) in a `UModal`/`USlideover` via Nuxt UI's `useOverlay` - see [the full guide](/components/overlay) for details.
+
+```typescript
+import { useFormKitOverlay } from '@sfxcode/nuxt-ui-formkit'
+
+const overlay = useFormKitOverlay()
+
+const result = await overlay.edit({ data, schema, title }) // hand-written schema
+const inferred = await overlay.auto({ data, title }) // schema inferred via FUAutoForm
+```
+
+**Parameters (`edit`):** `data`, `schema`, `title` *(optional)*, `as` *(optional, `'modal' | 'slideover'`, default `'modal'`)*
+
+**Parameters (`auto`):** `data`/`valibotSchema`/`zodSchema`/`overrides` *(optional)*, `title` *(optional)*, `as` *(optional)*
+
+**Returns:** `{ edit, auto }`, each resolving to the saved data or `null` on cancel/dismiss
+
+### useFormKitSchema
+
+Schema builder utilities for creating FormKit schemas programmatically.
+
+```typescript
+import { useFormKitSchema } from '@sfxcode/nuxt-ui-formkit'
+
+const { addList, addElement, addListGroup, addComponent } = useFormKitSchema()
+
+const schema = [
+  addElement('div', [
+    addList('items', [
+      addListGroup([
+        addComponent('UButton', { label: 'Click Me' })
+      ])
+    ])
+  ])
+]
+```
+
+**Methods:**
+- `addComponent(component, props, render, formKitAttrs)` - Add a Vue component
+- `addElement(element, children, attrs, render, formKitAttrs)` - Add an HTML element
+- `addGroup(name, children, render, formKitAttrs)` - Add a FormKit group
+- `addList(name, children, dynamic, render, formKitAttrs)` - Add a FormKit list
+- `addListGroup(children, render, formKitAttrs)` - Add a repeating list group
+
+### useFormKitEditor / useFormKitEditorSchema
+
+Builds a form that edits the properties of another FormKit schema node (type, label, validation, options, ...) and converts its data back into a real `{ $formkit: ... }` node - see [the full guide](/components/input-editor) for details.
+
+```typescript
+import { useFormKitEditor, useFormKitEditorSchema } from '@sfxcode/nuxt-ui-formkit'
+
+const { schemaToEditorData, editorDataToSchema } = useFormKitEditor()
+const { editorSchema } = useFormKitEditorSchema() // pass `false` to lock the field type
+
+const formData = ref(schemaToEditorData({ $formkit: 'nuxtUIInput', name: 'field' }))
+const generatedField = computed(() => editorDataToSchema(formData.value))
+```
+
+**Parameters (`useFormKitEditorSchema`):** `isChangeTypePossible` *(optional, `boolean`, default `true`)*
+
+**Returns (`useFormKitEditor`):** `inputNames`, `outputNames`, `inputNamesWithOptions`, `inputNamesWithLegend`, `schemaToEditorData`, `editorDataToSchema`, `editorDataToJson`, `editorDataToCode`
+
+**Returns (`useFormKitEditorSchema`):** `editorSchema`, `fieldTypeOptions`, `typeOptions`
+
+## Components
+
+### FUDataEdit
+
+Form component for editing data with schema-based configuration.
+
+```vue
+<FUDataEdit
+  :data="formData"
+  :schema="schema"
+  :debug-data="false"
+  @data-saved="handleSubmit"
+/>
+```
+
+**Props:**
+- `data` - Reactive data object to edit
+- `schema` - FormKit schema definition
+- `debugData` - Show debug panel (default: false)
+
+**Events:**
+- `data-saved` - Emitted when form is submitted with valid data
+
+### FUDataView
+
+Display component for read-only data presentation.
+
+```vue
+<FUDataView
+  :data="displayData"
+  :schema="schema"
+/>
+```
+
+**Props:**
+- `data` - Data object to display
+- `schema` - Schema definition using output components
+
+### FUDataDebug
+
+Development tool for debugging form data and state.
+
+```vue
+<FUDataDebug
+  :data="formData"
+  :show-json="true"
+/>
+```
+
+**Props:**
+- `data` - Data object to debug
+- `showJson` - Display formatted JSON (default: true)
+
+## Type Definitions
+
+### FormKit Schema Types
+
+```typescript
+import type { FormKitSchemaNode } from '@formkit/core'
+
+// Schema node definition
+interface SchemaNode {
+  $formkit?: string
+  $el?: string
+  $cmp?: string
+  name?: string
+  label?: string
+  validation?: string
+  children?: SchemaNode[]
+  if?: string
+  attrs?: Record<string, any>
+  props?: Record<string, any>
+}
+```
+
+### Component Props Types
+
+```typescript
+// Input component props
+interface NuxtUIInputProps {
+  name: string
+  label?: string
+  help?: string
+  placeholder?: string
+  validation?: string
+  disabled?: boolean
+  required?: boolean
+  inputType?: 'text' | 'email' | 'password' | 'url' | 'tel' | 'number' | 'search'
+  leadingIcon?: string
+  trailingIcon?: string
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
+  color?: string
+}
+
+// Output component props
+interface NuxtUIOutputProps {
+  name: string
+  label?: string
+  help?: string
+  color?: string
+  size?: string
+  leadingIcon?: string
+  trailingIcon?: string
+}
+```
+
+## Utilities
+
+### Color Conversion
+
+Convert between color formats (hex, rgb, hsl).
+
+```typescript
+import { hexToRgb, rgbToHex, hslToRgb } from '@sfxcode/nuxt-ui-formkit'
+
+// Convert hex to RGB
+const rgb = hexToRgb('#ff0000') // { r: 255, g: 0, b: 0 }
+
+// Convert RGB to hex
+const hex = rgbToHex(255, 0, 0) // '#ff0000'
+
+// Convert HSL to RGB
+const rgb2 = hslToRgb(0, 100, 50) // { r: 255, g: 0, b: 0 }
+```
+
+### Duration Conversion
+
+Convert time durations between formats.
+
+```typescript
+import { parseDuration, formatDuration } from '@sfxcode/nuxt-ui-formkit'
+
+// Parse duration string
+const seconds = parseDuration('1h 30m') // 5400
+
+// Format seconds to readable string
+const formatted = formatDuration(5400) // '1h 30m'
+```
+
+## External Module Usage
+
+### Import Definitions
+
+Import FormKit definitions in your own modules:
+
+```typescript
+// Import all definitions
+import { nuxtUIInputs, nuxtUIOutputs } from '@sfxcode/nuxt-ui-formkit/formkit'
+
+export default defineFormKitConfig({
+  inputs: {
+    ...nuxtUIInputs,
+    ...nuxtUIOutputs
+  }
+})
+```
+
+```typescript
+// Import specific definitions
+import {
+  nuxtUIInputDefinition,
+  nuxtUISelectDefinition
+} from '@sfxcode/nuxt-ui-formkit/definitions'
+
+export default defineFormKitConfig({
+  inputs: {
+    nuxtUIInput: nuxtUIInputDefinition,
+    nuxtUISelect: nuxtUISelectDefinition
+  }
+})
+```
+
+### Available Exports
+
+**From `@sfxcode/nuxt-ui-formkit/formkit`:**
+- `nuxtUIInputs` - All input component definitions
+- `nuxtUIOutputs` - All output component definitions
+
+**From `@sfxcode/nuxt-ui-formkit/definitions`:**
+- Individual component definitions (e.g., `nuxtUIInputDefinition`, `nuxtUISelectDefinition`)
+
+**From `@sfxcode/nuxt-ui-formkit/plugins`:**
+- FormKit plugins (e.g., `addNuxtAsteriskPlugin`, `createAutosavePlugin`)
+
+## Best Practices
+
+- ✅
+- Use `useFormKitInput` for consistent prop binding
+- Leverage schema builders for complex forms
+- Utilize TypeScript types for better IDE support
+- Import only needed definitions in external modules
+- Use `FUDataDebug` during development
+:::
+
+## Next Steps
+
+---
+
+<!-- https://sfxcode.github.io/nuxt-ui-formkit/examples/index.md -->
+
+# Overview
+
+
+## Overview
+
+Explore complete, production-ready form examples that demonstrate best practices and common use cases with Nuxt UI FormKit.
+
+::: info
+More examples are available in the [playground](https://github.com/sfxcode/nuxt-ui-formkit/tree/main/playground/app/pages) of the repository.
+:::
+
+## Contact Form
+
+A simple contact form with validation:
+
+```vue
+<template>
+  <FormKit
+    type="form"
+    :actions="false"
+    @submit="handleSubmit"
+  >
+    <FormKit
+      type="nuxtUIInput"
+      name="name"
+      label="Full Name"
+      placeholder="John Doe"
+      validation="required"
+    />
+
+    <FormKit
+      type="nuxtUIInput"
+      name="email"
+      label="Email Address"
+      input-type="email"
+      placeholder="john@example.com"
+      validation="required|email"
+    />
+
+    <FormKit
+      type="nuxtUITextarea"
+      name="message"
+      label="Message"
+      placeholder="How can we help?"
+      validation="required|length:10"
+      :rows="4"
+    />
+
+    <FormKit
+      type="nuxtUICheckbox"
+      name="subscribe"
+      label="Subscribe to our newsletter"
+    />
+
+    <div class="flex gap-2">
+      <UButton type="submit" size="lg">
+        Send Message
+      </UButton>
+      <UButton type="reset" color="neutral" variant="outline" size="lg">
+        Clear
+      </UButton>
+    </div>
+  </FormKit>
+</template>
+
+<script setup lang="ts">
+const handleSubmit = async (data: any) => {
+  await $fetch('/api/contact', {
+    method: 'POST',
+    body: data
+  })
+}
+</script>
+```
+
+## User Profile Form
+
+Multi-section profile form with schema:
+
+```vue
+<template>
+  <FUDataEdit
+    :data="profile"
+    :schema="profileSchema"
+    @data-saved="saveProfile"
+  />
+</template>
+
+<script setup lang="ts">
+const profile = ref({
+  // Personal Info
+  firstName: '',
+  lastName: '',
+  email: '',
+  phone: '',
+  birthDate: null,
+  
+  // Address
+  street: '',
+  city: '',
+  country: '',
+  postalCode: '',
+  
+  // Preferences
+  theme: 'light',
+  newsletter: false,
+  notifications: []
+})
+
+const profileSchema = [
+  { $el: 'h3', children: 'Personal Information', attrs: { class: 'text-xl font-bold mb-4' } },
+  {
+    $formkit: 'nuxtUIInput',
+    name: 'firstName',
+    label: 'First Name',
+    validation: 'required'
+  },
+  {
+    $formkit: 'nuxtUIInput',
+    name: 'lastName',
+    label: 'Last Name',
+    validation: 'required'
+  },
+  {
+    $formkit: 'nuxtUIInput',
+    name: 'email',
+    inputType: 'email',
+    label: 'Email',
+    validation: 'required|email'
+  },
+  {
+    $formkit: 'nuxtUIInput',
+    name: 'phone',
+    inputType: 'tel',
+    label: 'Phone'
+  },
+  {
+    $formkit: 'nuxtUIInputDate',
+    name: 'birthDate',
+    label: 'Date of Birth'
+  },
+  
+  { $el: 'h3', children: 'Address', attrs: { class: 'text-xl font-bold mt-8 mb-4' } },
+  {
+    $formkit: 'nuxtUIInput',
+    name: 'street',
+    label: 'Street Address'
+  },
+  {
+    $formkit: 'nuxtUIInput',
+    name: 'city',
+    label: 'City'
+  },
+  {
+    $formkit: 'nuxtUISelect',
+    name: 'country',
+    label: 'Country',
+    options: ['USA', 'UK', 'Canada', 'Australia', 'Germany']
+  },
+  {
+    $formkit: 'nuxtUIInput',
+    name: 'postalCode',
+    label: 'Postal Code'
+  },
+  
+  { $el: 'h3', children: 'Preferences', attrs: { class: 'text-xl font-bold mt-8 mb-4' } },
+  {
+    $formkit: 'nuxtUIRadioGroup',
+    name: 'theme',
+    label: 'Color Theme',
+    options: [
+      { label: 'Light', value: 'light' },
+      { label: 'Dark', value: 'dark' },
+      { label: 'System', value: 'system' }
+    ]
+  },
+  {
+    $formkit: 'nuxtUISwitch',
+    name: 'newsletter',
+    label: 'Subscribe to newsletter'
+  },
+  {
+    $formkit: 'nuxtUICheckboxGroup',
+    name: 'notifications',
+    label: 'Notification Preferences',
+    options: [
+      { label: 'Email notifications', value: 'email' },
+      { label: 'Push notifications', value: 'push' },
+      { label: 'SMS notifications', value: 'sms' }
+    ]
+  }
+]
+
+const saveProfile = async (data: any) => {
+  await $fetch('/api/profile', {
+    method: 'PUT',
+    body: data
+  })
+}
+</script>
+```
+
+## More Examples
+
+
+:::

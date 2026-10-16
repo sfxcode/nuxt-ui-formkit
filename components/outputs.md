@@ -1,0 +1,785 @@
+# Output Components
+
+
+## Overview
+
+Output components render data in read-only mode with beautiful formatting. Perfect for dashboards, profile pages, and data visualization - all fully integrated with schemas.
+
+::: info
+**Schema-First:** Output components work seamlessly with `FUDataView` for creating display-only forms from schemas.
+:::
+
+## Text Outputs
+
+### nuxtUIOutputText
+
+Display text with style customization and icons.
+
+**Schema Example:**
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUIOutputText',
+    name: 'userName',
+    label: 'Username',
+    leadingIcon: 'i-lucide-user',
+    color: 'primary',
+    size: 'lg'
+  }
+]
+```
+
+**Complete Example:**
+
+```vue
+<template>
+  <FUDataView :data="userData" :schema="displaySchema" />
+</template>
+
+<script setup lang="ts">
+const userData = ref({
+  userName: 'johndoe',
+  fullName: 'John Doe'
+})
+
+const displaySchema = [
+  {
+    $formkit: 'nuxtUIOutputText',
+    name: 'userName',
+    label: 'Username',
+    leadingIcon: 'i-lucide-user'
+  },
+  {
+    $formkit: 'nuxtUIOutputText',
+    name: 'fullName',
+    label: 'Full Name',
+    leadingIcon: 'i-lucide-id-card',
+    size: 'lg'
+  }
+]
+</script>
+```
+
+**Key Props:**
+- `leadingIcon` - Icon before text
+- `trailingIcon` - Icon after text
+- `color` - Text color
+- `size` - Text size
+- `outputType` - How the value is rendered (see below)
+
+**`outputType` values:**
+
+| Value | Description |
+| --- | --- |
+| `text` (default) | Render the raw value as plain text |
+| `email` | Render as a `mailto:` link |
+| `url` | Render as an external link (opens in a new tab) |
+| `tel` | Render as a `tel:` link |
+| `color` | Render the value as a hex color swatch |
+| `duration` | Format the value as a human-readable duration (e.g. `1h 30m`) |
+| `i18n` | Translate the value using it as the i18n message key |
+
+**i18n Example:**
+
+The `i18n` type uses the field value as the translation key via `vue-i18n`'s `useI18n()`. With a value of `status.active` and a matching message, it renders the translated text; when no i18n instance is active it falls back to the raw value.
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUIOutputText',
+    name: 'status',
+    label: 'Status',
+    outputType: 'i18n' // value "status.active" → "Active"
+  }
+]
+```
+
+> Requires `vue-i18n` (or `@nuxtjs/i18n`) to be installed and configured in your app. It is an optional peer dependency — without it, the value is shown unchanged.
+
+### nuxtUIOutputLink
+
+Display URLs with automatic link generation.
+
+**Schema Example:**
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUIOutputLink',
+    name: 'website',
+    label: 'Website',
+    leadingIcon: 'i-lucide-link',
+    target: '_blank'
+  },
+  {
+    $formkit: 'nuxtUIOutputLink',
+    name: 'email',
+    label: 'Email',
+    leadingIcon: 'i-lucide-mail',
+    target: '_blank'
+  }
+]
+```
+
+**Key Props:**
+- `target` - Link target (_blank, _self)
+- `external` - Mark as external link
+- `leadingIcon` - Icon before link
+
+## Formatted Outputs
+
+### nuxtUIOutputNumber
+
+Display numbers with advanced formatting (currency, percentage, decimal).
+
+**Schema Example:**
+
+```typescript
+const schema = [
+  // Currency
+  {
+    $formkit: 'nuxtUIOutputNumber',
+    name: 'price',
+    label: 'Price',
+    formatOptions: {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 2
+    }
+  },
+  
+  // Percentage
+  {
+    $formkit: 'nuxtUIOutputNumber',
+    name: 'growth',
+    label: 'Growth Rate',
+    formatOptions: {
+      style: 'percent',
+      minimumFractionDigits: 1
+    }
+  },
+  
+  // Decimal
+  {
+    $formkit: 'nuxtUIOutputNumber',
+    name: 'rating',
+    label: 'Rating',
+    formatOptions: {
+      minimumFractionDigits: 1,
+      maximumFractionDigits: 2
+    }
+  }
+]
+```
+
+**Complete Dashboard Example:**
+
+```vue
+<template>
+  <FUDataView :data="metrics" :schema="metricsSchema" />
+</template>
+
+<script setup lang="ts">
+const metrics = ref({
+  revenue: 125430.50,
+  profit: 42150.25,
+  growth: 0.234,
+  conversionRate: 0.0453,
+  customers: 1250
+})
+
+const metricsSchema = [
+  {
+    $el: 'h3',
+    children: 'Financial Metrics',
+    attrs: { class: 'text-xl font-bold mb-4' }
+  },
+  {
+    $formkit: 'nuxtUIOutputNumber',
+    name: 'revenue',
+    label: 'Total Revenue',
+    formatOptions: {
+      style: 'currency',
+      currency: 'USD'
+    }
+  },
+  {
+    $formkit: 'nuxtUIOutputNumber',
+    name: 'profit',
+    label: 'Net Profit',
+    formatOptions: {
+      style: 'currency',
+      currency: 'USD'
+    }
+  },
+  {
+    $el: 'h3',
+    children: 'Performance Metrics',
+    attrs: { class: 'text-xl font-bold mt-6 mb-4' }
+  },
+  {
+    $formkit: 'nuxtUIOutputNumber',
+    name: 'growth',
+    label: 'Growth Rate',
+    formatOptions: {
+      style: 'percent',
+      minimumFractionDigits: 1
+    }
+  },
+  {
+    $formkit: 'nuxtUIOutputNumber',
+    name: 'conversionRate',
+    label: 'Conversion Rate',
+    formatOptions: {
+      style: 'percent',
+      minimumFractionDigits: 2
+    }
+  },
+  {
+    $formkit: 'nuxtUIOutputNumber',
+    name: 'customers',
+    label: 'Total Customers',
+    formatOptions: {
+      useGrouping: true
+    }
+  }
+]
+</script>
+```
+
+### nuxtUIOutputProgress
+
+Display a numeric value as a progress bar.
+
+**Schema Example:**
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUIOutputProgress',
+    name: 'storageUsed',
+    label: 'Storage Used',
+    max: 100,
+    status: true,
+    color: 'primary'
+  },
+  {
+    $formkit: 'nuxtUIOutputProgress',
+    name: 'quotaUsed',
+    label: 'Quota',
+    max: 500,
+    status: true,
+    color: 'warning'
+  }
+]
+```
+
+**Notes:**
+- The field's value is the current progress amount, not a percentage - it's read against `max` (defaults to `100`).
+- `status: true` overlays the computed percentage as text; omit it for a bare bar.
+- `orientation: 'vertical'` renders a vertical bar instead of the default horizontal one.
+
+### nuxtUIOutputRating
+
+Display a numeric rating as a read-only row of stars.
+
+**Schema Example:**
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUIOutputRating',
+    name: 'reviewScore',
+    label: 'Review Score',
+    length: 5,
+    color: 'warning'
+  },
+  {
+    $formkit: 'nuxtUIOutputRating',
+    name: 'satisfaction',
+    label: 'Satisfaction',
+    length: 10,
+    size: 'sm',
+    orientation: 'horizontal'
+  }
+]
+```
+
+**Notes:**
+- The field's value is the current rating; `length` (default `5`) sets the number of stars, not `max`.
+- This component is always read-only - it wraps the same star widget as `nuxtUIInputRating`, but forces Nuxt UI's `readonly` mode so clicking a star never changes the value.
+- `icon`/`emptyIcon` customize the filled/empty star glyphs; `color`/`size` follow the same values as every other Output component.
+
+### nuxtUIOutputDate
+
+Display dates and times with customizable formatting.
+
+**Schema Example:**
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUIOutputDate',
+    name: 'createdAt',
+    label: 'Created',
+    format: 'PPP' // October 14, 2023
+  },
+  {
+    $formkit: 'nuxtUIOutputDate',
+    name: 'updatedAt',
+    label: 'Last Updated',
+    format: 'Pp', // Oct 14, 2023, 3:30 PM
+  },
+  {
+    $formkit: 'nuxtUIOutputDate',
+    name: 'lastLogin',
+    label: 'Last Login',
+    relative: true // "2 hours ago"
+  }
+]
+```
+
+**Format Options:**
+- `PP` - Oct 14, 2023
+- `PPP` - October 14, 2023
+- `PPPP` - Saturday, October 14, 2023
+- `Pp` - Oct 14, 2023, 3:30 PM
+- `relative: true` - Relative time (e.g., "2 hours ago")
+
+### nuxtUIOutputBoolean
+
+Display boolean values with custom text and icons.
+
+**Schema Example:**
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUIOutputBoolean',
+    name: 'isActive',
+    label: 'Status',
+    trueValue: 'Active',
+    falseValue: 'Inactive',
+    trueIcon: 'i-lucide-check-circle',
+    falseIcon: 'i-lucide-x-circle',
+    trueColor: 'green',
+    falseColor: 'red'
+  },
+  {
+    $formkit: 'nuxtUIOutputBoolean',
+    name: 'isPremium',
+    label: 'Account Type',
+    trueValue: 'Premium',
+    falseValue: 'Free',
+    trueIcon: 'i-lucide-star',
+    falseIcon: 'i-lucide-user'
+  }
+]
+```
+
+## Collection Outputs
+
+### nuxtUIOutputList
+
+Display arrays/lists with various styles.
+
+**Schema Example:**
+
+```typescript
+const schema = [
+  // Badge style
+  {
+    $formkit: 'nuxtUIOutputList',
+    name: 'skills',
+    label: 'Skills',
+    listType: 'badge',
+    color: 'primary'
+  },
+  
+  // Bullet list
+  {
+    $formkit: 'nuxtUIOutputList',
+    name: 'features',
+    label: 'Features',
+    listType: 'ul'
+  },
+  
+  // Numbered list
+  {
+    $formkit: 'nuxtUIOutputList',
+    name: 'steps',
+    label: 'Steps',
+    listType: 'ol'
+  },
+  
+  // Comma-separated
+  {
+    $formkit: 'nuxtUIOutputList',
+    name: 'categories',
+    label: 'Categories',
+    listType: 'inline',
+    separator: ' • '
+  }
+]
+```
+
+**Complete Example:**
+
+```vue
+<template>
+  <FUDataView :data="projectData" :schema="projectSchema" />
+</template>
+
+<script setup lang="ts">
+const projectData = ref({
+  technologies: ['Vue', 'Nuxt', 'TypeScript', 'FormKit', 'TailwindCSS'],
+  features: ['Authentication', 'Real-time updates', 'Dark mode', 'Mobile responsive'],
+  milestones: ['Design phase', 'Development', 'Testing', 'Deployment'],
+  tags: ['Open Source', 'SaaS', 'Enterprise']
+})
+
+const projectSchema = [
+  {
+    $formkit: 'nuxtUIOutputList',
+    name: 'technologies',
+    label: 'Technologies',
+    listType: 'badge',
+    color: 'blue'
+  },
+  {
+    $formkit: 'nuxtUIOutputList',
+    name: 'features',
+    label: 'Key Features',
+    listType: 'ul'
+  },
+  {
+    $formkit: 'nuxtUIOutputList',
+    name: 'milestones',
+    label: 'Project Milestones',
+    listType: 'ol'
+  },
+  {
+    $formkit: 'nuxtUIOutputList',
+    name: 'tags',
+    label: 'Tags',
+    listType: 'inline',
+    separator: ' • '
+  }
+]
+</script>
+```
+
+## Status Outputs
+
+### nuxtUIOutputBadge
+
+Display a single value as a status badge.
+
+::: tip
+Not to be confused with `nuxtUIOutputList`'s `listType: 'badge'` mode just above - that renders an **array** as multiple badges (e.g. a list of tags). `nuxtUIOutputBadge` is for a **single** status value (e.g. `"Active"`, `"Pending"`).
+:::
+
+**Schema Example:**
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUIOutputBadge',
+    name: 'status',
+    label: 'Status',
+    color: 'success',
+    variant: 'subtle'
+  },
+  {
+    $formkit: 'nuxtUIOutputBadge',
+    name: 'priority',
+    label: 'Priority',
+    color: 'error',
+    variant: 'solid',
+    badgeIcon: 'i-heroicons-exclamation-triangle'
+  }
+]
+```
+
+**Notes:**
+- `badgeIcon` renders an icon *inside* the badge pill - distinct from the common `leadingIcon`/`trailingIcon`, which render an external icon beside it.
+- `variant` accepts this library's usual `outline | soft | subtle | ghost | none`, but the underlying `UBadge` only supports `outline | soft | subtle | solid` - `ghost` and `none` both map to `soft`.
+
+## Profile Outputs
+
+### nuxtUIOutputUser
+
+Display a name, description, and avatar together as a profile-style entry.
+
+::: warning
+Unlike every other Output component, this field's **value is an object**, not a scalar: `{ name?, description?, avatar? }`. `avatar` mirrors Nuxt UI's own `Avatar` props (`src`, `alt`, `icon`, `text`).
+:::
+
+**Schema Example:**
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUIOutputUser',
+    name: 'author',
+    label: 'Author',
+    orientation: 'horizontal'
+  },
+  {
+    $formkit: 'nuxtUIOutputUser',
+    name: 'assignee',
+    label: 'Assigned To',
+    chip: true
+  }
+]
+
+const data = {
+  author: {
+    name: 'Jane Doe',
+    description: 'Senior Engineer',
+    avatar: { src: 'https://example.com/jane.png' }
+  },
+  assignee: {
+    name: 'John Smith',
+    description: 'Online now',
+    avatar: { text: 'JS' }
+  }
+}
+```
+
+**Notes:**
+- `avatar.src` shows an image; omit it and `avatar.text`/`avatar.icon` render initials or an icon instead.
+- `chip: true` overlays a status indicator (e.g. online/offline) on the avatar, using Nuxt UI's default chip styling; pass a `Chip` props object instead of `true` to customize it.
+- `orientation: 'vertical'` stacks the avatar above the name/description instead of side-by-side.
+
+## Complete User Profile Example
+
+Here's a comprehensive example combining all output types:
+
+```vue
+<template>
+  <UContainer>
+    <div class="max-w-4xl mx-auto my-8">
+      <h1 class="text-3xl font-bold mb-8">User Profile</h1>
+      
+      <FUDataView
+        :data="userProfile"
+        :schema="profileSchema"
+      />
+    </div>
+  </UContainer>
+</template>
+
+<script setup lang="ts">
+const userProfile = ref({
+  // Personal Info
+  fullName: 'John Doe',
+  username: 'johndoe',
+  email: 'john@example.com',
+  website: 'https://johndoe.com',
+  
+  // Metrics
+  salary: 125000,
+  performance: 0.95,
+  tasksCompleted: 342,
+  
+  // Dates
+  joinDate: new Date('2023-01-15'),
+  lastLogin: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
+  
+  // Status
+  isActive: true,
+  isPremium: true,
+  
+  // Collections
+  skills: ['Vue', 'Nuxt', 'TypeScript', 'Node.js', 'PostgreSQL'],
+  languages: ['English', 'Spanish', 'French'],
+  achievements: ['Employee of the Month', 'Innovation Award', 'Team Lead']
+})
+
+const profileSchema = [
+  // Personal Information
+  {
+    $el: 'h2',
+    children: 'Personal Information',
+    attrs: { class: 'text-2xl font-semibold mb-4' }
+  },
+  {
+    $formkit: 'nuxtUIOutputText',
+    name: 'fullName',
+    label: 'Full Name',
+    leadingIcon: 'i-lucide-user',
+    size: 'lg'
+  },
+  {
+    $formkit: 'nuxtUIOutputText',
+    name: 'username',
+    label: 'Username',
+    leadingIcon: 'i-lucide-at-sign'
+  },
+  {
+    $formkit: 'nuxtUIOutputLink',
+    name: 'email',
+    label: 'Email',
+    leadingIcon: 'i-lucide-mail',
+    target: '_blank'
+  },
+  {
+    $formkit: 'nuxtUIOutputLink',
+    name: 'website',
+    label: 'Website',
+    leadingIcon: 'i-lucide-globe',
+    target: '_blank'
+  },
+  
+  // Performance Metrics
+  {
+    $el: 'h2',
+    children: 'Performance Metrics',
+    attrs: { class: 'text-2xl font-semibold mt-8 mb-4' }
+  },
+  {
+    $formkit: 'nuxtUIOutputNumber',
+    name: 'salary',
+    label: 'Annual Salary',
+    formatOptions: {
+      style: 'currency',
+      currency: 'USD'
+    }
+  },
+  {
+    $formkit: 'nuxtUIOutputNumber',
+    name: 'performance',
+    label: 'Performance Rating',
+    formatOptions: {
+      style: 'percent',
+      minimumFractionDigits: 0
+    }
+  },
+  {
+    $formkit: 'nuxtUIOutputNumber',
+    name: 'tasksCompleted',
+    label: 'Tasks Completed',
+    formatOptions: {
+      useGrouping: true
+    }
+  },
+  
+  // Timeline
+  {
+    $el: 'h2',
+    children: 'Timeline',
+    attrs: { class: 'text-2xl font-semibold mt-8 mb-4' }
+  },
+  {
+    $formkit: 'nuxtUIOutputDate',
+    name: 'joinDate',
+    label: 'Join Date',
+    format: 'PPP'
+  },
+  {
+    $formkit: 'nuxtUIOutputDate',
+    name: 'lastLogin',
+    label: 'Last Login',
+    relative: true
+  },
+  
+  // Status
+  {
+    $el: 'h2',
+    children: 'Status',
+    attrs: { class: 'text-2xl font-semibold mt-8 mb-4' }
+  },
+  {
+    $formkit: 'nuxtUIOutputBoolean',
+    name: 'isActive',
+    label: 'Account Status',
+    trueValue: 'Active',
+    falseValue: 'Inactive',
+    trueIcon: 'i-lucide-check-circle',
+    falseIcon: 'i-lucide-x-circle',
+    trueColor: 'green',
+    falseColor: 'red'
+  },
+  {
+    $formkit: 'nuxtUIOutputBoolean',
+    name: 'isPremium',
+    label: 'Membership',
+    trueValue: 'Premium',
+    falseValue: 'Standard',
+    trueIcon: 'i-lucide-star',
+    falseIcon: 'i-lucide-user'
+  },
+  
+  // Skills & Achievements
+  {
+    $el: 'h2',
+    children: 'Skills & Achievements',
+    attrs: { class: 'text-2xl font-semibold mt-8 mb-4' }
+  },
+  {
+    $formkit: 'nuxtUIOutputList',
+    name: 'skills',
+    label: 'Technical Skills',
+    listType: 'badge',
+    color: 'primary'
+  },
+  {
+    $formkit: 'nuxtUIOutputList',
+    name: 'languages',
+    label: 'Languages',
+    listType: 'inline',
+    separator: ' • '
+  },
+  {
+    $formkit: 'nuxtUIOutputList',
+    name: 'achievements',
+    label: 'Achievements',
+    listType: 'ul'
+  }
+]
+</script>
+```
+
+## Common Props
+
+All output components support:
+
+- `name` (required) - Field name in data object
+- `label` - Display label
+- `help` - Help text below value
+- `color` - Component color
+- `size` - Component size
+
+### Icon Tooltips
+
+Every `icon`/`leadingIcon`/`trailingIcon` pair described above also accepts a matching `*Tooltip` prop - `iconTooltip`, `leadingIconTooltip`, `trailingIconTooltip` (plus `trueIconTooltip`/`falseIconTooltip` on `nuxtUIOutputBoolean`, matching its `trueIcon`/`falseIcon`). Each accepts any Nuxt UI [`Tooltip`](https://ui.nuxt.com/components/tooltip) prop except `class` (e.g. `text`, `content`, `arrow`, `delayDuration`) as a plain object. No tooltip is rendered unless one is supplied.
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUIOutputText',
+    name: 'userName',
+    label: 'Username',
+    leadingIcon: 'i-lucide-user',
+    leadingIconTooltip: { text: 'Unique account identifier' }
+  }
+]
+```
+
+### Icon Accessibility
+
+An icon with a click handler (`onIconClicked`, `onLeadingIconClicked`, `onTrailingIconClicked`) renders as a real `<button type="button">`, so it is keyboard-focusable, activates with Enter/Space and is announced by screen readers. Its accessible name is the icon's tooltip `text` if one is set, otherwise the icon's own name (`i-lucide-eye-off` becomes "eye off") - so give a clickable icon a tooltip `text` for a meaningful label. A non-clickable icon is decorative and hidden from assistive tech, unless it has a tooltip `text`, in which case it is exposed as an image with that text as its label.
+
+## Use Cases
+
+- ✅
+- **User Profiles** - Display user information cleanly
+- **Dashboards** - Show metrics with proper formatting
+- **Detail Views** - Present record details in read-only mode
+- **Reports** - Format and display report data
+- **Admin Panels** - View data before editing
+:::
+
+## Next Steps

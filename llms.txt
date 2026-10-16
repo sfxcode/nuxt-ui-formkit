@@ -1,0 +1,38 @@
+# Nuxt UI FormKit
+
+> FormKit integration for Nuxt UI - Seamlessly connect FormKit form handling with Nuxt UI components
+
+## Getting Started
+
+- [Installation](https://sfxcode.github.io/nuxt-ui-formkit/getting-started/installation.md)
+- [Quick Start](https://sfxcode.github.io/nuxt-ui-formkit/getting-started/quick-start.md)
+- [Schema-Based Forms](https://sfxcode.github.io/nuxt-ui-formkit/getting-started/schema-forms.md)
+- [Server-Side Rendering](https://sfxcode.github.io/nuxt-ui-formkit/getting-started/ssr.md)
+- [Styling](https://sfxcode.github.io/nuxt-ui-formkit/getting-started/styling.md)
+- [Generating Forms with AI](https://sfxcode.github.io/nuxt-ui-formkit/getting-started/ai-forms.md)
+- [Known Limitations](https://sfxcode.github.io/nuxt-ui-formkit/getting-started/known-limitations.md): Behaviors and gaps worth knowing before building on Nuxt UI FormKit - silent no-ops, validation timing, and what isn't supported.
+
+## Components
+
+- [Input Components](https://sfxcode.github.io/nuxt-ui-formkit/components/inputs.md)
+- [Output Components](https://sfxcode.github.io/nuxt-ui-formkit/components/outputs.md): Display-only components for rendering read-only data with custom formatting - fully integrated with schemas.
+- [Repeater](https://sfxcode.github.io/nuxt-ui-formkit/components/repeater.md): Create dynamic repeatable form sections with add, remove, clone, and drag-and-drop reordering functionality.
+- [Multi-Step](https://sfxcode.github.io/nuxt-ui-formkit/components/multi-step.md): Wizard-style multi-step forms with tab navigation and per-step validation gating, built on @formkit/addons.
+- [FUDataView](https://sfxcode.github.io/nuxt-ui-formkit/components/data-view.md): Display form data in read-only view mode with schema-based rendering.
+- [FUDataEdit](https://sfxcode.github.io/nuxt-ui-formkit/components/data-edit.md): Editable form component with schema-based rendering, submit/reset handling, and full validation support.
+- [FUAutoForm](https://sfxcode.github.io/nuxt-ui-formkit/components/auto-form.md): Render a complete form without writing a schema - inputs are inferred from your data's value shapes, or from a Valibot or Zod schema, with an override map for fine-tuning.
+- [Standard Schema Validation](https://sfxcode.github.io/nuxt-ui-formkit/components/standard-schema.md): Validate a FormKit form against any Standard Schema-compliant library (Zod, Valibot, ArkType) instead of hand-writing FormKit validation strings.
+- [useFormKitOverlay](https://sfxcode.github.io/nuxt-ui-formkit/components/overlay.md): Promise-based modal/slideover forms - open FUDataEdit or FUAutoForm in a UModal/USlideover and await the saved data or null on cancel.
+- [useFormKitEditor](https://sfxcode.github.io/nuxt-ui-formkit/components/input-editor.md): Build a form that edits the properties of another FormKit schema node - pick a type, fill in its label/validation/options, and get a real { $formkit: ... } node back.
+
+## API Reference
+
+- [Utilities](https://sfxcode.github.io/nuxt-ui-formkit/api/utilities.md): Composables and utility functions for building forms with Nuxt UI FormKit.
+
+## Examples
+
+- [Overview](https://sfxcode.github.io/nuxt-ui-formkit/examples/index.md): Real-world form examples showcasing Nuxt UI FormKit components in action.
+
+## Optional
+
+- [All pages in one file](https://sfxcode.github.io/nuxt-ui-formkit/llms-full.txt)
