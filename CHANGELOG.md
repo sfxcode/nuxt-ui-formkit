@@ -5,6 +5,107 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.3.9
+
+[compare changes](https://github.com/sfxcode/nuxt-ui-formkit/compare/v1.3.8...v1.3.9)
+
+### 🚀 Enhancements
+
+- **config:** Accept a plugins option in createNuxtUiFormkitConfig ([95abb9b](https://github.com/sfxcode/nuxt-ui-formkit/commit/95abb9b))
+- **multi-step:** Warn in dev when nuxtUIMultiStep has no multi-step plugin ([fe50a37](https://github.com/sfxcode/nuxt-ui-formkit/commit/fe50a37))
+
+### 🩹 Fixes
+
+- **inputs:** Make declared props actually reach the wrapped Nuxt UI component ([8f6d453](https://github.com/sfxcode/nuxt-ui-formkit/commit/8f6d453))
+- **standard-schema:** Don't let unresolved, in-flight or throwing validations slip through ([7f7dada](https://github.com/sfxcode/nuxt-ui-formkit/commit/7f7dada))
+- **output:** Only render links with a safe URL scheme ([9bc3482](https://github.com/sfxcode/nuxt-ui-formkit/commit/9bc3482))
+- **output:** Don't throw when a color field holds a non-string ([b38e1b0](https://github.com/sfxcode/nuxt-ui-formkit/commit/b38e1b0))
+- **dates:** Return undefined for malformed date strings instead of throwing ([b0bd551](https://github.com/sfxcode/nuxt-ui-formkit/commit/b0bd551))
+- **repeater:** Deep-clone rows so they don't share nested values ([d008bbf](https://github.com/sfxcode/nuxt-ui-formkit/commit/d008bbf))
+- **editor:** Emit compilable, complete code in editorDataToCode ([ba50413](https://github.com/sfxcode/nuxt-ui-formkit/commit/ba50413))
+- **output:** Keep noopener noreferrer on _blank links with a custom rel ([0c48b95](https://github.com/sfxcode/nuxt-ui-formkit/commit/0c48b95))
+- **autosave:** Survive corrupt drafts and unavailable localStorage ([2fcadbc](https://github.com/sfxcode/nuxt-ui-formkit/commit/2fcadbc))
+- **standard-schema:** Don't clobber a node's own validating message ([0d2e743](https://github.com/sfxcode/nuxt-ui-formkit/commit/0d2e743))
+- **useFormKitForm:** Run the submit handler only for a valid form and surface its failure ([a65f1da](https://github.com/sfxcode/nuxt-ui-formkit/commit/a65f1da))
+- **output:** Make clickable icons keyboard and screen-reader accessible ([35e18b5](https://github.com/sfxcode/nuxt-ui-formkit/commit/35e18b5))
+- **duration:** Treat unparseable parts as zero instead of returning NaN ([d311cbe](https://github.com/sfxcode/nuxt-ui-formkit/commit/d311cbe))
+- **types:** Make FUInputTags max and FUColorPicker throttle optional ([4956f71](https://github.com/sfxcode/nuxt-ui-formkit/commit/4956f71))
+- **autoform:** Drop zod's implicit safe-integer bounds from derived validation ([59cb464](https://github.com/sfxcode/nuxt-ui-formkit/commit/59cb464))
+- **autoform:** Derive length rules from zod array min/max ([f72ff32](https://github.com/sfxcode/nuxt-ui-formkit/commit/f72ff32))
+- **autoform:** Stop the schema adapters recursing forever on cyclic schemas ([5be4921](https://github.com/sfxcode/nuxt-ui-formkit/commit/5be4921))
+- **overlay:** Give the form a copy of the data so Cancel/Discard leave the caller's object alone ([77a9780](https://github.com/sfxcode/nuxt-ui-formkit/commit/77a9780))
+- **overlay:** Copy the data without flattening class instances like CalendarDate ([9203ea0](https://github.com/sfxcode/nuxt-ui-formkit/commit/9203ea0))
+- **repeater:** Copy new and cloned rows without flattening class instances ([1f0d907](https://github.com/sfxcode/nuxt-ui-formkit/commit/1f0d907))
+- **repeater:** Derive element ids from the node id instead of a random uuid ([eee939f](https://github.com/sfxcode/nuxt-ui-formkit/commit/eee939f))
+- **dates:** Hydrate date fields in the server's time zone, then switch to the browser's ([5b554d6](https://github.com/sfxcode/nuxt-ui-formkit/commit/5b554d6))
+- **editor-schema:** Count field ids per Vue app, not per module ([020258f](https://github.com/sfxcode/nuxt-ui-formkit/commit/020258f))
+- **overlay:** Fail loudly when edit()/auto() is called on the server ([0a8d501](https://github.com/sfxcode/nuxt-ui-formkit/commit/0a8d501))
+- **playground:** Make the date, time and link demo pages server-render cleanly ([03070fc](https://github.com/sfxcode/nuxt-ui-formkit/commit/03070fc))
+- **calendar:** Don't jump back to today when a selection is cleared ([83bed0e](https://github.com/sfxcode/nuxt-ui-formkit/commit/83bed0e))
+
+### 💅 Refactors
+
+- **inputs:** Drop the dead @blur binding on FUInputDate and FUInputTime ([b3e2ea8](https://github.com/sfxcode/nuxt-ui-formkit/commit/b3e2ea8))
+- **inputs:** Add commonProps to useFormKitInput ([9d884a7](https://github.com/sfxcode/nuxt-ui-formkit/commit/9d884a7))
+- **inputs:** Spread commonProps in the text-like inputs ([711c818](https://github.com/sfxcode/nuxt-ui-formkit/commit/711c818))
+- **inputs:** Spread commonProps in the select/menu family ([153333a](https://github.com/sfxcode/nuxt-ui-formkit/commit/153333a))
+- **inputs:** Spread commonProps in the remaining wrapped inputs ([d0ec29f](https://github.com/sfxcode/nuxt-ui-formkit/commit/d0ec29f))
+- **autoform:** Define the library-neutral schema IR ([231abfc](https://github.com/sfxcode/nuxt-ui-formkit/commit/231abfc))
+- **autoform:** Add the valibot adapter to the schema IR ([6d5e576](https://github.com/sfxcode/nuxt-ui-formkit/commit/6d5e576))
+- **autoform:** Add the zod adapter to the schema IR ([92a1446](https://github.com/sfxcode/nuxt-ui-formkit/commit/92a1446))
+- **autoform:** Write schema inference once against the IR ([7562e42](https://github.com/sfxcode/nuxt-ui-formkit/commit/7562e42))
+- **autoform:** Run both schema engines through adapter -> IR -> shared inference ([f9ea97d](https://github.com/sfxcode/nuxt-ui-formkit/commit/f9ea97d))
+- **autoform:** Build repeater and group nodes through the shared builders ([414c868](https://github.com/sfxcode/nuxt-ui-formkit/commit/414c868))
+- **inputs:** Drop the redundant @change/@update:model-value re-commit bindings ([9ad0d1d](https://github.com/sfxcode/nuxt-ui-formkit/commit/9ad0d1d))
+- **inputs:** Remove the unused handleChange/handleInput helpers ([c66d124](https://github.com/sfxcode/nuxt-ui-formkit/commit/c66d124))
+
+### 📖 Documentation
+
+- **blur:** Explain why a null relatedTarget counts as focus having left ([727a8fb](https://github.com/sfxcode/nuxt-ui-formkit/commit/727a8fb))
+- Add a Server-Side Rendering page and replace "SSR is untested" ([c61e893](https://github.com/sfxcode/nuxt-ui-formkit/commit/c61e893))
+
+### 🏡 Chore
+
+- **playground:** Make server rendering switchable with PLAYGROUND_SSR ([7ff6af2](https://github.com/sfxcode/nuxt-ui-formkit/commit/7ff6af2))
+
+### ✅ Tests
+
+- Guard definition props against component context reads ([27e1bdf](https://github.com/sfxcode/nuxt-ui-formkit/commit/27e1bdf))
+- Fail when a schema references a component plugin.ts doesn't register ([dfbd4df](https://github.com/sfxcode/nuxt-ui-formkit/commit/dfbd4df))
+- **autosave:** Pin that FUAutoForm forwards the autosave prop ([32ce79b](https://github.com/sfxcode/nuxt-ui-formkit/commit/32ce79b))
+- **inputs:** Add blur wiring tests for FUInputTags and FUInputRating ([b544bb2](https://github.com/sfxcode/nuxt-ui-formkit/commit/b544bb2))
+- **inputs:** Pin that inputs forward slots to the wrapped component ([6d0b7fc](https://github.com/sfxcode/nuxt-ui-formkit/commit/6d0b7fc))
+- **inputs:** Guard that wrapped inputs spread commonProps ([63098b2](https://github.com/sfxcode/nuxt-ui-formkit/commit/63098b2))
+- **autoform:** Pin wrapper, default and pipe behavior of both inference engines ([69bb5b7](https://github.com/sfxcode/nuxt-ui-formkit/commit/69bb5b7))
+- **autoform,inputs:** Pin valibot email+url, tighten the commonProps guard ([23acb41](https://github.com/sfxcode/nuxt-ui-formkit/commit/23acb41))
+- **autosave:** Wait out the debounce before clearing storage between tests ([0249097](https://github.com/sfxcode/nuxt-ui-formkit/commit/0249097))
+- **repeater:** Pin that a newItem changed after mount reaches new rows ([77733a8](https://github.com/sfxcode/nuxt-ui-formkit/commit/77733a8))
+- Wait on observable state instead of sleeping in the form and schema suites ([902903a](https://github.com/sfxcode/nuxt-ui-formkit/commit/902903a))
+- **overlay:** Wait on observable state instead of sleeping in the overlay suites ([a388668](https://github.com/sfxcode/nuxt-ui-formkit/commit/a388668))
+- **multi-step,data-edit:** Wait on observable state instead of sleeping ([5fe9f81](https://github.com/sfxcode/nuxt-ui-formkit/commit/5fe9f81))
+- **repeater,auto-form:** Wait on observable state instead of sleeping ([b91b209](https://github.com/sfxcode/nuxt-ui-formkit/commit/b91b209))
+- **inputs:** Wait on rendered output instead of sleeping after mount ([65a20d7](https://github.com/sfxcode/nuxt-ui-formkit/commit/65a20d7))
+- **autosave:** Name the absence windows and convert the one positive wait ([dd28d7b](https://github.com/sfxcode/nuxt-ui-formkit/commit/dd28d7b))
+- **support:** Steer new tests to vi.waitFor in wait.ts ([b7ee7cf](https://github.com/sfxcode/nuxt-ui-formkit/commit/b7ee7cf))
+- **e2e:** Add an opt-in browser smoke harness for the playground ([5f9763c](https://github.com/sfxcode/nuxt-ui-formkit/commit/5f9763c))
+- **e2e:** Smoke checks for the interactive playground pages ([fb769b0](https://github.com/sfxcode/nuxt-ui-formkit/commit/fb769b0))
+- **e2e:** Server-render every registered type against the real server ([318af9b](https://github.com/sfxcode/nuxt-ui-formkit/commit/318af9b))
+- **e2e:** Keep autosave server-safe, and check the server log in SSR runs ([74cb00c](https://github.com/sfxcode/nuxt-ui-formkit/commit/74cb00c))
+- **e2e:** Hydrate every page with a repeater under SSR ([aae7eb8](https://github.com/sfxcode/nuxt-ui-formkit/commit/aae7eb8))
+- **e2e:** Pin how the editor behaves on a server-rendered page ([ec4ae0d](https://github.com/sfxcode/nuxt-ui-formkit/commit/ec4ae0d))
+- **e2e:** Run SSR with the server and the browser 26 hours apart, and check dates ([9f89940](https://github.com/sfxcode/nuxt-ui-formkit/commit/9f89940))
+- **e2e:** Check the composables and per-request state on the server ([56050aa](https://github.com/sfxcode/nuxt-ui-formkit/commit/56050aa))
+- **e2e:** Load every playground route under SSR ([82eb8c1](https://github.com/sfxcode/nuxt-ui-formkit/commit/82eb8c1))
+- Fail when src/runtime touches a browser global where a server render can run it ([93a84ee](https://github.com/sfxcode/nuxt-ui-formkit/commit/93a84ee))
+
+### 🎨 Styles
+
+- **test:** Use a non-capturing group in the plugin registration scan ([4826ca2](https://github.com/sfxcode/nuxt-ui-formkit/commit/4826ca2))
+
+### ❤️ Contributors
+
+- Sfxcode <tom@sfxcode.com>
+
 ## v1.3.8
 
 [compare changes](https://github.com/sfxcode/nuxt-ui-formkit/compare/v1.3.7...v1.3.8)
