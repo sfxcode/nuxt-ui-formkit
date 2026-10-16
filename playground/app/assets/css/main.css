@@ -73,3 +73,13 @@
     width: 100%;
   }
 }
+
+/*
+ * A slider's thumb is taller than its track and overflows it, so it touches the label
+ * above and the help text below. Give the track room for the thumb.
+ */
+@layer components {
+  .formkit-outer[data-type='nuxtUISlider'] .formkit-inner {
+    padding-block: 0.5rem;
+  }
+}
