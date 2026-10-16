@@ -5,6 +5,39 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.4.0
+
+[compare changes](https://github.com/sfxcode/nuxt-ui-formkit/compare/v1.3.10...v1.4.0)
+
+### 🚀 Enhancements
+
+- Ship a skill for AI coding assistants ([fd8db3b](https://github.com/sfxcode/nuxt-ui-formkit/commit/fd8db3b))
+
+### 🩹 Fixes
+
+- **skill:** An untouched checkbox is undefined, so use !== true ([160ff4b](https://github.com/sfxcode/nuxt-ui-formkit/commit/160ff4b))
+- **FUDataEdit,FUDataView:** Render a field afresh when its type changes ([3561a58](https://github.com/sfxcode/nuxt-ui-formkit/commit/3561a58))
+
+### 📖 Documentation
+
+- **schema-forms:** The conditional example needs an id on the field it reads ([7268123](https://github.com/sfxcode/nuxt-ui-formkit/commit/7268123))
+- Add a Generating Forms with AI page ([2c1c538](https://github.com/sfxcode/nuxt-ui-formkit/commit/2c1c538))
+- Publish llms.txt, llms-full.txt and a Markdown copy of every page ([7018c0b](https://github.com/sfxcode/nuxt-ui-formkit/commit/7018c0b))
+- **ai-forms:** Point at llms.txt and llms-full.txt ([b2e53d3](https://github.com/sfxcode/nuxt-ui-formkit/commit/b2e53d3))
+- **ai-forms:** Explain how to install the skill ([e544634](https://github.com/sfxcode/nuxt-ui-formkit/commit/e544634))
+- **ai-forms:** The playground editor can keep stale components ([1a48801](https://github.com/sfxcode/nuxt-ui-formkit/commit/1a48801))
+- **ai-forms:** Drop the stale-component caveat for the playground editor ([aaacdeb](https://github.com/sfxcode/nuxt-ui-formkit/commit/aaacdeb))
+- **ai-forms:** Add how the skill was tested ([bb584cc](https://github.com/sfxcode/nuxt-ui-formkit/commit/bb584cc))
+
+### 🏡 Chore
+
+- **package:** Update @nuxt/test-utils to version 4.3.4 ([bf27d60](https://github.com/sfxcode/nuxt-ui-formkit/commit/bf27d60))
+- **package:** Update release script to use minor versioning ([785270a](https://github.com/sfxcode/nuxt-ui-formkit/commit/785270a))
+
+### ❤️ Contributors
+
+- Sfxcode ([@sfxcode](https://github.com/sfxcode))
+
 ## v1.3.10
 
 [compare changes](https://github.com/sfxcode/nuxt-ui-formkit/compare/v1.3.9...v1.3.10)
