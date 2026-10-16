@@ -659,6 +659,10 @@ const schema = [
 ]
 ```
 
+::: tip
+The slider's thumb is taller than its track and overflows it, so it touches the label above and the help text below. Give the track vertical room with CSS: `.formkit-outer[data-type='nuxtUISlider'] .formkit-inner { padding-block: 0.5rem; }`.
+:::
+
 ### nuxtUICalendar
 
 Bare date-grid picker with day, month, and year views, supporting range and multiple selection.
