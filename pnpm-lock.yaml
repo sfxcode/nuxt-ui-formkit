@@ -11,6 +11,9 @@ importers:
       '@formkit/addons':
         specifier: ^2.1.2
         version: 2.1.2
+      '@formkit/auto-animate':
+        specifier: ^0.10.0
+        version: 0.10.0
       '@formkit/nuxt':
         specifier: ^2.1.2
         version: 2.1.2(@nuxt/kit@4.6.2(@nuxt/schema@4.6.2)(confbox@0.3.1)(dotenv@17.4.2)(giget@3.3.1)(jiti@2.7.0)(magic-string@1.4.3)(mlly@1.8.2)(oxc-parser@0.140.0)(rolldown@1.2.14)(unplugin@3.4.0(esbuild@0.28.2)(rolldown@1.2.14)(rollup@4.64.7)(vite@8.3.4)))(esbuild@0.28.2)(rollup@4.64.7)(vite@8.3.4)(vue@3.5.44(typescript@6.0.3))

@@ -4,6 +4,8 @@ import type { FormKitExtendableSchemaRoot, FormKitNode } from '@formkit/core'
 // a separate `@formkit/addons` import just for the plugin that recognizes them.
 export { createMultiStepPlugin } from '@formkit/addons'
 
+export { createAutoAnimatePlugin } from './autoAnimate'
+export type { AutoAnimateTargets } from './autoAnimate'
 export { createAutosavePlugin } from './autosave'
 export type { AutosaveOptions } from './autosave'
 

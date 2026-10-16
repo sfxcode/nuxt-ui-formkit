@@ -91,6 +91,7 @@
   },
   "dependencies": {
     "@formkit/addons": "^2.1.2",
+    "@formkit/auto-animate": "^0.10.0",
     "@formkit/nuxt": "^2.1.2",
     "@nuxt/ui": "^4.12.0",
     "@standard-schema/spec": "^1.1.0",

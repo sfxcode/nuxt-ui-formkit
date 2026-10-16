@@ -14,6 +14,7 @@ const runtimeDirectory = resolve(dirname(fileURLToPath(import.meta.url)), '../sr
 // not listed here must keep browser globals inside a client-only lifecycle hook, an
 // `import.meta.client` branch or a `typeof` check.
 const EXCEPTIONS: [file: string, reason: string][] = [
+  ['formkit/plugins/autoAnimate.ts', 'every `document` and `MutationObserver` use sits in a helper that starts with a `typeof document` check, or is reached only after a `typeof window` check, which the checker does not follow as an early return; the server only ever marks the schema'],
   ['formkit/plugins/autosave.ts', 'every `localStorage` read and write is inside a helper wrapped in try/catch, and the addons plugin it wraps returns without `window`; pinned by the /ssr-autosave end-to-end entry'],
 ]
 

@@ -6,10 +6,11 @@ import * as plugins from '../../src/runtime/formkit/plugins'
 describe('plugins module', () => {
   // Guards against a plugin being exported but never wired into
   // createNuxtUiFormkitConfig() (the dead `addNuxtLabelPlugin` case).
-  // `createAutosavePlugin` is the one deliberate exception: a per-form opt-in
-  // that consumers pass to `<FormKit :plugins>`, never global config.
+  // `createAutosavePlugin` and `createAutoAnimatePlugin` are the deliberate
+  // exceptions: opt-ins the consumer passes in themselves (`<FormKit :plugins>`
+  // and `createNuxtUiFormkitConfig({ plugins })`), never wired by default.
   it('exports only plugins that createNuxtUiFormkitConfig() can wire', () => {
-    expect(Object.keys(plugins).sort()).toEqual(['addNuxtAsteriskPlugin', 'createAutosavePlugin', 'createMultiStepPlugin'])
+    expect(Object.keys(plugins).sort()).toEqual(['addNuxtAsteriskPlugin', 'createAutoAnimatePlugin', 'createAutosavePlugin', 'createMultiStepPlugin'])
   })
 })
 
