@@ -37,17 +37,17 @@ const taskSchema = [
     name: 'tasks',
     label: 'Project Tasks',
     help: 'Drag tasks to reorder priorities',
-    listClass: 'space-y-3',
-    listItemClass: 'flex items-center gap-3 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 transition-colors',
+    listClass: 'grid gap-3',
+    listItemClass: 'flex items-start gap-3 p-4 rounded-lg border border-default bg-elevated/30 hover:border-accented transition-colors',
     draggable: true,
     displayDragHandle: true,
-    dragHandleClass: 'cursor-grab active:cursor-grabbing text-gray-400 hover:text-gray-600 dark:hover:text-gray-300',
+    dragHandleClass: 'mt-8 cursor-grab active:cursor-grabbing text-muted hover:text-default',
     hideMoveButtons: true,
     displayCloneButton: false,
     displayAddButton: true,
     displayDeleteButton: true,
-    buttonGroupClass: 'flex gap-1 mt-4 ml-auto',
-    buttonSize: 'lg',
+    buttonGroupClass: 'flex gap-1 mt-6 ml-auto',
+    buttonSize: 'md',
     insertButtonLabel: 'Add Task',
     insertButtonSize: 'md',
     alwaysDisplayInsertButton: true,
@@ -59,28 +59,32 @@ const taskSchema = [
         name: 'title',
         placeholder: 'Enter task description',
         validation: 'required',
-        outerClass: 'flex-1',
+        outerClass: 'flex-1 min-w-0',
+        class: 'w-full',
       },
       {
         $formkit: 'nuxtUISelect',
         label: 'Priority',
         name: 'priority',
         items: ['low', 'medium', 'high'],
-        outerClass: 'w-32',
+        outerClass: 'w-36',
+        class: 'w-full',
       },
       {
         $formkit: 'nuxtUISelect',
         label: 'Status',
         name: 'status',
         items: ['todo', 'in-progress', 'done'],
-        outerClass: 'w-36',
+        outerClass: 'w-40',
+        class: 'w-full',
       },
       {
         $formkit: 'nuxtUIInput',
         label: 'Assignee',
         name: 'assignee',
         placeholder: 'Name',
-        outerClass: 'w-32',
+        outerClass: 'w-36',
+        class: 'w-full',
       },
     ],
   },
@@ -92,16 +96,16 @@ const prioritySchema = [
     name: 'priorities',
     label: 'Priority Levels',
     help: 'Drag to reorder priority levels',
-    listClass: 'space-y-2',
-    listItemClass: 'flex items-center gap-4 p-3 bg-white dark:bg-gray-900 rounded-lg border-2 border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow',
+    listClass: 'grid gap-2',
+    listItemClass: 'flex items-start gap-4 p-3 rounded-lg border border-default bg-elevated/30 hover:border-accented transition-colors cursor-grab active:cursor-grabbing',
     draggable: true,
     hideMoveButtons: true,
     hideButtonGroup: false,
     displayCloneButton: true,
     displayAddButton: false,
     displayDeleteButton: true,
-    buttonGroupClass: 'flex gap-1 mt-4 ml-auto',
-    buttonSize: 'lg',
+    buttonGroupClass: 'flex gap-1 mt-6 ml-auto',
+    buttonSize: 'md',
     insertButtonLabel: 'Add Priority Level',
     insertButtonSize: 'sm',
     minItems: 2,
@@ -113,7 +117,8 @@ const prioritySchema = [
         label: 'Order',
         name: 'order',
         min: 1,
-        outerClass: 'w-24',
+        outerClass: 'w-28',
+        class: 'w-full',
       },
       {
         $formkit: 'nuxtUIInput',
@@ -121,7 +126,8 @@ const prioritySchema = [
         name: 'label',
         placeholder: 'Enter label',
         validation: 'required',
-        outerClass: 'flex-1',
+        outerClass: 'flex-1 min-w-0',
+        class: 'w-full',
       },
     ],
   },
@@ -215,17 +221,12 @@ const prioritySchema = [
 </template>
 
 <style scoped>
-/* Drag target visual feedback */
+/* Drag target visual feedback. Theme variables, so it also works in dark mode. */
 :deep(.formkit-repeater-drop-target) {
-  border-color: rgb(59 130 246);
-  background-color: rgb(239 246 255);
-  transform: scale(1.05);
+  border-color: var(--ui-primary);
+  background-color: color-mix(in oklab, var(--ui-primary) 12%, transparent);
+  transform: scale(1.02);
   transition: all 0.2s ease;
-}
-
-:deep(.dark .formkit-repeater-drop-target) {
-  border-color: rgb(96 165 250);
-  background-color: rgb(30 58 138 / 0.3);
 }
 
 /* Drag handle hover effect */
