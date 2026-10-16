@@ -61,7 +61,7 @@ function portIsFree(port) {
 
 /**
  * Starts `nuxi dev playground` on a free port and resolves once it prints its
- * `Local:` line. The child leads its own process group, so `stop()` can take the
+ * `Local:` line (`getLog()` returns everything the server has printed since). The child leads its own process group, so `stop()` can take the
  * whole `npx -> nuxi -> vite` tree down - killing only the wrapper leaves the
  * port bound (see brain/notes/playwright-verification-gotchas).
  */
@@ -125,7 +125,7 @@ export async function startPlayground() {
     await new Promise(resolveWait => setTimeout(resolveWait, 500))
   }
 
-  return { url, stop }
+  return { url, stop, getLog: () => log }
 }
 
 async function answers200(url) {

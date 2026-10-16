@@ -389,4 +389,40 @@ export default [
       }
     },
   },
+  {
+    // `FUDataEdit`'s `autosave` prop on a server-rendered page (not inside `<ClientOnly>`, unlike
+    // form/form-autosave): the plugin must not break the render, a stored draft must appear
+    // after hydration without a mismatch, and the plugin must still save once hydrated.
+    path: '/ssr-autosave',
+    ssr: 'only',
+    // `body`, not `form`: if the plugin broke server rendering the page would be a 500 with no
+    // form, and the checks below are what say so.
+    ready: 'body',
+    async checks(page) {
+      const origin = new URL(page.url()).origin
+      const storageKey = 'nuxt-ui-formkit-ssr-draft-ssr-autosave-form'
+      const draft = () => page.evaluate(key => localStorage.getItem(key), storageKey)
+      const name = page.getByLabel('Name')
+
+      // The server renders the whole form (the plugin is a no-op there), with no draft in it.
+      const response = await page.request.get(`${origin}/ssr-autosave`)
+      const html = await response.text()
+      assert.equal(response.status(), 200)
+      assert.ok(/<form[\s>]/.test(html), 'the form is in the server HTML')
+      assert.equal((html.match(/<input/g) ?? []).length, 2, 'both inputs are in the server HTML')
+      assert.ok(!html.includes('Ada Lovelace'), 'the server knows nothing of a browser draft')
+
+      // A draft stored in the browser is restored after hydration (and the runner fails the
+      // reload on a hydration warning).
+      assert.equal(await draft(), null)
+      await page.evaluate(key => localStorage.setItem(key, JSON.stringify({ maxAge: Date.now() + 3_600_000, data: { name: 'Ada Lovelace', email: 'ada@example.com' } })), storageKey)
+      await page.reload({ waitUntil: 'networkidle' })
+      await poll(() => name.inputValue(), value => assert.equal(value, 'Ada Lovelace'))
+      assert.equal(await page.getByLabel('Email').inputValue(), 'ada@example.com')
+
+      // The plugin is live on a server-rendered page: typing writes a new draft.
+      await name.fill('Grace Hopper')
+      await poll(draft, value => assert.equal(JSON.parse(value).data.name, 'Grace Hopper'))
+    },
+  },
 ]

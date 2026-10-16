@@ -20,10 +20,22 @@ import { startPlayground } from './server.mjs'
 // never completes in a headless browser.
 const IGNORED = [/\[devframe\] Timeout waiting for rpc to be trusted/]
 
+// In SSR mode the server's own output is checked too: an error that is logged but does not
+// change the status code (an unhandled rejection, a `window` read inside a guarded block)
+// would otherwise pass.
+// Lines tagged `[console.` are the browser's own console, which the dev server forwards to
+// its terminal; the browser-side checks above already judge those.
+//
+// The server logs through consola, so a `console.error` shows up as ` ERROR  <message>` with no
+// "Error" in it - hence the level tag as well as the usual words.
+const SERVER_LOG_PROBLEM = /^\s*ERROR\b|\b(?:Error|TypeError|ReferenceError)\b|Unhandled|unhandledRejection|\[Vue warn\]|is not defined/
+const isServerProblem = line => SERVER_LOG_PROBLEM.test(line) && !line.includes('[console.')
+
 const isProblem = ({ kind, text }) =>
   !IGNORED.some(pattern => pattern.test(text)) && (kind === 'error' || kind === 'pageerror' || text.startsWith('[Vue warn]'))
 
-async function runPage(browser, baseUrl, entry) {
+async function runPage(browser, baseUrl, entry, server) {
+  const logStart = server.getLog?.().length ?? 0
   const page = await browser.newPage({ viewport: { width: 1100, height: 1600 } })
   const problems = []
   page.on('pageerror', error => problems.push({ kind: 'pageerror', text: error.message }))
@@ -44,6 +56,11 @@ async function runPage(browser, baseUrl, entry) {
     const bad = problems.filter(isProblem)
     if (bad.length)
       throw new Error(`${bad.length} console problem(s):\n  ${bad.map(p => `${p.kind}: ${p.text.slice(0, 200)}`).join('\n  ')}`)
+    if (entry.ssr && server.getLog) {
+      const serverProblems = server.getLog().slice(logStart).split('\n').filter(isServerProblem)
+      if (serverProblems.length)
+        throw new Error(`${serverProblems.length} problem(s) in the server log:\n  ${serverProblems.slice(0, 5).map(line => line.trim().slice(0, 200)).join('\n  ')}`)
+    }
   }
   finally {
     await page.close()
@@ -72,7 +89,7 @@ async function main() {
     for (const entry of selected) {
       const started = Date.now()
       try {
-        await runPage(browser, server.url, entry)
+        await runPage(browser, server.url, entry, server)
         results.push({ path: entry.path, ok: true, ms: Date.now() - started })
         console.log(`  PASS ${entry.path} (${Date.now() - started}ms)`)
       }
