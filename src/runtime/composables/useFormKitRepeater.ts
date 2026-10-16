@@ -11,8 +11,6 @@ export function useFormKitRepeater() {
       return array
     }
 
-    const uuid = typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2)
-
     // The nested `list` node (see the comment in repeater.ts on the `addList(...)`
     // call) only ever receives this outer node's value one-way, via its schema
     // `value: '$value'` binding - it is NOT a real parent/child of this outer
@@ -38,6 +36,12 @@ export function useFormKitRepeater() {
         // would rebuild a `CalendarDate` value as a plain object without its methods.
         const makeNewItem = (): object => clonePlain(node.context?.newItem || {})
 
+        // Makes the list and row element ids unique per repeater instance. Not random: a
+        // server-rendered page and its hydration create the repeater twice, and an id
+        // that differs between the two is a hydration mismatch. FormKit's own node id is
+        // unique per node and the same on both sides.
+        const instanceId = String(node.props.id ?? node.name)
+
         node.context.listName = node.name
         node.context.renderButtons = !node.context.hideButtonGroup
         node.context.insertButtonSize = node.context.insertButtonSize ? node.context.insertButtonSize : 'md'
@@ -49,7 +53,7 @@ export function useFormKitRepeater() {
         node.context.internalDragHandleClass = node.context.dragHandleClass ? `formkit-repeater-drag-handle ${node.context.dragHandleClass}` : 'formkit-repeater-drag-handle'
         node.context.internalListClass = node.context.listClass ? `formkit-items ${node.context.listClass}` : 'formkit-items'
         node.context.internalListItemClass = node.context.listItemClass ? `formkit-item ${node.context.listItemClass}` : 'formkit-item'
-        node.context.internalListId = `formkit-items-${uuid}`
+        node.context.internalListId = `formkit-items-${instanceId}`
         node.context.minItems = node.context.minItems !== undefined ? node.context.minItems : 0
         node.context.maxItems = node.context.maxItems !== undefined ? node.context.maxItems : Number.POSITIVE_INFINITY
         node.context.repeaterValidation = [['length', node.context.minItems, node.context.maxItems]]
@@ -61,7 +65,7 @@ export function useFormKitRepeater() {
         }
 
         node.context.getListItemId = (index: number): string => {
-          return `formkit-item-${index}-${uuid}`
+          return `formkit-item-${index}-${instanceId}`
         }
 
         node.context.insertNode = (parentNode: FormKitNode) => (): void => {
