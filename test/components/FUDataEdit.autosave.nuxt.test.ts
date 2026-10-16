@@ -10,11 +10,23 @@ const storageKey = (key: string) => `nuxt-ui-formkit-${key}-test-autosave`
 
 let activeWrapper: Awaited<ReturnType<typeof mountSuspended>> | undefined
 
+// Longer than the plugin's default 200ms debounce.
+const DEBOUNCE_SETTLE_MS = 250
+let usedAutosave = false
+
 // FormKit's registry and localStorage both outlive a test's wrapper, so a
-// leftover draft or node from one test would leak into the next.
-afterEach(() => {
+// leftover draft or node from one test would leak into the next. That includes
+// a *pending debounced save*: the plugin keeps its timer private and an unmounted
+// form still fires it (a restore re-arms it too), so clearing storage straight
+// away let it write the previous test's draft back into the next test - the
+// "clears the saved draft" test failed about 1 run in 30 that way. Wait the
+// debounce out first, then clear.
+afterEach(async () => {
   activeWrapper?.unmount()
   activeWrapper = undefined
+  if (usedAutosave)
+    await new Promise(resolve => setTimeout(resolve, DEBOUNCE_SETTLE_MS))
+  usedAutosave = false
   localStorage.clear()
 })
 
@@ -32,6 +44,7 @@ async function mountDataEdit(props: Record<string, unknown> = {}) {
     },
   })
   activeWrapper = wrapper
+  usedAutosave ||= props.autosave !== undefined
   await flushPromises()
   return wrapper
 }
@@ -96,6 +109,19 @@ describe('FUDataEdit autosave prop', () => {
     await new Promise(resolve => setTimeout(resolve, 400))
 
     expect(localStorage.getItem(storageKey('draft'))).toBeNull()
+  })
+
+  // Intentional (the last edit is what a draft is for), and the reason the
+  // afterEach above has to wait out the debounce.
+  it('still saves a pending edit when the form unmounts inside the debounce window', async () => {
+    const wrapper = await mountDataEdit({ autosave: { key: 'draft', debounce: 150 } })
+    await wrapper.find('input').setValue('ada@example.com')
+    // Let FormKit commit the value (its own ~20ms input debounce), but unmount
+    // before the plugin's 150ms save fires.
+    await new Promise(resolve => setTimeout(resolve, 60))
+    wrapper.unmount()
+
+    await vi.waitFor(() => expect(localStorage.getItem(storageKey('draft'))).toContain('ada@example.com'))
   })
 
   it('keeps drafts with different keys separate', async () => {
