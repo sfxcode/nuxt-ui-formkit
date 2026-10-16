@@ -5,6 +5,7 @@ import type { PropType } from 'vue'
 import { computed } from 'vue'
 import { useFormKitInput } from '../../utils/useFormKitInput'
 import { createContainerBlurHandler } from '../../utils/useFormKitContainerBlur'
+import { useHydrationSafeTimeZone } from '../../utils/useHydrationSafeTimeZone'
 import type { DateValueType } from '../../utils/dateValueConversion'
 import { fromDateValueOrRange, toDateValue, toDateValueOrRange } from '../../utils/dateValueConversion'
 import type { AvatarProps } from '#ui/components/Avatar.vue'
@@ -75,16 +76,20 @@ const { isInvalid, styleClass, validSlotNames, commonProps } = useFormKitInput(p
 // whole date field."
 const handleContainerBlur = createContainerBlurHandler(props.context)
 
+// The zone values are converted in: the field's own `timeZone`, else one that is the same for
+// the server render and hydration and the browser's own once mounted (see the composable).
+const timeZone = useHydrationSafeTimeZone(() => props.context.timeZone)
+
 const conversionOptions = computed(() => ({
   granularity: props.context.granularity,
   hideTimeZone: props.context.hideTimeZone,
-  timeZone: props.context.timeZone,
+  timeZone: timeZone.value,
 }))
 
 const modelValue = computed({
   get: () => toDateValueOrRange(props.context._value, conversionOptions.value),
   set: (value) => {
-    props.context.node.input(fromDateValueOrRange(value, props.context.valueType ?? 'calendar', props.context.timeZone))
+    props.context.node.input(fromDateValueOrRange(value, props.context.valueType ?? 'calendar', timeZone.value))
   },
 })
 

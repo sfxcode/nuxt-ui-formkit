@@ -1,4 +1,6 @@
-import { defineNuxtPlugin } from '#app'
+import { getLocalTimeZone } from '@internationalized/date'
+import { defineNuxtPlugin, useState } from '#app'
+import { hydrationTimeZoneKey } from './utils/useHydrationSafeTimeZone'
 import { UButton, UIcon, UTabs, UTooltip, UUser } from '#components'
 
 export default defineNuxtPlugin((_nuxtApp) => {
@@ -9,4 +11,8 @@ export default defineNuxtPlugin((_nuxtApp) => {
   _nuxtApp.vueApp.component('UTabs', UTabs)
   _nuxtApp.vueApp.component('UUser', UUser)
   _nuxtApp.vueApp.component('UTooltip', UTooltip)
+
+  // The zone date fields use until they are mounted (see useHydrationSafeTimeZone): the server's
+  // own, carried to the browser in the payload so hydration renders what the server rendered.
+  _nuxtApp.vueApp.provide(hydrationTimeZoneKey, useState<string>('nuxt-ui-formkit-time-zone', () => getLocalTimeZone()))
 })

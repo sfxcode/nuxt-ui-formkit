@@ -3,8 +3,10 @@ import type { FormKitFrameworkContext } from '@formkit/core'
 import type { DateValue } from '@internationalized/date'
 import type { PropType } from 'vue'
 import { computed } from 'vue'
+import { today } from '@internationalized/date'
 import { useFormKitInput } from '../../utils/useFormKitInput'
 import { createContainerBlurHandler } from '../../utils/useFormKitContainerBlur'
+import { useHydrationSafeTimeZone } from '../../utils/useHydrationSafeTimeZone'
 import type { DateValueType } from '../../utils/dateValueConversion'
 import { toDateValue, toDateValueOrRangeOrArray, fromDateValueOrRangeOrArray } from '../../utils/dateValueConversion'
 
@@ -57,16 +59,43 @@ const { styleClass, validSlotNames, commonProps } = useFormKitInput(props.contex
 // components in phases 7-8.
 const handleContainerBlur = createContainerBlurHandler(props.context)
 
-const conversionOptions = computed(() => ({ timeZone: props.context.timeZone }))
+// The zone values are converted in: the field's own `timeZone`, else one that is the same for
+// the server render and hydration and the browser's own once mounted (see the composable).
+const timeZone = useHydrationSafeTimeZone(() => props.context.timeZone)
+
+const conversionOptions = computed(() => ({ timeZone: timeZone.value }))
 
 const modelValue = computed({
   get: () => toDateValueOrRangeOrArray(props.context._value, conversionOptions.value),
   set: (value) => {
-    props.context.node.input(fromDateValueOrRangeOrArray(value, props.context.valueType ?? 'calendar', props.context.timeZone))
+    props.context.node.input(fromDateValueOrRangeOrArray(value, props.context.valueType ?? 'calendar', timeZone.value))
   },
 })
 
 const defaultValue = computed(() => toDateValueOrRangeOrArray(props.context.defaultValue, conversionOptions.value))
+// Without a value, Nuxt UI centres the calendar (and makes one day focusable) on the browser's
+// `today()`, which on the server is the server's: a different focusable cell is a hydration
+// mismatch. So with nothing to centre on, hand it `today` in the hydration zone instead.
+const hasValue = computed(() => {
+  const value = modelValue.value as unknown
+  if (value === undefined || value === null)
+    return false
+  if (Array.isArray(value))
+    return value.length > 0
+  if (typeof value === 'object' && 'start' in value && 'end' in value)
+    return Boolean(value.start || value.end)
+  return true
+})
+const placeholder = computed(() => {
+  // `placeholder` is not a declared prop of this field, so a consumer's own arrives in the attrs
+  // (spread onto UCalendar before this binding) and must not be overridden.
+  const explicit = props.context.attrs?.placeholder as DateValue | undefined
+  if (explicit !== undefined)
+    return explicit
+  if (hasValue.value || defaultValue.value)
+    return undefined
+  return today(timeZone.value)
+})
 const minValue = computed(() => toDateValue(props.context.minValue, conversionOptions.value))
 const maxValue = computed(() => toDateValue(props.context.maxValue, conversionOptions.value))
 </script>
@@ -86,6 +115,7 @@ const maxValue = computed(() => toDateValue(props.context.maxValue, conversionOp
     :year-controls="context.yearControls"
     :view-control="context.viewControl"
     :default-value="defaultValue"
+    :placeholder="placeholder"
     :min-value="minValue"
     :max-value="maxValue"
     :is-date-disabled="context.isDateDisabled"
