@@ -61,7 +61,7 @@ const schema = [/* paste the generated array here */]
 </template>
 ```
 
-The playground's **Playground** page (`/playground`) has a JSON editor that re-renders the form as you edit it, which is the quickest way to try a generated schema and tweak it. Then run through this list:
+The playground's **Playground** page (`/playground`) has a JSON editor that re-renders the form when you paste a schema into it, which is a quick first look. It keeps the components it already rendered at each position, so when a pasted schema changes a field's type, the old component can linger (for example a text box where a checkbox should be). Judge conditional fields and field types in the snippet above, on a fresh page load, not in the editor. Then run through this list:
 
 - **Every conditional field**: change the field it depends on and check that it appears and disappears. A condition that never matches shows no error; the field is just never there.
 - **Repeaters**: add, copy, remove and reorder a few rows, and check the insert button is still there afterwards.
