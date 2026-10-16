@@ -1,6 +1,9 @@
 import type { FormKitSchemaNode } from '@formkit/core'
 import { isDateValue } from '../utils/dateValueConversion'
-import { REPEATER_BUTTON_DEFAULTS } from '../utils/schemaInference'
+import type { SchemaIR } from '../utils/schemaIR'
+import { nodeFromIR, REPEATER_BUTTON_DEFAULTS } from '../utils/schemaInference'
+import { valibotToIR } from '../utils/valibotAdapter'
+import { zodToIR } from '../utils/zodAdapter'
 
 // `false` removes an inferred field; `true` keeps it as inferred (a no-op,
 // so computed visibility maps can toggle without rebuilding the object).
@@ -282,123 +285,15 @@ export interface ValibotLikeSchema {
   pipe?: readonly ValibotLikePipeEntry[]
 }
 
-const OPTIONAL_WRAPPER_TYPES = new Set(['optional', 'nullable', 'nullish', 'exact_optional'])
-
-function unwrapValibot(entry: ValibotLikeSchema): { schema: ValibotLikeSchema, required: boolean } {
-  let schema = entry
-  let required = true
-  while (OPTIONAL_WRAPPER_TYPES.has(schema.type) && schema.wrapped) {
-    required = false
-    schema = schema.wrapped
-  }
-  return { schema, required }
-}
-
-function deriveValibotValidation(schema: ValibotLikeSchema, required: boolean): string | undefined {
-  const rules: string[] = []
-  // `required` on a switch would force the boolean to true, which is not
-  // what a plain `v.boolean()` entry means.
-  if (required && schema.type !== 'boolean') {
-    rules.push('required')
-  }
-  let minLength: number | undefined
-  let maxLength: number | undefined
-  for (const entry of schema.pipe ?? []) {
-    if (entry.kind !== 'validation') {
-      continue
-    }
-    if (entry.type === 'email' || entry.type === 'url') {
-      rules.push(entry.type)
-    }
-    else if (entry.type === 'min_length' && typeof entry.requirement === 'number') {
-      minLength = entry.requirement
-    }
-    else if (entry.type === 'max_length' && typeof entry.requirement === 'number') {
-      maxLength = entry.requirement
-    }
-    else if (entry.type === 'min_value' && typeof entry.requirement === 'number') {
-      rules.push(`min:${entry.requirement}`)
-    }
-    else if (entry.type === 'max_value' && typeof entry.requirement === 'number') {
-      rules.push(`max:${entry.requirement}`)
-    }
-  }
-  if (maxLength !== undefined) {
-    rules.push(`length:${minLength ?? 0},${maxLength}`)
-  }
-  else if (minLength !== undefined) {
-    rules.push(`length:${minLength}`)
-  }
-  return rules.length ? rules.join('|') : undefined
-}
-
-function blankValueFromValibot(entry: ValibotLikeSchema): unknown {
-  if (entry.default !== undefined) {
-    return entry.default
-  }
-  const { schema } = unwrapValibot(entry)
-  switch (schema.type) {
-    case 'string':
-      return ''
-    case 'number':
-      return 0
-    case 'boolean':
-      return false
-    case 'array':
-      return []
-    case 'object':
-      return schema.entries ? blankItemFromValibot(schema.entries) : {}
-    default:
-      return null
-  }
-}
-
-function blankItemFromValibot(entries: Record<string, ValibotLikeSchema>): Record<string, unknown> {
-  const blank: Record<string, unknown> = {}
-  for (const [key, entry] of Object.entries(entries)) {
-    blank[key] = blankValueFromValibot(entry)
-  }
-  return blank
-}
-
-function inferValibotNode(name: string, entry: ValibotLikeSchema, overrides: AutoFormOverrides | undefined, path: string): AutoFormSchemaNode | undefined {
-  const { schema, required } = unwrapValibot(entry)
-  const label = humanizeKey(name)
-  const validation = deriveValibotValidation(schema, required)
-  const base: AutoFormSchemaNode = validation ? { name, label, validation } : { name, label }
-  switch (schema.type) {
-    case 'string':
-      return { $formkit: 'nuxtUIInput', ...base }
-    case 'number':
-      return { $formkit: 'nuxtUIInputNumber', ...base }
-    case 'boolean':
-      return { $formkit: 'nuxtUISwitch', ...base }
-    case 'date':
-      return { $formkit: 'nuxtUIInputDate', ...base, valueType: 'date' }
-    case 'array': {
-      const item = schema.item ? unwrapValibot(schema.item).schema : undefined
-      if (item?.type === 'object' && item.entries) {
-        return {
-          $formkit: 'nuxtUIRepeater',
-          ...base,
-          newItem: blankItemFromValibot(item.entries),
-          children: inferValibotNodes(item.entries, overrides, path),
-          ...REPEATER_BUTTON_DEFAULTS,
-        }
-      }
-      return { $formkit: 'nuxtUIInputTags', ...base }
-    }
-    case 'object':
-      return schema.entries
-        ? { $formkit: 'group', name, children: inferValibotNodes(schema.entries, overrides, path) }
-        : undefined
-    default:
-      return undefined
-  }
-}
-
-function inferValibotNodes(entries: Record<string, ValibotLikeSchema>, overrides?: AutoFormOverrides, pathPrefix = ''): AutoFormSchemaNode[] {
-  return buildNodes(entries, (key, entry, path) => inferValibotNode(key, entry, overrides, path), overrides, pathPrefix)
+// Both libraries are read by their adapter into the same `SchemaIR`, so
+// the inference below is written once and can't drift between them.
+function inferIRNodes(shape: Record<string, SchemaIR>, overrides?: AutoFormOverrides, pathPrefix = ''): AutoFormSchemaNode[] {
+  return buildNodes(
+    shape,
+    (key, entry, path) => nodeFromIR(key, humanizeKey(key), entry, childShape => inferIRNodes(childShape, overrides, path)),
+    overrides,
+    pathPrefix,
+  )
 }
 
 export function inferFormSchemaFromValibot(schema: object, overrides?: AutoFormOverrides): FormKitSchemaNode[] {
@@ -406,7 +301,7 @@ export function inferFormSchemaFromValibot(schema: object, overrides?: AutoFormO
   if (root.kind !== 'schema' || root.type !== 'object' || !root.entries) {
     return []
   }
-  return inferValibotNodes(root.entries, overrides) as FormKitSchemaNode[]
+  return inferIRNodes(valibotToIR(root).shape!, overrides) as FormKitSchemaNode[]
 }
 
 // Structural duck-type for introspecting Zod 4.x schemas without importing
@@ -430,141 +325,12 @@ export interface ZodLikeSchema {
   def?: { defaultValue?: unknown }
 }
 
-const ZOD_UNWRAPPABLE_TYPES = new Set(['optional', 'nullable', 'nullish', 'default'])
-
-function unwrapZod(entry: ZodLikeSchema): { schema: ZodLikeSchema, required: boolean } {
-  let schema = entry
-  let required = true
-  while (ZOD_UNWRAPPABLE_TYPES.has(schema.type) && typeof schema.unwrap === 'function') {
-    required = false
-    schema = schema.unwrap()
-  }
-  return { schema, required }
-}
-
-function isNumericBound(value: unknown): value is number {
-  return Number.isFinite(value)
-    && value !== Number.MIN_SAFE_INTEGER
-    && value !== Number.MAX_SAFE_INTEGER
-}
-
-function deriveZodValidation(schema: ZodLikeSchema, required: boolean): string | undefined {
-  const rules: string[] = []
-  // `required` on a switch would force the boolean to true, which is not
-  // what a plain `z.boolean()` entry means.
-  if (required && schema.type !== 'boolean') {
-    rules.push('required')
-  }
-  if (schema.format === 'email' || schema.format === 'url') {
-    rules.push(schema.format)
-  }
-  // Zod's `minValue`/`maxValue` getters default to `-Infinity`/`Infinity`
-  // (not `null`, unlike `minLength`/`maxLength`) when no `.min()`/`.max()`
-  // was ever chained - `Number.isFinite` excludes those unconstrained
-  // defaults, `typeof === 'number'` would not. `.int()` instead reports the
-  // finite safe-integer limits, which also mean "no bound" (an explicit
-  // `.min(Number.MIN_SAFE_INTEGER)` is indistinguishable and dropped too).
-  if (isNumericBound(schema.minValue)) {
-    rules.push(`min:${schema.minValue}`)
-  }
-  if (isNumericBound(schema.maxValue)) {
-    rules.push(`max:${schema.maxValue}`)
-  }
-  if (typeof schema.maxLength === 'number') {
-    rules.push(`length:${schema.minLength ?? 0},${schema.maxLength}`)
-  }
-  else if (typeof schema.minLength === 'number') {
-    rules.push(`length:${schema.minLength}`)
-  }
-  return rules.length ? rules.join('|') : undefined
-}
-
-function blankValueFromZod(entry: ZodLikeSchema): unknown {
-  // `.default()` can sit at any point in an `.optional()`/`.nullable()`
-  // chain depending on call order (`.optional().default(x)` exposes
-  // `defaultValue` on the outermost entry; `.default(x).optional()` only
-  // exposes it one `.unwrap()` in) - walk the whole chain rather than
-  // checking just the outermost layer.
-  let schema = entry
-  while (true) {
-    if (schema.def?.defaultValue !== undefined) {
-      return schema.def.defaultValue
-    }
-    if (!ZOD_UNWRAPPABLE_TYPES.has(schema.type) || typeof schema.unwrap !== 'function') {
-      break
-    }
-    schema = schema.unwrap()
-  }
-  switch (schema.type) {
-    case 'string':
-      return ''
-    case 'number':
-      return 0
-    case 'boolean':
-      return false
-    case 'array':
-      return []
-    case 'object':
-      return schema.shape ? blankItemFromZod(schema.shape) : {}
-    default:
-      return null
-  }
-}
-
-function blankItemFromZod(shape: Record<string, ZodLikeSchema>): Record<string, unknown> {
-  const blank: Record<string, unknown> = {}
-  for (const [key, entry] of Object.entries(shape)) {
-    blank[key] = blankValueFromZod(entry)
-  }
-  return blank
-}
-
-function inferZodNode(name: string, entry: ZodLikeSchema, overrides: AutoFormOverrides | undefined, path: string): AutoFormSchemaNode | undefined {
-  const { schema, required } = unwrapZod(entry)
-  const label = humanizeKey(name)
-  const validation = deriveZodValidation(schema, required)
-  const base: AutoFormSchemaNode = validation ? { name, label, validation } : { name, label }
-  switch (schema.type) {
-    case 'string':
-      return { $formkit: 'nuxtUIInput', ...base }
-    case 'number':
-      return { $formkit: 'nuxtUIInputNumber', ...base }
-    case 'boolean':
-      return { $formkit: 'nuxtUISwitch', ...base }
-    case 'date':
-      return { $formkit: 'nuxtUIInputDate', ...base, valueType: 'date' }
-    case 'array': {
-      const item = schema.element ? unwrapZod(schema.element).schema : undefined
-      if (item?.type === 'object' && item.shape) {
-        return {
-          $formkit: 'nuxtUIRepeater',
-          ...base,
-          newItem: blankItemFromZod(item.shape),
-          children: inferZodNodes(item.shape, overrides, path),
-          ...REPEATER_BUTTON_DEFAULTS,
-        }
-      }
-      return { $formkit: 'nuxtUIInputTags', ...base }
-    }
-    case 'object':
-      return schema.shape
-        ? { $formkit: 'group', name, children: inferZodNodes(schema.shape, overrides, path) }
-        : undefined
-    default:
-      return undefined
-  }
-}
-
-function inferZodNodes(shape: Record<string, ZodLikeSchema>, overrides?: AutoFormOverrides, pathPrefix = ''): AutoFormSchemaNode[] {
-  return buildNodes(shape, (key, entry, path) => inferZodNode(key, entry, overrides, path), overrides, pathPrefix)
-}
-
 export function inferFormSchemaFromZod(schema: object, overrides?: AutoFormOverrides): FormKitSchemaNode[] {
   const root = schema as ZodLikeSchema
   if (root.type !== 'object' || !root.shape) {
     return []
   }
-  return inferZodNodes(root.shape, overrides) as FormKitSchemaNode[]
+  return inferIRNodes(zodToIR(root).shape!, overrides) as FormKitSchemaNode[]
 }
 
 export function useFormKitAutoForm() {

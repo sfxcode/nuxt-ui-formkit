@@ -188,13 +188,13 @@ describe('inferFormSchemaFromValibot wrappers and defaults (pinned behavior)', (
     expect(node?.validation).toBe('required|length:2')
   })
 
-  it('keeps the last of repeated min/max length, and emits every min/max value', () => {
+  it('keeps the last of repeated min/max length, and the tightest of repeated min/max value', () => {
     const nodes = infer(v.object({
       s: v.pipe(v.string(), v.minLength(2), v.minLength(5), v.maxLength(9), v.maxLength(8)),
       n: v.pipe(v.number(), v.minValue(1), v.minValue(3), v.maxValue(9)),
     }))
     expect(nodes[0]?.validation).toBe('required|length:5,8')
-    expect(nodes[1]?.validation).toBe('required|min:1|min:3|max:9')
+    expect(nodes[1]?.validation).toBe('required|min:3|max:9')
   })
 
   it('emits rules in pipe order, with length last', () => {
