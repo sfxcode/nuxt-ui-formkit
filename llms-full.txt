@@ -1354,6 +1354,26 @@ cp -r node_modules/@sfxcode/nuxt-ui-formkit/skills/nuxt-ui-formkit .claude/skill
 
 Re-run the copy after you upgrade the module. For another assistant, the skill is plain Markdown (`skills/nuxt-ui-formkit/SKILL.md`): paste it into that tool's project instructions.
 
+### How the skill was tested
+
+It was tried in a fresh Claude Code session, in a project that had the skill installed, and compared with a control session without it. Both sessions got the same request, which contained the usual traps: "a select `userType` (individual or business); a `companyName` field shown only for business users; a checkbox `newsletter`; a `newsletterEmail` field shown only when it is ticked; and a list of phone numbers where the user can add, remove and copy lines". Neither session could read files or browse; the skill session could only load the skill.
+
+The skill was found: the session listed `nuxt-ui-formkit` among its skills. The two answers differed like this:
+
+| Check | With the skill | Control |
+|---|---|---|
+| Field types | `nuxtUICheckbox`, `nuxtUIInput`, `nuxtUISelect`, `nuxtUIRepeater` | `text`, `tel`, `select`, `checkbox`, `repeater` (plain FormKit types, not this framework's) |
+| `id` on the fields read by `$get()` | on `userType` and `newsletter` | missing on both |
+| Condition on the checkbox | `$get(newsletter).value === true` | the same |
+| Repeater display flags and row layout | all set | no `nuxtUIRepeater` at all |
+
+Read this as a sign that the skill loads and is followed, not as a measurement:
+
+- It was one run each, and model output varies.
+- The control had no docs to read, so the comparison mostly shows that the skill supplies the framework's type names and rules. It does not show the skill beating an assistant that can read this site.
+- The request was written to contain the traps.
+- The setup rules (registering the inputs in `formkit.config.ts`) were not tested, because they need a real Nuxt project.
+
 ## Tips
 
 - **Name the fields you care about.** A vague request ("a feedback survey") gets sensible defaults; a precise one gets what you asked for.
