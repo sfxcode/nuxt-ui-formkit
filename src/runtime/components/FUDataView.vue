@@ -3,7 +3,8 @@ import type { FormKitSchemaDefinition } from '@formkit/core'
 import type { PropType } from 'vue'
 import { FormKitSchema } from '@formkit/vue'
 import FuDataDebug from './FUDataDebug.vue'
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
+import { withNodeKeys } from '../utils/withNodeKeys'
 
 const props = defineProps({
   data: {
@@ -46,6 +47,9 @@ watch(() => props.data, (newData: Record<string, unknown>) => {
 if (props.data) {
   formData.value = props.data
 }
+
+// Keyed per field, so a field whose type changes is rendered afresh (see `withNodeKeys`).
+const keyedSchema = computed(() => withNodeKeys(props.schema))
 </script>
 
 <template>
@@ -58,7 +62,7 @@ if (props.data) {
     >
       <FormKitSchema
         v-if="schema"
-        :schema="schema"
+        :schema="keyedSchema"
         :data="formData"
       />
     </FormKit>

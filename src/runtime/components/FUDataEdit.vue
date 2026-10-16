@@ -5,10 +5,11 @@ import type { PropType } from 'vue'
 import type { AutosaveOptions } from '../formkit/plugins/autosave'
 import { reset } from '@formkit/core'
 import { FormKit, FormKitMessages, FormKitSchema, useFormKitContextById } from '@formkit/vue'
-import { onScopeDispose, ref, watch } from 'vue'
+import { computed, onScopeDispose, ref, watch } from 'vue'
 
 import { createAutosavePlugin } from '../formkit/plugins/autosave'
 import { attachStandardSchema } from '../composables/useFormKitStandardSchema'
+import { withNodeKeys } from '../utils/withNodeKeys'
 import FUDataDebug from './FUDataDebug.vue'
 
 const props = defineProps({
@@ -109,6 +110,8 @@ const autosavePlugins = props.autosave
   : []
 
 const formSchema = ref(props.schema)
+// Keyed per field, so a field whose type changes is rendered afresh (see `withNodeKeys`).
+const keyedSchema = computed(() => withNodeKeys(formSchema.value))
 
 const formData = defineModel<Record<string, unknown>>()
 
@@ -159,7 +162,7 @@ function handleReset() {
       <template #default>
         <FormKitSchema
           v-if="formSchema"
-          :schema="formSchema"
+          :schema="keyedSchema"
           :data="formData"
         />
         <slot />
