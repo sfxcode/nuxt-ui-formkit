@@ -12,6 +12,10 @@ import { startPlayground } from './server.mjs'
 //   E2E_CHROME=/path/to/chrome      browser executable
 //   E2E_SSR=true                    start the playground with server rendering on
 //                                   (`npm run test:e2e:ssr`) and run the pages marked `ssr`
+//   E2E_SERVER_TZ / E2E_BROWSER_TZ  the time zones of the SSR server and the browser (defaults
+//                                   below: 26 hours apart, the most there is, so the calendar
+//                                   dates always differ and any time-zone dependence in what is
+//                                   rendered shows up as a hydration mismatch at any time of day)
 //
 // A page entry's `ssr` field: `'only'` runs in SSR mode only; `true` runs in both modes;
 // unset runs in the normal (client-only) mode only.
@@ -31,12 +35,17 @@ const IGNORED = [/\[devframe\] Timeout waiting for rpc to be trusted/]
 const SERVER_LOG_PROBLEM = /^\s*ERROR\b|\b(?:Error|TypeError|ReferenceError)\b|Unhandled|unhandledRejection|\[Vue warn\]|is not defined/
 const isServerProblem = line => SERVER_LOG_PROBLEM.test(line) && !line.includes('[console.')
 
+// UTC+14 and UTC-12: 26 hours apart, so the local dates differ whatever time it is.
+const DEFAULT_SERVER_TZ = 'Pacific/Kiritimati'
+const DEFAULT_BROWSER_TZ = 'Etc/GMT+12'
+
 const isProblem = ({ kind, text }) =>
   !IGNORED.some(pattern => pattern.test(text)) && (kind === 'error' || kind === 'pageerror' || text.startsWith('[Vue warn]'))
 
 async function runPage(browser, baseUrl, entry, server) {
   const logStart = server.getLog?.().length ?? 0
-  const page = await browser.newPage({ viewport: { width: 1100, height: 1600 } })
+  const timezoneId = entry.ssr ? (process.env.E2E_BROWSER_TZ ?? DEFAULT_BROWSER_TZ) : undefined
+  const page = await browser.newPage({ viewport: { width: 1100, height: 1600 }, ...(timezoneId && { timezoneId }) })
   const problems = []
   page.on('pageerror', error => problems.push({ kind: 'pageerror', text: error.message }))
   page.on('console', (message) => {
@@ -70,8 +79,11 @@ async function runPage(browser, baseUrl, entry, server) {
 async function main() {
   const only = process.env.E2E_PAGE
   const ssrMode = process.env.E2E_SSR === 'true'
-  if (ssrMode)
+  if (ssrMode) {
     process.env.PLAYGROUND_SSR = 'true'
+    // The server child inherits this; the browser pages get the other one (see runPage).
+    process.env.TZ = process.env.E2E_SERVER_TZ ?? DEFAULT_SERVER_TZ
+  }
   const inMode = entry => (ssrMode ? Boolean(entry.ssr) : entry.ssr !== 'only')
   const selected = pages.filter(entry => inMode(entry) && (!only || entry.path.includes(only)))
   if (!selected.length)

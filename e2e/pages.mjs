@@ -471,4 +471,32 @@ export default [
       assert.ok((await page.locator('body').textContent()).includes('Hello server world'), 'the content is shown after hydration')
     },
   },
+  {
+    // Date fields on a server-rendered page, with the server and the browser in time zones 26 hours
+    // apart (see run.mjs), so the same instant is a different calendar day on each side:
+    // 2020-12-12T23:30:00Z is Dec 13 at UTC+14 and Dec 12 at UTC-12. Hydration must not mismatch
+    // (the runner fails on a warning); the browser then shows its own day, and a field with an
+    // explicit `timeZone` never moves.
+    path: '/ssr-dates',
+    ssr: 'only',
+    async checks(page) {
+      const origin = new URL(page.url()).origin
+      const html = await (await page.request.get(`${origin}/ssr-dates`)).text()
+      // The date fields' visually hidden inputs, which hold the field's date as an ISO day.
+      const hiddenValues = () => page.locator('input[aria-hidden="true"]').evaluateAll(inputs => inputs.map(input => input.value))
+      const serverHidden = [...html.matchAll(/<input[^>]*aria-hidden="true"[^>]*>/g)].map(match => match[0].match(/value="([^"]*)"/)?.[1]).filter(Boolean)
+
+      // The server rendered in its own zone: the instant is Dec 13 there (the JS Date and the zoned
+      // ISO fields), while a plain ISO day and a field with an explicit UTC zone are Dec 12.
+      assert.ok(serverHidden.includes('2020-12-13'), `the server renders the instant in its zone (got ${JSON.stringify(serverHidden)})`)
+      assert.ok(serverHidden.includes('2020-12-12'), 'a zone-free day and an explicit UTC zone are Dec 12 on the server')
+
+      // After mount the browser's own zone applies: the same fields now show Dec 12, and nothing
+      // is left at Dec 13.
+      await poll(hiddenValues, (values) => {
+        assert.ok(!values.includes('2020-12-13'), `a field is still on the server's day (got ${JSON.stringify(values)})`)
+        assert.ok(values.filter(value => value === '2020-12-12').length >= 4, `the dates show the browser's day (got ${JSON.stringify(values)})`)
+      })
+    },
+  },
 ]
