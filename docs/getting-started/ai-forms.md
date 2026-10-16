@@ -247,6 +247,19 @@ For the hotel request above, the generated schema was (unedited):
 ]
 ```
 
+## A skill for your coding assistant
+
+The prompt above is for generating one form. If an assistant is working in your project more broadly (setting the module up, writing and fixing forms), give it the skill that ships with the package. It is a short list of the rules that are easy to get wrong and fail silently: registering the inputs, `$get()` needing an `id`, the bare repeater defaults, field widths, and a pointer to [`llms.txt`](https://sfxcode.github.io/nuxt-ui-formkit/llms.txt) for everything else.
+
+Because it is installed with the package, it always matches the version you have. For Claude Code, copy it into your project's skills folder:
+
+```bash
+mkdir -p .claude/skills
+cp -r node_modules/@sfxcode/nuxt-ui-formkit/skills/nuxt-ui-formkit .claude/skills/
+```
+
+Re-run the copy after you upgrade the module. For another assistant, the skill is plain Markdown (`skills/nuxt-ui-formkit/SKILL.md`): paste it into that tool's project instructions.
+
 ## Tips
 
 - **Name the fields you care about.** A vague request ("a feedback survey") gets sensible defaults; a precise one gets what you asked for.
