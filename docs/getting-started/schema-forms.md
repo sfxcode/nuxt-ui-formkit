@@ -141,6 +141,7 @@ Show fields based on other field values:
 const schema = [
   {
     $formkit: 'nuxtUISelect',
+    id: 'userType', // `$get()` looks a field up by its `id`
     name: 'userType',
     label: 'User Type',
     options: ['individual', 'business']
@@ -153,6 +154,10 @@ const schema = [
   }
 ]
 ```
+
+::: warning The referenced field needs an `id`
+`$get(userType)` resolves by `id`, not by `name`. Without the `id` the condition never matches and the field is silently never shown. Inside a repeater row, read a sibling with `$node.value.<field>` instead (see [Known Limitations](/getting-started/known-limitations#repeaters-and-schemas)).
+:::
 
 ### Grouped Fields
 
