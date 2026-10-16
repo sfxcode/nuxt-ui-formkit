@@ -5,7 +5,6 @@ import { assert, dragAndDrop, fieldByLabel, labelsOf, messagesOf, nodeState, pol
 
 // Types that hydrate with a mismatch (checked in dev, where Vue reports attribute mismatches).
 const KNOWN_HYDRATION_GAPS = [
-  ['nuxtUIRepeater', 'row and list ids contain a random uuid, so the server and client ids differ (plan 19 phase 4)'],
 ]
 
 // Things the server HTML does not contain, as `[type, what, why]`.
@@ -425,4 +424,22 @@ export default [
       await poll(draft, value => assert.equal(JSON.parse(value).data.name, 'Grace Hopper'))
     },
   },
+  // Pages with a repeater, server-rendered and hydrated. The repeater's list and row ids used to
+  // contain a random uuid, so each of these logged a hydration mismatch in dev; the runner fails
+  // on one, so merely loading them is the check - plus that the repeater really rendered.
+  ...[
+    '/form/auto-form',
+    '/form/repeater-sample',
+    '/form/repeater-nested',
+    '/form/repeater-drag',
+    '/samples/job-application',
+    '/samples/user-registration',
+  ].map(path => ({
+    path,
+    ssr: 'only',
+    async checks(page) {
+      const repeaterElements = page.locator('[id^="formkit-item"]')
+      await poll(() => repeaterElements.count(), count => assert.ok(count > 0, 'the repeater rendered'))
+    },
+  })),
 ]
