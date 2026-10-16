@@ -113,7 +113,7 @@ const user = ref({ name: '', email: '', age: 18, newsletter: false, contacts: []
 
 ## Zod Schemas
 
-If you already describe your data with [Zod](https://zod.dev), pass the schema instead — same rules apply as Valibot above (required/email/url/length/min/max, nesting, skipped constructs). Zod is introspected via its own public schema getters (`.type`, `.shape`, `.unwrap()`, `.minLength`, `.format`, ...) rather than its internal `_zod.def`; this module does not depend on it.
+If you already describe your data with [Zod](https://zod.dev), pass the schema instead — same rules apply as Valibot above (required/email/url/length/min/max, nesting, skipped constructs). Zod is introspected via its own public schema getters (`.type`, `.shape`, `.unwrap()`, `.minLength`, `.format`, ...); the one exception is array `.min()`/`.max()`/`.nonempty()`, which zod only records in its `checks` and which are read from there. This module does not depend on zod.
 
 ```vue
 <template>

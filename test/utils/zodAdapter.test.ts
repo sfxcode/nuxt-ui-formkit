@@ -81,6 +81,14 @@ describe('zodToIR rules', () => {
     expect(toIR(z.number().int().min(5)).rules).toEqual({ min: 5 })
   })
 
+  it('reads array bounds from the checks, tightest wins', () => {
+    expect(toIR(z.array(z.string()).min(1).max(3)).rules).toEqual({ minLength: 1, maxLength: 3 })
+    expect(toIR(z.array(z.string()).nonempty()).rules).toEqual({ minLength: 1 })
+    expect(toIR(z.array(z.string()).min(2).min(5).max(9).max(8)).rules).toEqual({ minLength: 5, maxLength: 8 })
+    expect(toIR(z.array(z.string()).min(1).optional()).rules).toEqual({ minLength: 1 })
+    expect(toIR(z.array(z.string())).rules).toEqual({})
+  })
+
   it('reads rules through a wrapper', () => {
     expect(toIR(z.string().url().optional()).rules).toEqual({ format: 'url' })
   })
@@ -102,6 +110,7 @@ describe('valibot and zod adapters agree', () => {
     ['string rules', v.object({ e: v.pipe(v.string(), v.email()), u: v.pipe(v.string(), v.url()), l: v.pipe(v.string(), v.minLength(2), v.maxLength(10)) }), z.object({ e: z.string().email(), u: z.string().url(), l: z.string().min(2).max(10) })],
     ['number rules', v.object({ n: v.pipe(v.number(), v.minValue(18), v.maxValue(99)) }), z.object({ n: z.number().min(18).max(99) })],
     ['groups and repeaters', v.object({ g: v.object({ city: v.string() }), r: v.array(v.object({ x: v.string(), y: v.optional(v.number(), 1) })), t: v.array(v.string()) }), z.object({ g: z.object({ city: z.string() }), r: z.array(z.object({ x: z.string(), y: z.number().default(1) })), t: z.array(z.string()) })],
+    ['array bounds', v.object({ t: v.pipe(v.array(v.string()), v.minLength(1), v.maxLength(3)), r: v.pipe(v.array(v.object({ x: v.string() })), v.minLength(2)) }), z.object({ t: z.array(z.string()).min(1).max(3), r: z.array(z.object({ x: z.string() })).min(2) })],
     ['unsupported', v.object({ p: v.picklist(['a']), r: v.record(v.string(), v.string()) }), z.object({ p: z.enum(['a']), r: z.record(z.string(), z.string()) })],
   ]
 

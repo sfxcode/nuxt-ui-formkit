@@ -218,10 +218,25 @@ describe('inferFormSchemaFromZod wrappers and defaults (pinned behavior)', () =>
     expect(nodes[1]?.validation).toBe('required|min:3|max:9')
   })
 
-  // Differs from valibot, whose array pipe does emit `length:` (see the valibot test).
-  it('emits no length rule for min/max on an array', () => {
+  // Same as valibot's array pipe (see the valibot test); zod keeps array bounds
+  // in `def.checks`, not in `minLength`/`maxLength` getters.
+  it('derives length rules from min/max on an array', () => {
     const [node] = infer(z.object({ tags: z.array(z.string()).min(1).max(3) }))
-    expect(node).toMatchObject({ $formkit: 'nuxtUIInputTags', validation: 'required' })
+    expect(node).toMatchObject({ $formkit: 'nuxtUIInputTags', validation: 'required|length:1,3' })
+  })
+
+  it('derives length rules for nonempty and for an optional array', () => {
+    const nodes = infer(z.object({
+      a: z.array(z.string()).nonempty(),
+      b: z.array(z.string()).min(2).optional(),
+      c: z.array(z.string()).max(4),
+    }))
+    expect(nodes.map(node => node.validation)).toEqual(['required|length:1', 'length:2', 'required|length:0,4'])
+  })
+
+  it('emits an array length rule on a repeater too', () => {
+    const [node] = infer(z.object({ rows: z.array(z.object({ x: z.string() })).min(1).max(5) }))
+    expect(node).toMatchObject({ $formkit: 'nuxtUIRepeater', validation: 'required|length:1,5' })
   })
 
   it('returns an empty schema for roots that are not an object with a shape', () => {

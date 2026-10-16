@@ -35,6 +35,21 @@ function rulesFromGetters(schema: ZodLikeSchema): SchemaIRRules {
   return rules
 }
 
+// Zod arrays expose no `minLength`/`maxLength` getters (only strings do); their
+// bounds live in `def.checks`. Repeated bounds all have to hold, so the
+// tightest wins - the same as the getters report for strings.
+function rulesFromArrayChecks(schema: ZodLikeSchema, rules: SchemaIRRules): void {
+  for (const check of schema.def?.checks ?? []) {
+    const def = check._zod?.def
+    if (def?.check === 'min_length' && typeof def.minimum === 'number') {
+      rules.minLength = rules.minLength === undefined ? def.minimum : Math.max(rules.minLength, def.minimum)
+    }
+    else if (def?.check === 'max_length' && typeof def.maximum === 'number') {
+      rules.maxLength = rules.maxLength === undefined ? def.maximum : Math.min(rules.maxLength, def.maximum)
+    }
+  }
+}
+
 export function zodToIR(entry: ZodLikeSchema): SchemaIR {
   // `.default()` can sit anywhere in an `.optional()`/`.nullable()` chain
   // depending on call order, so walk the whole chain for it.
@@ -59,8 +74,11 @@ export function zodToIR(entry: ZodLikeSchema): SchemaIR {
   if (kind === 'object' && schema.shape) {
     ir.shape = Object.fromEntries(Object.entries(schema.shape).map(([key, value]) => [key, zodToIR(value)]))
   }
-  if (kind === 'array' && schema.element) {
-    ir.element = zodToIR(schema.element)
+  if (kind === 'array') {
+    rulesFromArrayChecks(schema, ir.rules)
+    if (schema.element) {
+      ir.element = zodToIR(schema.element)
+    }
   }
   return ir
 }

@@ -309,7 +309,16 @@ export interface ZodLikeSchema {
   maxValue?: number | null
   format?: string | null
   unwrap?: () => ZodLikeSchema
-  def?: { defaultValue?: unknown }
+  def?: {
+    defaultValue?: unknown
+    // Arrays keep their `.min()`/`.max()`/`.nonempty()` bounds here, not in
+    // `minLength`/`maxLength` getters (those exist on strings only).
+    checks?: readonly ZodLikeCheck[]
+  }
+}
+
+export interface ZodLikeCheck {
+  _zod?: { def?: { check?: string, minimum?: number, maximum?: number } }
 }
 
 export function inferFormSchemaFromZod(schema: object, overrides?: AutoFormOverrides): FormKitSchemaNode[] {
