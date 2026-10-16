@@ -119,6 +119,7 @@ export default [
   },
   {
     path: '/form/overlay-form',
+    ssr: true, // also in SSR mode: the overlay composable must behave the same on a server-rendered page
     ready: 'button',
     async checks(page) {
       const dialog = page.locator('[role="dialog"]')
@@ -497,6 +498,63 @@ export default [
         assert.ok(!values.includes('2020-12-13'), `a field is still on the server's day (got ${JSON.stringify(values)})`)
         assert.ok(values.filter(value => value === '2020-12-12').length >= 4, `the dates show the browser's day (got ${JSON.stringify(values)})`)
       })
+    },
+  },
+  {
+    // The composables on a server-rendered page: they construct without error, `overlay.edit()`
+    // fails loudly there instead of returning a promise nothing can settle, and a request leaves
+    // nothing behind for the next one (the server process outlives every request).
+    path: '/ssr-composables',
+    ssr: 'only',
+    async checks(page) {
+      const origin = new URL(page.url()).origin
+      const fetchPage = async (query = '') => {
+        const response = await page.request.get(`${origin}/ssr-composables${query}`)
+        return { status: response.status(), html: await response.text() }
+      }
+      const outcome = html => html.match(/data-overlay-outcome[^>]*>([^<]*)</)?.[1]?.trim()
+      const ids = html => [...html.matchAll(/ id="([^"]+)"/g)].map(match => match[1])
+      const overlayCount = html => Number(html.match(/registered overlays: (\d+)/)?.[1])
+
+      const plain = await fetchPage()
+      assert.equal(plain.status, 200, 'the composables construct on the server')
+      assert.equal(outcome(plain.html), 'not called')
+      assert.ok(plain.html.includes('isDirty: false'), 'useFormKitForm reports its state on the server')
+
+      // overlay.edit() on the server throws a message that says what to do instead.
+      const edit = await fetchPage('?edit=1')
+      assert.equal(edit.status, 200)
+      assert.match(outcome(edit.html), /^threw: .*useFormKitOverlay\(\)\.edit\(\) cannot run on the server.*onMounted/)
+      assert.ok(!edit.html.includes('Server edit'), 'no overlay is rendered on the server')
+
+      // Nothing from that request is in the next one, and two plain renders are identical.
+      const again = await fetchPage()
+      assert.equal(outcome(again.html), 'not called', 'the failed server call left nothing behind')
+      assert.deepEqual(ids(again.html), ids(plain.html), 'two server renders of the same page produce the same ids')
+
+      // Constructing the overlay on every request must not keep adding registrations to a store
+      // that outlives the requests.
+      for (let request = 0; request < 3; request++)
+        assert.equal(overlayCount((await fetchPage()).html), overlayCount(plain.html), 'the number of registered overlays does not grow per request')
+    },
+  },
+  {
+    // The editor-schema form builds its field ids from a counter; it used to be a module-level one
+    // that grew with every request (`_dollar_formkit_4` on the server, `_1` in the browser), a
+    // hydration mismatch and server HTML that depended on how many requests came before.
+    path: '/form/input-editor',
+    ssr: 'only',
+    async checks(page) {
+      const origin = new URL(page.url()).origin
+      const renders = []
+      for (let request = 0; request < 3; request++)
+        renders.push(await (await page.request.get(`${origin}/form/input-editor`)).text())
+
+      for (const html of renders) {
+        assert.ok(html.includes('_dollar_formkit_1'), 'the ids start from 1 in every request')
+        assert.ok(!/_dollar_formkit_[2-9]/.test(html), 'a later request does not continue the count')
+      }
+      assert.ok((await page.locator('[id^="_dollar_formkit_1"]').count()) > 0, 'the form hydrated with the same ids')
     },
   },
 ]
