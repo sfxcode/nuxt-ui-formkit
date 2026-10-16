@@ -65,7 +65,7 @@ const props = defineProps({
   },
 })
 
-const { handleInput, handleChange, isInvalid, styleClass, color, modelValue, items, validSlotNames, ui } = useFormKitInput(props.context)
+const { handleInput, handleChange, isInvalid, styleClass, modelValue, items, validSlotNames, ui, commonProps } = useFormKitInput(props.context)
 
 // `UListbox` declares no `blur` emit at all - `@focusout` (which bubbles,
 // unlike `blur`) plus a relatedTarget-outside-container check is what
@@ -377,17 +377,13 @@ watch(targetItems, (newVal) => {
     :id="context.id"
     v-model="modelValue"
     :name="context.node.name"
-    v-bind="{ ...context?.attrs }"
+    v-bind="{ ...context?.attrs, ...commonProps }"
     :class="styleClass"
-    :style="context?.attrs.style"
     :as="context.as"
-    :color="color"
-    :size="context.size ?? 'md'"
     :items="items"
     :by="context.by"
     :orientation="context.orientation"
     :selection-behavior="context.selectionBehavior"
-    :disabled="!!context?.disabled"
     :default-value="context.defaultValue"
     :multiple="context.multiple"
     :value-key="context.valueKey"
@@ -405,7 +401,6 @@ watch(targetItems, (newVal) => {
     :autofocus="context.autofocus"
     :autofocus-delay="context.autofocusDelay"
     :search-term="context.searchTerm"
-    :ui="ui"
     @change="handleChange"
     @update:model-value="handleInput"
     @focusout="handleContainerBlur"

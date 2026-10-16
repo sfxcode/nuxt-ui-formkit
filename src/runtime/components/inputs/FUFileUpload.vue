@@ -35,7 +35,7 @@ const props = defineProps({
   },
 })
 
-const { handleInput, handleChange, handleBlur, isInvalid, styleClass, color, modelValue, validSlotNames, ui } = useFormKitInput(props.context)
+const { handleInput, handleChange, handleBlur, isInvalid, styleClass, modelValue, validSlotNames, commonProps } = useFormKitInput(props.context)
 
 // `UFileUpload` doesn't declare `blur` in its own emits - `@blur` below
 // relies on its `inheritAttrs: false` + manual `$attrs` spread directly onto
@@ -48,19 +48,15 @@ const { handleInput, handleChange, handleBlur, isInvalid, styleClass, color, mod
   <UFileUpload
     :id="context.id"
     v-model="modelValue"
-    v-bind="{ ...context?.attrs }"
+    v-bind="{ ...context?.attrs, ...commonProps }"
     :class="styleClass"
-    :disabled="!!context?.disabled"
-    :style="context?.attrs.style"
     :highlight="isInvalid || context.highlight"
     :multiple="context.multiple"
     :accept="context.accept"
     :icon="context.icon"
     :label="context.label"
     :description="context.description"
-    :color="color"
     :variant="context.variant ?? 'area'"
-    :size="context.size ?? 'md'"
     :layout="context.layout ?? 'list'"
     :position="context.position ?? 'outside'"
     :dropzone="context.dropzone"
@@ -73,7 +69,6 @@ const { handleInput, handleChange, handleBlur, isInvalid, styleClass, color, mod
     :file-delete-icon="context.fileDeleteIcon"
     :preview="context.preview"
     :name="context.node.name"
-    :ui="ui"
     @change="handleChange"
     @update:model-value="handleInput"
     @blur="handleBlur"
