@@ -4,7 +4,10 @@ import { parseDate, CalendarDate } from '@internationalized/date'
 
 const data = {
   date2: new CalendarDate(2022, 2, 3),
-  date34: new Date(2026, 6, 5),
+  // Instants are built from UTC (not `new Date(y, m, d)`, which is local midnight): on a server-rendered
+  // page the script runs on the server and in the browser, and a local-time Date is a different
+  // instant in each zone, so the field would hydrate with a different day.
+  date34: new Date(Date.UTC(2026, 6, 5, 12)),
   date35: '2026-07-05',
 }
 const inputDateSchema = [
@@ -214,7 +217,7 @@ const inputDateSchema = [
     name: 'date33',
     label: 'defaultValue as JS Date (valueType: date)',
     valueType: 'date',
-    defaultValue: new Date(2026, 6, 5),
+    defaultValue: new Date(Date.UTC(2026, 6, 5, 12)),
   },
   {
     $formkit: 'nuxtUIInputDate',

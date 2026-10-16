@@ -1,7 +1,10 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup>
+// Instants are built from UTC (not `new Date(y, m, d)`, which is local midnight): on a server-rendered
+// page the script runs on the server and in the browser, and a local-time Date is a different
+// instant in each zone, so the field would hydrate with a different day.
 const data = {
-  date17: new Date(2026, 6, 5),
+  date17: new Date(Date.UTC(2026, 6, 5, 12)),
   date18: { start: '2026-07-01', end: '2026-07-10' },
 }
 const calendarSchema = [
@@ -117,7 +120,7 @@ const calendarSchema = [
     name: 'date16',
     label: 'defaultValue as JS Date (valueType: date)',
     valueType: 'date',
-    defaultValue: new Date(2026, 6, 5),
+    defaultValue: new Date(Date.UTC(2026, 6, 5, 12)),
     class: 'w-1/2',
   },
   {

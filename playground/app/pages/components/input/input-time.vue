@@ -37,14 +37,14 @@ const inputTimeSchema = [
     name: 'time5',
     label: 'With 15-Minute Steps',
     help: 'Increments by 15 minutes',
-    step: 15,
+    step: { minute: 15 },
   },
   {
     $formkit: 'nuxtUIInputTime',
     name: 'time6',
     label: 'With 30-Minute Steps',
     help: 'Increments by 30 minutes',
-    step: 30,
+    step: { minute: 30 },
   },
   {
     $formkit: 'nuxtUIInputTime',
