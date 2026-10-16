@@ -11,6 +11,7 @@ Most of these fail **silently** - no error, no warning, just a missing label or 
 
 - **Inputs are not auto-registered.** The module only adds a plugin, the composables, and `FUDataView`/`FUDataEdit`/`FUDataDebug`/`FUAutoForm`. The `nuxtUI*` input and output types exist only once your `formkit.config.ts` registers them via [`createNuxtUiFormkitConfig()`](/getting-started/installation#formkit-configuration), and that file is only picked up if `@formkit/nuxt` is in your `modules`.
 - **Multi-step needs its plugin.** `nuxtUIMultiStep`/`nuxtUIStep` do nothing unless you call `createNuxtUiFormkitConfig({ multiStep: true })` (or register `createMultiStepPlugin()` yourself). See [Multi-Step](/components/multi-step).
+- **Don't override `plugins` after spreading the helper.** `defaultConfig({ ...createNuxtUiFormkitConfig(), plugins: [x] })` replaces the whole array and silently drops the asterisk plugin (required fields lose their `*`). Pass yours as `createNuxtUiFormkitConfig({ plugins: [x] })`, which appends them.
 - **Schemas can only use globally registered Nuxt UI components.** The module registers `UButton`, `UIcon`, `UTabs`, `UUser` and `UTooltip`. Any other `$cmp: 'UXxx'` in a schema renders as an unstyled custom element.
 - **SSR is untested.** The playground runs with `ssr: false`; nothing here has been verified for server rendering or hydration.
 

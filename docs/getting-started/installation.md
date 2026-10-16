@@ -64,12 +64,10 @@ import { createNuxtUiFormkitConfig } from '@sfxcode/nuxt-ui-formkit/formkit'
 
 // `multiStep: true` additionally registers `createMultiStepPlugin()` -
 // omit it if you're not using `nuxtUIMultiStep`/`nuxtUIStep`.
-const nuxtUiFormkitConfig = createNuxtUiFormkitConfig({ multiStep: true })
-
-const config: DefaultConfigOptions = {
-  locales: { en },
-  locale: 'en',
-  inputs: nuxtUiFormkitConfig.inputs,
+// Pass your own plugins through the `plugins` option: they are appended after
+// this module's, so the asterisk plugin is kept.
+const nuxtUiFormkitConfig = createNuxtUiFormkitConfig({
+  multiStep: true,
   plugins: [
     createAutoAnimatePlugin(
       {
@@ -82,8 +80,14 @@ const config: DefaultConfigOptions = {
         nuxtUIRepeater: ['items'],
       }
     ),
-    ...nuxtUiFormkitConfig.plugins!,
   ],
+})
+
+const config: DefaultConfigOptions = {
+  locales: { en },
+  locale: 'en',
+  inputs: nuxtUiFormkitConfig.inputs,
+  plugins: nuxtUiFormkitConfig.plugins,
 }
 
 export default config

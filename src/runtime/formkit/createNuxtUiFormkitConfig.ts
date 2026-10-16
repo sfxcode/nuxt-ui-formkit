@@ -12,6 +12,13 @@ export interface CreateNuxtUiFormkitConfigOptions {
    * every node to check its type), so it's opt-in.
    */
   multiStep?: boolean
+  /**
+   * Your own FormKit plugins (e.g. `createAutoAnimatePlugin`), appended after
+   * this module's. Pass them here rather than overriding `plugins` after the
+   * spread: `defaultConfig({ ...createNuxtUiFormkitConfig(), plugins: [x] })`
+   * replaces the whole array and silently drops the asterisk plugin.
+   */
+  plugins?: DefaultConfigOptions['plugins']
 }
 
 /**
@@ -22,13 +29,12 @@ export interface CreateNuxtUiFormkitConfigOptions {
  * (locales, `iconLoader`, other plugins like `createAutoAnimatePlugin`).
  */
 export function createNuxtUiFormkitConfig(options: CreateNuxtUiFormkitConfigOptions = {}): Pick<DefaultConfigOptions, 'inputs' | 'plugins'> {
-  const plugins: DefaultConfigOptions['plugins'] = [addNuxtAsteriskPlugin]
-
-  if (options.multiStep)
-    plugins.push(createMultiStepPlugin())
-
   return {
     inputs: { ...nuxtUIInputs, ...nuxtUIOutputs },
-    plugins,
+    plugins: [
+      addNuxtAsteriskPlugin,
+      ...(options.multiStep ? [createMultiStepPlugin()] : []),
+      ...(options.plugins ?? []),
+    ],
   }
 }
