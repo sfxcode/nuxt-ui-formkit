@@ -1,9 +1,13 @@
 import { defineConfig } from 'vitepress'
 import pkg from '../../package.json' with { type: 'json' }
+import { writeLlmsFiles } from './llms'
+
+const siteUrl = 'https://sfxcode.github.io/nuxt-ui-formkit'
+const siteDescription = 'FormKit integration for Nuxt UI - Seamlessly connect FormKit form handling with Nuxt UI components'
 
 export default defineConfig({
   title: 'Nuxt UI FormKit',
-  description: 'FormKit integration for Nuxt UI - Seamlessly connect FormKit form handling with Nuxt UI components',
+  description: siteDescription,
 
   lang: 'en-US',
 
@@ -12,7 +16,12 @@ export default defineConfig({
 
   // Sitemap configuration
   sitemap: {
-    hostname: 'https://sfxcode.github.io/nuxt-ui-formkit',
+    hostname: siteUrl,
+  },
+
+  // llms.txt, llms-full.txt and a Markdown copy of every page, for language models
+  buildEnd: (config) => {
+    writeLlmsFiles(config, siteUrl, 'Nuxt UI FormKit', siteDescription)
   },
 
   // Enhanced metadata for better SEO
