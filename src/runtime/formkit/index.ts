@@ -33,140 +33,161 @@ export * from './plugins'
  */
 type MergeSlots<A, B> = A & Omit<B, keyof A>
 
-declare module '@formkit/inputs' {
-  interface FormKitInputProps<Props extends FormKitInputs<Props>> {
-    // Input Components
-    nuxtUICalendar: {
-      type: 'nuxtUICalendar'
-    }
-    nuxtUICheckbox: {
-      type: 'nuxtUICheckbox'
-    }
-    nuxtUICheckboxGroup: {
-      type: 'nuxtUICheckboxGroup'
-    }
-    nuxtUIColorPicker: {
-      type: 'nuxtUIColorPicker'
-    }
-    nuxtUIEditor: {
-      type: 'nuxtUIEditor'
-    }
-    nuxtUIFileUpload: {
-      type: 'nuxtUIFileUpload'
-    }
-    nuxtUIInput: {
-      type: 'nuxtUIInput'
-    }
-    nuxtUIInputDate: {
-      type: 'nuxtUIInputDate'
-    }
-    nuxtUIInputMenu: {
-      type: 'nuxtUIInputMenu'
-    }
-    nuxtUIInputNumber: {
-      type: 'nuxtUIInputNumber'
-    }
-    nuxtUIInputRating: {
-      type: 'nuxtUIInputRating'
-    }
-    nuxtUIInputTags: {
-      type: 'nuxtUIInputTags'
-    }
-    nuxtUIInputTime: {
-      type: 'nuxtUIInputTime'
-    }
-    nuxtUIListbox: {
-      type: 'nuxtUIListbox'
-    }
-    nuxtUIMultiStep: {
-      type: 'nuxtUIMultiStep'
-    }
-    nuxtUIPinInput: {
-      type: 'nuxtUIPinInput'
-    }
-    nuxtUIRadioGroup: {
-      type: 'nuxtUIRadioGroup'
-    }
-    nuxtUIRepeater: {
-      type: 'nuxtUIRepeater'
-    }
-    nuxtUISelect: {
-      type: 'nuxtUISelect'
-    }
-    nuxtUISelectMenu: {
-      type: 'nuxtUISelectMenu'
-    }
-    nuxtUISlider: {
-      type: 'nuxtUISlider'
-    }
-    nuxtUIStep: {
-      type: 'nuxtUIStep'
-    }
-    nuxtUISwitch: {
-      type: 'nuxtUISwitch'
-    }
-    nuxtUITextarea: {
-      type: 'nuxtUITextarea'
-    }
-    nuxtUITree: {
-      type: 'nuxtUITree'
-    }
-    // Output Components
-    nuxtUIOutputText: {
-      type: 'nuxtUIOutputText'
-    }
-    nuxtUIOutputBoolean: {
-      type: 'nuxtUIOutputBoolean'
-    }
-    nuxtUIOutputDate: {
-      type: 'nuxtUIOutputDate'
-    }
-    nuxtUIOutputLink: {
-      type: 'nuxtUIOutputLink'
-    }
-    nuxtUIOutputNumber: {
-      type: 'nuxtUIOutputNumber'
-    }
-    nuxtUIOutputList: {
-      type: 'nuxtUIOutputList'
-    }
-    nuxtUIOutputProgress: {
-      type: 'nuxtUIOutputProgress'
-    }
-    nuxtUIOutputRating: {
-      type: 'nuxtUIOutputRating'
-    }
-    nuxtUIOutputUser: {
-      type: 'nuxtUIOutputUser'
-    }
-    nuxtUIOutputBadge: {
-      type: 'nuxtUIOutputBadge'
-    }
+/**
+ * Input props of every `nuxtUI` type. Also the source of the `form` types, see `FormAliases`.
+ */
+type NuxtUIInputProps = {
+  // Input Components
+  nuxtUICalendar: {
+    type: 'nuxtUICalendar'
   }
+  nuxtUICheckbox: {
+    type: 'nuxtUICheckbox'
+  }
+  nuxtUICheckboxGroup: {
+    type: 'nuxtUICheckboxGroup'
+  }
+  nuxtUIColorPicker: {
+    type: 'nuxtUIColorPicker'
+  }
+  nuxtUIEditor: {
+    type: 'nuxtUIEditor'
+  }
+  nuxtUIFileUpload: {
+    type: 'nuxtUIFileUpload'
+  }
+  nuxtUIInput: {
+    type: 'nuxtUIInput'
+  }
+  nuxtUIInputDate: {
+    type: 'nuxtUIInputDate'
+  }
+  nuxtUIInputMenu: {
+    type: 'nuxtUIInputMenu'
+  }
+  nuxtUIInputNumber: {
+    type: 'nuxtUIInputNumber'
+  }
+  nuxtUIInputRating: {
+    type: 'nuxtUIInputRating'
+  }
+  nuxtUIInputTags: {
+    type: 'nuxtUIInputTags'
+  }
+  nuxtUIInputTime: {
+    type: 'nuxtUIInputTime'
+  }
+  nuxtUIListbox: {
+    type: 'nuxtUIListbox'
+  }
+  nuxtUIMultiStep: {
+    type: 'nuxtUIMultiStep'
+  }
+  nuxtUIPinInput: {
+    type: 'nuxtUIPinInput'
+  }
+  nuxtUIRadioGroup: {
+    type: 'nuxtUIRadioGroup'
+  }
+  nuxtUIRepeater: {
+    type: 'nuxtUIRepeater'
+  }
+  nuxtUISelect: {
+    type: 'nuxtUISelect'
+  }
+  nuxtUISelectMenu: {
+    type: 'nuxtUISelectMenu'
+  }
+  nuxtUISlider: {
+    type: 'nuxtUISlider'
+  }
+  nuxtUIStep: {
+    type: 'nuxtUIStep'
+  }
+  nuxtUISwitch: {
+    type: 'nuxtUISwitch'
+  }
+  nuxtUITextarea: {
+    type: 'nuxtUITextarea'
+  }
+  nuxtUITree: {
+    type: 'nuxtUITree'
+  }
+  // Output Components
+  nuxtUIOutputText: {
+    type: 'nuxtUIOutputText'
+  }
+  nuxtUIOutputBoolean: {
+    type: 'nuxtUIOutputBoolean'
+  }
+  nuxtUIOutputDate: {
+    type: 'nuxtUIOutputDate'
+  }
+  nuxtUIOutputLink: {
+    type: 'nuxtUIOutputLink'
+  }
+  nuxtUIOutputNumber: {
+    type: 'nuxtUIOutputNumber'
+  }
+  nuxtUIOutputList: {
+    type: 'nuxtUIOutputList'
+  }
+  nuxtUIOutputProgress: {
+    type: 'nuxtUIOutputProgress'
+  }
+  nuxtUIOutputRating: {
+    type: 'nuxtUIOutputRating'
+  }
+  nuxtUIOutputUser: {
+    type: 'nuxtUIOutputUser'
+  }
+  nuxtUIOutputBadge: {
+    type: 'nuxtUIOutputBadge'
+  }
+}
 
-  interface FormKitInputSlots<Props extends FormKitInputs<Props>> {
-    nuxtUICalendar: MergeSlots<FormKitBaseSlots<Props>, CalendarSlots>
-    nuxtUICheckbox: MergeSlots<FormKitBaseSlots<Props>, CheckboxSlots>
-    nuxtUICheckboxGroup: MergeSlots<FormKitBaseSlots<Props>, CheckboxGroupSlots>
-    nuxtUIEditor: MergeSlots<FormKitBaseSlots<Props>, EditorSlots>
-    nuxtUIFileUpload: MergeSlots<FormKitBaseSlots<Props>, FileUploadSlots>
-    nuxtUIInput: MergeSlots<FormKitBaseSlots<Props>, InputSlots>
-    nuxtUIInputDate: MergeSlots<FormKitBaseSlots<Props>, InputDateSlots>
-    nuxtUIInputMenu: MergeSlots<FormKitBaseSlots<Props>, InputMenuSlots>
-    nuxtUIInputNumber: MergeSlots<FormKitBaseSlots<Props>, InputNumberSlots>
-    nuxtUIInputRating: MergeSlots<FormKitBaseSlots<Props>, InputRatingSlots>
-    nuxtUIInputTags: MergeSlots<FormKitBaseSlots<Props>, InputTagsSlots>
-    nuxtUIInputTime: MergeSlots<FormKitBaseSlots<Props>, InputTimeSlots>
-    nuxtUIListbox: MergeSlots<FormKitBaseSlots<Props>, ListboxSlots>
-    nuxtUIMultiStep: MergeSlots<FormKitBaseSlots<Props>, FormKitMultiStepSlots<Props>>
-    nuxtUIPinInput: MergeSlots<FormKitBaseSlots<Props>, PinInputSlots>
-    nuxtUIRadioGroup: MergeSlots<FormKitBaseSlots<Props>, RadioGroupSlots>
-    nuxtUIRepeater: FormKitBaseSlots<Props>
-    nuxtUISelect: MergeSlots<FormKitBaseSlots<Props>, SelectSlots>
-    nuxtUISelectMenu: MergeSlots<FormKitBaseSlots<Props>, SelectMenuSlots>
-    nuxtUIStep: MergeSlots<FormKitBaseSlots<Props>, FormKitStepSlots<Props>>
-    nuxtUISwitch: MergeSlots<FormKitBaseSlots<Props>, SwitchSlots>
-    nuxtUITextarea: MergeSlots<FormKitBaseSlots<Props>, TextareaSlots>
-    nuxtUITree: MergeSlots<FormKitBaseSlots<Props>, TreeSlots>
-  }
+/**
+ * Slots of every `nuxtUI` type. Also the source of the `form` types, see `FormAliases`.
+ */
+type NuxtUIInputSlots<Props extends FormKitInputs<Props>> = {
+  nuxtUICalendar: MergeSlots<FormKitBaseSlots<Props>, CalendarSlots>
+  nuxtUICheckbox: MergeSlots<FormKitBaseSlots<Props>, CheckboxSlots>
+  nuxtUICheckboxGroup: MergeSlots<FormKitBaseSlots<Props>, CheckboxGroupSlots>
+  nuxtUIEditor: MergeSlots<FormKitBaseSlots<Props>, EditorSlots>
+  nuxtUIFileUpload: MergeSlots<FormKitBaseSlots<Props>, FileUploadSlots>
+  nuxtUIInput: MergeSlots<FormKitBaseSlots<Props>, InputSlots>
+  nuxtUIInputDate: MergeSlots<FormKitBaseSlots<Props>, InputDateSlots>
+  nuxtUIInputMenu: MergeSlots<FormKitBaseSlots<Props>, InputMenuSlots>
+  nuxtUIInputNumber: MergeSlots<FormKitBaseSlots<Props>, InputNumberSlots>
+  nuxtUIInputRating: MergeSlots<FormKitBaseSlots<Props>, InputRatingSlots>
+  nuxtUIInputTags: MergeSlots<FormKitBaseSlots<Props>, InputTagsSlots>
+  nuxtUIInputTime: MergeSlots<FormKitBaseSlots<Props>, InputTimeSlots>
+  nuxtUIListbox: MergeSlots<FormKitBaseSlots<Props>, ListboxSlots>
+  nuxtUIMultiStep: MergeSlots<FormKitBaseSlots<Props>, FormKitMultiStepSlots<Props>>
+  nuxtUIPinInput: MergeSlots<FormKitBaseSlots<Props>, PinInputSlots>
+  nuxtUIRadioGroup: MergeSlots<FormKitBaseSlots<Props>, RadioGroupSlots>
+  nuxtUIRepeater: FormKitBaseSlots<Props>
+  nuxtUISelect: MergeSlots<FormKitBaseSlots<Props>, SelectSlots>
+  nuxtUISelectMenu: MergeSlots<FormKitBaseSlots<Props>, SelectMenuSlots>
+  nuxtUIStep: MergeSlots<FormKitBaseSlots<Props>, FormKitStepSlots<Props>>
+  nuxtUISwitch: MergeSlots<FormKitBaseSlots<Props>, SwitchSlots>
+  nuxtUITextarea: MergeSlots<FormKitBaseSlots<Props>, TextareaSlots>
+  nuxtUITree: MergeSlots<FormKitBaseSlots<Props>, TreeSlots>
+}
+
+/**
+ * Mirrors the `nuxtUI` entries of a props/slots record under the `form` prefix (`nuxtUIInput` -> `formInput`),
+ * including the literal `type` of the props, so both names are typed the same.
+ */
+type FormAliases<T> = {
+  [K in keyof T as K extends `nuxtUI${infer Rest}` ? `form${Rest}` : never]:
+  K extends `nuxtUI${infer Rest}`
+    ? T[K] extends { type: string } ? Omit<T[K], 'type'> & { type: `form${Rest}` } : T[K]
+    : never
+}
+
+declare module '@formkit/inputs' {
+  interface FormKitInputProps<Props extends FormKitInputs<Props>> extends NuxtUIInputProps, FormAliases<NuxtUIInputProps> {}
+
+  interface FormKitInputSlots<Props extends FormKitInputs<Props>> extends NuxtUIInputSlots<Props>, FormAliases<NuxtUIInputSlots<Props>> {}
 }

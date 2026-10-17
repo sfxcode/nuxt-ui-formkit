@@ -28,13 +28,15 @@ function extractInterfaceKeys(source: string, startMarker: string, endMarker?: s
   const afterStart = source.slice(startIndex + startMarker.length)
   const endIndex = endMarker ? afterStart.indexOf(endMarker) : -1
   const body = endIndex === -1 ? afterStart : afterStart.slice(0, endIndex)
-  return [...body.matchAll(/^ {4}(\w+):/gm)].map(match => match[1] as string)
+  return [...body.matchAll(/^ {2}(\w+):/gm)].map(match => match[1] as string)
 }
 
+// The `nuxtUI` members live in these two type aliases, which the augmented `FormKitInputProps`
+// and `FormKitInputSlots` interfaces extend (together with their `form` prefix mirror).
 const propsKeys = new Set(
-  extractInterfaceKeys(formkitIndexSource, 'interface FormKitInputProps', 'interface FormKitInputSlots'),
+  extractInterfaceKeys(formkitIndexSource, 'type NuxtUIInputProps = {', 'type NuxtUIInputSlots<'),
 )
-const slotsKeys = new Set(extractInterfaceKeys(formkitIndexSource, 'interface FormKitInputSlots'))
+const slotsKeys = new Set(extractInterfaceKeys(formkitIndexSource, 'type NuxtUIInputSlots<', '/**\n * Mirrors'))
 
 interface RegistrationCompletenessConfig {
   /** Human-readable label used in describe/it titles, e.g. 'input' or 'output'. */

@@ -1,6 +1,6 @@
 import type { DefaultConfigOptions } from '@formkit/vue'
 import { createMultiStepPlugin } from '@formkit/addons'
-import { nuxtUIInputs, nuxtUIOutputs } from './definitions'
+import { formInputs, formOutputs, nuxtUIInputs, nuxtUIOutputs } from './definitions'
 import { addNuxtAsteriskPlugin } from './plugins'
 
 export interface CreateNuxtUiFormkitConfigOptions {
@@ -12,6 +12,14 @@ export interface CreateNuxtUiFormkitConfigOptions {
    * every node to check its type), so it's opt-in.
    */
   multiStep?: boolean
+  /**
+   * Also registers every input and output under the library-neutral `form` prefix
+   * (`formInput`, `formSelect`, `formRepeater`, `formOutputText`, ...) next to the
+   * `nuxtUI` names. They are the same definitions, so both names behave the same.
+   * Off by default: the registered types stay exactly as they were, so a custom
+   * input of your own that happens to be called `formSelect` is not replaced.
+   */
+  formPrefix?: boolean
   /**
    * Your own FormKit plugins (e.g. `createAutoAnimatePlugin`), appended after
    * this module's. Pass them here rather than overriding `plugins` after the
@@ -30,7 +38,7 @@ export interface CreateNuxtUiFormkitConfigOptions {
  */
 export function createNuxtUiFormkitConfig(options: CreateNuxtUiFormkitConfigOptions = {}): Pick<DefaultConfigOptions, 'inputs' | 'plugins'> {
   return {
-    inputs: { ...nuxtUIInputs, ...nuxtUIOutputs },
+    inputs: { ...nuxtUIInputs, ...nuxtUIOutputs, ...(options.formPrefix ? { ...formInputs, ...formOutputs } : {}) },
     plugins: [
       addNuxtAsteriskPlugin,
       ...(options.multiStep ? [createMultiStepPlugin()] : []),

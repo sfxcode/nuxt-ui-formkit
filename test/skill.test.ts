@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
-import { nuxtUIInputs, nuxtUIOutputs } from '../src/runtime/formkit/definitions'
+import { formInputs, formOutputs, nuxtUIInputs, nuxtUIOutputs } from '../src/runtime/formkit/definitions'
 import * as formkit from '../src/runtime/formkit'
 
 // `skills/nuxt-ui-formkit/SKILL.md` ships in the package for AI coding assistants. A skill copies
@@ -17,6 +17,14 @@ describe('skills/nuxt-ui-formkit/SKILL.md', () => {
   it('only names input and output types that are registered', () => {
     const registered = new Set([...Object.keys(nuxtUIInputs), ...Object.keys(nuxtUIOutputs)])
     const named = [...new Set(skill.match(/\bnuxtUI[A-Za-z]+\b/g))]
+    expect(named.length).toBeGreaterThan(0)
+    expect(named.filter(name => !registered.has(name))).toEqual([])
+  })
+
+  it('only names form prefix types that are registered', () => {
+    const registered = new Set([...Object.keys(formInputs), ...Object.keys(formOutputs)])
+    // `formPrefix` is the createNuxtUiFormkitConfig option, not a type
+    const named = [...new Set(skill.match(/\bform[A-Z][A-Za-z]+\b/g))].filter(name => name !== 'formPrefix')
     expect(named.length).toBeGreaterThan(0)
     expect(named.filter(name => !registered.has(name))).toEqual([])
   })

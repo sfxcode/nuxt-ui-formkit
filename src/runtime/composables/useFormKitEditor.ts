@@ -65,6 +65,8 @@ export function useFormKitEditor() {
       return {}
 
     const formkitInput = data._dollar_formkit
+    // The `form` prefix names are aliases: look them up like the `nuxtUI` name, keep the node's own name in the result.
+    const lookupInput = typeof formkitInput === 'string' ? formkitInput.replace(/^form(?=[A-Z])/, 'nuxtUI') : formkitInput
     let extraAttrs: Record<string, unknown> = {}
 
     if (data.attrs && Array.isArray(data.attrs) && data.attrs.length > 0) {
@@ -93,8 +95,8 @@ export function useFormKitEditor() {
       slots: undefined,
     }
 
-    const useOptions = formkitInput ? inputNamesWithOptions.includes(formkitInput) : false
-    const useLegend = formkitInput ? inputNamesWithLegend.includes(formkitInput) : false
+    const useOptions = lookupInput ? inputNamesWithOptions.includes(lookupInput) : false
+    const useLegend = lookupInput ? inputNamesWithLegend.includes(lookupInput) : false
 
     const result: Record<string, unknown> = {
       ...data,

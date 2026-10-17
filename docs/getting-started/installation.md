@@ -92,6 +92,25 @@ const config: DefaultConfigOptions = {
 export default config
 ```
 
+### The `form` prefix
+
+Every input and output is also available under the library-neutral `form` prefix: `formInput` next to `nuxtUIInput`, `formSelect` next to `nuxtUISelect`, `formRepeater` next to `nuxtUIRepeater`, `formOutputText` next to `nuxtUIOutputText`, and so on. The `form` names are the same definitions, so both names behave identically. Use them when a schema should keep its type names across UI libraries that offer the same prefix, such as [FormKit PrimeVue](https://github.com/sfxcode/formkit-primevue).
+
+The `nuxtUI` names are unchanged, and the `form` names are off by default, so a custom input of your own that happens to be called `formSelect` is not replaced. Turn them on with `formPrefix`:
+
+```typescript [formkit.config.ts]
+const nuxtUiFormkitConfig = createNuxtUiFormkitConfig({ formPrefix: true })
+```
+
+```typescript
+const schema = [
+  { $formkit: 'formInput', name: 'name', label: 'Name', validation: 'required' },
+  { $formkit: 'formSelect', name: 'role', label: 'Role', options: ['Tank', 'Healer'] },
+]
+```
+
+The asterisk plugin, `createMultiStepPlugin`, the TypeScript types and the animation targets of `createAutoAnimatePlugin` treat the `form` names like the `nuxtUI` names: a target keyed `nuxtUIRepeater` also applies to `formRepeater`, and the other way round.
+
 ::: details Escape hatch: fully manual wiring
 If you need finer-grained control (e.g. registering only a subset of inputs), you can still wire everything up yourself instead of using the helper:
 

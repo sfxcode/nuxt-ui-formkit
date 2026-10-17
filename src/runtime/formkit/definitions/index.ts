@@ -1,6 +1,7 @@
 import { nuxtUICalendarDefinition, nuxtUICheckboxDefinition, nuxtUICheckboxGroupDefinition, nuxtUIColorPickerDefinition, nuxtUIEditorDefinition, nuxtUIFileUploadDefinition, nuxtUIInputDateDefinition, nuxtUIInputDefinition, nuxtUIInputMenuDefinition, nuxtUIInputNumberDefinition, nuxtUIInputRatingDefinition, nuxtUIInputTagsDefinition, nuxtUIInputTimeDefinition, nuxtUIListboxDefinition, nuxtUIPinInputDefinition, nuxtUIRadioGroupDefinition, nuxtUISelectDefinition, nuxtUISelectMenuDefinition, nuxtUISliderDefinition, nuxtUISwitchDefinition, nuxtUITextareaDefinition, nuxtUITreeDefinition } from './input'
 import { nuxtUIMultiStepDefinition, nuxtUIStepDefinition } from './multiStep'
 import { nuxtUIOutputBadgeDefinition, nuxtUIOutputBooleanDefinition, nuxtUIOutputDateDefinition, nuxtUIOutputLinkDefinition, nuxtUIOutputListDefinition, nuxtUIOutputNumberDefinition, nuxtUIOutputProgressDefinition, nuxtUIOutputRatingDefinition, nuxtUIOutputTextDefinition, nuxtUIOutputUserDefinition } from './output'
+import { renamePrefix } from './prefix'
 import { nuxtUIRepeaterDefinition } from './repeater'
 
 // Re-export all individual definitions
@@ -48,3 +49,13 @@ export const nuxtUIOutputs = {
   nuxtUIOutputText: nuxtUIOutputTextDefinition,
   nuxtUIOutputUser: nuxtUIOutputUserDefinition,
 }
+
+/**
+ * The same definitions under the library-neutral `form` prefix (`formInput`, `formRepeater`, ...), so
+ * a schema can keep its type names when it moves between UI libraries that share the prefix.
+ * `nuxtUIInputs` and `nuxtUIOutputs` are unchanged: register these in addition to keep both names,
+ * or pass `{ formPrefix: true }` to `createNuxtUiFormkitConfig`.
+ */
+export const formInputs = renamePrefix(nuxtUIInputs, 'nuxtUI', 'form')
+
+export const formOutputs = renamePrefix(nuxtUIOutputs, 'nuxtUI', 'form')
