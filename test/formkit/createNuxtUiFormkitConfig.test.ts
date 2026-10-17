@@ -1,13 +1,13 @@
 import { describe, expect, it } from 'vitest'
 import { createNuxtUiFormkitConfig } from '../../src/runtime/formkit/createNuxtUiFormkitConfig'
-import { nuxtUIInputs, nuxtUIOutputs } from '../../src/runtime/formkit/definitions'
+import { formInputs, formOutputs, nuxtUIInputs, nuxtUIOutputs } from '../../src/runtime/formkit/definitions'
 import { addNuxtAsteriskPlugin } from '../../src/runtime/formkit/plugins'
 
 describe('createNuxtUiFormkitConfig', () => {
-  it('always includes every nuxtUI input and output, plus the asterisk plugin', () => {
+  it('always includes every nuxtUI input and output (and their form names), plus the asterisk plugin', () => {
     const config = createNuxtUiFormkitConfig()
 
-    expect(config.inputs).toEqual({ ...nuxtUIInputs, ...nuxtUIOutputs })
+    expect(config.inputs).toEqual({ ...nuxtUIInputs, ...nuxtUIOutputs, ...formInputs, ...formOutputs })
     expect(config.plugins).toContain(addNuxtAsteriskPlugin)
   })
 

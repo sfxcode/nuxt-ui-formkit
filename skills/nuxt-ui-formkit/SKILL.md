@@ -16,7 +16,7 @@ Read the docs instead of guessing: https://sfxcode.github.io/nuxt-ui-formkit/llm
   `createNuxtUiFormkitConfig({ multiStep: true, plugins: [...] })` from `@sfxcode/nuxt-ui-formkit/formkit`, then use its `inputs` and `plugins`.
 - Pass your own plugins through the helper's `plugins` option. Setting `plugins` after spreading it drops the asterisk plugin.
 - `multiStep: true` is required for `nuxtUIMultiStep` / `nuxtUIStep`.
-- `formPrefix: true` also registers every type under the library-neutral `form` prefix (`formSelect` for `nuxtUISelect`). Same definitions, both names work.
+- Every type is also registered under the library-neutral `form` prefix (`formSelect` for `nuxtUISelect`). Same definitions, both names work. `formPrefix: false` turns the `form` names off.
 
 ## Schemas
 

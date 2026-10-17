@@ -13,11 +13,11 @@ export interface CreateNuxtUiFormkitConfigOptions {
    */
   multiStep?: boolean
   /**
-   * Also registers every input and output under the library-neutral `form` prefix
+   * Registers every input and output under the library-neutral `form` prefix
    * (`formInput`, `formSelect`, `formRepeater`, `formOutputText`, ...) next to the
    * `nuxtUI` names. They are the same definitions, so both names behave the same.
-   * Off by default: the registered types stay exactly as they were, so a custom
-   * input of your own that happens to be called `formSelect` is not replaced.
+   * On by default. Pass `false` to register only the `nuxtUI` names, e.g. when an
+   * input of your own is called `formSelect` and must not be replaced.
    */
   formPrefix?: boolean
   /**
@@ -38,7 +38,7 @@ export interface CreateNuxtUiFormkitConfigOptions {
  */
 export function createNuxtUiFormkitConfig(options: CreateNuxtUiFormkitConfigOptions = {}): Pick<DefaultConfigOptions, 'inputs' | 'plugins'> {
   return {
-    inputs: { ...nuxtUIInputs, ...nuxtUIOutputs, ...(options.formPrefix ? { ...formInputs, ...formOutputs } : {}) },
+    inputs: { ...nuxtUIInputs, ...nuxtUIOutputs, ...(options.formPrefix === false ? {} : { ...formInputs, ...formOutputs }) },
     plugins: [
       addNuxtAsteriskPlugin,
       ...(options.multiStep ? [createMultiStepPlugin()] : []),

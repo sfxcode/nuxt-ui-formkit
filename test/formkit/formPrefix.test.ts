@@ -62,21 +62,27 @@ describe('renamePrefix', () => {
 })
 
 describe('createNuxtUiFormkitConfig with formPrefix', () => {
-  it('registers the form names in addition to the nuxtUI names', () => {
-    const config = createNuxtUiFormkitConfig({ formPrefix: true })
+  const all = { ...nuxtUIInputs, ...nuxtUIOutputs, ...formInputs, ...formOutputs }
 
-    expect(config.inputs).toEqual({ ...nuxtUIInputs, ...nuxtUIOutputs, ...formInputs, ...formOutputs })
+  it('registers the form names in addition to the nuxtUI names by default', () => {
+    expect(createNuxtUiFormkitConfig().inputs).toEqual(all)
+    expect(createNuxtUiFormkitConfig({}).inputs).toEqual(all)
   })
 
-  it('is off by default, so the registered types stay as they were', () => {
-    const expected = { ...nuxtUIInputs, ...nuxtUIOutputs }
+  it('registers them for formPrefix: true as well, and for the other options', () => {
+    expect(createNuxtUiFormkitConfig({ formPrefix: true }).inputs).toEqual(all)
+    expect(createNuxtUiFormkitConfig({ multiStep: true, plugins: [] }).inputs).toEqual(all)
+  })
 
-    expect(createNuxtUiFormkitConfig().inputs).toEqual(expected)
-    expect(createNuxtUiFormkitConfig({ formPrefix: false }).inputs).toEqual(expected)
+  it('registers only the nuxtUI names for formPrefix: false', () => {
+    const inputs = createNuxtUiFormkitConfig({ formPrefix: false }).inputs
+
+    expect(inputs).toEqual({ ...nuxtUIInputs, ...nuxtUIOutputs })
+    expect(Object.keys(inputs ?? {}).some(key => key.startsWith('form'))).toBe(false)
   })
 
   it('does not change the plugins', () => {
-    expect(createNuxtUiFormkitConfig({ formPrefix: true }).plugins).toEqual(createNuxtUiFormkitConfig().plugins)
+    expect(createNuxtUiFormkitConfig({ formPrefix: false }).plugins).toEqual(createNuxtUiFormkitConfig().plugins)
   })
 })
 

@@ -54,7 +54,7 @@ export const nuxtUIOutputs = {
  * The same definitions under the library-neutral `form` prefix (`formInput`, `formRepeater`, ...), so
  * a schema can keep its type names when it moves between UI libraries that share the prefix.
  * `nuxtUIInputs` and `nuxtUIOutputs` are unchanged: register these in addition to keep both names,
- * or pass `{ formPrefix: true }` to `createNuxtUiFormkitConfig`.
+ * or leave `createNuxtUiFormkitConfig` to do it: it registers them unless `{ formPrefix: false }` is passed.
  */
 export const formInputs = renamePrefix(nuxtUIInputs, 'nuxtUI', 'form')
 

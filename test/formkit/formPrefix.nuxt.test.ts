@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { createNuxtUiFormkitConfig } from '../../src/runtime/formkit/createNuxtUiFormkitConfig'
 import { mountFormKit } from '../support/mountFormKit'
 
-const inputs = createNuxtUiFormkitConfig({ formPrefix: true }).inputs ?? {}
+const inputs = createNuxtUiFormkitConfig().inputs ?? {}
 
 // FormKit and Nuxt UI number their ids and `for`/`aria-*` links per mount, and FormKit writes the type
 // name as it was given into `data-type`, so those differ between two otherwise identical mounts.
