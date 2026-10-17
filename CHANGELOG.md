@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.4.1
+
+[compare changes](https://github.com/sfxcode/nuxt-ui-formkit/compare/v1.4.0...v1.4.1)
+
+### 🚀 Enhancements
+
+- **form-prefix:** Add library-neutral form prefix for inputs and outputs ([1b34625](https://github.com/sfxcode/nuxt-ui-formkit/commit/1b34625))
+- **form-prefix:** Register the form names by default ([497b3d5](https://github.com/sfxcode/nuxt-ui-formkit/commit/497b3d5))
+
+### 🏡 Chore
+
+- **package:** Update release script to use patch versioning ([945d78d](https://github.com/sfxcode/nuxt-ui-formkit/commit/945d78d))
+
+### ❤️ Contributors
+
+- Sfxcode <tom@sfxcode.com>
+
 ## v1.4.0
 
 [compare changes](https://github.com/sfxcode/nuxt-ui-formkit/compare/v1.3.10...v1.4.0)
