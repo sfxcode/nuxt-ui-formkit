@@ -54,7 +54,7 @@ This module does not register `@formkit/nuxt` for you. It ships as a dependency,
 
 ## FormKit Configuration
 
-Create a `formkit.config.ts` file in your project root to configure FormKit. The recommended way is `createNuxtUiFormkitConfig()`, which registers every `nuxtUIXxx` input/output plus this module's own plugins for you - spread its result into your own config alongside whatever else you need (locales, `iconLoader`, other plugins):
+Create a `formkit.config.ts` file in your project root to configure FormKit. The recommended way is `createNuxtUiFormkitConfig()`, which registers every `nuxtUIXxx` input/output (and its `form` name) plus this module's own plugins for you - spread its result into your own config alongside whatever else you need (locales, `iconLoader`, other plugins):
 
 ```typescript [formkit.config.ts]
 import type { DefaultConfigOptions } from '@formkit/vue'
@@ -91,6 +91,25 @@ const config: DefaultConfigOptions = {
 
 export default config
 ```
+
+### The `form` prefix
+
+Every input and output is also available under the library-neutral `form` prefix: `formInput` next to `nuxtUIInput`, `formSelect` next to `nuxtUISelect`, `formRepeater` next to `nuxtUIRepeater`, `formOutputText` next to `nuxtUIOutputText`, and so on. The `form` names are the same definitions, so both names behave identically. Use them when a schema should keep its type names across UI libraries that offer the same prefix, such as [FormKit PrimeVue](https://github.com/sfxcode/formkit-primevue).
+
+`createNuxtUiFormkitConfig()` registers the `form` names next to the `nuxtUI` names, which are unchanged. If an input of your own happens to be called `formSelect` and must not be replaced, register only the `nuxtUI` names with `formPrefix: false`:
+
+```typescript [formkit.config.ts]
+const nuxtUiFormkitConfig = createNuxtUiFormkitConfig({ formPrefix: false })
+```
+
+```typescript
+const schema = [
+  { $formkit: 'formInput', name: 'name', label: 'Name', validation: 'required' },
+  { $formkit: 'formSelect', name: 'role', label: 'Role', options: ['Tank', 'Healer'] },
+]
+```
+
+The asterisk plugin, `createMultiStepPlugin`, the TypeScript types and the animation targets of `createAutoAnimatePlugin` treat the `form` names like the `nuxtUI` names: a target keyed `nuxtUIRepeater` also applies to `formRepeater`, and the other way round.
 
 ::: details Escape hatch: fully manual wiring
 If you need finer-grained control (e.g. registering only a subset of inputs), you can still wire everything up yourself instead of using the helper:

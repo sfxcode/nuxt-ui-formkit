@@ -323,6 +323,10 @@ export default defineFormKitConfig({
 **From `@sfxcode/nuxt-ui-formkit/formkit`:**
 - `nuxtUIInputs` - All input component definitions
 - `nuxtUIOutputs` - All output component definitions
+- `formInputs` - The same input definitions under the `form` prefix (`formInput`, `formSelect`, ...)
+- `formOutputs` - The same output definitions under the `form` prefix (`formOutputText`, ...)
+
+`createNuxtUiFormkitConfig()` registers the `form` names unless you pass `{ formPrefix: false }`. When you wire the inputs yourself, spread `formInputs` and `formOutputs` next to `nuxtUIInputs` and `nuxtUIOutputs`.
 
 **From `@sfxcode/nuxt-ui-formkit/definitions`:**
 - Individual component definitions (e.g., `nuxtUIInputDefinition`, `nuxtUISelectDefinition`)
