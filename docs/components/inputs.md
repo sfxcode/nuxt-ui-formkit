@@ -163,6 +163,16 @@ const schema = [
 
 **Blur/validation behavior:** `validationVisibility: 'blur'` (FormKit's default) reveals validation messages once the dropdown has been opened and closed at least once — Nuxt UI's `USelect` only emits a `blur` event synthetically on that open→close transition, since its trigger has no native blur listener of its own. Tabbing through the trigger without ever opening the dropdown does not trigger this reveal. Set `validationVisibility: 'live'` on the field if messages need to appear without an open/close cycle.
 
+**Slots:** all Nuxt UI slots are forwarded, together with the FormKit context. Since `@nuxt/ui` 4.13 the trigger slots (`leading`, `default`, `trailing`) of `nuxtUISelect`, `nuxtUISelectMenu` and `nuxtUIInputMenu` also receive the selected `item`, so you can render it without looking it up from `modelValue`:
+
+```vue
+<FormKit type="nuxtUISelect" name="status" :options="statuses">
+  <template #leading="{ item, ui }">
+    <UChip v-if="item" v-bind="item.chip" inset standalone :class="ui.itemLeadingChip()" />
+  </template>
+</FormKit>
+```
+
 ### nuxtUISelectMenu
 
 Advanced select with grouping and multiple selection support.
