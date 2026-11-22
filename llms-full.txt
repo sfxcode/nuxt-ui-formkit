@@ -1634,6 +1634,16 @@ const schema = [
 
 **Blur/validation behavior:** `validationVisibility: 'blur'` (FormKit's default) reveals validation messages once the dropdown has been opened and closed at least once — Nuxt UI's `USelect` only emits a `blur` event synthetically on that open→close transition, since its trigger has no native blur listener of its own. Tabbing through the trigger without ever opening the dropdown does not trigger this reveal. Set `validationVisibility: 'live'` on the field if messages need to appear without an open/close cycle.
 
+**Slots:** all Nuxt UI slots are forwarded, together with the FormKit context. Since `@nuxt/ui` 4.13 the trigger slots (`leading`, `default`, `trailing`) of `nuxtUISelect`, `nuxtUISelectMenu` and `nuxtUIInputMenu` also receive the selected `item`, so you can render it without looking it up from `modelValue`:
+
+```vue
+<FormKit type="nuxtUISelect" name="status" :options="statuses">
+  <template #leading="{ item, ui }">
+    <UChip v-if="item" v-bind="item.chip" inset standalone :class="ui.itemLeadingChip()" />
+  </template>
+</FormKit>
+```
+
 ### nuxtUISelectMenu
 
 Advanced select with grouping and multiple selection support.
@@ -1925,6 +1935,81 @@ const schema = [
 
 **Key Props:**
 - `trueValue` / `falseValue` - Custom values emitted for the on / off states
+
+### nuxtUIToggle
+
+A button that is pressed on or off, holding a boolean value. Requires `@nuxt/ui` 4.13+.
+
+📖 Nuxt UI reference: [Toggle](https://ui.nuxt.com/docs/components/toggle)
+
+**Schema Example:**
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUIToggle',
+    name: 'bold',
+    label: 'Bold',
+    icon: 'i-lucide-bold'
+  },
+  {
+    $formkit: 'nuxtUIToggle',
+    name: 'newsletter',
+    label: 'Newsletter',
+    toggleLabel: 'Subscribe',
+    activeColor: 'success'
+  }
+]
+```
+
+**Key Props:**
+- `toggleLabel` - Text inside the button. FormKit's `label` stays the field label above it
+- `icon` / `leadingIcon` / `trailingIcon` - Button icons
+- `color` / `variant` - Unpressed look (Nuxt UI defaults: `neutral` / `ghost`)
+- `activeColor` / `activeVariant` - Pressed look (Nuxt UI defaults: `primary` / `soft`)
+
+### nuxtUIToggleGroup
+
+A bar of toggle buttons holding one value, or an array of values with `multiple`. Requires `@nuxt/ui` 4.13+.
+
+📖 Nuxt UI reference: [ToggleGroup](https://ui.nuxt.com/docs/components/toggle-group)
+
+**Schema Example:**
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUIToggleGroup',
+    name: 'align',
+    label: 'Alignment',
+    options: [
+      { label: 'Left', value: 'left', icon: 'i-lucide-align-left' },
+      { label: 'Center', value: 'center', icon: 'i-lucide-align-center' },
+      { label: 'Right', value: 'right', icon: 'i-lucide-align-right' }
+    ],
+    validation: 'required'
+  },
+  {
+    $formkit: 'nuxtUIToggleGroup',
+    name: 'formatting',
+    label: 'Formatting',
+    multiple: true,
+    options: [
+      { value: 'bold', icon: 'i-lucide-bold', 'aria-label': 'Bold' },
+      { value: 'italic', icon: 'i-lucide-italic', 'aria-label': 'Italic' }
+    ]
+  }
+]
+```
+
+**Key Props:**
+- `options` - Objects (`label`, `value`, `icon`, `disabled`, any Button prop) or primitives (`['S', 'M', 'L']` become `{ label, value }`)
+- `multiple` - Several items can be pressed; the value is an array (maps to Nuxt UI's `type="multiple"`)
+- `orientation` - `horizontal` (default) or `vertical`
+- `attached` - Join the buttons into one bar
+- `activeColor` / `activeVariant` - Pressed look
+
+**Blur/validation behavior:** like `nuxtUIRadioGroup`, the field counts as blurred once focus leaves the whole group, not when it moves between its own buttons.
 
 ## Specialized Inputs
 
