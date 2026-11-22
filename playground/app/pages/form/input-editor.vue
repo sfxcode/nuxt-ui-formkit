@@ -30,14 +30,21 @@ function resetField() {
 const generatedField = computed(() => editorDataToSchema(formData.value))
 const generatedSchema = computed(() => [generatedField.value] as unknown as FormKitSchemaDefinition)
 
-async function copyJson() {
-  await navigator.clipboard.writeText(editorDataToJson(formData.value))
-  toast.add({ title: 'Copied schema JSON to clipboard', icon: 'i-lucide-check', color: 'success' })
+// `toast.promise` returns the original promise, so a failed copy still rejects - the error toast covers it.
+async function copyToClipboard(text: string, what: string) {
+  await toast.promise(navigator.clipboard.writeText(text), {
+    loading: `Copying ${what}...`,
+    success: { title: `Copied ${what} to clipboard`, icon: 'i-lucide-check', color: 'success' },
+    error: { title: 'Copy failed - clipboard permission denied', icon: 'i-lucide-x', color: 'error' },
+  }).catch(() => {})
 }
 
-async function copyCode() {
-  await navigator.clipboard.writeText(editorDataToCode(formData.value))
-  toast.add({ title: 'Copied schema object to clipboard', icon: 'i-lucide-check', color: 'success' })
+function copyJson() {
+  return copyToClipboard(editorDataToJson(formData.value), 'schema JSON')
+}
+
+function copyCode() {
+  return copyToClipboard(editorDataToCode(formData.value), 'schema object')
 }
 </script>
 

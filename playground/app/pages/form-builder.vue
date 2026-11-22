@@ -661,13 +661,12 @@ function updateFullSchema(value: string) {
 }
 
 async function copySchema() {
-  try {
-    await navigator.clipboard.writeText(fullSchemaText.value)
-    toast.add({ title: 'Copied schema to clipboard', icon: 'i-lucide-check', color: 'success' })
-  }
-  catch {
-    toast.add({ title: 'Copy failed - clipboard permission denied', icon: 'i-lucide-x', color: 'error' })
-  }
+  // `toast.promise` returns the original promise, so a failed copy still rejects - the error toast covers it.
+  await toast.promise(navigator.clipboard.writeText(fullSchemaText.value), {
+    loading: 'Copying schema...',
+    success: { title: 'Copied schema to clipboard', icon: 'i-lucide-check', color: 'success' },
+    error: { title: 'Copy failed - clipboard permission denied', icon: 'i-lucide-x', color: 'error' },
+  }).catch(() => {})
 }
 
 // ---------------------------------------------------------------------------
