@@ -32,7 +32,7 @@ const items = ref([
   },
 ] satisfies SelectItem[])
 
-function getChip(value: string) {
+function getChip(value: unknown) {
   return items.value.find(item => item.value === value)?.chip
 }
 </script>

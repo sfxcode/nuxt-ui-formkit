@@ -34,6 +34,12 @@ export * from './plugins'
 type MergeSlots<A, B> = A & Omit<B, keyof A>
 
 /**
+ * The `options` list of the list-based types (mapped to the Nuxt UI `items` prop). Declared explicitly because
+ * FormKit types `options` as `undefined` (`FormKitConditionalProps`) on every input type that does not declare it.
+ */
+type NuxtUIOptions = unknown[]
+
+/**
  * Input props of every `nuxtUI` type. Also the source of the `form` types, see `FormAliases`.
  */
 type NuxtUIInputProps = {
@@ -46,6 +52,7 @@ type NuxtUIInputProps = {
   }
   nuxtUICheckboxGroup: {
     type: 'nuxtUICheckboxGroup'
+    options?: NuxtUIOptions
   }
   nuxtUIColorPicker: {
     type: 'nuxtUIColorPicker'
@@ -64,6 +71,7 @@ type NuxtUIInputProps = {
   }
   nuxtUIInputMenu: {
     type: 'nuxtUIInputMenu'
+    options?: NuxtUIOptions
   }
   nuxtUIInputNumber: {
     type: 'nuxtUIInputNumber'
@@ -79,6 +87,7 @@ type NuxtUIInputProps = {
   }
   nuxtUIListbox: {
     type: 'nuxtUIListbox'
+    options?: NuxtUIOptions
   }
   nuxtUIMultiStep: {
     type: 'nuxtUIMultiStep'
@@ -88,15 +97,18 @@ type NuxtUIInputProps = {
   }
   nuxtUIRadioGroup: {
     type: 'nuxtUIRadioGroup'
+    options?: NuxtUIOptions
   }
   nuxtUIRepeater: {
     type: 'nuxtUIRepeater'
   }
   nuxtUISelect: {
     type: 'nuxtUISelect'
+    options?: NuxtUIOptions
   }
   nuxtUISelectMenu: {
     type: 'nuxtUISelectMenu'
+    options?: NuxtUIOptions
   }
   nuxtUISlider: {
     type: 'nuxtUISlider'
@@ -112,6 +124,7 @@ type NuxtUIInputProps = {
   }
   nuxtUITree: {
     type: 'nuxtUITree'
+    options?: NuxtUIOptions
   }
   // Output Components
   nuxtUIOutputText: {
