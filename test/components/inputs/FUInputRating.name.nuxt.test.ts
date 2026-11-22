@@ -16,7 +16,7 @@ describe('FUInputRating name prop', () => {
     const wrapper = await mountSuspended(FormKit, {
       props: { type: 'form' },
       slots: {
-        default: () => [h(FormKit, { type: 'nuxtUIInputRating', name: 'my-distinctive-name', modelValue: 0 })],
+        default: () => [h(FormKit as never, { type: 'nuxtUIInputRating', name: 'my-distinctive-name', modelValue: 0 })],
       },
       attachTo: document.body,
       global: { plugins: [[plugin, defaultConfig({ inputs: { nuxtUIInputRating: nuxtUIInputRatingDefinition } })]] },

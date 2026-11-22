@@ -33,10 +33,10 @@ function mountHost(schema: StandardSchemaV1, onSubmit?: () => void) {
       })
       onUnmounted(() => detach?.())
 
-      return () => h(FormKit, { type: 'form', id: 'test-form', onSubmit }, {
+      return () => h(FormKit as never, { type: 'form', id: 'test-form', onSubmit }, {
         default: () => [
-          h(FormKit, { type: 'nuxtUIInput', name: 'email', label: 'Email', value: 'bad' }),
-          h(FormKit, { type: 'nuxtUIInput', name: 'username', label: 'Username', value: 'ab' }),
+          h(FormKit as never, { type: 'nuxtUIInput', name: 'email', label: 'Email', value: 'bad' }),
+          h(FormKit as never, { type: 'nuxtUIInput', name: 'username', label: 'Username', value: 'ab' }),
         ],
       })
     },

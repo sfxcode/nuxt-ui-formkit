@@ -16,7 +16,7 @@ describe('FUPinInput name prop', () => {
     const wrapper = await mountSuspended(FormKit, {
       props: { type: 'form' },
       slots: {
-        default: () => [h(FormKit, { type: 'nuxtUIPinInput', name: 'my-distinctive-name' })],
+        default: () => [h(FormKit as never, { type: 'nuxtUIPinInput', name: 'my-distinctive-name' })],
       },
       attachTo: document.body,
       global: { plugins: [[plugin, defaultConfig({ inputs: { nuxtUIPinInput: nuxtUIPinInputDefinition } })]] },

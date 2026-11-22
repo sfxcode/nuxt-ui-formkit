@@ -16,7 +16,7 @@ describe('FUListbox name prop', () => {
     const wrapper = await mountSuspended(FormKit, {
       props: { type: 'form' },
       slots: {
-        default: () => [h(FormKit, { type: 'nuxtUIListbox', name: 'my-distinctive-name', options: ['a', 'b'] })],
+        default: () => [h(FormKit as never, { type: 'nuxtUIListbox', name: 'my-distinctive-name', options: ['a', 'b'] })],
       },
       attachTo: document.body,
       global: { plugins: [[plugin, defaultConfig({ inputs: { nuxtUIListbox: nuxtUIListboxDefinition } })]] },
@@ -31,7 +31,7 @@ describe('FUListbox name prop', () => {
     const wrapper = await mountSuspended(FormKit, {
       props: { type: 'form' },
       slots: {
-        default: () => [h(FormKit, { type: 'nuxtUIListbox', name: 'my-distinctive-name', options: ['a', 'b'], displayMode: 'transfer', modelValue: [] })],
+        default: () => [h(FormKit as never, { type: 'nuxtUIListbox', name: 'my-distinctive-name', options: ['a', 'b'], displayMode: 'transfer', modelValue: [] })],
       },
       attachTo: document.body,
       global: { plugins: [[plugin, defaultConfig({ inputs: { nuxtUIListbox: nuxtUIListboxDefinition } })]] },

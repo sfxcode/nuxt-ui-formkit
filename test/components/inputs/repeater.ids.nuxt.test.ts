@@ -41,8 +41,8 @@ describe('nuxtUIRepeater element ids', () => {
   it('differ between two repeaters on the same page', async () => {
     const Page = defineComponent({
       setup: () => () => h('div', [
-        h(FormKit, { type: 'nuxtUIRepeater', id: 'repeater-a', value: rows, hideMoveButtons: true }),
-        h(FormKit, { type: 'nuxtUIRepeater', id: 'repeater-b', value: rows, hideMoveButtons: true }),
+        h(FormKit as never, { type: 'nuxtUIRepeater', id: 'repeater-a', value: rows, hideMoveButtons: true }),
+        h(FormKit as never, { type: 'nuxtUIRepeater', id: 'repeater-b', value: rows, hideMoveButtons: true }),
       ]),
     })
     const wrapper = await mountSuspended(Page, {

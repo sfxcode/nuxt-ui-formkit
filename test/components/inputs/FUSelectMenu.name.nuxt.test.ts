@@ -16,7 +16,7 @@ describe('FUSelectMenu name prop', () => {
     const wrapper = await mountSuspended(FormKit, {
       props: { type: 'form' },
       slots: {
-        default: () => [h(FormKit, { type: 'nuxtUISelectMenu', name: 'my-distinctive-name', options: ['a', 'b'] })],
+        default: () => [h(FormKit as never, { type: 'nuxtUISelectMenu', name: 'my-distinctive-name', options: ['a', 'b'] })],
       },
       attachTo: document.body,
       global: { plugins: [[plugin, defaultConfig({ inputs: { nuxtUISelectMenu: nuxtUISelectMenuDefinition } })]] },

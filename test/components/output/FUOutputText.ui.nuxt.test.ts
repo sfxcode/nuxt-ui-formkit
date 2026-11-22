@@ -48,7 +48,7 @@ describe('FUOutputText icon tooltip props', () => {
     const Host = defineComponent({
       setup() {
         return () => h(UApp, null, {
-          default: () => h(FormKit, {
+          default: () => h(FormKit as never, {
             type: 'nuxtUIOutputText',
             id: 'output-text-tooltip-test',
             modelValue: 'Hello world',

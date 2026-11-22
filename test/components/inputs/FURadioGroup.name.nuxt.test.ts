@@ -16,7 +16,7 @@ describe('FURadioGroup name prop', () => {
     const wrapper = await mountSuspended(FormKit, {
       props: { type: 'form' },
       slots: {
-        default: () => [h(FormKit, { type: 'nuxtUIRadioGroup', name: 'my-distinctive-name', options: ['a', 'b'] })],
+        default: () => [h(FormKit as never, { type: 'nuxtUIRadioGroup', name: 'my-distinctive-name', options: ['a', 'b'] })],
       },
       attachTo: document.body,
       global: { plugins: [[plugin, defaultConfig({ inputs: { nuxtUIRadioGroup: nuxtUIRadioGroupDefinition } })]] },

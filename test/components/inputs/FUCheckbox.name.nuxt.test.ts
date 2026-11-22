@@ -16,7 +16,7 @@ describe('FUCheckbox name prop', () => {
     const wrapper = await mountSuspended(FormKit, {
       props: { type: 'form' },
       slots: {
-        default: () => [h(FormKit, { type: 'nuxtUICheckbox', name: 'my-distinctive-name' })],
+        default: () => [h(FormKit as never, { type: 'nuxtUICheckbox', name: 'my-distinctive-name' })],
       },
       attachTo: document.body,
       global: { plugins: [[plugin, defaultConfig({ inputs: { nuxtUICheckbox: nuxtUICheckboxDefinition } })]] },

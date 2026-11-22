@@ -16,7 +16,7 @@ describe('FUSwitch name prop', () => {
     const wrapper = await mountSuspended(FormKit, {
       props: { type: 'form' },
       slots: {
-        default: () => [h(FormKit, { type: 'nuxtUISwitch', name: 'my-distinctive-name' })],
+        default: () => [h(FormKit as never, { type: 'nuxtUISwitch', name: 'my-distinctive-name' })],
       },
       attachTo: document.body,
       global: { plugins: [[plugin, defaultConfig({ inputs: { nuxtUISwitch: nuxtUISwitchDefinition } })]] },

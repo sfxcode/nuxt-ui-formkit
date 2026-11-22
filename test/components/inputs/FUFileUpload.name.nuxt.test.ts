@@ -16,7 +16,7 @@ describe('FUFileUpload name prop', () => {
     const wrapper = await mountSuspended(FormKit, {
       props: { type: 'form' },
       slots: {
-        default: () => [h(FormKit, { type: 'nuxtUIFileUpload', name: 'my-distinctive-name' })],
+        default: () => [h(FormKit as never, { type: 'nuxtUIFileUpload', name: 'my-distinctive-name' })],
       },
       attachTo: document.body,
       global: { plugins: [[plugin, defaultConfig({ inputs: { nuxtUIFileUpload: nuxtUIFileUploadDefinition } })]] },

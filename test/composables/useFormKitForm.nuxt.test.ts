@@ -23,8 +23,8 @@ const HostComponent = defineComponent({
     const form = useFormKitForm('test-form')
     expose({ form })
 
-    return () => h(FormKit, { type: 'form', id: 'test-form', dirtyBehavior: props.dirtyBehavior, value: props.initial }, {
-      default: () => h(FormKit, {
+    return () => h(FormKit as never, { type: 'form', id: 'test-form', dirtyBehavior: props.dirtyBehavior, value: props.initial }, {
+      default: () => h(FormKit as never, {
         type: 'nuxtUIInput',
         name: 'email',
         label: 'Email',
@@ -284,8 +284,8 @@ function mountHostWithSchema(schema: z.ZodType) {
 
       expose({ form, blur })
 
-      return () => h(FormKit, { type: 'form', id: 'schema-test-form' }, {
-        default: () => h(FormKit, {
+      return () => h(FormKit as never, { type: 'form', id: 'schema-test-form' }, {
+        default: () => h(FormKit as never, {
           type: 'nuxtUIInput',
           name: 'email',
           label: 'Email',

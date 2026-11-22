@@ -25,7 +25,7 @@ describe('FUSlider name prop', () => {
     const wrapper = await mountSuspended(FormKit, {
       props: { type: 'form' },
       slots: {
-        default: () => [h(FormKit, { type: 'nuxtUISlider', name: 'my-distinctive-name', modelValue: 0 })],
+        default: () => [h(FormKit as never, { type: 'nuxtUISlider', name: 'my-distinctive-name', modelValue: 0 })],
       },
       attachTo: document.body,
       global: { plugins: [[plugin, defaultConfig({ inputs: { nuxtUISlider: nuxtUISliderDefinition } })]] },

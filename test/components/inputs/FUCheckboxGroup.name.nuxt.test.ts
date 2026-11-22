@@ -19,7 +19,7 @@ describe('FUCheckboxGroup name prop', () => {
         // Reka UI's `CheckboxGroupRoot` only renders a hidden native input
         // per *selected* value (empty selection -> nothing to serialize),
         // so at least one item must be selected for the name to reach the DOM.
-        default: () => [h(FormKit, { type: 'nuxtUICheckboxGroup', name: 'my-distinctive-name', options: ['a', 'b'], modelValue: ['a'] })],
+        default: () => [h(FormKit as never, { type: 'nuxtUICheckboxGroup', name: 'my-distinctive-name', options: ['a', 'b'], modelValue: ['a'] })],
       },
       attachTo: document.body,
       global: { plugins: [[plugin, defaultConfig({ inputs: { nuxtUICheckboxGroup: nuxtUICheckboxGroupDefinition } })]] },
