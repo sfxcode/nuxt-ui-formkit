@@ -18,7 +18,7 @@ FormKit Nuxt UI bridges the gap between [FormKit](https://formkit.com/)'s powerf
 
 ## Features
 
-✨ **22 Input Components** - Complete set of FormKit-wrapped Nuxt UI input components
+✨ **24 Input Components** - Complete set of FormKit-wrapped Nuxt UI input components
 - `nuxtUICalendar` - Bare date-grid picker with range/multiple selection
 - `nuxtUICheckbox` - Single checkbox with label and description
 - `nuxtUICheckboxGroup` - Multiple checkbox selection
@@ -51,13 +51,17 @@ FormKit Nuxt UI bridges the gap between [FormKit](https://formkit.com/)'s powerf
 - `nuxtUIMultiStep` - Tab-strip wizard container built on `@formkit/addons`' `createMultiStepPlugin`
 - `nuxtUIStep` - A single step's content, with Nuxt UI-styled previous/next actions
 
-📊 **6 Output Components** - Display-only components for read-only data
+📊 **10 Output Components** - Display-only components for read-only data
+- `nuxtUIOutputBadge` - Value shown as a colored badge
 - `nuxtUIOutputBoolean` - Boolean display with custom icons
 - `nuxtUIOutputDate` - Formatted date/time display
 - `nuxtUIOutputLink` - URL display with navigation
 - `nuxtUIOutputList` - List display with separators and badge styles
 - `nuxtUIOutputNumber` - Formatted number display (currency, percentage)
+- `nuxtUIOutputProgress` - Progress bar for numeric values
+- `nuxtUIOutputRating` - Read-only star rating
 - `nuxtUIOutputText` - Styled text display with icons
+- `nuxtUIOutputUser` - User display with avatar, name and description
 
 🎯 **Form Management** - Powerful form utilities
 - `FUDataEdit` - Edit forms with schema-based configuration
