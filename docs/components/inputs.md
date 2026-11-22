@@ -455,6 +455,81 @@ const schema = [
 **Key Props:**
 - `trueValue` / `falseValue` - Custom values emitted for the on / off states
 
+### nuxtUIToggle
+
+A button that is pressed on or off, holding a boolean value. Requires `@nuxt/ui` 4.13+.
+
+📖 Nuxt UI reference: [Toggle](https://ui.nuxt.com/docs/components/toggle)
+
+**Schema Example:**
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUIToggle',
+    name: 'bold',
+    label: 'Bold',
+    icon: 'i-lucide-bold'
+  },
+  {
+    $formkit: 'nuxtUIToggle',
+    name: 'newsletter',
+    label: 'Newsletter',
+    toggleLabel: 'Subscribe',
+    activeColor: 'success'
+  }
+]
+```
+
+**Key Props:**
+- `toggleLabel` - Text inside the button. FormKit's `label` stays the field label above it
+- `icon` / `leadingIcon` / `trailingIcon` - Button icons
+- `color` / `variant` - Unpressed look (Nuxt UI defaults: `neutral` / `ghost`)
+- `activeColor` / `activeVariant` - Pressed look (Nuxt UI defaults: `primary` / `soft`)
+
+### nuxtUIToggleGroup
+
+A bar of toggle buttons holding one value, or an array of values with `multiple`. Requires `@nuxt/ui` 4.13+.
+
+📖 Nuxt UI reference: [ToggleGroup](https://ui.nuxt.com/docs/components/toggle-group)
+
+**Schema Example:**
+
+```typescript
+const schema = [
+  {
+    $formkit: 'nuxtUIToggleGroup',
+    name: 'align',
+    label: 'Alignment',
+    options: [
+      { label: 'Left', value: 'left', icon: 'i-lucide-align-left' },
+      { label: 'Center', value: 'center', icon: 'i-lucide-align-center' },
+      { label: 'Right', value: 'right', icon: 'i-lucide-align-right' }
+    ],
+    validation: 'required'
+  },
+  {
+    $formkit: 'nuxtUIToggleGroup',
+    name: 'formatting',
+    label: 'Formatting',
+    multiple: true,
+    options: [
+      { value: 'bold', icon: 'i-lucide-bold', 'aria-label': 'Bold' },
+      { value: 'italic', icon: 'i-lucide-italic', 'aria-label': 'Italic' }
+    ]
+  }
+]
+```
+
+**Key Props:**
+- `options` - Objects (`label`, `value`, `icon`, `disabled`, any Button prop) or primitives (`['S', 'M', 'L']` become `{ label, value }`)
+- `multiple` - Several items can be pressed; the value is an array (maps to Nuxt UI's `type="multiple"`)
+- `orientation` - `horizontal` (default) or `vertical`
+- `attached` - Join the buttons into one bar
+- `activeColor` / `activeVariant` - Pressed look
+
+**Blur/validation behavior:** like `nuxtUIRadioGroup`, the field counts as blurred once focus leaves the whole group, not when it moves between its own buttons.
+
 ## Specialized Inputs
 
 ### nuxtUIInputDate

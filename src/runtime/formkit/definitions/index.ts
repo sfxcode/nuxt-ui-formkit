@@ -1,4 +1,4 @@
-import { nuxtUICalendarDefinition, nuxtUICheckboxDefinition, nuxtUICheckboxGroupDefinition, nuxtUIColorPickerDefinition, nuxtUIEditorDefinition, nuxtUIFileUploadDefinition, nuxtUIInputDateDefinition, nuxtUIInputDefinition, nuxtUIInputMenuDefinition, nuxtUIInputNumberDefinition, nuxtUIInputRatingDefinition, nuxtUIInputTagsDefinition, nuxtUIInputTimeDefinition, nuxtUIListboxDefinition, nuxtUIPinInputDefinition, nuxtUIRadioGroupDefinition, nuxtUISelectDefinition, nuxtUISelectMenuDefinition, nuxtUISliderDefinition, nuxtUISwitchDefinition, nuxtUITextareaDefinition, nuxtUITreeDefinition } from './input'
+import { nuxtUICalendarDefinition, nuxtUICheckboxDefinition, nuxtUICheckboxGroupDefinition, nuxtUIColorPickerDefinition, nuxtUIEditorDefinition, nuxtUIFileUploadDefinition, nuxtUIInputDateDefinition, nuxtUIInputDefinition, nuxtUIInputMenuDefinition, nuxtUIInputNumberDefinition, nuxtUIInputRatingDefinition, nuxtUIInputTagsDefinition, nuxtUIInputTimeDefinition, nuxtUIListboxDefinition, nuxtUIPinInputDefinition, nuxtUIRadioGroupDefinition, nuxtUISelectDefinition, nuxtUISelectMenuDefinition, nuxtUISliderDefinition, nuxtUISwitchDefinition, nuxtUITextareaDefinition, nuxtUIToggleDefinition, nuxtUIToggleGroupDefinition, nuxtUITreeDefinition } from './input'
 import { nuxtUIMultiStepDefinition, nuxtUIStepDefinition } from './multiStep'
 import { nuxtUIOutputBadgeDefinition, nuxtUIOutputBooleanDefinition, nuxtUIOutputDateDefinition, nuxtUIOutputLinkDefinition, nuxtUIOutputListDefinition, nuxtUIOutputNumberDefinition, nuxtUIOutputProgressDefinition, nuxtUIOutputRatingDefinition, nuxtUIOutputTextDefinition, nuxtUIOutputUserDefinition } from './output'
 import { renamePrefix } from './prefix'
@@ -33,6 +33,8 @@ export const nuxtUIInputs = {
   nuxtUIStep: nuxtUIStepDefinition,
   nuxtUISwitch: nuxtUISwitchDefinition,
   nuxtUITextarea: nuxtUITextareaDefinition,
+  nuxtUIToggle: nuxtUIToggleDefinition,
+  nuxtUIToggleGroup: nuxtUIToggleGroupDefinition,
   nuxtUITree: nuxtUITreeDefinition,
   nuxtUIRepeater: nuxtUIRepeaterDefinition,
 }

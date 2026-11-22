@@ -40,6 +40,8 @@ FormKit Nuxt UI bridges the gap between [FormKit](https://formkit.com/)'s powerf
 - `nuxtUISlider` - Range slider for numeric values
 - `nuxtUISwitch` - Toggle switch for boolean states
 - `nuxtUITextarea` - Multi-line text input with autoresize
+- `nuxtUIToggle` - Pressable on/off button for boolean states
+- `nuxtUIToggleGroup` - Button bar for picking one or several options
 - `nuxtUITree` - Hierarchical selection input (categories, org charts, file trees)
 
 🔁 **Repeater Component** - Dynamic repeatable form sections
@@ -327,6 +329,8 @@ The playground includes comprehensive examples for all components:
 - [Slider](./playground/app/pages/components/input/slider.vue)
 - [Switch](./playground/app/pages/components/input/switch.vue)
 - [Textarea](./playground/app/pages/components/input/textarea.vue)
+- [Toggle](./playground/app/pages/components/input/toggle.vue)
+- [ToggleGroup](./playground/app/pages/components/input/toggle-group.vue)
 
 ### Output Components
 - [OutputBoolean](./playground/app/pages/components/output/boolean.vue)

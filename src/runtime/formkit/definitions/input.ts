@@ -21,6 +21,8 @@ import FUSelect from '../../../runtime/components/inputs/FUSelect.vue'
 import FUSelectMenu from '../../../runtime/components/inputs/FUSelectMenu.vue'
 import FUSlider from '../../../runtime/components/inputs/FUSlider.vue'
 import FUSwitch from '../../../runtime/components/inputs/FUSwitch.vue'
+import FUToggle from '../../../runtime/components/inputs/FUToggle.vue'
+import FUToggleGroup from '../../../runtime/components/inputs/FUToggleGroup.vue'
 import FUTextarea from '../../../runtime/components/inputs/FUTextarea.vue'
 import FUTree from '../../../runtime/components/inputs/FUTree.vue'
 
@@ -126,6 +128,16 @@ export const nuxtUISwitchDefinition: FormKitTypeDefinition = createInput(FUSwitc
 
 export const nuxtUITextareaDefinition: FormKitTypeDefinition = createInput(FUTextarea, {
   props: ['color', 'size', 'variant', 'placeholder', 'autofocus', 'autofocusDelay', 'autoresize', 'autoresizeDelay', 'rows', 'maxrows', 'highlight', 'fixed', 'icon', 'avatar', 'leading', 'leadingIcon', 'trailing', 'trailingIcon', 'loading', 'loadingIcon', 'cols', 'dirname', 'maxlength', 'minlength', 'wrap', 'ui'],
+  family: 'NuxtUIInput',
+})
+
+export const nuxtUIToggleDefinition: FormKitTypeDefinition = createInput(FUToggle, {
+  props: ['toggleLabel', 'icon', 'leadingIcon', 'trailingIcon', 'color', 'variant', 'activeColor', 'activeVariant', 'size', 'square', 'block', 'defaultValue', 'name', 'ui'],
+  family: 'NuxtUIInput',
+})
+
+export const nuxtUIToggleGroupDefinition: FormKitTypeDefinition = createInput(FUToggleGroup, {
+  props: ['options', 'multiple', 'valueKey', 'labelKey', 'orientation', 'attached', 'loop', 'rovingFocus', 'color', 'variant', 'activeColor', 'activeVariant', 'size', 'name', 'ui'],
   family: 'NuxtUIInput',
 })
 

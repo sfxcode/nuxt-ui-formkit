@@ -24,7 +24,8 @@ A field is `{ $formkit: 'nuxtUIInput', name, label, validation, ...props }`; hea
 
 - **Conditional fields** use `if: "$get(plan).value === 'pro'"`. `$get()` finds a field by its **`id`**, not its `name`, so the field it reads needs an `id`. Without one the field never shows, with no error. `&&`, `||`, `===`, `!==` work; there is no unary `!`. An untouched checkbox or switch is `undefined`, not `false`: to react to "off" write `!== true`, or set `value: false`.
 - **Inside a repeater row** read a sibling with `$node.value.<field>`.
-- **`required` passes for `false`.** Use `accepted` on `nuxtUICheckbox` and `nuxtUISwitch`.
+- **`required` passes for `false`.** Use `accepted` on `nuxtUICheckbox`, `nuxtUISwitch` and `nuxtUIToggle`.
+- **Toggles:** `nuxtUIToggle`'s button text is `toggleLabel` (`label` is the field label). `nuxtUIToggleGroup` holds one value, or an array with `multiple: true`.
 - **Dates:** `nuxtUIInputDate` and `nuxtUICalendar` emit `CalendarDate` objects (not JSON). Set `valueType: 'iso'` or `'date'`.
 - **Options** are strings or `{ label, value }`. A `nuxtUISelectMenu` bound to a string needs `valueKey: 'value'`.
 - **Validation messages** appear on blur. `nuxtUISelect` only reveals after its dropdown closes; use `'live'` or `nuxtUISelectMenu`.

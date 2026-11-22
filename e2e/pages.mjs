@@ -281,6 +281,46 @@ const explicitPages = [
     },
   },
   {
+    path: '/components/input/toggle',
+    async checks(page) {
+      const bold = fieldByLabel(page, 'Bold').locator('button')
+      assert.equal(await bold.getAttribute('aria-pressed'), 'false')
+      await bold.click()
+      await poll(() => bold.getAttribute('aria-pressed'), pressed => assert.equal(pressed, 'true'))
+
+      // `toggleLabel` is the button text, `label` stays the field label.
+      const newsletter = fieldByLabel(page, 'Newsletter')
+      assert.equal((await newsletter.locator('button').textContent()).trim(), 'Subscribe')
+      assert.equal(await newsletter.locator('button').getAttribute('aria-pressed'), 'true', 'value: true starts pressed')
+    },
+  },
+  {
+    path: '/components/input/toggle-group',
+    async checks(page) {
+      const align = fieldByLabel(page, 'Alignment')
+      const pressed = scope => scope.locator('button[aria-pressed="true"], button[data-state="on"]').allInnerTexts()
+
+      assert.deepEqual(await pressed(align), ['Left'])
+      await align.getByRole('button', { name: 'Right' }).click()
+      await poll(() => pressed(align), texts => assert.deepEqual(texts, ['Right']))
+
+      // multiple: true accumulates.
+      const formatting = fieldByLabel(page, 'Formatting')
+      await formatting.getByRole('button', { name: 'Italic' }).click()
+      await poll(() => formatting.locator('button[data-state="on"]').count(), count => assert.equal(count, 2))
+
+      // Primitive options render as labels; required shows only after focus leaves the whole group.
+      const plan = fieldByLabel(page, 'Plan')
+      assert.deepEqual((await plan.locator('button').allInnerTexts()).map(t => t.trim()), ['Free', 'Pro', 'Team'])
+      await plan.getByRole('button', { name: 'Free' }).focus()
+      await page.keyboard.press('ArrowRight')
+      assert.equal((await nodeState(plan)).blurred, false, 'moving between its own buttons is not a blur')
+      await page.locator('h1').click()
+      await poll(() => nodeState(plan), state => assert.equal(state.blurred, true))
+      await poll(() => messagesOf(plan), messages => assert.ok(messages.includes('Plan is required.'), `got ${JSON.stringify(messages)}`))
+    },
+  },
+  {
     path: '/components/input/editor',
     ready: '[contenteditable="true"]',
     async checks(page) {

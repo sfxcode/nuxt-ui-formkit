@@ -134,6 +134,18 @@ const items = ref<NavigationMenuItem[]>([
         to: '/components/input/textarea',
       },
       {
+        label: 'Toggle',
+        icon: 'i-lucide-bold',
+        description: 'Pressable button for boolean on/off states.',
+        to: '/components/input/toggle',
+      },
+      {
+        label: 'Toggle Group',
+        icon: 'i-lucide-align-center',
+        description: 'Button bar for picking one or several options.',
+        to: '/components/input/toggle-group',
+      },
+      {
         label: 'Tree',
         icon: 'i-lucide-folder-tree',
         description: 'Hierarchical selection input for nested data.',

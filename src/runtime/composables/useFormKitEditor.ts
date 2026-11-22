@@ -24,13 +24,13 @@ type EditorData = Record<string, unknown> & {
 export function useFormKitEditor() {
   // Types whose Nuxt UI component accepts an `options`/`items` list of
   // `{ label, value }` entries - these get the editor's "Options" section.
-  const inputNamesWithOptions = ['nuxtUICheckboxGroup', 'nuxtUIInputMenu', 'nuxtUIListbox', 'nuxtUIRadioGroup', 'nuxtUISelect', 'nuxtUISelectMenu', 'nuxtUITree']
+  const inputNamesWithOptions = ['nuxtUICheckboxGroup', 'nuxtUIInputMenu', 'nuxtUIListbox', 'nuxtUIRadioGroup', 'nuxtUISelect', 'nuxtUISelectMenu', 'nuxtUIToggleGroup', 'nuxtUITree']
 
   // Types whose Nuxt UI component takes `legend` instead of FormKit's usual
   // `label` (a fieldset heading rather than a single control's label).
   const inputNamesWithLegend = ['nuxtUICheckboxGroup', 'nuxtUIRadioGroup']
 
-  const inputNames = ['nuxtUICalendar', 'nuxtUICheckbox', 'nuxtUICheckboxGroup', 'nuxtUIColorPicker', 'nuxtUIEditor', 'nuxtUIFileUpload', 'nuxtUIInput', 'nuxtUIInputDate', 'nuxtUIInputMenu', 'nuxtUIInputNumber', 'nuxtUIInputRating', 'nuxtUIInputTags', 'nuxtUIInputTime', 'nuxtUIListbox', 'nuxtUIPinInput', 'nuxtUIRadioGroup', 'nuxtUISelect', 'nuxtUISelectMenu', 'nuxtUISlider', 'nuxtUISwitch', 'nuxtUITextarea', 'nuxtUITree'].sort()
+  const inputNames = ['nuxtUICalendar', 'nuxtUICheckbox', 'nuxtUICheckboxGroup', 'nuxtUIColorPicker', 'nuxtUIEditor', 'nuxtUIFileUpload', 'nuxtUIInput', 'nuxtUIInputDate', 'nuxtUIInputMenu', 'nuxtUIInputNumber', 'nuxtUIInputRating', 'nuxtUIInputTags', 'nuxtUIInputTime', 'nuxtUIListbox', 'nuxtUIPinInput', 'nuxtUIRadioGroup', 'nuxtUISelect', 'nuxtUISelectMenu', 'nuxtUISlider', 'nuxtUISwitch', 'nuxtUITextarea', 'nuxtUIToggle', 'nuxtUIToggleGroup', 'nuxtUITree'].sort()
 
   const outputNames = ['nuxtUIOutputBadge', 'nuxtUIOutputBoolean', 'nuxtUIOutputDate', 'nuxtUIOutputLink', 'nuxtUIOutputList', 'nuxtUIOutputNumber', 'nuxtUIOutputProgress', 'nuxtUIOutputRating', 'nuxtUIOutputText', 'nuxtUIOutputUser'].sort()
 

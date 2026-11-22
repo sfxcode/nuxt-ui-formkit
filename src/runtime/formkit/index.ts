@@ -20,6 +20,8 @@ import type {
   ListboxSlots,
   PinInputSlots,
   SwitchSlots,
+  ToggleSlots,
+  ToggleGroupSlots,
   TreeSlots,
 } from '@nuxt/ui'
 
@@ -122,6 +124,13 @@ type NuxtUIInputProps = {
   nuxtUITextarea: {
     type: 'nuxtUITextarea'
   }
+  nuxtUIToggle: {
+    type: 'nuxtUIToggle'
+  }
+  nuxtUIToggleGroup: {
+    type: 'nuxtUIToggleGroup'
+    options?: NuxtUIOptions
+  }
   nuxtUITree: {
     type: 'nuxtUITree'
     options?: NuxtUIOptions
@@ -185,6 +194,8 @@ type NuxtUIInputSlots<Props extends FormKitInputs<Props>> = {
   nuxtUIStep: MergeSlots<FormKitBaseSlots<Props>, FormKitStepSlots<Props>>
   nuxtUISwitch: MergeSlots<FormKitBaseSlots<Props>, SwitchSlots>
   nuxtUITextarea: MergeSlots<FormKitBaseSlots<Props>, TextareaSlots>
+  nuxtUIToggle: MergeSlots<FormKitBaseSlots<Props>, ToggleSlots>
+  nuxtUIToggleGroup: MergeSlots<FormKitBaseSlots<Props>, ToggleGroupSlots>
   nuxtUITree: MergeSlots<FormKitBaseSlots<Props>, TreeSlots>
 }
 
