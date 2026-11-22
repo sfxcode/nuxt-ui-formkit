@@ -5,6 +5,37 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.5.0
+
+[compare changes](https://github.com/sfxcode/nuxt-ui-formkit/compare/v1.4.2...v1.5.0)
+
+### 🚀 Enhancements
+
+- **inputs:** Add nuxtUIToggle and nuxtUIToggleGroup ([f7af596](https://github.com/sfxcode/nuxt-ui-formkit/commit/f7af596))
+
+### 🩹 Fixes
+
+- **types:** Declare options on the list-based input types ([c1a3a2d](https://github.com/sfxcode/nuxt-ui-formkit/commit/c1a3a2d))
+
+### 📖 Documentation
+
+- **inputs:** Note the selected item in select trigger slots ([f397872](https://github.com/sfxcode/nuxt-ui-formkit/commit/f397872))
+- Update input and output counts ([80f1211](https://github.com/sfxcode/nuxt-ui-formkit/commit/80f1211))
+
+### 🏡 Chore
+
+- **package:** Update dependencies - nuxt ui 4.13.0, formkit 2.9.0 ([22d2f03](https://github.com/sfxcode/nuxt-ui-formkit/commit/22d2f03))
+- **playground:** Use toast.promise for clipboard copies ([a55db0d](https://github.com/sfxcode/nuxt-ui-formkit/commit/a55db0d))
+- **release:** Update changelogen to use minor versioning ([a2c1b08](https://github.com/sfxcode/nuxt-ui-formkit/commit/a2c1b08))
+
+### ✅ Tests
+
+- Cast FormKit in h() calls for the FormKit 2.9 typings ([419a3f2](https://github.com/sfxcode/nuxt-ui-formkit/commit/419a3f2))
+
+### ❤️ Contributors
+
+- Sfxcode ([@sfxcode](https://github.com/sfxcode))
+
 ## v1.4.2
 
 [compare changes](https://github.com/sfxcode/nuxt-ui-formkit/compare/v1.4.1...v1.4.2)
